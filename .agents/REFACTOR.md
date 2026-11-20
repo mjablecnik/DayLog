@@ -11,4 +11,5 @@ Things to clean up before the first release (delete lines as they are done).
 - TimeLog screens read `AppThemeData` (an adapter over the palette); move them to `context.palette` and delete the adapter.
 - Time tracking tests still sit flat under `test/time_tracking/` (a copy of TimeLog's layout): mirror `lib/time_tracking/`.
 - `lib/time_tracking/data/time_tracking_queries.dart` is a long extension: split reminders, completions, tasks and entries.
-- Tasks (service, providers, tables) have no screen: decide whether to keep them (project suggestions read them).
+- Tasks (service, state providers, tables, 16 property tests) have no screen since TimeLog 1.1; only the project names feed the suggestions. Delete the rest of the Tasks layer and keep the two tables for the import.
+- `lib/time_tracking/` draws Material icon-font icons (`Icons.*`); move them to the bundled SVG icons and drop the exemption in `test/ui/assets_test.dart`.

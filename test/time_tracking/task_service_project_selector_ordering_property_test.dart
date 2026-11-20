@@ -14,7 +14,6 @@ import 'package:zafling/time_tracking/services/task_service.dart';
 // hand-rolled randomized loop (100+ iterations, seeded for reproducibility)
 // exercises the same property without adding that dependency.
 //
-// ProjectSelector (lib/ui/widgets/project_selector.dart) renders projects in
 // the exact order returned by taskProjectsProvider (backed by
 // TaskService.getAllProjects()/watchAllProjects()) and unconditionally
 // appends the "Nepřiřazeno" (Unassigned) chip after that loop — so the

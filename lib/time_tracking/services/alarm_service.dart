@@ -3,7 +3,10 @@ import 'dart:developer' as dev;
 import 'package:audioplayers/audioplayers.dart';
 
 class AlarmService {
-  final AudioPlayer _player = AudioPlayer();
+  // Created on the first alarm, so the audio plugin is not touched until a
+  // timer rings (and tests that never ring one need no audio plugin).
+  AudioPlayer? _audioPlayer;
+  AudioPlayer get _player => _audioPlayer ??= AudioPlayer();
   bool _isPlaying = false;
 
   bool get isPlaying => _isPlaying;
@@ -20,7 +23,7 @@ class AlarmService {
 
   Future<void> stop() async {
     try {
-      await _player.stop().timeout(const Duration(milliseconds: 200));
+      await _audioPlayer?.stop().timeout(const Duration(milliseconds: 200));
       _isPlaying = false;
     } catch (e, st) {
       dev.log('AlarmService: failed to stop alarm', error: e, stackTrace: st);
@@ -29,6 +32,6 @@ class AlarmService {
   }
 
   void dispose() {
-    _player.dispose();
+    _audioPlayer?.dispose();
   }
 }

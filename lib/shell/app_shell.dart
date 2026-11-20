@@ -236,6 +236,7 @@ class _AppShellState extends ConsumerState<AppShell>
                   Destination.notes => gated(NotesScreen()),
                   Destination.settings => SettingsScreen(
                     shortcutTargets: _shortcutTargets(context),
+                    moduleGroups: const <Widget>[TimeSettingsGroups()],
                   ),
                 },
             ],

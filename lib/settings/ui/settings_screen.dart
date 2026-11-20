@@ -48,60 +48,82 @@ class SettingsScreen extends ConsumerWidget {
       body: SafeArea(
         // The tab bar below already clears the bottom inset.
         bottom: false,
-        child: ListView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          padding: const EdgeInsets.fromLTRB(
-            Space.s20,
-            Space.s16,
-            Space.s20,
-            Space.s24,
-          ),
+        child: Column(
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                const MenuButton(),
-                Expanded(
-                  child: Semantics(
-                    header: true,
-                    child: Text(
-                      l.settings_title,
-                      style: context.displayText.headlineLarge,
+            // Outside the list, so the menu button stays reachable when the
+            // list is scrolled.
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                Space.s20,
+                Space.s16,
+                Space.s20,
+                0,
+              ),
+              child: Row(
+                children: <Widget>[
+                  const MenuButton(),
+                  Expanded(
+                    child: Semantics(
+                      header: true,
+                      child: Text(
+                        l.settings_title,
+                        style: context.displayText.headlineLarge,
+                      ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: const EdgeInsets.fromLTRB(
+                  Space.s20,
+                  Space.s24,
+                  Space.s20,
+                  Space.s24,
                 ),
-              ],
+                children: <Widget>[
+                  SettingsGroup(
+                    label: l.settings_groupProfile,
+                    child: const _HeroNameField(),
+                  ),
+                  const SizedBox(height: Space.s24),
+                  SettingsGroup(
+                    label: l.settings_groupLanguage,
+                    child: const _LanguageControl(),
+                  ),
+                  const SizedBox(height: Space.s24),
+                  SettingsGroup(
+                    label: l.settings_groupAppearance,
+                    child: const _ThemeControl(),
+                  ),
+                  const SizedBox(height: Space.s24),
+                  // This one draws its own group header.
+                  const RulesSection(),
+                  const SizedBox(height: Space.s24),
+                  SettingsGroup(
+                    label: l.settings_shortcutTitle,
+                    child: ShortcutGuide(targets: shortcutTargets),
+                  ),
+                  const SizedBox(height: Space.s24),
+                  for (final Widget group in moduleGroups) ...<Widget>[
+                    group,
+                    const SizedBox(height: Space.s24),
+                  ],
+                  SettingsGroup(
+                    label: l.settings_groupData,
+                    child: const ExportRow(),
+                  ),
+                  const SizedBox(height: Space.s24),
+                  SettingsGroup(
+                    label: l.settings_groupAbout,
+                    child: const _AboutRow(),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: Space.s24),
-            SettingsGroup(
-              label: l.settings_groupProfile,
-              child: const _HeroNameField(),
-            ),
-            const SizedBox(height: Space.s24),
-            SettingsGroup(
-              label: l.settings_groupLanguage,
-              child: const _LanguageControl(),
-            ),
-            const SizedBox(height: Space.s24),
-            SettingsGroup(
-              label: l.settings_groupAppearance,
-              child: const _ThemeControl(),
-            ),
-            const SizedBox(height: Space.s24),
-            // This one draws its own group header.
-            const RulesSection(),
-            const SizedBox(height: Space.s24),
-            SettingsGroup(
-              label: l.settings_shortcutTitle,
-              child: ShortcutGuide(targets: shortcutTargets),
-            ),
-            const SizedBox(height: Space.s24),
-            for (final Widget group in moduleGroups) ...<Widget>[
-              group,
-              const SizedBox(height: Space.s24),
-            ],
-            SettingsGroup(label: l.settings_groupData, child: const ExportRow()),
-            const SizedBox(height: Space.s24),
-            SettingsGroup(label: l.settings_groupAbout, child: const _AboutRow()),
           ],
         ),
       ),
@@ -112,10 +134,7 @@ class SettingsScreen extends ConsumerWidget {
 /// Shows a localized message for a failed write; never exception text.
 void _reportFailure(BuildContext context, Object error) {
   if (error is! DomainError) return;
-  showAppSnack(
-    context,
-    domainErrorText(AppLocalizations.of(context), error),
-  );
+  showAppSnack(context, domainErrorText(AppLocalizations.of(context), error));
 }
 
 class _LanguageControl extends ConsumerWidget {

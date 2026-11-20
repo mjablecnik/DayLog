@@ -29,6 +29,7 @@ class DurationAdjuster extends StatelessWidget {
       children: [
         _StepButton(
           icon: Icons.remove,
+          label: l10n.time_durationDecreaseLabel,
           theme: theme,
           enabled: minutes > min,
           onPressed: onDecrement,
@@ -44,6 +45,7 @@ class DurationAdjuster extends StatelessWidget {
         const SizedBox(width: 16),
         _StepButton(
           icon: Icons.add,
+          label: l10n.time_durationIncreaseLabel,
           theme: theme,
           enabled: minutes < max,
           onPressed: onIncrement,
@@ -55,12 +57,14 @@ class DurationAdjuster extends StatelessWidget {
 
 class _StepButton extends StatelessWidget {
   final IconData icon;
+  final String label;
   final AppThemeData theme;
   final bool enabled;
   final VoidCallback onPressed;
 
   const _StepButton({
     required this.icon,
+    required this.label,
     required this.theme,
     required this.enabled,
     required this.onPressed,
@@ -68,20 +72,35 @@ class _StepButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    // The drawn circle is 36 px; the tap area around it is 44 px.
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: label,
+      excludeSemantics: true,
       onTap: enabled ? onPressed : null,
-      child: Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: theme.panel,
-          border: Border.all(color: theme.border),
-        ),
-        child: Icon(
-          icon,
-          size: 18,
-          color: enabled ? theme.dim : theme.faint,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: enabled ? onPressed : null,
+        child: SizedBox(
+          width: 44,
+          height: 44,
+          child: Center(
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: theme.panel,
+                border: Border.all(color: theme.border),
+              ),
+              child: Icon(
+                icon,
+                size: 18,
+                color: enabled ? theme.dim : theme.faint,
+              ),
+            ),
+          ),
         ),
       ),
     );

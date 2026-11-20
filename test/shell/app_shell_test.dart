@@ -24,6 +24,7 @@ import 'package:zafling/shell/bottom_bar.dart';
 import 'package:zafling/shell/destination.dart';
 import 'package:zafling/shell/reconcile_banner.dart';
 import 'package:zafling/shell/splash_screen.dart';
+import 'package:zafling/time_tracking/time_tracking.dart' show TimeSettingsGroups;
 import 'package:zafling/settings/ui_providers.dart';
 import 'package:zafling/ui_kit/common/add_fab.dart';
 import 'package:zafling/ui_kit/common/menu_button.dart';
@@ -344,6 +345,21 @@ void main() {
       expect(find.byType(AddFab), findsNothing);
       expect(find.byType(BottomBar), findsOneWidget);
       expect(find.bySemanticsLabel('Settings'), findsWidgets);
+    });
+
+    shellTest('Settings carries the reminder groups of the timer, after the shortcut guide', (
+      tester,
+    ) async {
+      await pumpApp(tester);
+      await settle(tester);
+      await open(tester, Destination.settings);
+
+      expect(find.byType(TimeSettingsGroups), findsOneWidget);
+      expect(find.text('DAILY REMINDER'), findsOneWidget);
+      expect(find.text('TESTING'), findsOneWidget);
+      final double shortcut = tester.getTopLeft(find.text('HOME SCREEN SHORTCUT')).dy;
+      final double reminder = tester.getTopLeft(find.text('DAILY REMINDER')).dy;
+      expect(reminder, greaterThan(shortcut));
     });
 
     shellTest('a message raised on the Settings tab is cleared on leaving it', (

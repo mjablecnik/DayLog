@@ -79,6 +79,7 @@ flutter:
 
   assets:
     - assets/icons/
+    - assets/audio/alarm.mp3
     - assets/fonts/licenses/
 
   # Static instances of the SIL OFL family Figtree, the one face of the app, for body

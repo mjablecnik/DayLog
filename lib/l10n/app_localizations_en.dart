@@ -48,9 +48,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_retry => 'Try again';
 
   @override
-  String get common_ok => 'OK';
-
-  @override
   String get common_close => 'Close';
 
   @override
@@ -63,9 +60,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_discard => 'Discard';
 
   @override
-  String get common_remove => 'Remove';
-
-  @override
   String common_plusXp(int xp) {
     final intl.NumberFormat xpNumberFormat = intl.NumberFormat.decimalPattern(
       localeName,
@@ -73,16 +67,6 @@ class AppLocalizationsEn extends AppLocalizations {
     final String xpString = xpNumberFormat.format(xp);
 
     return '+$xpString XP';
-  }
-
-  @override
-  String common_xp(int xp) {
-    final intl.NumberFormat xpNumberFormat = intl.NumberFormat.decimalPattern(
-      localeName,
-    );
-    final String xpString = xpNumberFormat.format(xp);
-
-    return '$xpString XP';
   }
 
   @override
@@ -95,9 +79,6 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get common_loading => 'Loading…';
 
   @override
   String get common_today => 'today';
@@ -292,9 +273,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Pick by how much time it will take. A trip, waiting around or something unpleasant? Go one step up — effort earns more XP.';
 
   @override
-  String get a11y_openSettings => 'Open settings';
-
-  @override
   String get a11y_addQuest => 'Post a quest';
 
   @override
@@ -308,11 +286,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String a11y_reopenQuest(String name) {
     return 'Reopen quest $name';
-  }
-
-  @override
-  String a11y_dragHandle(String name) {
-    return 'Reorder quest $name';
   }
 
   @override
@@ -392,15 +365,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String a11y_selectedOption(String label) {
-    return '$label, selected';
-  }
-
-  @override
   String get a11y_dismissReward => 'Dismiss reward';
-
-  @override
-  String get a11y_closeSheet => 'Close form';
 
   @override
   String get a11y_removeRow => 'Remove row';
@@ -525,9 +490,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reward_completeMission => 'Complete mission';
-
-  @override
-  String get reward_missionBonusLabel => 'Mission bonus';
 
   @override
   String get missions_title => 'Missions';
@@ -839,34 +801,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rule_cadenceYearly => 'Yearly';
 
   @override
-  String get rule_detailDaily => 'Daily';
-
-  @override
-  String rule_detailWeekly(String weekday) {
-    return 'Weekly, $weekday';
-  }
-
-  @override
-  String rule_detailBiweekly(String weekday) {
-    return 'Every 2 weeks, $weekday';
-  }
-
-  @override
-  String rule_detailMonthly(int day) {
-    return 'Monthly, day $day';
-  }
-
-  @override
-  String rule_detailQuarterly(String date) {
-    return 'Quarterly, $date';
-  }
-
-  @override
-  String rule_detailYearly(String date) {
-    return 'Yearly, $date';
-  }
-
-  @override
   String rule_line(String cadence, int count, String date) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -875,17 +809,6 @@ class AppLocalizationsEn extends AppLocalizations {
       one: '$count quest',
     );
     return '$cadence · $_temp0 · next $date';
-  }
-
-  @override
-  String rule_lineManual(String cadence, int count, String date) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count quests',
-      one: '$count quest',
-    );
-    return '$cadence · $_temp0 · by hand, next $date';
   }
 
   @override
@@ -1474,9 +1397,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notes_errorGeneric => 'That did not work.';
 
   @override
-  String get notes_errorGone => 'That item no longer exists.';
-
-  @override
   String get notes_trashButton => 'Trash';
 
   @override
@@ -1765,12 +1685,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_commonReset => 'Reset';
 
   @override
-  String get time_commonCreate => 'Create';
-
-  @override
-  String get time_commonUnassigned => 'Unassigned';
-
-  @override
   String get time_errorDatabaseUnavailable =>
       'Database unavailable. Please try again.';
 
@@ -1792,9 +1706,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time_projectNameHint => 'Project name...';
-
-  @override
-  String get time_projectNameFieldHint => 'Project name';
 
   @override
   String get time_descriptionHint => 'Describe what you worked on...';
@@ -1969,17 +1880,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_statsByCustomName => 'Other by name';
 
   @override
-  String get time_taskProjectCategoryCaption => 'Category';
-
-  @override
-  String get time_taskProjectEditCategory => 'Edit category';
-
-  @override
-  String time_taskProjectChipSemantics(String name, String category) {
-    return '$name, $category';
-  }
-
-  @override
   String get time_timerPrefillTooltip => 'Pre-fill description';
 
   @override
@@ -2071,83 +1971,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_dayYesterday => 'Yesterday';
 
   @override
-  String get time_tasksTitle => 'Tasks';
-
-  @override
-  String get time_taskCreateFailed => 'Failed to create task.';
-
-  @override
-  String get time_taskReorderFailed => 'Failed to move task.';
-
-  @override
-  String get time_tasksShowArchived => 'Show archived tasks';
-
-  @override
-  String get time_tasksLoadFailed => 'Failed to load tasks.';
-
-  @override
-  String get time_tasksEmptyTitle => 'No tasks yet';
-
-  @override
-  String get time_tasksEmptySubtitle => 'Tap + to create your first task';
-
-  @override
-  String get time_tasksArchivedHeader => 'Archived';
-
-  @override
-  String get time_taskToggleFailed => 'Failed to update task status.';
-
-  @override
-  String get time_taskUnarchiveFailed => 'Failed to restore task.';
-
-  @override
-  String get time_taskSaveFailed => 'Failed to save task.';
-
-  @override
-  String get time_taskDeleteTitle => 'Delete task?';
-
-  @override
-  String time_taskDeleteBody(String title) {
-    return '\"$title\" will be permanently removed.';
-  }
-
-  @override
-  String get time_taskDeleteFailed => 'Failed to delete task.';
-
-  @override
-  String get time_taskEditTitle => 'Edit task';
-
-  @override
-  String get time_taskNewTitle => 'New task';
-
-  @override
-  String get time_taskTitleHint => 'Task title';
-
-  @override
-  String get time_taskDescriptionHint => 'Description (optional)';
-
-  @override
-  String get time_taskDeadlineHint => 'Deadline (optional)';
-
-  @override
-  String get time_projectCreateFailed => 'Failed to create project.';
-
-  @override
-  String time_projectDeleteTitle(String name) {
-    return 'Delete project \"$name\"?';
-  }
-
-  @override
-  String get time_projectDeleteBody =>
-      'All tasks in this project will be permanently deleted.';
-
-  @override
-  String get time_projectDeleteFailed => 'Failed to delete project.';
-
-  @override
-  String get time_projectCreateTitle => 'New project';
-
-  @override
   String get time_statsTitle => 'Statistics';
 
   @override
@@ -2178,15 +2001,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_statsUntrackedTime => 'Untracked time';
 
   @override
-  String get time_navStats => 'Stats';
-
-  @override
-  String get time_navTimer => 'Timer';
-
-  @override
-  String get time_settingsTitle => 'Settings';
-
-  @override
   String get time_settingsDailyReminderSection => 'Daily reminder';
 
   @override
@@ -2197,20 +2011,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time_settingsRecurringRemindersLabel => 'Recurring reminders';
-
-  @override
-  String get time_settingsDataSection => 'Data';
-
-  @override
-  String get time_settingsExportButton => 'Export data';
-
-  @override
-  String get time_settingsExportHint =>
-      'Saves all data into one file you can move elsewhere.';
-
-  @override
-  String get time_settingsExportFailed =>
-      'The export failed. Please try again.';
 
   @override
   String get time_settingsTestingSection => 'Testing';
@@ -2241,9 +2041,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time_settingsNoReminder => 'No reminder.';
-
-  @override
-  String get time_settingsLanguageSection => 'Language';
 
   @override
   String get time_reminderDeleteTitle => 'Delete reminder?';
@@ -2329,4 +2126,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time_recurringReminderDefaultNotificationBody => 'Tap to open';
+
+  @override
+  String get time_durationDecreaseLabel => 'Shorten the timer';
+
+  @override
+  String get time_durationIncreaseLabel => 'Lengthen the timer';
 }

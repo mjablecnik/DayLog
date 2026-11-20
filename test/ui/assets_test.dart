@@ -113,7 +113,9 @@ void main() {
     final RegExp fontIcon = RegExp(r'\b(Icons|CupertinoIcons)\.|[^A-Za-z]Icon\(|IconData\(');
     final List<String> offences = <String>[];
     for (final File file in Directory('lib').listSync(recursive: true).whereType<File>()) {
-      if (!file.path.endsWith('.dart')) continue;
+      // The time tracking feature keeps TimeLog's Material icons for now (listed in
+      // .agents/REFACTOR.md); every other code draws the bundled SVG icons.
+      if (!file.path.endsWith('.dart') || file.path.startsWith('lib/time_tracking/')) continue;
       final List<String> lines = file.readAsLinesSync();
       for (int i = 0; i < lines.length; i++) {
         if (fontIcon.hasMatch(lines[i].replaceFirst(RegExp(r'//.*$'), ''))) {

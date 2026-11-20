@@ -49,9 +49,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get common_retry => 'Zkusit znovu';
 
   @override
-  String get common_ok => 'OK';
-
-  @override
   String get common_close => 'Zavřít';
 
   @override
@@ -64,9 +61,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get common_discard => 'Zahodit';
 
   @override
-  String get common_remove => 'Odebrat';
-
-  @override
   String common_plusXp(int xp) {
     final intl.NumberFormat xpNumberFormat = intl.NumberFormat.decimalPattern(
       localeName,
@@ -74,16 +68,6 @@ class AppLocalizationsCs extends AppLocalizations {
     final String xpString = xpNumberFormat.format(xp);
 
     return '+$xpString XP';
-  }
-
-  @override
-  String common_xp(int xp) {
-    final intl.NumberFormat xpNumberFormat = intl.NumberFormat.decimalPattern(
-      localeName,
-    );
-    final String xpString = xpNumberFormat.format(xp);
-
-    return '$xpString XP';
   }
 
   @override
@@ -97,9 +81,6 @@ class AppLocalizationsCs extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get common_loading => 'Načítání…';
 
   @override
   String get common_today => 'dnes';
@@ -303,9 +284,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'Zvol podle toho, kolik času ti to zabere. Cesta, čekání nebo něco nepříjemného? Klidně o stupeň výš — za námahu patří víc XP.';
 
   @override
-  String get a11y_openSettings => 'Otevřít nastavení';
-
-  @override
   String get a11y_addQuest => 'Vyvěsit quest';
 
   @override
@@ -319,11 +297,6 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String a11y_reopenQuest(String name) {
     return 'Znovu otevřít quest $name';
-  }
-
-  @override
-  String a11y_dragHandle(String name) {
-    return 'Změnit pořadí questu $name';
   }
 
   @override
@@ -403,15 +376,7 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String a11y_selectedOption(String label) {
-    return '$label, vybráno';
-  }
-
-  @override
   String get a11y_dismissReward => 'Zavřít odměnu';
-
-  @override
-  String get a11y_closeSheet => 'Zavřít formulář';
 
   @override
   String get a11y_removeRow => 'Odebrat řádek';
@@ -536,9 +501,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get reward_completeMission => 'Dokončit misi';
-
-  @override
-  String get reward_missionBonusLabel => 'Bonus za misi';
 
   @override
   String get missions_title => 'Mise';
@@ -873,34 +835,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get rule_cadenceYearly => 'Ročně';
 
   @override
-  String get rule_detailDaily => 'Denně';
-
-  @override
-  String rule_detailWeekly(String weekday) {
-    return 'Týdně, $weekday';
-  }
-
-  @override
-  String rule_detailBiweekly(String weekday) {
-    return 'Každé 2 týdny, $weekday';
-  }
-
-  @override
-  String rule_detailMonthly(int day) {
-    return 'Měsíčně, $day. den';
-  }
-
-  @override
-  String rule_detailQuarterly(String date) {
-    return 'Čtvrtletně, $date';
-  }
-
-  @override
-  String rule_detailYearly(String date) {
-    return 'Ročně, $date';
-  }
-
-  @override
   String rule_line(String cadence, int count, String date) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -910,18 +844,6 @@ class AppLocalizationsCs extends AppLocalizations {
       one: '$count quest',
     );
     return '$cadence · $_temp0 · příště $date';
-  }
-
-  @override
-  String rule_lineManual(String cadence, int count, String date) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count questů',
-      few: '$count questy',
-      one: '$count quest',
-    );
-    return '$cadence · $_temp0 · ručně, příště $date';
   }
 
   @override
@@ -1513,9 +1435,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get notes_errorGeneric => 'Nepodařilo se to provést.';
 
   @override
-  String get notes_errorGone => 'Tato položka už neexistuje.';
-
-  @override
   String get notes_trashButton => 'Koš';
 
   @override
@@ -1808,12 +1727,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_commonReset => 'Resetovat';
 
   @override
-  String get time_commonCreate => 'Vytvořit';
-
-  @override
-  String get time_commonUnassigned => 'Nepřiřazeno';
-
-  @override
   String get time_errorDatabaseUnavailable =>
       'Databáze není dostupná. Zkuste to prosím znovu.';
 
@@ -1836,9 +1749,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get time_projectNameHint => 'Název projektu...';
-
-  @override
-  String get time_projectNameFieldHint => 'Název projektu';
 
   @override
   String get time_descriptionHint => 'Popiš, na čem jsi pracoval/a...';
@@ -2013,17 +1923,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_statsByCustomName => 'Ostatní podle názvu';
 
   @override
-  String get time_taskProjectCategoryCaption => 'Kategorie';
-
-  @override
-  String get time_taskProjectEditCategory => 'Upravit kategorii';
-
-  @override
-  String time_taskProjectChipSemantics(String name, String category) {
-    return '$name, $category';
-  }
-
-  @override
   String get time_timerPrefillTooltip => 'Předvyplnit popis';
 
   @override
@@ -2117,83 +2016,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_dayYesterday => 'Včera';
 
   @override
-  String get time_tasksTitle => 'Úkoly';
-
-  @override
-  String get time_taskCreateFailed => 'Vytvoření úkolu se nezdařilo.';
-
-  @override
-  String get time_taskReorderFailed => 'Přesunutí úkolu se nezdařilo.';
-
-  @override
-  String get time_tasksShowArchived => 'Zobrazit archivované úkoly';
-
-  @override
-  String get time_tasksLoadFailed => 'Načtení úkolů se nezdařilo.';
-
-  @override
-  String get time_tasksEmptyTitle => 'Zatím žádné úkoly';
-
-  @override
-  String get time_tasksEmptySubtitle => 'Klepnutím na + vytvoř první úkol';
-
-  @override
-  String get time_tasksArchivedHeader => 'Archivováno';
-
-  @override
-  String get time_taskToggleFailed => 'Nepodařilo se aktualizovat stav úkolu.';
-
-  @override
-  String get time_taskUnarchiveFailed => 'Nepodařilo se obnovit úkol.';
-
-  @override
-  String get time_taskSaveFailed => 'Nepodařilo se uložit úkol.';
-
-  @override
-  String get time_taskDeleteTitle => 'Smazat úkol?';
-
-  @override
-  String time_taskDeleteBody(String title) {
-    return '\"$title\" bude trvale odstraněn.';
-  }
-
-  @override
-  String get time_taskDeleteFailed => 'Nepodařilo se smazat úkol.';
-
-  @override
-  String get time_taskEditTitle => 'Upravit úkol';
-
-  @override
-  String get time_taskNewTitle => 'Nový úkol';
-
-  @override
-  String get time_taskTitleHint => 'Název úkolu';
-
-  @override
-  String get time_taskDescriptionHint => 'Popis (volitelné)';
-
-  @override
-  String get time_taskDeadlineHint => 'Termín (volitelné)';
-
-  @override
-  String get time_projectCreateFailed => 'Vytvoření projektu se nezdařilo.';
-
-  @override
-  String time_projectDeleteTitle(String name) {
-    return 'Smazat projekt \"$name\"?';
-  }
-
-  @override
-  String get time_projectDeleteBody =>
-      'Všechny úkoly v tomto projektu budou trvale smazány.';
-
-  @override
-  String get time_projectDeleteFailed => 'Smazání projektu se nezdařilo.';
-
-  @override
-  String get time_projectCreateTitle => 'Nový projekt';
-
-  @override
   String get time_statsTitle => 'Statistiky';
 
   @override
@@ -2224,15 +2046,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_statsUntrackedTime => 'Nesledovaný čas';
 
   @override
-  String get time_navStats => 'Statistiky';
-
-  @override
-  String get time_navTimer => 'Časovač';
-
-  @override
-  String get time_settingsTitle => 'Nastavení';
-
-  @override
   String get time_settingsDailyReminderSection => 'Denní připomínka';
 
   @override
@@ -2243,20 +2056,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get time_settingsRecurringRemindersLabel => 'Opakované připomínky';
-
-  @override
-  String get time_settingsDataSection => 'Data';
-
-  @override
-  String get time_settingsExportButton => 'Exportovat data';
-
-  @override
-  String get time_settingsExportHint =>
-      'Uloží všechna data do jednoho souboru, který přeneseš jinam.';
-
-  @override
-  String get time_settingsExportFailed =>
-      'Export se nepodařil. Zkus to prosím znovu.';
 
   @override
   String get time_settingsTestingSection => 'Testování';
@@ -2288,9 +2087,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get time_settingsNoReminder => 'Žádná připomínka.';
-
-  @override
-  String get time_settingsLanguageSection => 'Jazyk';
 
   @override
   String get time_reminderDeleteTitle => 'Smazat připomínku?';
@@ -2378,4 +2174,10 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get time_recurringReminderDefaultNotificationBody =>
       'Klepni pro otevření';
+
+  @override
+  String get time_durationDecreaseLabel => 'Zkrátit časovač';
+
+  @override
+  String get time_durationIncreaseLabel => 'Prodloužit časovač';
 }

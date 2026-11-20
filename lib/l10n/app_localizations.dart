@@ -170,12 +170,6 @@ abstract class AppLocalizations {
   /// **'Zkusit znovu'**
   String get common_retry;
 
-  /// Generic acknowledge button.
-  ///
-  /// In cs, this message translates to:
-  /// **'OK'**
-  String get common_ok;
-
   /// Generic close button.
   ///
   /// In cs, this message translates to:
@@ -200,35 +194,17 @@ abstract class AppLocalizations {
   /// **'Zahodit'**
   String get common_discard;
 
-  /// Generic remove button.
-  ///
-  /// In cs, this message translates to:
-  /// **'Odebrat'**
-  String get common_remove;
-
   /// XP figure with a plus sign, e.g. on cards and effort options.
   ///
   /// In cs, this message translates to:
   /// **'+{xp} XP'**
   String common_plusXp(int xp);
 
-  /// XP figure without a sign.
-  ///
-  /// In cs, this message translates to:
-  /// **'{xp} XP'**
-  String common_xp(int xp);
-
   /// Count of Quests with a correctly pluralised noun (Czech one/few/other). Property 6 of spec 002 tests this key.
   ///
   /// In cs, this message translates to:
   /// **'{count, plural, one{{count} quest} few{{count} questy} other{{count} questů}}'**
   String common_questCount(int count);
-
-  /// Semantic label of skeleton cards while data loads.
-  ///
-  /// In cs, this message translates to:
-  /// **'Načítání…'**
-  String get common_loading;
 
   /// Lower-case word for the current Board_Day.
   ///
@@ -470,12 +446,6 @@ abstract class AppLocalizations {
   /// **'Zvol podle toho, kolik času ti to zabere. Cesta, čekání nebo něco nepříjemného? Klidně o stupeň výš — za námahu patří víc XP.'**
   String get quest_effortHint;
 
-  /// Semantic label of the gear.
-  ///
-  /// In cs, this message translates to:
-  /// **'Otevřít nastavení'**
-  String get a11y_openSettings;
-
   /// Semantic label of the add button on the Board_Screen.
   ///
   /// In cs, this message translates to:
@@ -499,12 +469,6 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Znovu otevřít quest {name}'**
   String a11y_reopenQuest(String name);
-
-  /// Semantic label of the drag handle.
-  ///
-  /// In cs, this message translates to:
-  /// **'Změnit pořadí questu {name}'**
-  String a11y_dragHandle(String name);
 
   /// Semantic hint of the drag handle.
   ///
@@ -590,23 +554,11 @@ abstract class AppLocalizations {
   /// **'Nová úroveň {level}'**
   String a11y_levelUp(int level);
 
-  /// Semantic label of a selected segment or chip.
-  ///
-  /// In cs, this message translates to:
-  /// **'{label}, vybráno'**
-  String a11y_selectedOption(String label);
-
   /// Semantic label of the scrim behind the Reward_Card.
   ///
   /// In cs, this message translates to:
   /// **'Zavřít odměnu'**
   String get a11y_dismissReward;
-
-  /// Semantic label of the sheet grabber.
-  ///
-  /// In cs, this message translates to:
-  /// **'Zavřít formulář'**
-  String get a11y_closeSheet;
 
   /// Semantic label of the remove button of a quest row.
   ///
@@ -793,12 +745,6 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Dokončit misi'**
   String get reward_completeMission;
-
-  /// Label next to the bonus XP on the Mission Reward_Card.
-  ///
-  /// In cs, this message translates to:
-  /// **'Bonus za misi'**
-  String get reward_missionBonusLabel;
 
   /// Title of the Missions_Screen.
   ///
@@ -1256,53 +1202,11 @@ abstract class AppLocalizations {
   /// **'Ročně'**
   String get rule_cadenceYearly;
 
-  /// Cadence part of a rule row line for Daily.
-  ///
-  /// In cs, this message translates to:
-  /// **'Denně'**
-  String get rule_detailDaily;
-
-  /// Cadence part of a rule row line; weekday is a localized weekday name.
-  ///
-  /// In cs, this message translates to:
-  /// **'Týdně, {weekday}'**
-  String rule_detailWeekly(String weekday);
-
-  /// Cadence part of a rule row line; weekday is a localized weekday name.
-  ///
-  /// In cs, this message translates to:
-  /// **'Každé 2 týdny, {weekday}'**
-  String rule_detailBiweekly(String weekday);
-
-  /// Cadence part of a rule row line.
-  ///
-  /// In cs, this message translates to:
-  /// **'Měsíčně, {day}. den'**
-  String rule_detailMonthly(int day);
-
-  /// Cadence part of a rule row line; date is formatted day and month.
-  ///
-  /// In cs, this message translates to:
-  /// **'Čtvrtletně, {date}'**
-  String rule_detailQuarterly(String date);
-
-  /// Cadence part of a rule row line; date is formatted day and month.
-  ///
-  /// In cs, this message translates to:
-  /// **'Ročně, {date}'**
-  String rule_detailYearly(String date);
-
   /// Rule row line; cadence is the rule_detail* text, date the formatted Next_Occurrence.
   ///
   /// In cs, this message translates to:
   /// **'{cadence} · {count, plural, one{{count} quest} few{{count} questy} other{{count} questů}} · příště {date}'**
   String rule_line(String cadence, int count, String date);
-
-  /// Rule row line after a manual posting skipped the nearest automatic one.
-  ///
-  /// In cs, this message translates to:
-  /// **'{cadence} · {count, plural, one{{count} quest} few{{count} questy} other{{count} questů}} · ručně, příště {date}'**
-  String rule_lineManual(String cadence, int count, String date);
 
   /// Snackbar after posting a rule by hand.
   ///
@@ -2228,12 +2132,6 @@ abstract class AppLocalizations {
   /// **'Nepodařilo se to provést.'**
   String get notes_errorGeneric;
 
-  /// Snackbar when the Node was removed meanwhile.
-  ///
-  /// In cs, this message translates to:
-  /// **'Tato položka už neexistuje.'**
-  String get notes_errorGone;
-
   /// Semantic label of the Trash button of the Notes_Screen.
   ///
   /// In cs, this message translates to:
@@ -2696,18 +2594,6 @@ abstract class AppLocalizations {
   /// **'Resetovat'**
   String get time_commonReset;
 
-  /// Time tracking text: "Create"
-  ///
-  /// In cs, this message translates to:
-  /// **'Vytvořit'**
-  String get time_commonCreate;
-
-  /// Time tracking text: "Unassigned"
-  ///
-  /// In cs, this message translates to:
-  /// **'Nepřiřazeno'**
-  String get time_commonUnassigned;
-
   /// Time tracking text: "Database unavailable. Please try again."
   ///
   /// In cs, this message translates to:
@@ -2749,12 +2635,6 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Název projektu...'**
   String get time_projectNameHint;
-
-  /// Time tracking text: "Project name"
-  ///
-  /// In cs, this message translates to:
-  /// **'Název projektu'**
-  String get time_projectNameFieldHint;
 
   /// Time tracking text: "Describe what you worked on..."
   ///
@@ -3080,24 +2960,6 @@ abstract class AppLocalizations {
   /// **'Ostatní podle názvu'**
   String get time_statsByCustomName;
 
-  /// Time tracking text: "Category"
-  ///
-  /// In cs, this message translates to:
-  /// **'Kategorie'**
-  String get time_taskProjectCategoryCaption;
-
-  /// Time tracking text: "Edit category"
-  ///
-  /// In cs, this message translates to:
-  /// **'Upravit kategorii'**
-  String get time_taskProjectEditCategory;
-
-  /// Time tracking text: "{name}, {category}"
-  ///
-  /// In cs, this message translates to:
-  /// **'{name}, {category}'**
-  String time_taskProjectChipSemantics(String name, String category);
-
   /// Time tracking text: "Pre-fill description"
   ///
   /// In cs, this message translates to:
@@ -3260,150 +3122,6 @@ abstract class AppLocalizations {
   /// **'Včera'**
   String get time_dayYesterday;
 
-  /// Time tracking text: "Tasks"
-  ///
-  /// In cs, this message translates to:
-  /// **'Úkoly'**
-  String get time_tasksTitle;
-
-  /// Time tracking text: "Failed to create task."
-  ///
-  /// In cs, this message translates to:
-  /// **'Vytvoření úkolu se nezdařilo.'**
-  String get time_taskCreateFailed;
-
-  /// Time tracking text: "Failed to move task."
-  ///
-  /// In cs, this message translates to:
-  /// **'Přesunutí úkolu se nezdařilo.'**
-  String get time_taskReorderFailed;
-
-  /// Time tracking text: "Show archived tasks"
-  ///
-  /// In cs, this message translates to:
-  /// **'Zobrazit archivované úkoly'**
-  String get time_tasksShowArchived;
-
-  /// Time tracking text: "Failed to load tasks."
-  ///
-  /// In cs, this message translates to:
-  /// **'Načtení úkolů se nezdařilo.'**
-  String get time_tasksLoadFailed;
-
-  /// Time tracking text: "No tasks yet"
-  ///
-  /// In cs, this message translates to:
-  /// **'Zatím žádné úkoly'**
-  String get time_tasksEmptyTitle;
-
-  /// Time tracking text: "Tap + to create your first task"
-  ///
-  /// In cs, this message translates to:
-  /// **'Klepnutím na + vytvoř první úkol'**
-  String get time_tasksEmptySubtitle;
-
-  /// Time tracking text: "Archived"
-  ///
-  /// In cs, this message translates to:
-  /// **'Archivováno'**
-  String get time_tasksArchivedHeader;
-
-  /// Time tracking text: "Failed to update task status."
-  ///
-  /// In cs, this message translates to:
-  /// **'Nepodařilo se aktualizovat stav úkolu.'**
-  String get time_taskToggleFailed;
-
-  /// Time tracking text: "Failed to restore task."
-  ///
-  /// In cs, this message translates to:
-  /// **'Nepodařilo se obnovit úkol.'**
-  String get time_taskUnarchiveFailed;
-
-  /// Time tracking text: "Failed to save task."
-  ///
-  /// In cs, this message translates to:
-  /// **'Nepodařilo se uložit úkol.'**
-  String get time_taskSaveFailed;
-
-  /// Time tracking text: "Delete task?"
-  ///
-  /// In cs, this message translates to:
-  /// **'Smazat úkol?'**
-  String get time_taskDeleteTitle;
-
-  /// Time tracking text: "'{title}' will be permanently removed."
-  ///
-  /// In cs, this message translates to:
-  /// **'\"{title}\" bude trvale odstraněn.'**
-  String time_taskDeleteBody(String title);
-
-  /// Time tracking text: "Failed to delete task."
-  ///
-  /// In cs, this message translates to:
-  /// **'Nepodařilo se smazat úkol.'**
-  String get time_taskDeleteFailed;
-
-  /// Time tracking text: "Edit task"
-  ///
-  /// In cs, this message translates to:
-  /// **'Upravit úkol'**
-  String get time_taskEditTitle;
-
-  /// Time tracking text: "New task"
-  ///
-  /// In cs, this message translates to:
-  /// **'Nový úkol'**
-  String get time_taskNewTitle;
-
-  /// Time tracking text: "Task title"
-  ///
-  /// In cs, this message translates to:
-  /// **'Název úkolu'**
-  String get time_taskTitleHint;
-
-  /// Time tracking text: "Description (optional)"
-  ///
-  /// In cs, this message translates to:
-  /// **'Popis (volitelné)'**
-  String get time_taskDescriptionHint;
-
-  /// Time tracking text: "Deadline (optional)"
-  ///
-  /// In cs, this message translates to:
-  /// **'Termín (volitelné)'**
-  String get time_taskDeadlineHint;
-
-  /// Time tracking text: "Failed to create project."
-  ///
-  /// In cs, this message translates to:
-  /// **'Vytvoření projektu se nezdařilo.'**
-  String get time_projectCreateFailed;
-
-  /// Time tracking text: "Delete project '{name}'?"
-  ///
-  /// In cs, this message translates to:
-  /// **'Smazat projekt \"{name}\"?'**
-  String time_projectDeleteTitle(String name);
-
-  /// Time tracking text: "All tasks in this project will be permanently deleted."
-  ///
-  /// In cs, this message translates to:
-  /// **'Všechny úkoly v tomto projektu budou trvale smazány.'**
-  String get time_projectDeleteBody;
-
-  /// Time tracking text: "Failed to delete project."
-  ///
-  /// In cs, this message translates to:
-  /// **'Smazání projektu se nezdařilo.'**
-  String get time_projectDeleteFailed;
-
-  /// Time tracking text: "New project"
-  ///
-  /// In cs, this message translates to:
-  /// **'Nový projekt'**
-  String get time_projectCreateTitle;
-
   /// Time tracking text: "Statistics"
   ///
   /// In cs, this message translates to:
@@ -3464,24 +3182,6 @@ abstract class AppLocalizations {
   /// **'Nesledovaný čas'**
   String get time_statsUntrackedTime;
 
-  /// Time tracking text: "Stats"
-  ///
-  /// In cs, this message translates to:
-  /// **'Statistiky'**
-  String get time_navStats;
-
-  /// Time tracking text: "Timer"
-  ///
-  /// In cs, this message translates to:
-  /// **'Časovač'**
-  String get time_navTimer;
-
-  /// Time tracking text: "Settings"
-  ///
-  /// In cs, this message translates to:
-  /// **'Nastavení'**
-  String get time_settingsTitle;
-
   /// Time tracking text: "Daily reminder"
   ///
   /// In cs, this message translates to:
@@ -3505,30 +3205,6 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Opakované připomínky'**
   String get time_settingsRecurringRemindersLabel;
-
-  /// Time tracking text: "Data"
-  ///
-  /// In cs, this message translates to:
-  /// **'Data'**
-  String get time_settingsDataSection;
-
-  /// Time tracking text: "Export data"
-  ///
-  /// In cs, this message translates to:
-  /// **'Exportovat data'**
-  String get time_settingsExportButton;
-
-  /// Time tracking text: "Saves all data into one file you can move elsewhere."
-  ///
-  /// In cs, this message translates to:
-  /// **'Uloží všechna data do jednoho souboru, který přeneseš jinam.'**
-  String get time_settingsExportHint;
-
-  /// Time tracking text: "The export failed. Please try again."
-  ///
-  /// In cs, this message translates to:
-  /// **'Export se nepodařil. Zkus to prosím znovu.'**
-  String get time_settingsExportFailed;
 
   /// Time tracking text: "Testing"
   ///
@@ -3577,12 +3253,6 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Žádná připomínka.'**
   String get time_settingsNoReminder;
-
-  /// Time tracking text: "Language"
-  ///
-  /// In cs, this message translates to:
-  /// **'Jazyk'**
-  String get time_settingsLanguageSection;
 
   /// Time tracking text: "Delete reminder?"
   ///
@@ -3739,6 +3409,18 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Klepni pro otevření'**
   String get time_recurringReminderDefaultNotificationBody;
+
+  /// Accessibility label of the minus button that shortens the timer duration.
+  ///
+  /// In cs, this message translates to:
+  /// **'Zkrátit časovač'**
+  String get time_durationDecreaseLabel;
+
+  /// Accessibility label of the plus button that lengthens the timer duration.
+  ///
+  /// In cs, this message translates to:
+  /// **'Prodloužit časovač'**
+  String get time_durationIncreaseLabel;
 }
 
 class _AppLocalizationsDelegate

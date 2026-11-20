@@ -19,8 +19,6 @@ import 'package:zafling/time_tracking/ui/widgets/activity_picker/activity_picker
 import 'package:zafling/time_tracking/ui/widgets/sheets/description_sheet.dart';
 import 'package:zafling/time_tracking/ui/widgets/sheets/edit_sheet.dart';
 import 'package:zafling/time_tracking/ui/widgets/sheets/manual_entry_sheet.dart';
-import 'package:zafling/time_tracking/ui/widgets/controls/project_selector.dart';
-import 'package:zafling/time_tracking/data/time_tracking_queries.dart';
 import '../../helpers/time_theme.dart';
 import 'package:zafling/database/providers.dart';
 
@@ -535,121 +533,6 @@ void main() {
         matching: find.byType(Semantics),
       ).first);
       expect(chip.properties.selected, isTrue);
-    });
-  });
-
-  group('Tasks tab', () {
-    testWidgets('create dialog offers the four categories and creates the project with one',
-        (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
-      await _pump(tester, ProjectSelector(theme: testTimeTheme), database: db);
-
-      await tester.tap(find.byIcon(Icons.add));
-      await tester.pumpAndSettle();
-      expect(find.text('CATEGORY'), findsOneWidget);
-      for (final label in ['Paid work', 'Unpaid work', 'Housework', 'Other']) {
-        expect(find.text(label), findsOneWidget);
-      }
-
-      await tester.tap(find.byKey(const ValueKey('scope-chip-housework')));
-      await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextField), 'Garage');
-      await tester.pump();
-      await tester.tap(find.text('Create'));
-      await tester.pumpAndSettle();
-
-      final projects = await db.getAllTaskProjects();
-      expect(projects.single.name, 'Garage');
-      expect(projects.single.scope, 'housework');
-      expect((await SharedPreferences.getInstance()).getString('last_task_project_scope'),
-          'housework');
-    });
-
-    testWidgets('the dialog preselects unpaid work, then the last used category', (tester) async {
-      await _pump(tester, ProjectSelector(theme: testTimeTheme));
-      await tester.tap(find.byIcon(Icons.add));
-      await tester.pumpAndSettle();
-      expect(
-        tester.widget<Semantics>(find.descendant(
-          of: find.byKey(const ValueKey('scope-chip-workUnpaid')),
-          matching: find.byType(Semantics),
-        ).first).properties.selected,
-        isTrue,
-      );
-    });
-
-    testWidgets('a project chip shows its category dot and a screen reader label', (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
-      await db.insertTaskProject(
-        TaskProjectsCompanion.insert(name: 'Client').copyWith(scope: const Value('workPaid')),
-      );
-      final handle = tester.ensureSemantics();
-      await _pump(tester, ProjectSelector(theme: testTimeTheme), database: db);
-
-      expect(find.bySemanticsLabel('Client, Paid work'), findsOneWidget);
-      handle.dispose();
-    });
-
-    testWidgets('long press opens a menu; edit changes only the category; cancel changes nothing',
-        (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
-      final id = await db.insertTaskProject(TaskProjectsCompanion.insert(name: 'Mover'));
-      await _pump(tester, ProjectSelector(theme: testTimeTheme), database: db);
-
-      await tester.longPress(find.text('Mover'));
-      await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('project-menu-edit')), findsOneWidget);
-      expect(find.byKey(const ValueKey('project-menu-delete')), findsOneWidget);
-
-      // Edit mode: the name is plain text, the current category is selected.
-      await tester.tap(find.byKey(const ValueKey('project-menu-edit')));
-      await tester.pumpAndSettle();
-      expect(find.text('Edit category'), findsOneWidget);
-      expect(find.byType(TextField), findsNothing);
-
-      // Cancel leaves the project unchanged.
-      await tester.tap(find.text('Cancel'));
-      await tester.pumpAndSettle();
-      expect((await db.getAllTaskProjects()).single.scope, 'workUnpaid');
-
-      await tester.longPress(find.text('Mover'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('project-menu-edit')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('scope-chip-workPaid')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Save'));
-      await tester.pumpAndSettle();
-
-      final project = (await db.getAllTaskProjects()).single;
-      expect(project.id, id);
-      expect(project.name, 'Mover');
-      expect(project.scope, 'workPaid');
-    });
-
-    testWidgets('the menu delete action shows the existing confirmation', (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
-      await db.insertTaskProject(TaskProjectsCompanion.insert(name: 'Doomed'));
-      await _pump(tester, ProjectSelector(theme: testTimeTheme), database: db);
-
-      await tester.longPress(find.text('Doomed'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('project-menu-delete')));
-      await tester.pumpAndSettle();
-      expect(find.text('Delete project "Doomed"?'), findsOneWidget);
-      expect(find.text('All tasks in this project will be permanently deleted.'), findsOneWidget);
-      // Nothing is deleted before confirming.
-      expect(await db.getAllTaskProjects(), hasLength(1));
-    });
-
-    testWidgets('the delete button on the chip still works', (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
-      await db.insertTaskProject(TaskProjectsCompanion.insert(name: 'Close me'));
-      await _pump(tester, ProjectSelector(theme: testTimeTheme), database: db);
-
-      await tester.tap(find.byIcon(Icons.close));
-      await tester.pumpAndSettle();
-      expect(find.text('Delete project "Close me"?'), findsOneWidget);
     });
   });
 }

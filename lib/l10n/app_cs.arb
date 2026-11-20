@@ -53,10 +53,6 @@
   "@common_retry": {
     "description": "Retry button on banners and snackbars."
   },
-  "common_ok": "OK",
-  "@common_ok": {
-    "description": "Generic acknowledge button."
-  },
   "common_close": "Zavřít",
   "@common_close": {
     "description": "Generic close button."
@@ -73,23 +69,9 @@
   "@common_discard": {
     "description": "Destructive button of the discard-changes confirmation."
   },
-  "common_remove": "Odebrat",
-  "@common_remove": {
-    "description": "Generic remove button."
-  },
   "common_plusXp": "+{xp} XP",
   "@common_plusXp": {
     "description": "XP figure with a plus sign, e.g. on cards and effort options.",
-    "placeholders": {
-      "xp": {
-        "type": "int",
-        "format": "decimalPattern"
-      }
-    }
-  },
-  "common_xp": "{xp} XP",
-  "@common_xp": {
-    "description": "XP figure without a sign.",
     "placeholders": {
       "xp": {
         "type": "int",
@@ -105,10 +87,6 @@
         "type": "int"
       }
     }
-  },
-  "common_loading": "Načítání…",
-  "@common_loading": {
-    "description": "Semantic label of skeleton cards while data loads."
   },
   "common_today": "dnes",
   "@common_today": {
@@ -366,10 +344,6 @@
   "@quest_effortHint": {
     "description": "Hint under the effort picker: choose by time, go one step up for trips, waiting or unpleasant tasks."
   },
-  "a11y_openSettings": "Otevřít nastavení",
-  "@a11y_openSettings": {
-    "description": "Semantic label of the gear."
-  },
   "a11y_addQuest": "Vyvěsit quest",
   "@a11y_addQuest": {
     "description": "Semantic label of the add button on the Board_Screen."
@@ -390,15 +364,6 @@
   "a11y_reopenQuest": "Znovu otevřít quest {name}",
   "@a11y_reopenQuest": {
     "description": "Semantic label of the check circle of a done Quest.",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "a11y_dragHandle": "Změnit pořadí questu {name}",
-  "@a11y_dragHandle": {
-    "description": "Semantic label of the drag handle.",
     "placeholders": {
       "name": {
         "type": "String"
@@ -535,22 +500,9 @@
       }
     }
   },
-  "a11y_selectedOption": "{label}, vybráno",
-  "@a11y_selectedOption": {
-    "description": "Semantic label of a selected segment or chip.",
-    "placeholders": {
-      "label": {
-        "type": "String"
-      }
-    }
-  },
   "a11y_dismissReward": "Zavřít odměnu",
   "@a11y_dismissReward": {
     "description": "Semantic label of the scrim behind the Reward_Card."
-  },
-  "a11y_closeSheet": "Zavřít formulář",
-  "@a11y_closeSheet": {
-    "description": "Semantic label of the sheet grabber."
   },
   "a11y_removeRow": "Odebrat řádek",
   "@a11y_removeRow": {
@@ -725,10 +677,6 @@
   "reward_completeMission": "Dokončit misi",
   "@reward_completeMission": {
     "description": "Primary button of the Reward_Card and Mission_Detail_Screen."
-  },
-  "reward_missionBonusLabel": "Bonus za misi",
-  "@reward_missionBonusLabel": {
-    "description": "Label next to the bonus XP on the Mission Reward_Card."
   },
   "missions_title": "Mise",
   "@missions_title": {
@@ -1129,73 +1077,9 @@
   "@rule_cadenceYearly": {
     "description": "Cadence chip."
   },
-  "rule_detailDaily": "Denně",
-  "@rule_detailDaily": {
-    "description": "Cadence part of a rule row line for Daily."
-  },
-  "rule_detailWeekly": "Týdně, {weekday}",
-  "@rule_detailWeekly": {
-    "description": "Cadence part of a rule row line; weekday is a localized weekday name.",
-    "placeholders": {
-      "weekday": {
-        "type": "String"
-      }
-    }
-  },
-  "rule_detailBiweekly": "Každé 2 týdny, {weekday}",
-  "@rule_detailBiweekly": {
-    "description": "Cadence part of a rule row line; weekday is a localized weekday name.",
-    "placeholders": {
-      "weekday": {
-        "type": "String"
-      }
-    }
-  },
-  "rule_detailMonthly": "Měsíčně, {day}. den",
-  "@rule_detailMonthly": {
-    "description": "Cadence part of a rule row line.",
-    "placeholders": {
-      "day": {
-        "type": "int"
-      }
-    }
-  },
-  "rule_detailQuarterly": "Čtvrtletně, {date}",
-  "@rule_detailQuarterly": {
-    "description": "Cadence part of a rule row line; date is formatted day and month.",
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "rule_detailYearly": "Ročně, {date}",
-  "@rule_detailYearly": {
-    "description": "Cadence part of a rule row line; date is formatted day and month.",
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
   "rule_line": "{cadence} · {count, plural, one{{count} quest} few{{count} questy} other{{count} questů}} · příště {date}",
   "@rule_line": {
     "description": "Rule row line; cadence is the rule_detail* text, date the formatted Next_Occurrence.",
-    "placeholders": {
-      "cadence": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
-      },
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "rule_lineManual": "{cadence} · {count, plural, one{{count} quest} few{{count} questy} other{{count} questů}} · ručně, příště {date}",
-  "@rule_lineManual": {
-    "description": "Rule row line after a manual posting skipped the nearest automatic one.",
     "placeholders": {
       "cadence": {
         "type": "String"
@@ -1997,10 +1881,6 @@
   "@notes_errorGeneric": {
     "description": "Snackbar after a notes action failed."
   },
-  "notes_errorGone": "Tato položka už neexistuje.",
-  "@notes_errorGone": {
-    "description": "Snackbar when the Node was removed meanwhile."
-  },
   "notes_trashButton": "Koš",
   "@notes_trashButton": {
     "description": "Semantic label of the Trash button of the Notes_Screen."
@@ -2388,14 +2268,6 @@
   "@time_commonReset": {
     "description": "Time tracking text: \"Reset\""
   },
-  "time_commonCreate": "Vytvořit",
-  "@time_commonCreate": {
-    "description": "Time tracking text: \"Create\""
-  },
-  "time_commonUnassigned": "Nepřiřazeno",
-  "@time_commonUnassigned": {
-    "description": "Time tracking text: \"Unassigned\""
-  },
   "time_errorDatabaseUnavailable": "Databáze není dostupná. Zkuste to prosím znovu.",
   "@time_errorDatabaseUnavailable": {
     "description": "Time tracking text: \"Database unavailable. Please try again.\""
@@ -2423,10 +2295,6 @@
   "time_projectNameHint": "Název projektu...",
   "@time_projectNameHint": {
     "description": "Time tracking text: \"Project name...\""
-  },
-  "time_projectNameFieldHint": "Název projektu",
-  "@time_projectNameFieldHint": {
-    "description": "Time tracking text: \"Project name\""
   },
   "time_descriptionHint": "Popiš, na čem jsi pracoval/a...",
   "@time_descriptionHint": {
@@ -2672,26 +2540,6 @@
   "@time_statsByCustomName": {
     "description": "Time tracking text: \"Other by name\""
   },
-  "time_taskProjectCategoryCaption": "Kategorie",
-  "@time_taskProjectCategoryCaption": {
-    "description": "Time tracking text: \"Category\""
-  },
-  "time_taskProjectEditCategory": "Upravit kategorii",
-  "@time_taskProjectEditCategory": {
-    "description": "Time tracking text: \"Edit category\""
-  },
-  "time_taskProjectChipSemantics": "{name}, {category}",
-  "@time_taskProjectChipSemantics": {
-    "description": "Time tracking text: \"{name}, {category}\"",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      },
-      "category": {
-        "type": "String"
-      }
-    }
-  },
   "time_timerPrefillTooltip": "Předvyplnit popis",
   "@time_timerPrefillTooltip": {
     "description": "Time tracking text: \"Pre-fill description\""
@@ -2810,112 +2658,6 @@
   "@time_dayYesterday": {
     "description": "Time tracking text: \"Yesterday\""
   },
-  "time_tasksTitle": "Úkoly",
-  "@time_tasksTitle": {
-    "description": "Time tracking text: \"Tasks\""
-  },
-  "time_taskCreateFailed": "Vytvoření úkolu se nezdařilo.",
-  "@time_taskCreateFailed": {
-    "description": "Time tracking text: \"Failed to create task.\""
-  },
-  "time_taskReorderFailed": "Přesunutí úkolu se nezdařilo.",
-  "@time_taskReorderFailed": {
-    "description": "Time tracking text: \"Failed to move task.\""
-  },
-  "time_tasksShowArchived": "Zobrazit archivované úkoly",
-  "@time_tasksShowArchived": {
-    "description": "Time tracking text: \"Show archived tasks\""
-  },
-  "time_tasksLoadFailed": "Načtení úkolů se nezdařilo.",
-  "@time_tasksLoadFailed": {
-    "description": "Time tracking text: \"Failed to load tasks.\""
-  },
-  "time_tasksEmptyTitle": "Zatím žádné úkoly",
-  "@time_tasksEmptyTitle": {
-    "description": "Time tracking text: \"No tasks yet\""
-  },
-  "time_tasksEmptySubtitle": "Klepnutím na + vytvoř první úkol",
-  "@time_tasksEmptySubtitle": {
-    "description": "Time tracking text: \"Tap + to create your first task\""
-  },
-  "time_tasksArchivedHeader": "Archivováno",
-  "@time_tasksArchivedHeader": {
-    "description": "Time tracking text: \"Archived\""
-  },
-  "time_taskToggleFailed": "Nepodařilo se aktualizovat stav úkolu.",
-  "@time_taskToggleFailed": {
-    "description": "Time tracking text: \"Failed to update task status.\""
-  },
-  "time_taskUnarchiveFailed": "Nepodařilo se obnovit úkol.",
-  "@time_taskUnarchiveFailed": {
-    "description": "Time tracking text: \"Failed to restore task.\""
-  },
-  "time_taskSaveFailed": "Nepodařilo se uložit úkol.",
-  "@time_taskSaveFailed": {
-    "description": "Time tracking text: \"Failed to save task.\""
-  },
-  "time_taskDeleteTitle": "Smazat úkol?",
-  "@time_taskDeleteTitle": {
-    "description": "Time tracking text: \"Delete task?\""
-  },
-  "time_taskDeleteBody": "\"{title}\" bude trvale odstraněn.",
-  "@time_taskDeleteBody": {
-    "description": "Time tracking text: \"'{title}' will be permanently removed.\"",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      }
-    }
-  },
-  "time_taskDeleteFailed": "Nepodařilo se smazat úkol.",
-  "@time_taskDeleteFailed": {
-    "description": "Time tracking text: \"Failed to delete task.\""
-  },
-  "time_taskEditTitle": "Upravit úkol",
-  "@time_taskEditTitle": {
-    "description": "Time tracking text: \"Edit task\""
-  },
-  "time_taskNewTitle": "Nový úkol",
-  "@time_taskNewTitle": {
-    "description": "Time tracking text: \"New task\""
-  },
-  "time_taskTitleHint": "Název úkolu",
-  "@time_taskTitleHint": {
-    "description": "Time tracking text: \"Task title\""
-  },
-  "time_taskDescriptionHint": "Popis (volitelné)",
-  "@time_taskDescriptionHint": {
-    "description": "Time tracking text: \"Description (optional)\""
-  },
-  "time_taskDeadlineHint": "Termín (volitelné)",
-  "@time_taskDeadlineHint": {
-    "description": "Time tracking text: \"Deadline (optional)\""
-  },
-  "time_projectCreateFailed": "Vytvoření projektu se nezdařilo.",
-  "@time_projectCreateFailed": {
-    "description": "Time tracking text: \"Failed to create project.\""
-  },
-  "time_projectDeleteTitle": "Smazat projekt \"{name}\"?",
-  "@time_projectDeleteTitle": {
-    "description": "Time tracking text: \"Delete project '{name}'?\"",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "time_projectDeleteBody": "Všechny úkoly v tomto projektu budou trvale smazány.",
-  "@time_projectDeleteBody": {
-    "description": "Time tracking text: \"All tasks in this project will be permanently deleted.\""
-  },
-  "time_projectDeleteFailed": "Smazání projektu se nezdařilo.",
-  "@time_projectDeleteFailed": {
-    "description": "Time tracking text: \"Failed to delete project.\""
-  },
-  "time_projectCreateTitle": "Nový projekt",
-  "@time_projectCreateTitle": {
-    "description": "Time tracking text: \"New project\""
-  },
   "time_statsTitle": "Statistiky",
   "@time_statsTitle": {
     "description": "Time tracking text: \"Statistics\""
@@ -2956,18 +2698,6 @@
   "@time_statsUntrackedTime": {
     "description": "Time tracking text: \"Untracked time\""
   },
-  "time_navStats": "Statistiky",
-  "@time_navStats": {
-    "description": "Time tracking text: \"Stats\""
-  },
-  "time_navTimer": "Časovač",
-  "@time_navTimer": {
-    "description": "Time tracking text: \"Timer\""
-  },
-  "time_settingsTitle": "Nastavení",
-  "@time_settingsTitle": {
-    "description": "Time tracking text: \"Settings\""
-  },
   "time_settingsDailyReminderSection": "Denní připomínka",
   "@time_settingsDailyReminderSection": {
     "description": "Time tracking text: \"Daily reminder\""
@@ -2983,22 +2713,6 @@
   "time_settingsRecurringRemindersLabel": "Opakované připomínky",
   "@time_settingsRecurringRemindersLabel": {
     "description": "Time tracking text: \"Recurring reminders\""
-  },
-  "time_settingsDataSection": "Data",
-  "@time_settingsDataSection": {
-    "description": "Time tracking text: \"Data\""
-  },
-  "time_settingsExportButton": "Exportovat data",
-  "@time_settingsExportButton": {
-    "description": "Time tracking text: \"Export data\""
-  },
-  "time_settingsExportHint": "Uloží všechna data do jednoho souboru, který přeneseš jinam.",
-  "@time_settingsExportHint": {
-    "description": "Time tracking text: \"Saves all data into one file you can move elsewhere.\""
-  },
-  "time_settingsExportFailed": "Export se nepodařil. Zkus to prosím znovu.",
-  "@time_settingsExportFailed": {
-    "description": "Time tracking text: \"The export failed. Please try again.\""
   },
   "time_settingsTestingSection": "Testování",
   "@time_settingsTestingSection": {
@@ -3036,10 +2750,6 @@
   "time_settingsNoReminder": "Žádná připomínka.",
   "@time_settingsNoReminder": {
     "description": "Time tracking text: \"No reminder.\""
-  },
-  "time_settingsLanguageSection": "Jazyk",
-  "@time_settingsLanguageSection": {
-    "description": "Time tracking text: \"Language\""
   },
   "time_reminderDeleteTitle": "Smazat připomínku?",
   "@time_reminderDeleteTitle": {
@@ -3157,5 +2867,13 @@
   "time_recurringReminderDefaultNotificationBody": "Klepni pro otevření",
   "@time_recurringReminderDefaultNotificationBody": {
     "description": "Time tracking text: \"Tap to open\""
+  },
+  "time_durationDecreaseLabel": "Zkrátit časovač",
+  "@time_durationDecreaseLabel": {
+    "description": "Accessibility label of the minus button that shortens the timer duration."
+  },
+  "time_durationIncreaseLabel": "Prodloužit časovač",
+  "@time_durationIncreaseLabel": {
+    "description": "Accessibility label of the plus button that lengthens the timer duration."
   }
 }

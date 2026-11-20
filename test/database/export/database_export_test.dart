@@ -81,4 +81,34 @@ void main() {
 
     expect(jsonDecode(text), jsonDecode(jsonEncode(await export())));
   });
+
+  test('carries the preferences it is given, and an empty map when there are none', () async {
+    expect((await export())['preferences'], isEmpty);
+    final data = await exportDatabase(
+      db,
+      appName: 'zafling',
+      appVersion: '1.4.0',
+      exportedAt: exportedAt,
+      preferences: <String, Object?>{'reminder_enabled': true, 'known': <String>['a', 'b']},
+    );
+    expect(data['preferences'], <String, Object?>{'reminder_enabled': true, 'known': <String>['a', 'b']});
+  });
+
+  test('the time tracking tables are exported with the others', () async {
+    final tables = (await export())['tables']! as Map<String, Object?>;
+    expect(
+      tables.keys,
+      containsAll(<String>[
+        'time_entries',
+        'recurring_reminders',
+        'completion_records',
+        'task_projects',
+        'tasks',
+        'quests',
+        'missions',
+        'calendar_events',
+        'note_nodes',
+      ]),
+    );
+  });
 }

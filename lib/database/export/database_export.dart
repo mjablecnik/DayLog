@@ -16,11 +16,15 @@ const exportFormatVersion = 1;
 /// SQLite types (integers stay integers, so dates and booleans are stored
 /// exactly as they are in the database); a BLOB is written as
 /// `{"$blob": "<base64>"}`.
+///
+/// [preferences] are the SharedPreferences entries of the app (the timer, the
+/// reminders, the suggestion lists), written as they are under `preferences`.
 Future<Map<String, Object?>> exportDatabase(
   GeneratedDatabase db, {
   required String appName,
   required String appVersion,
   required DateTime exportedAt,
+  Map<String, Object?> preferences = const <String, Object?>{},
 }) async {
   final tables = <String, Object?>{};
   final rowCounts = <String, int>{};
@@ -45,6 +49,7 @@ Future<Map<String, Object?>> exportDatabase(
     'exportedAt': exportedAt.toIso8601String(),
     'rowCounts': rowCounts,
     'tables': tables,
+    'preferences': preferences,
   };
 }
 
@@ -54,12 +59,14 @@ Future<String> exportDatabaseAsJson(
   required String appName,
   required String appVersion,
   required DateTime exportedAt,
+  Map<String, Object?> preferences = const <String, Object?>{},
 }) async {
   final data = await exportDatabase(
     db,
     appName: appName,
     appVersion: appVersion,
     exportedAt: exportedAt,
+    preferences: preferences,
   );
   return const JsonEncoder.withIndent('  ').convert(data);
 }

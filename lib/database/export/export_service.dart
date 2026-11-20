@@ -4,6 +4,7 @@ import 'dart:ui' show Rect;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/clock.dart';
 import '../app_database.dart';
@@ -25,8 +26,18 @@ class ExportService {
       appName: 'zafling',
       appVersion: await _appVersion(),
       exportedAt: now,
+      preferences: await _readPreferences(),
     );
     return (fileName: 'zafling-export-${_date(now)}.json', json: json);
+  }
+
+  /// Every SharedPreferences entry, sorted by key so the file is stable.
+  Future<Map<String, Object?>> _readPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.reload();
+    return <String, Object?>{
+      for (final String key in prefs.getKeys().toList()..sort()) key: prefs.get(key),
+    };
   }
 
   /// Writes the export to the temporary directory and opens the share sheet.

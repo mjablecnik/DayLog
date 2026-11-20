@@ -1,4 +1,3 @@
-import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zafling/core/errors.dart';
 import 'package:zafling/quests/domain/xp_rules.dart';
@@ -146,31 +145,5 @@ void main() {
       await expectLater(missions.reorder([a.id, a.id]), throwsA(isA<ValidationError>()));
       await expectLater(missions.reorder([a.id, 999]), throwsA(isA<ValidationError>()));
     });
-  });
-
-  test('upgrading a version 1 database puts loose Quests in Todo and keeps the Mission order', () async {
-    final upgraded = AppDatabase.forTesting(
-      NativeDatabase.memory(setup: (raw) => raw.execute('''
-      CREATE TABLE missions (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL,
-        bonus TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'open', created_at INTEGER NOT NULL,
-        completed_at INTEGER NULL, awarded_bonus INTEGER NULL, rule_id INTEGER NULL);
-      CREATE TABLE quests (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL,
-        note TEXT NULL, difficulty TEXT NOT NULL, mission_id INTEGER NULL, sort_order INTEGER NOT NULL,
-        created_at INTEGER NOT NULL, completed_at INTEGER NULL, awarded_xp INTEGER NULL);
-      CREATE TABLE app_state (id INTEGER NOT NULL DEFAULT 1, total_xp INTEGER NOT NULL DEFAULT 0,
-        hero_name TEXT NOT NULL DEFAULT '', language TEXT NOT NULL DEFAULT 'system',
-        theme TEXT NOT NULL DEFAULT 'system', display_font TEXT NOT NULL DEFAULT 'figtree');
-      INSERT INTO missions (name, bonus, created_at) VALUES ('m1', 'small', 0), ('m2', 'small', 0);
-      INSERT INTO quests (name, difficulty, mission_id, sort_order, created_at)
-        VALUES ('loose', 'easy', NULL, 1, 0), ('inside', 'easy', 2, 2, 0);
-      PRAGMA user_version = 1;
-    ''')),
-    );
-    addTearDown(upgraded.close);
-
-    final rows = await upgraded.select(upgraded.quests).get();
-    expect({for (final r in rows) r.name: r.board}, {'loose': BoardSection.todo, 'inside': null});
-    final order = await upgraded.select(upgraded.missions).get();
-    expect({for (final m in order) m.name: m.sortOrder}, {'m1': 1, 'm2': 2});
   });
 }

@@ -82,6 +82,9 @@ class ImportPlan {
   factory ImportPlan.build(ExportFile file, GeneratedDatabase db);   // throws ImportFailure for unknown table/column
   final List<PlannedTable> tables;     // name, columns, rows
   int deletedRowCount(Map<String, int> existing);
+
+  /// Columns an old export holds and the Database no longer has; skipped, not refused.
+  static const Map<String, Set<String>> retiredColumns = {'app_state': {'display_font'}};
 }
 ```
 

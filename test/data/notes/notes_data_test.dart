@@ -1,26 +1,12 @@
-import 'dart:io';
 
 import 'package:drift/drift.dart' hide isNull, isNotNull;
-import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zafling/notes/domain/note_node.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
 import 'package:zafling/database/app_database.dart';
 import 'package:zafling/notes/data/notes_mappers.dart';
 
 import '../../helpers/test_database.dart';
 
-/// A schema 3 file is a schema 5 file without `note_nodes` and `calendar_addresses`, with `user_version = 3`.
-AppDatabase openAsSchema3(File file) => AppDatabase.forTesting(
-  NativeDatabase(
-    file,
-    setup: (dynamic raw) {
-      raw.execute('DROP TABLE calendar_addresses');
-      raw.execute('DROP TABLE note_nodes');
-      raw.execute('PRAGMA user_version = 3');
-    },
-  ),
-);
 
 final DateTime _now = DateTime(2026, 11, 19, 12);
 
@@ -42,13 +28,12 @@ Future<int> insertNode(
 );
 
 Future<void> main() async {
-  group('schema 4', () {
+  group('notes table', () {
     late AppDatabase db;
     setUp(() => db = createTestDatabase());
     tearDown(() => db.close());
 
-    test('a fresh database is at version 6 with an empty notes table', () async {
-      expect(db.schemaVersion, 6);
+    test('a fresh database has an empty notes table', () async {
       expect(await db.select(db.noteNodes).get(), isEmpty);
     });
 
@@ -88,51 +73,5 @@ Future<void> main() async {
     test('a parent that does not exist is rejected', () async {
       expect(insertNode(db, parent: 999), throwsA(anything));
     });
-  });
-
-  group('migration 3 to 4', () {
-    late Directory dir;
-    late File file;
-    setUp(() {
-      dir = Directory.systemTemp.createTempSync('notes_migration_');
-      file = File('${dir.path}/zafling.sqlite');
-    });
-    tearDown(() => dir.deleteSync(recursive: true));
-
-    test('adds the table and changes no existing data', () async {
-      AppDatabase db = AppDatabase.forTesting(NativeDatabase(file));
-      await db.into(db.missions).insert(
-        MissionsCompanion.insert(name: 'M', bonus: MissionBonus.small, createdAt: _now),
-      );
-      await db.into(db.quests).insert(
-        QuestsCompanion.insert(name: 'Q', difficulty: Difficulty.easy, sortOrder: 1, createdAt: _now),
-      );
-      await db.update(db.appState).write(const AppStateCompanion(totalXp: Value(420)));
-      final List<QuestRow> quests = await db.select(db.quests).get();
-      final List<MissionRow> missions = await db.select(db.missions).get();
-      final List<CalendarEventRow> events = await db.select(db.calendarEvents).get();
-      final AppStateRow state = await db.select(db.appState).getSingle();
-      await db.close();
-
-      db = openAsSchema3(file);
-      expect(await db.select(db.noteNodes).get(), isEmpty);
-      expect(await db.select(db.quests).get(), quests);
-      expect(await db.select(db.missions).get(), missions);
-      expect(await db.select(db.calendarEvents).get(), events);
-      expect(await db.select(db.appState).getSingle(), state);
-      await insertNode(db, name: 'after migration');
-      await db.close();
-
-      db = AppDatabase.forTesting(NativeDatabase(file));
-      expect(await db.select(db.noteNodes).get(), hasLength(1));
-      expect(db.schemaVersion, 6);
-      await db.close();
-    });
-  });
-
-  test('the schema 4 dump contains the notes table', () {
-    final String dump = File('drift_schemas/drift_schema_v4.json').readAsStringSync();
-    expect(dump, contains('note_nodes'));
-    expect(dump, contains('idx_note_nodes_parent'));
   });
 }

@@ -3206,18 +3206,6 @@ class $AppStateTable extends AppState
         requiredDuringInsert: false,
         defaultValue: const Constant('system'),
       ).withConverter<AppTheme>($AppStateTable.$convertertheme);
-  static const VerificationMeta _displayFontMeta = const VerificationMeta(
-    'displayFont',
-  );
-  @override
-  late final GeneratedColumn<String> displayFont = GeneratedColumn<String>(
-    'display_font',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('figtree'),
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3225,7 +3213,6 @@ class $AppStateTable extends AppState
     heroName,
     language,
     theme,
-    displayFont,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3252,15 +3239,6 @@ class $AppStateTable extends AppState
       context.handle(
         _heroNameMeta,
         heroName.isAcceptableOrUnknown(data['hero_name']!, _heroNameMeta),
-      );
-    }
-    if (data.containsKey('display_font')) {
-      context.handle(
-        _displayFontMeta,
-        displayFont.isAcceptableOrUnknown(
-          data['display_font']!,
-          _displayFontMeta,
-        ),
       );
     }
     return context;
@@ -3296,10 +3274,6 @@ class $AppStateTable extends AppState
           data['${effectivePrefix}theme'],
         )!,
       ),
-      displayFont: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}display_font'],
-      )!,
     );
   }
 
@@ -3320,14 +3294,12 @@ class AppStateRow extends DataClass implements Insertable<AppStateRow> {
   final String heroName;
   final AppLanguage language;
   final AppTheme theme;
-  final String displayFont;
   const AppStateRow({
     required this.id,
     required this.totalXp,
     required this.heroName,
     required this.language,
     required this.theme,
-    required this.displayFont,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3345,7 +3317,6 @@ class AppStateRow extends DataClass implements Insertable<AppStateRow> {
         $AppStateTable.$convertertheme.toSql(theme),
       );
     }
-    map['display_font'] = Variable<String>(displayFont);
     return map;
   }
 
@@ -3356,7 +3327,6 @@ class AppStateRow extends DataClass implements Insertable<AppStateRow> {
       heroName: Value(heroName),
       language: Value(language),
       theme: Value(theme),
-      displayFont: Value(displayFont),
     );
   }
 
@@ -3375,7 +3345,6 @@ class AppStateRow extends DataClass implements Insertable<AppStateRow> {
       theme: $AppStateTable.$convertertheme.fromJson(
         serializer.fromJson<String>(json['theme']),
       ),
-      displayFont: serializer.fromJson<String>(json['displayFont']),
     );
   }
   @override
@@ -3391,7 +3360,6 @@ class AppStateRow extends DataClass implements Insertable<AppStateRow> {
       'theme': serializer.toJson<String>(
         $AppStateTable.$convertertheme.toJson(theme),
       ),
-      'displayFont': serializer.toJson<String>(displayFont),
     };
   }
 
@@ -3401,14 +3369,12 @@ class AppStateRow extends DataClass implements Insertable<AppStateRow> {
     String? heroName,
     AppLanguage? language,
     AppTheme? theme,
-    String? displayFont,
   }) => AppStateRow(
     id: id ?? this.id,
     totalXp: totalXp ?? this.totalXp,
     heroName: heroName ?? this.heroName,
     language: language ?? this.language,
     theme: theme ?? this.theme,
-    displayFont: displayFont ?? this.displayFont,
   );
   AppStateRow copyWithCompanion(AppStateCompanion data) {
     return AppStateRow(
@@ -3417,9 +3383,6 @@ class AppStateRow extends DataClass implements Insertable<AppStateRow> {
       heroName: data.heroName.present ? data.heroName.value : this.heroName,
       language: data.language.present ? data.language.value : this.language,
       theme: data.theme.present ? data.theme.value : this.theme,
-      displayFont: data.displayFont.present
-          ? data.displayFont.value
-          : this.displayFont,
     );
   }
 
@@ -3430,15 +3393,13 @@ class AppStateRow extends DataClass implements Insertable<AppStateRow> {
           ..write('totalXp: $totalXp, ')
           ..write('heroName: $heroName, ')
           ..write('language: $language, ')
-          ..write('theme: $theme, ')
-          ..write('displayFont: $displayFont')
+          ..write('theme: $theme')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, totalXp, heroName, language, theme, displayFont);
+  int get hashCode => Object.hash(id, totalXp, heroName, language, theme);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3447,8 +3408,7 @@ class AppStateRow extends DataClass implements Insertable<AppStateRow> {
           other.totalXp == this.totalXp &&
           other.heroName == this.heroName &&
           other.language == this.language &&
-          other.theme == this.theme &&
-          other.displayFont == this.displayFont);
+          other.theme == this.theme);
 }
 
 class AppStateCompanion extends UpdateCompanion<AppStateRow> {
@@ -3457,14 +3417,12 @@ class AppStateCompanion extends UpdateCompanion<AppStateRow> {
   final Value<String> heroName;
   final Value<AppLanguage> language;
   final Value<AppTheme> theme;
-  final Value<String> displayFont;
   const AppStateCompanion({
     this.id = const Value.absent(),
     this.totalXp = const Value.absent(),
     this.heroName = const Value.absent(),
     this.language = const Value.absent(),
     this.theme = const Value.absent(),
-    this.displayFont = const Value.absent(),
   });
   AppStateCompanion.insert({
     this.id = const Value.absent(),
@@ -3472,7 +3430,6 @@ class AppStateCompanion extends UpdateCompanion<AppStateRow> {
     this.heroName = const Value.absent(),
     this.language = const Value.absent(),
     this.theme = const Value.absent(),
-    this.displayFont = const Value.absent(),
   });
   static Insertable<AppStateRow> custom({
     Expression<int>? id,
@@ -3480,7 +3437,6 @@ class AppStateCompanion extends UpdateCompanion<AppStateRow> {
     Expression<String>? heroName,
     Expression<String>? language,
     Expression<String>? theme,
-    Expression<String>? displayFont,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3488,7 +3444,6 @@ class AppStateCompanion extends UpdateCompanion<AppStateRow> {
       if (heroName != null) 'hero_name': heroName,
       if (language != null) 'language': language,
       if (theme != null) 'theme': theme,
-      if (displayFont != null) 'display_font': displayFont,
     });
   }
 
@@ -3498,7 +3453,6 @@ class AppStateCompanion extends UpdateCompanion<AppStateRow> {
     Value<String>? heroName,
     Value<AppLanguage>? language,
     Value<AppTheme>? theme,
-    Value<String>? displayFont,
   }) {
     return AppStateCompanion(
       id: id ?? this.id,
@@ -3506,7 +3460,6 @@ class AppStateCompanion extends UpdateCompanion<AppStateRow> {
       heroName: heroName ?? this.heroName,
       language: language ?? this.language,
       theme: theme ?? this.theme,
-      displayFont: displayFont ?? this.displayFont,
     );
   }
 
@@ -3532,9 +3485,6 @@ class AppStateCompanion extends UpdateCompanion<AppStateRow> {
         $AppStateTable.$convertertheme.toSql(theme.value),
       );
     }
-    if (displayFont.present) {
-      map['display_font'] = Variable<String>(displayFont.value);
-    }
     return map;
   }
 
@@ -3545,8 +3495,7 @@ class AppStateCompanion extends UpdateCompanion<AppStateRow> {
           ..write('totalXp: $totalXp, ')
           ..write('heroName: $heroName, ')
           ..write('language: $language, ')
-          ..write('theme: $theme, ')
-          ..write('displayFont: $displayFont')
+          ..write('theme: $theme')
           ..write(')'))
         .toString();
   }
@@ -7605,7 +7554,6 @@ typedef $$AppStateTableCreateCompanionBuilder = AppStateCompanion Function({
   Value<String> heroName,
   Value<AppLanguage> language,
   Value<AppTheme> theme,
-  Value<String> displayFont,
 });
 typedef $$AppStateTableUpdateCompanionBuilder = AppStateCompanion Function({
   Value<int> id,
@@ -7613,7 +7561,6 @@ typedef $$AppStateTableUpdateCompanionBuilder = AppStateCompanion Function({
   Value<String> heroName,
   Value<AppLanguage> language,
   Value<AppTheme> theme,
-  Value<String> displayFont,
 });
 
 class $$AppStateTableFilterComposer
@@ -7651,11 +7598,6 @@ class $$AppStateTableFilterComposer
         column: $table.theme,
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
-
-  ColumnFilters<String> get displayFont => $composableBuilder(
-    column: $table.displayFont,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$AppStateTableOrderingComposer
@@ -7691,11 +7633,6 @@ class $$AppStateTableOrderingComposer
     column: $table.theme,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get displayFont => $composableBuilder(
-    column: $table.displayFont,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$AppStateTableAnnotationComposer
@@ -7721,11 +7658,6 @@ class $$AppStateTableAnnotationComposer
 
   GeneratedColumnWithTypeConverter<AppTheme, String> get theme =>
       $composableBuilder(column: $table.theme, builder: (column) => column);
-
-  GeneratedColumn<String> get displayFont => $composableBuilder(
-    column: $table.displayFont,
-    builder: (column) => column,
-  );
 }
 
 class $$AppStateTableTableManager
@@ -7764,14 +7696,12 @@ class $$AppStateTableTableManager
                 Value<String> heroName = const Value.absent(),
                 Value<AppLanguage> language = const Value.absent(),
                 Value<AppTheme> theme = const Value.absent(),
-                Value<String> displayFont = const Value.absent(),
               }) => AppStateCompanion(
                 id: id,
                 totalXp: totalXp,
                 heroName: heroName,
                 language: language,
                 theme: theme,
-                displayFont: displayFont,
               ),
           createCompanionCallback:
               ({
@@ -7780,14 +7710,12 @@ class $$AppStateTableTableManager
                 Value<String> heroName = const Value.absent(),
                 Value<AppLanguage> language = const Value.absent(),
                 Value<AppTheme> theme = const Value.absent(),
-                Value<String> displayFont = const Value.absent(),
               }) => AppStateCompanion.insert(
                 id: id,
                 totalXp: totalXp,
                 heroName: heroName,
                 language: language,
                 theme: theme,
-                displayFont: displayFont,
               ),
           withReferenceMapper: (p0) => p0
               .map(

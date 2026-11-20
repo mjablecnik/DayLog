@@ -13,8 +13,8 @@ Add a Replace_Import of the QuestLog and TimeLog Export_Files to the App: a pure
     - _Requirements: 1.2, 1.3, 1.4, 1.5_
 
   - [ ] 1.2 Write `ImportPlan`
-    - `lib/database/import/import_plan.dart`: match table names to `db.allTables` and column names to the table's columns; throw `unknownTable` and `unknownColumn`
-    - _Requirements: 1.6_
+    - `lib/database/import/import_plan.dart`: match table names to `db.allTables` and column names to the table's columns; throw `unknownTable` and `unknownColumn`; skip the `retiredColumns` (`app_state.display_font`)
+    - _Requirements: 1.6, 1.7_
 
   - [ ]* 1.3 Write unit tests for parsing and planning
     - One test per refusal rule; a valid QuestLog and a valid TimeLog header

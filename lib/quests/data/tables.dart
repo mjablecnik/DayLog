@@ -96,8 +96,6 @@ class AppState extends Table {
   TextColumn get heroName => text().withDefault(const Constant(''))();
   TextColumn get language => textEnum<AppLanguage>().withDefault(const Constant('system'))();
   TextColumn get theme => textEnum<AppTheme>().withDefault(const Constant('system'))();
-  // Unused since the title font was fixed to Figtree; the column stays so that no migration is needed.
-  TextColumn get displayFont => text().withDefault(const Constant('figtree'))();
 
   @override
   Set<Column> get primaryKey => {id};

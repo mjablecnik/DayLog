@@ -8,6 +8,7 @@ The import is a one-off migration tool. It is part of Settings → Data so that 
 
 ## Glossary
 
+- **Retired_Column**: A column that a Legacy_App wrote and the Database no longer has, listed in `retiredColumns` of the Importer.
 - **Importer**: The code in `lib/database/import/` that reads an Export_File and writes the Database.
 - **Export_File**: A JSON file with `format` equal to `questlog-export`, `timelog-export` or `zafling-export`, produced by a Legacy_App or by the App itself.
 - **Export_Header**: The keys `format`, `formatVersion`, `app`, `appVersion`, `schemaVersion`, `exportedAt`, `rowCounts` of an Export_File.
@@ -33,7 +34,8 @@ The import is a one-off migration tool. It is part of Settings → Data so that 
 3. IF `format` is not `questlog-export`, `timelog-export` or `zafling-export`, THEN THE Importer SHALL refuse the file and leave the Database unchanged.
 4. IF `formatVersion` is greater than the highest version the Importer knows, THEN THE Importer SHALL refuse the file and leave the Database unchanged.
 5. IF the file is not valid JSON or lacks `tables` or `rowCounts`, THEN THE Importer SHALL refuse the file and leave the Database unchanged.
-6. IF the file names a table the Database does not have, or a column a table does not have, THEN THE Importer SHALL refuse the file, name the table or column, and leave the Database unchanged.
+6. IF the file names a table the Database does not have, or a column a table does not have, THEN THE Importer SHALL refuse the file, name the table or column, and leave the Database unchanged, except for a retired column.
+7. THE Importer SHALL skip the values of a retired column and SHALL NOT report them as an error; the retired columns are `app_state.display_font`.
 
 ### Requirement 2: Confirmation
 

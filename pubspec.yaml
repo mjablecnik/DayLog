@@ -47,6 +47,12 @@ dependencies:
   super_editor: 0.3.0-dev.52
   app_links: ^7.2.2
   share_plus: ^13.3.1
+  shared_preferences: ^2.5.6
+  audioplayers: ^6.8.1
+  flutter_local_notifications: ^23.0.3
+  timezone: ^0.11.2
+  flutter_timezone: ^5.1.1
+  freezed_annotation: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +67,7 @@ dev_dependencies:
   drift_dev: ^2.35.3
   build_runner: ^2.16.1
   glados: ^1.1.7
+  freezed: ^4.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

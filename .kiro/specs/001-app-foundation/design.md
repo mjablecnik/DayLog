@@ -6,13 +6,13 @@ The App is created by copying QuestLog 1.5.0 into `/workspace/Zafling`, renaming
 
 **Key design decisions:**
 - **New project, QuestLog as the base**: QuestLog already uses Riverpod 3, one Drift database, `app_state` settings, l10n with a template ARB and the structure check. TimeLog (Riverpod 2, SharedPreferences, native iOS code) is ported into that frame.
-- **Feature-first folders, no feature imports another feature**: a feature talks to the rest through `core/`, `database/` and `theme/`. The Shell is the only place that knows every feature, so a new feature is one folder plus one Destination entry.
+- **Feature-first folders with one isolated feature**: `time_tracking/` is independent and talks to the rest only through `core/`, `database/`, `theme/`, `ui_kit/`. The QuestLog modules (`quests/`, `calendar/`, `notes/`, `settings/`) were one product and depend on each other (the Board shows calendar events, an event awards XP, a Note in the Trash reuses quest actions). Untangling that would change QuestLog, which this spec does not do, so the coupling is allowed inside that group, and the test fences the group off from `time_tracking/` and the Shell. The Shell is the only place that knows every feature, so a new feature is one folder plus one Destination entry.
 - **One Database, original table names**: the importer in `003-legacy-import` can copy rows table by table without renaming. Table classes stay in their feature folder; `database/app_database.dart` lists them.
-- **Each feature keeps its own palette**: restyling is not part of the move. The theme setting chooses light or dark once; each Destination maps it to its own palette. Unifying the palettes is a later, separate spec.
-- **Drawer navigation with `IndexedStack`**: eight Destinations do not fit a bottom bar; the Drawer was the approved layout of the mockup. `IndexedStack` keeps state alive.
+- **One theme, a registry for more**: the blue theme of QuestLog (dark `guildBoard`, light `daylight`) is the only theme, and the Time_Module is restyled to it. `ThemeDefinition` objects in a registry hold the palettes, so a second theme is one more definition. The only restyling in the move is that of the Time_Module screens.
+- **Bottom bar for the five main pages, Drawer for the rest**: Timer, Quests, Calendar, Notes and Settings are tabs; History, Statistics and Missions are in the Drawer, and the bar marks the tab they belong to. `IndexedStack` keeps state alive.
 - **Own URL scheme**: `zafling://` so the Legacy_Apps keep their schemes while installed. The native handler of the Live Activity takes only `zafling://action/...`; every other `zafling://` link goes to `app_links` through `super`.
 - **iOS project from TimeLog**: a widget extension target cannot be created reliably by hand-editing `project.pbxproj`, so the App starts from TimeLog's `ios/` (which has it) and receives QuestLog's URL scheme and `FlutterDeepLinkingEnabled` entries.
-- **Menu button in the existing header**: every Destination already has its own header; the Shell supplies a `ShellMenuButton` widget that each screen places in it, so no new bar appears.
+- **Menu button in the existing header**: every Destination already has its own header; the Shell supplies a `MenuButton` widget that each screen places in it, so no new bar appears.
 - **One export for everything**: the new export writes every table plus the SharedPreferences (format `zafling-export`), because after the move it is the only backup.
 
 ```mermaid
@@ -53,7 +53,7 @@ sequenceDiagram
 
 ### Destination model
 
-`Destination` is an enum in `shell/destination.dart`. Each value has a deep-link name, an icon, an l10n label, a group and a builder. The Drawer, the deep-link parser and the `IndexedStack` all derive from this one enum, so a Destination cannot be in one and missing from another.
+`Destination` is an enum in `shell/destination.dart`. Each value has a deep-link name, an icon, an l10n label, a group, a parent tab and a builder. The Bottom_Bar (`isTab`), the Drawer (`!isTab`), the deep-link parser and the `IndexedStack` all derive from this one enum, so a Destination cannot be in one and missing from another.
 
 ## Project Structure
 
@@ -68,7 +68,8 @@ Zafling/
 │   │   ├── app_database.g.dart   # generated, committed
 │   │   ├── connection.dart       # opens zafling.sqlite
 │   │   └── export/               # database_export.dart, export_service.dart (moved from QuestLog)
-│   ├── theme/                    # shell_theme.dart, quest_palette.dart, time_palette.dart, tokens, typography
+│   ├── ui_kit/                   # shared widgets: common/, sheet/, forms/
+│   ├── theme/                    # shell_theme.dart, quest_theme.dart, tokens, typography (time palette lives in time_tracking/theme)
 │   ├── l10n/                     # app_cs.arb (template), app_en.arb, generated/
 │   ├── shell/                    # app_shell.dart, destination.dart, app_drawer.dart, deep_link.dart, splash_screen.dart, reconcile_banner.dart
 │   ├── settings/                 # settings_screen.dart + groups, shortcut_guide.dart, settings_service.dart, preferences
@@ -97,6 +98,9 @@ enum DestinationGroup { time, planning, notes, app }
 enum Destination {
   timer, history, statistics, quests, missions, calendar, notes, settings;
 
+  bool get isTab;               // timer, quests, calendar, notes, settings
+  Destination get tab;          // history, statistics -> timer; missions -> quests; a tab -> itself
+
   String get linkName;                       // 'timer', 'history', ...
   DestinationGroup get group;
   String label(AppLocalizations l);
@@ -115,11 +119,19 @@ class AppShell extends ConsumerStatefulWidget {
 }
 ```
 
-Holds the selected Destination, the Reconciliation state machine moved unchanged from QuestLog, the lifecycle observer and the deep-link subscription. Builds a `Scaffold` with the `AppDrawer` and an `IndexedStack` of `destinationBuilders`.
+Holds the selected Destination, the Reconciliation state machine moved unchanged from QuestLog, the lifecycle observer and the deep-link subscription. Builds a `Scaffold` with the `AppDrawer`, an `IndexedStack` of all eight Destinations and the `BottomBar`.
 
-### 3. AppDrawer (`lib/shell/app_drawer.dart`)
+### 3. BottomBar and AppDrawer (`lib/shell/bottom_bar.dart`, `lib/shell/app_drawer.dart`)
 
 ```dart
+/// The five tabs; `selected` is the tab of the shown Destination.
+class BottomBar extends StatelessWidget {
+  const BottomBar({super.key, required this.selected, required this.onSelect});
+  final Destination selected;
+  final ValueChanged<Destination> onSelect;
+}
+
+/// Lists the Destinations that are not tabs.
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key, required this.selected, required this.onSelect});
   final Destination selected;
@@ -154,24 +166,40 @@ class AppDatabase extends _$AppDatabase {
 
 The Time_Module tables are added when spec 002 reaches them; until then the list holds the QuestLog tables.
 
-### 6. Theme (`lib/theme/shell_theme.dart`)
+### 6. Theme (`lib/theme/`)
 
 ```dart
-ThemeData buildShellTheme({required Brightness brightness});
-ThemeData themeForDestination(Destination d, Brightness brightness);
+class ThemeDefinition {
+  const ThemeDefinition({required this.id, required this.labelKey, required this.light, required this.dark});
+  final String id;
+  final AppPalette light;
+  final AppPalette dark;
+}
+
+const List<ThemeDefinition> themeRegistry = [blueTheme];
+final activeThemeIdProvider = Provider<String>((ref) => blueTheme.id);
+ThemeData buildTheme({required AppPalette palette});     // as in QuestLog
 ```
 
-`themeForDestination` returns the QuestLog `buildTheme(palette: …)` for quest, calendar, notes and settings, and the TimeLog `toMaterialTheme()` for the time Destinations. The Shell wraps each Destination in a `Theme`.
+`ZaflingApp`'s `MaterialApp` takes `theme` from the active definition's light palette and `darkTheme` from its dark palette. Screens read `context.palette`.
 
-### 7. ShellMenuButton (`lib/shell/shell_menu_button.dart`)
+### 7. MenuButton and ShellMenuScope (`lib/ui_kit/common/menu_button.dart`)
 
 ```dart
-class ShellMenuButton extends StatelessWidget {
-  const ShellMenuButton({super.key});   // Scaffold.of(context).openDrawer()
+/// Provided by the Shell above the Destinations; `open` opens the Drawer.
+class ShellMenuScope extends InheritedWidget {
+  const ShellMenuScope({super.key, required this.open, required super.child});
+  final VoidCallback open;
+  static ShellMenuScope? maybeOf(BuildContext context);
+}
+
+/// Shows nothing when no scope is above it (tests, pushed routes).
+class MenuButton extends StatelessWidget {
+  const MenuButton({super.key});
 }
 ```
 
-Placed by each Destination's header; not shown on pushed routes. A swipe from the screen edge is not used, because it collides with the iOS back swipe and with reorder and slide gestures.
+Each Destination header places `MenuButton`. It lives in `ui_kit/` so the QuestLog modules can use it without importing `shell/`. A pushed route is not below the scope, so it shows no button and keeps its back button. A swipe from the screen edge is not used, because it collides with the iOS back swipe and with reorder and slide gestures.
 
 ### 8. Settings (`lib/settings/`)
 
@@ -192,9 +220,9 @@ No table name occurs twice. Foreign keys stay inside one feature, except those t
 
 ### Property 1: Every Destination is reachable
 
-*For any* Destination value, THE Drawer SHALL list it, THE deep-link parser SHALL map `zafling://<linkName>` back to it, and THE Shell SHALL build a screen for it.
+*For any* Destination value, THE Bottom_Bar or the Drawer SHALL list it (a tab in the bar, any other Destination in the Drawer), THE deep-link parser SHALL map `zafling://<linkName>` back to it, and THE Shell SHALL build a screen for it.
 
-**Validates: Requirements 4.2, 5.1**
+**Validates: Requirements 4.2, 4.3, 5.1**
 
 ### Property 2: Foreign links are ignored
 
@@ -202,11 +230,11 @@ No table name occurs twice. Foreign keys stay inside one feature, except those t
 
 **Validates: Requirements 5.2, 5.4**
 
-### Property 3: No feature imports another feature
+### Property 3: Folder boundaries hold
 
-*For any* source file under `lib/<feature>/`, THE file SHALL NOT import a path under `lib/<other feature>/`.
+*For any* source file under `lib/`, THE file SHALL respect the import rules of Requirement 1.4, 1.5 and 1.6.
 
-**Validates: Requirements 1.4, 1.5**
+**Validates: Requirements 1.4, 1.5, 1.6, 1.7**
 
 ### Property 4: Table names are unique
 
@@ -227,7 +255,7 @@ No table name occurs twice. Foreign keys stay inside one feature, except those t
 
 ## Testing Strategy
 
-- **Unit and widget tests** (`flutter_test`): ported from QuestLog, mirrored under `test/`. New tests: Destination/Drawer/deep-link, first screen, empty Database tables.
+- **Unit and widget tests** (`flutter_test`): ported from QuestLog, mirrored under `test/`. New tests: Destination, Bottom_Bar, Drawer and deep links, first screen, empty Database tables.
 - **Structure test** (`test/architecture/feature_imports_test.dart`): scans `lib/` and fails on a cross-feature import (Property 3).
 - **Golden tests**: ported from QuestLog; regenerated only for screens whose Shell chrome changed.
 - **Gate**: `scripts/check.sh`. The iOS build and on-device checks are done by Martin; the sandbox has Linux only.

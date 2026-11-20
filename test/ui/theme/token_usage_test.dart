@@ -2,14 +2,16 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// Every `.dart` file under `lib/ui/` outside `lib/ui/theme/`.
+/// Every `.dart` file of the UI: the `ui/` folder of each feature, `ui_kit/`,
+/// `shell/` and the Settings screens, i.e. everything outside `lib/theme/`,
+/// `lib/core/`, `lib/database/`, `lib/l10n/` and the non-UI services.
 List<File> _screenAndWidgetSources() {
-  final Directory root = Directory('lib/ui');
+  final Directory root = Directory('lib');
   return root
       .listSync(recursive: true)
       .whereType<File>()
-      .where((File f) => f.path.endsWith('.dart'))
-      .where((File f) => !f.path.startsWith('lib/ui/theme/'))
+      .where((File f) => f.path.endsWith('.dart') && !f.path.endsWith('.g.dart'))
+      .where((File f) => f.path.contains('/ui/') || f.path.startsWith('lib/ui_kit/') || f.path.startsWith('lib/shell/'))
       .toList()
     ..sort((File a, File b) => a.path.compareTo(b.path));
 }
@@ -41,15 +43,15 @@ void main() {
     expect(_screenAndWidgetSources().length, greaterThan(40));
   });
 
-  test('no literal Color(0x...) outside lib/ui/theme', () {
+  test('no literal Color(0x...) outside lib/theme', () {
     expect(_offences(RegExp(r'Color\(\s*0x', caseSensitive: false)), isEmpty);
   });
 
-  test('no named Colors.* other than transparent outside lib/ui/theme', () {
+  test('no named Colors.* other than transparent outside lib/theme', () {
     expect(_offences(RegExp(r'\bColors\.(?!transparent\b)[a-zA-Z]')), isEmpty);
   });
 
-  test('no literal Duration(milliseconds: ...) outside lib/ui/theme', () {
+  test('no literal Duration(milliseconds: ...) outside lib/theme', () {
     expect(_offences(RegExp(r'Duration\(\s*milliseconds\s*:')), isEmpty);
   });
 
@@ -59,11 +61,11 @@ void main() {
     r'|SizedBox\((width|height):\s*[1-9]',
   );
 
-  test('no literal spacing or radius outside lib/ui/theme', () {
+  test('no literal spacing or radius outside lib/theme', () {
     expect(_offences(literalSpacing), isEmpty);
   });
 
-  test('no Material Icons.* outside lib/ui/theme', () {
+  test('no Material Icons.* outside lib/theme', () {
     expect(_offences(RegExp(r'\bIcons\.[a-zA-Z]')), isEmpty);
   });
 

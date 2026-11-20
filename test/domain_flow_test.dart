@@ -1,13 +1,13 @@
 import 'package:glados/glados.dart';
-import 'package:questlog/core/board_day.dart';
-import 'package:questlog/core/cadence.dart';
-import 'package:questlog/core/xp_rules.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/data/models.dart';
-import 'package:questlog/services/mission_service.dart';
-import 'package:questlog/services/quest_service.dart';
-import 'package:questlog/services/recurrence_service.dart';
-import 'package:questlog/services/xp_engine.dart';
+import 'package:zafling/core/board_day.dart';
+import 'package:zafling/quests/domain/cadence.dart';
+import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/quests/data/models.dart';
+import 'package:zafling/quests/services/mission_service.dart';
+import 'package:zafling/quests/services/quest_service.dart';
+import 'package:zafling/quests/services/recurrence_service.dart';
+import 'package:zafling/quests/services/xp_engine.dart';
 
 import 'helpers/fixed_clock.dart';
 import 'helpers/test_database.dart';
@@ -17,7 +17,7 @@ import 'helpers/test_database.dart';
 /// the Board_Day rolls over at 04:00, and a manual posting skips the next
 /// automatic one.
 void main() {
-  late QuestlogDatabase db;
+  late AppDatabase db;
   late FixedClock clock;
   late XpEngine xp;
   late QuestService quests;

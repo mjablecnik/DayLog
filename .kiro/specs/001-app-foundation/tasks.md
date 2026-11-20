@@ -14,7 +14,7 @@ Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its fil
     - _Requirements: 1.1_
 
   - [ ] 1.2 Rename the package and the Working_Name
-    - `pubspec.yaml`: `name: zafling`, version `0.1.0+1`, SDK constraint unchanged
+    - `pubspec.yaml`: `name: zafling`, version `0.0.1+1` until the first release, SDK constraint unchanged
     - Replace `package:questlog/` imports; rename `QuestlogApp`, `QuestlogDatabase`, `QuestlogPalette` to `ZaflingApp`, `AppDatabase`, `QuestPalette`
     - Display name, bundle identifier `com.jablecnik.zafling`, App Group `group.com.jablecnik.zafling` and URL scheme `zafling` in `ios/Runner/Info.plist`, `ios/Runner.xcodeproj`, both entitlements files and `app_name` in both ARB files
     - Rename the extension target and folder to `ZaflingWidgetExtension` and fix the Xcode project references
@@ -55,11 +55,11 @@ Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its fil
     - Move `test/` files and goldens; run `dart run build_runner build` and `flutter gen-l10n`
     - _Requirements: 3.4, 3.5_
 
-  - [ ]* 2.7 Write the cross-feature import test
-    - `test/architecture/feature_imports_test.dart` scans `lib/<feature>/**.dart` and fails when a file imports `lib/<other feature>/`
-    - Fix any violation found by moving the shared piece into `core/`, `database/` or `theme/`
-    - **Property 3: No feature imports another feature**
-    - **Validates: Requirements 1.4, 1.5**
+  - [ ]* 2.7 Write the folder boundary test
+    - `test/architecture/feature_imports_test.dart` scans `lib/` and fails when `core`, `theme`, `ui_kit` or `l10n` import a feature, when `time_tracking` imports anything beyond the shared folders and `database`, or when a QuestLog module imports `time_tracking` or `shell`
+    - Fix any violation by moving the shared piece into `core/`, `ui_kit/` or `theme/`
+    - **Property 3: Folder boundaries hold**
+    - **Validates: Requirements 1.4, 1.5, 1.6, 1.7**
 
 - [ ] 3. Checkpoint — moved code is green
   - Ensure `scripts/check.sh` passes with all QuestLog tests; list regenerated goldens, ask the user if questions arise
@@ -73,35 +73,37 @@ Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its fil
   - [ ]* 4.2 Write property tests for Destination and links
     - **Property 1: Every Destination is reachable**
     - **Property 2: Foreign links are ignored**
-    - **Validates: Requirements 4.2, 5.1, 5.2, 5.4**
+    - **Validates: Requirements 4.2, 4.3, 5.1, 5.2, 5.4**
 
-  - [ ] 4.3 Add the `AppDrawer`
-    - Groups Time, Planning and Notes, App with the Destination list; labels from l10n; closes on selection
-    - _Requirements: 4.2, 4.3_
+  - [ ] 4.3 Add the `BottomBar` and the `AppDrawer`
+    - `BottomBar` from QuestLog's tab bar (rename `ShellTabBar`): tabs Timer, Quests, Calendar, Notes, Settings; marks the parent tab of History, Statistics and Missions
+    - `AppDrawer` lists History and Statistics (group Time) and Missions (group Planning); labels from l10n; closes on selection
+    - _Requirements: 4.2, 4.3, 4.5_
 
   - [ ] 4.4 Rebuild `AppShell` around `Destination` and `IndexedStack`
     - Move the Reconciliation state machine, lifecycle observer, splash and reconcile banner unchanged
     - Initial Destination is `timer`, or the one of the launching link
     - The Timer Destination is a placeholder screen until spec `002` replaces it, and does not wait for the Reconciliation; the Quest Destinations show the splash until it is done
     - Host the reward overlay in `ZaflingApp.builder`
-    - _Requirements: 4.1, 4.3, 4.4, 4.5, 4.6, 4.7, 5.3_
+    - _Requirements: 4.1, 4.5, 4.7, 4.8, 4.9, 4.10, 5.3_
 
   - [ ]* 4.5 Write Shell widget tests
     - First screen is the Timer; Drawer lists all Destinations; selecting closes the Drawer; state of a Destination survives switching; a launching link opens its Destination
-    - _Requirements: 4.1, 4.2, 4.3, 4.4, 5.3, 10.3, 10.4_
+    - _Requirements: 4.1, 4.2, 4.3, 4.5, 4.7, 5.3, 10.3, 10.4_
 
-  - [ ] 4.5a Add `ShellMenuButton` to every Destination header
-    - Place it in the existing header of Board, Missions, Calendar, Notes, Settings; the Timer, History and Statistics headers are done in spec `002`; hide it on pushed routes
-    - _Requirements: 4.8, 4.9_
+  - [ ] 4.5a Add `MenuButton` to every Destination header
+    - Add `lib/ui_kit/common/menu_button.dart` (`ShellMenuScope`, `MenuButton`) and place the button in the existing header of Board, Missions, Calendar, Notes and Settings; the Timer, History and Statistics headers are done in spec `002`; hide it on pushed routes
+    - _Requirements: 4.11, 4.12_
 
   - [ ] 4.6 Update the shortcut guide in Settings
     - List all eight links with the `zafling://` scheme; keep the guide's steps (Open URL, Add to Home Screen)
     - _Requirements: 5.5_
 
 - [ ] 5. Theme, settings and localisation
-  - [ ] 5.1 Add per-Destination themes
-    - `lib/theme/shell_theme.dart` with `themeForDestination`; Quest palettes from QuestLog; the Time palettes are plugged in by spec `002` (until then the Timer placeholder uses the Quest palettes)
-    - Wrap each Destination, the Drawer and the status bar style in the matching `Theme`
+  - [ ] 5.1 Add the theme registry
+    - `lib/theme/theme_registry.dart` with `ThemeDefinition`, `blueTheme` (`guildBoard`, `daylight`), `themeRegistry`, `activeThemeIdProvider`; rename `QuestPalette` to `AppPalette`
+    - `ZaflingApp` builds `theme` and `darkTheme` from the active definition; the Drawer and the status bar follow it
+    - Test: the registry holds the blue theme, every palette defines every role, and the provider returns the blue id
     - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
   - [ ] 5.2 Settings groups and shared language and theme
@@ -132,19 +134,33 @@ Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its fil
   - [ ] 6.3 Write the project documents
     - `CLAUDE.md`, `README.md`, `DOCS.md`, `FEATURES.md` in English: layout, commands, the import rule, the two palettes, the Working_Name locations
     - Add `.gitignore` for `build/`, `.dart_tool/`, `ios/Pods`, `.import/`
-    - _Requirements: 1.6, 8.2, 9.1_
+    - _Requirements: 1.8, 8.2, 9.1_
 
   - [ ] 6.4 Rename-check
     - Grep the project for `questlog`, `Questlog`, `QuestLog` outside the Quest_Module's user-visible name; list the remaining hits in the checkpoint report
     - _Requirements: 9.1, 9.4_
 
-- [ ] 7. Checkpoint — foundation is green
+- [ ] 7. Changelog and first release
+  - [ ] 7.1 Write the Release_Script and the Changelog
+    - `scripts/release.sh <version>` (bash, Script Portability pattern): validates the version and a clean tree, collects `git log <previous tag>..HEAD` subjects, groups `feat`, `fix`, others (skips `chore: bump`), prepends a section to `CHANGELOG.md`, sets `version:` in `pubspec.yaml` (build number kept), commits, creates the annotated tag
+    - `CHANGELOG.md` with the header and an empty `Unreleased` section; document the script in `DOCS.md`
+    - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5, 11.6_
+
+  - [ ]* 7.2 Test the Release_Script
+    - A bats-free shell test in `test/scripts/release_test.dart` runs the script in a temporary git repository: groups, tag, clean-tree refusal, bad version refusal, pre-release version
+    - _Requirements: 11.2, 11.3, 11.4, 11.5_
+
+  - [ ] 7.3 Release `1.0.0-dev.0`
+    - Run `scripts/release.sh 1.0.0-dev.0` after specs `001` to `003` are done and `scripts/check.sh` is green
+    - _Requirements: 11.7_
+
+- [ ] 8. Checkpoint — foundation is green
   - Ensure `scripts/check.sh` passes; commit in logical steps (scaffold, move, shell, docs); ask the user if questions arise
 
 ## Notes
 
 - Tasks marked with `*` are optional and can be skipped for a faster MVP, but the Property tests guard the structure and should run.
-- Commit in Conventional Commits, English, no tool attribution; dependency changes in their own commit. Never push. Tag `v0.1.0` on the version commit.
+- Commit in Conventional Commits, English, no tool attribution; dependency changes in their own commit. Never push. The first tag is `v1.0.0-dev.0`, made by `scripts/release.sh` after specs 001 to 003.
 - Run the Flutter toolchain after `git config --global --add safe.directory /opt/flutter` (skill `sandbox-flutter`); Drift codegen takes about 50 s, run it in the background.
 - The iOS build and every on-device check are Martin's; the sandbox has no iOS.
 - The two day boundaries (04:00 Board day, 03:00 logical day) stay separate; unifying them is a later decision.

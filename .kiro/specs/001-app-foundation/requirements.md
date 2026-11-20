@@ -17,13 +17,17 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 - **Time_Module**: The time tracking features moved from TimeLog (specified in `002-time-tracking-port`).
 - **Shell**: The root screen that hosts the destinations, the navigation drawer, the splash and the Reconciliation.
 - **Destination**: One reachable page of the App: Timer, History, Statistics, Quests, Missions, Calendar, Notes, Settings.
-- **Drawer**: The navigation panel that lists every Destination.
+- **Bottom_Bar**: The bottom navigation bar with five tabs: Timer, Quests, Calendar, Notes, Settings.
+- **Drawer**: The side panel that lists the Destinations that are not tabs of the Bottom_Bar: History, Statistics and Missions.
 - **Deep_Link**: A URL `zafling://<destination>` that opens a Destination.
 - **Database**: The single Drift database of the App, stored in one SQLite file.
 - **Legacy_App**: TimeLog or QuestLog in the frozen versions named above.
 - **Structure_Check**: `scripts/check-structure.sh`, which fails when a directory holds more than 15 source files.
 - **Time_Preferences**: The SharedPreferences keys of the Time_Module (defined in spec `002-time-tracking-port`).
 - **Row_Counts**, **Importer**: As defined in spec `003-legacy-import`.
+- **UI_Kit**: The folder `lib/ui_kit/` with the shared widgets (icons, sheets, snackbar, segmented control, form helpers).
+- **Changelog**: The file `CHANGELOG.md`, a list of released versions with their changes.
+- **Release_Script**: `scripts/release.sh`, which bumps the version, updates the Changelog, commits and tags.
 - **Working_Name**: The string `Zafling` and its derivatives (package name, bundle identifier, URL scheme, display name).
 
 ## Requirements
@@ -35,11 +39,13 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 #### Acceptance Criteria
 
 1. THE App SHALL be a Flutter project in `/workspace/Zafling` with its own git repository and the author identity `Martin Jablečník <martin.jablecnik@email.cz>`.
-2. THE App SHALL contain the folders `lib/core`, `lib/database`, `lib/shell`, `lib/theme`, `lib/l10n`, `lib/settings`, `lib/quests`, `lib/calendar`, `lib/notes` and `lib/time_tracking`, created before any code is moved into them.
+2. THE App SHALL contain the folders `lib/core`, `lib/database`, `lib/ui_kit`, `lib/shell`, `lib/theme`, `lib/l10n`, `lib/settings`, `lib/quests`, `lib/calendar`, `lib/notes` and `lib/time_tracking`, created before any code is moved into them.
 3. THE App SHALL contain `scripts/check.sh` that runs analysis, all tests and the Structure_Check, and `scripts/check-structure.sh` copied from `tool-configs/templates/scripts/`.
-4. WHEN a feature folder imports code, THE App SHALL import only from its own folder, `core`, `database`, `theme` and `l10n`, and never from another feature folder.
-5. IF a feature folder imports another feature folder, THEN THE App test suite SHALL fail.
-6. THE App SHALL contain `CLAUDE.md`, `README.md`, `DOCS.md` and `FEATURES.md` in English, describing the layout in this spec.
+4. THE folders `core`, `theme`, `ui_kit` and `l10n` SHALL NOT import a feature folder.
+5. THE folder `time_tracking` SHALL import only itself, `core`, `theme`, `ui_kit`, `l10n` and `database`.
+6. THE folders `quests`, `calendar`, `notes` and `settings` (the QuestLog modules, one product that grew together) SHALL NOT import `time_tracking` or `shell`; imports among them are allowed.
+7. IF an import breaks Criterion 4, 5 or 6, THEN THE App test suite SHALL fail.
+8. THE App SHALL contain `CLAUDE.md`, `README.md`, `DOCS.md` and `FEATURES.md` in English, describing the layout in this spec.
 
 ### Requirement 2: One Database
 
@@ -73,14 +79,17 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 #### Acceptance Criteria
 
 1. WHEN the App starts, THE Shell SHALL show the Timer Destination first, after the splash.
-2. THE Shell SHALL provide a Drawer that lists the Destinations Timer, History, Statistics, Quests, Missions, Calendar, Notes and Settings, grouped as Time, Planning and Notes, App.
-3. WHEN the user selects a Destination in the Drawer, THE Shell SHALL show it and close the Drawer.
-4. THE Shell SHALL keep the state of a Destination while another is shown, so a running Timer, an open note and a calendar month survive switching.
-5. WHILE the Reconciliation of the Quest_Module has not finished for the first time, THE Shell SHALL show the splash, and the Time_Module SHALL NOT wait for it.
-6. THE Shell SHALL host the reward overlay above the Navigator, as QuestLog does.
-7. THE Shell SHALL NOT show a mini timer, a Today page or any element that is not in a Legacy_App.
-8. THE header of every Destination SHALL contain a menu button that opens the Drawer, placed in the header the screen already has, so no Destination gains a new bar.
-9. WHILE a Destination has a pushed route open (Mission detail, note editor, event form), THE Shell SHALL keep the back button of that route and SHALL NOT show the menu button on it.
+2. THE Shell SHALL provide a Bottom_Bar with the tabs Timer, Quests, Calendar, Notes and Settings, in this order.
+3. THE Shell SHALL provide a Drawer that lists History and Statistics (group Time) and Missions (group Planning).
+4. WHEN the user selects a tab of the Bottom_Bar, THE Shell SHALL show its Destination.
+5. WHEN the user selects a Destination in the Drawer, THE Shell SHALL show it and close the Drawer.
+6. WHILE the Destination shown is not a tab, THE Bottom_Bar SHALL mark the tab it belongs to: Timer for History and Statistics, Quests for Missions.
+7. THE Shell SHALL keep the state of a Destination while another is shown, so a running Timer, an open note and a calendar month survive switching.
+8. WHILE the Reconciliation of the Quest_Module has not finished for the first time, THE Shell SHALL show the splash, and the Time_Module SHALL NOT wait for it.
+9. THE Shell SHALL host the reward overlay above the Navigator, as QuestLog does.
+10. THE Shell SHALL NOT show a mini timer, a Today page or any element that is not in a Legacy_App.
+11. THE header of every Destination SHALL contain a menu button that opens the Drawer, placed in the header the screen already has, so no Destination gains a new bar.
+12. WHILE a Destination has a pushed route open (Mission detail, note editor, event form), THE Shell SHALL keep the back button of that route and SHALL NOT show the menu button on it.
 
 ### Requirement 5: Deep links
 
@@ -113,11 +122,12 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 
 #### Acceptance Criteria
 
-1. WHILE the theme is dark, THE App SHALL render the Quest_Module, Calendar_Module and Notes_Module with the QuestLog palette `guildBoard` and the Time_Module with the TimeLog palette Midnight.
-2. WHILE the theme is light, THE App SHALL render the Quest_Module, Calendar_Module and Notes_Module with the QuestLog palette `daylight` and the Time_Module with the TimeLog palette Paper.
-3. THE Shell SHALL apply the palette of the Destination that is shown, including the Drawer, the status bar and the system bars.
-4. THE App SHALL load the fonts of both Legacy_Apps from bundled assets, register the licences of both font families, and fetch nothing from the network at runtime.
-5. THE App SHALL use the day boundaries of the Legacy_Apps unchanged: the Board day of the Quest_Module starts at 04:00 and the logical day of the Time_Module at 03:00.
+1. THE App SHALL provide one theme, the blue one of QuestLog, in a dark variant (`guildBoard`) and a light variant (`daylight`), and every Destination, including the Time_Module, SHALL use it.
+2. THE App SHALL define themes in a registry of theme definitions, each with an id, a label, a light palette and a dark palette, so that a further theme is added by one new definition and no screen changes.
+3. THE Shell SHALL apply the palette of the selected theme and brightness to the Drawer, the status bar and the system bars.
+4. THE App SHALL read the active theme id from one provider that returns the blue theme until a second theme exists.
+5. THE App SHALL load the fonts of both Legacy_Apps from bundled assets, register the licences of both font families, and fetch nothing from the network at runtime.
+6. THE App SHALL use the day boundaries of the Legacy_Apps unchanged: the Board day of the Quest_Module starts at 04:00 and the logical day of the Time_Module at 03:00.
 
 ### Requirement 8: Localisation
 
@@ -153,3 +163,17 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 2. THE App SHALL contain a test that opens the Database empty and asserts every expected table.
 3. THE App SHALL contain a test that asserts the Drawer lists every Destination and that every Deep_Link opens its Destination.
 4. THE App SHALL contain a test that asserts the first screen is the Timer.
+
+### Requirement 11: Changelog and releases
+
+**User Story:** As the developer, I want a changelog that updates itself when I raise the version, so that every release has its history without extra work.
+
+#### Acceptance Criteria
+
+1. THE App SHALL contain a Changelog in English in the Keep a Changelog layout, with an `Unreleased` section and one section per version, newest first.
+2. WHEN the Release_Script runs with a version, THE Release_Script SHALL write the commits since the previous tag into a new Changelog section grouped by Conventional Commit type (Features, Fixes, Other), and leave `Unreleased` empty.
+3. WHEN the Release_Script runs, THE Release_Script SHALL set the version in `pubspec.yaml` (the one source of the version), commit the Changelog and the version as `chore: bump version to <version>`, and create the annotated tag `v<version>` on that commit.
+4. IF the working tree is not clean or the version is not a valid semantic version, THEN THE Release_Script SHALL stop without changing anything.
+5. THE Release_Script SHALL accept a pre-release version such as `1.0.0-dev.0`.
+6. THE Release_Script SHALL NOT push and SHALL NOT add a tool attribution to the commit or the tag.
+7. THE first release of the App SHALL be `1.0.0-dev.0`.

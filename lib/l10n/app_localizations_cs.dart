@@ -10,7 +10,7 @@ class AppLocalizationsCs extends AppLocalizations {
   AppLocalizationsCs([String locale = 'cs']) : super(locale);
 
   @override
-  String get app_name => 'Questlog';
+  String get app_name => 'Zafling';
 
   @override
   String get app_splashLoading => 'Nástěnka se připravuje…';
@@ -1716,7 +1716,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settings_shortcutSubtitle =>
-      'Otevři QuestLog jedním klepnutím rovnou na vybrané obrazovce.';
+      'Otevři Zafling jedním klepnutím rovnou na vybrané obrazovce.';
 
   @override
   String get settings_shortcutPickLabel => 'Kam má ikona otevřít aplikaci?';

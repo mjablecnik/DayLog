@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/ui/theme/tokens.dart';
+import 'package:zafling/theme/tokens.dart';
 
 import '../ui/a11y/_a11y_harness.dart';
 
@@ -11,9 +11,9 @@ import '../ui/a11y/_a11y_harness.dart';
 /// Regenerate after an intended visual change with
 /// `flutter test --update-goldens test/goldens`.
 void main() {
-  const Map<String, QuestlogPalette> themes = <String, QuestlogPalette>{
-    'dark': QuestlogPalette.guildBoard,
-    'light': QuestlogPalette.daylight,
+  const Map<String, QuestPalette> themes = <String, QuestPalette>{
+    'dark': QuestPalette.guildBoard,
+    'light': QuestPalette.daylight,
   };
   const Map<String, Subject> screens = <String, Subject>{
     'board': Subject.board,
@@ -22,7 +22,7 @@ void main() {
   };
 
   for (final MapEntry<String, Subject> screen in screens.entries) {
-    for (final MapEntry<String, QuestlogPalette> theme in themes.entries) {
+    for (final MapEntry<String, QuestPalette> theme in themes.entries) {
       a11yTest('${screen.key} in the ${theme.key} theme', (
         WidgetTester tester,
         void Function(A11yEnv) track,

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/xp_rules.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/data/models.dart';
-import 'package:questlog/l10n/app_localizations.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/ui/screens/mission_detail/detail_quest_row.dart';
-import 'package:questlog/ui/screens/mission_detail/mission_detail_screen.dart';
-import 'package:questlog/ui/theme/questlog_theme.dart';
-import 'package:questlog/ui/theme/tokens.dart';
-import 'package:questlog/ui/widgets/cards/check_circle.dart';
+import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/quests/data/models.dart';
+import 'package:zafling/l10n/app_localizations.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/quests/ui/mission_detail/detail_quest_row.dart';
+import 'package:zafling/quests/ui/mission_detail/mission_detail_screen.dart';
+import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/tokens.dart';
+import 'package:zafling/quests/ui/cards/check_circle.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
@@ -25,7 +25,7 @@ const String homeLabel = 'missions-home';
 class DetailFixture {
   DetailFixture(this.db, this.container, this.clock);
 
-  final QuestlogDatabase db;
+  final AppDatabase db;
   final ProviderContainer container;
   final FixedClock clock;
 
@@ -107,12 +107,12 @@ Future<(DetailFixture, int)> pumpDetail(
   required Future<int> Function(DetailFixture f) seed,
   Locale locale = const Locale('en'),
   List<Override> overrides = const <Override>[],
-  QuestlogPalette palette = QuestlogPalette.guildBoard,
+  QuestPalette palette = QuestPalette.guildBoard,
 }) async {
   tester.view.physicalSize = const Size(800, 1800);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
-  final QuestlogDatabase db = createTestDatabase();
+  final AppDatabase db = createTestDatabase();
   final FixedClock clock = FixedClock(testNow);
   final ProviderContainer container = ProviderContainer(
     overrides: <Override>[

@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/notes/note_node.dart';
-import 'package:questlog/core/xp_rules.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/data/notes/notes_mappers.dart';
+import 'package:zafling/notes/domain/note_node.dart';
+import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/notes/data/notes_mappers.dart';
 
 import '../../helpers/test_database.dart';
 
 /// A schema 3 file is a schema 5 file without `note_nodes` and `calendar_addresses`, with `user_version = 3`.
-QuestlogDatabase openAsSchema3(File file) => QuestlogDatabase.forTesting(
+AppDatabase openAsSchema3(File file) => AppDatabase.forTesting(
   NativeDatabase(
     file,
     setup: (dynamic raw) {
@@ -25,7 +25,7 @@ QuestlogDatabase openAsSchema3(File file) => QuestlogDatabase.forTesting(
 final DateTime _now = DateTime(2026, 11, 19, 12);
 
 Future<int> insertNode(
-  QuestlogDatabase db, {
+  AppDatabase db, {
   int? parent,
   bool folder = false,
   String name = 'n',
@@ -43,7 +43,7 @@ Future<int> insertNode(
 
 Future<void> main() async {
   group('schema 4', () {
-    late QuestlogDatabase db;
+    late AppDatabase db;
     setUp(() => db = createTestDatabase());
     tearDown(() => db.close());
 
@@ -95,12 +95,12 @@ Future<void> main() async {
     late File file;
     setUp(() {
       dir = Directory.systemTemp.createTempSync('notes_migration_');
-      file = File('${dir.path}/questlog.sqlite');
+      file = File('${dir.path}/zafling.sqlite');
     });
     tearDown(() => dir.deleteSync(recursive: true));
 
     test('adds the table and changes no existing data', () async {
-      QuestlogDatabase db = QuestlogDatabase.forTesting(NativeDatabase(file));
+      AppDatabase db = AppDatabase.forTesting(NativeDatabase(file));
       await db.into(db.missions).insert(
         MissionsCompanion.insert(name: 'M', bonus: MissionBonus.small, createdAt: _now),
       );
@@ -123,7 +123,7 @@ Future<void> main() async {
       await insertNode(db, name: 'after migration');
       await db.close();
 
-      db = QuestlogDatabase.forTesting(NativeDatabase(file));
+      db = AppDatabase.forTesting(NativeDatabase(file));
       expect(await db.select(db.noteNodes).get(), hasLength(1));
       expect(db.schemaVersion, 6);
       await db.close();

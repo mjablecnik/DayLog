@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "app_name": "Questlog",
+  "app_name": "Zafling",
   "app_splashLoading": "Preparing your board…",
   "app_tabQuests": "Quests",
   "app_tabMissions": "Missions",
@@ -405,7 +405,7 @@
   "a11y_breadcrumbTo": "Go to {name}",
   "a11y_taskToggle": "Toggle done",
   "settings_shortcutTitle": "Home Screen shortcut",
-  "settings_shortcutSubtitle": "Open QuestLog on the screen you choose with a single tap.",
+  "settings_shortcutSubtitle": "Open Zafling on the screen you choose with a single tap.",
   "settings_shortcutPickLabel": "Which screen should the icon open?",
   "settings_shortcutCopyLink": "Copy link",
   "settings_shortcutCopied": "Link copied",

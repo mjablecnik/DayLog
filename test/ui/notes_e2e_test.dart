@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/notes/note_node.dart';
-import 'package:questlog/core/notes/note_tree.dart';
-import 'package:questlog/services/notes/notes_providers.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/ui/screens/note_editor/note_editor_screen.dart';
-import 'package:questlog/ui/screens/notes/folder_row.dart';
-import 'package:questlog/ui/screens/notes/note_row.dart';
-import 'package:questlog/ui/screens/notes/trash_row.dart';
-import 'package:questlog/ui/screens/shell/questlog_tab_bar.dart';
+import 'package:zafling/notes/domain/note_node.dart';
+import 'package:zafling/notes/domain/note_tree.dart';
+import 'package:zafling/notes/services/notes_providers.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/notes/ui/screens/note_editor/note_editor_screen.dart';
+import 'package:zafling/notes/ui/screens/notes/folder_row.dart';
+import 'package:zafling/notes/ui/screens/notes/note_row.dart';
+import 'package:zafling/notes/ui/screens/notes/trash_row.dart';
+import 'package:zafling/shell/shell_tab_bar.dart';
 import 'package:super_editor/super_editor.dart';
 
 import 'a11y/_a11y_harness.dart';
@@ -21,7 +21,7 @@ void main() {
   a11yTest('folders, a formatted note, move, trash, restore and delete for good', (tester, track) async {
     final A11yEnv env = await A11yEnv.pump(tester, Subject.shell);
     track(env);
-    final ProviderContainer container = ProviderScope.containerOf(tester.element(find.byType(QuestlogTabBar)));
+    final ProviderContainer container = ProviderScope.containerOf(tester.element(find.byType(ShellTabBar)));
     final int? xpBefore = await tester.runAsync(() => container.read(xpEngineProvider).readTotal());
 
     Future<void> tap(Finder finder) async {

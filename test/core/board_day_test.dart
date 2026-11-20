@@ -1,5 +1,5 @@
 import 'package:glados/glados.dart';
-import 'package:questlog/core/board_day.dart';
+import 'package:zafling/core/board_day.dart';
 
 import '../helpers/generators.dart';
 

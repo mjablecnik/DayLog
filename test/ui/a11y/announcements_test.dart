@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/app.dart';
-import 'package:questlog/core/xp_rules.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/l10n/app_localizations.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/ui/screens/shell/questlog_tab_bar.dart';
-import 'package:questlog/ui/state/ui_providers.dart';
-import 'package:questlog/ui/widgets/cards/check_circle.dart';
-import 'package:questlog/ui/widgets/cards/mission_card.dart';
+import 'package:zafling/app.dart';
+import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/l10n/app_localizations.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/settings/ui_providers.dart';
+import 'package:zafling/quests/ui/cards/check_circle.dart';
+import 'package:zafling/quests/ui/cards/mission_card.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/seed.dart';
@@ -25,7 +25,7 @@ void main() {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       final AppLocalizations l10n = lookupAppLocalizations(Locale(code));
-      final QuestlogDatabase db = createTestDatabase();
+      final AppDatabase db = createTestDatabase();
 
       final List<String> spoken = <String>[];
       tester.binding.defaultBinaryMessenger
@@ -70,7 +70,7 @@ void main() {
             deviceLocaleProvider.overrideWithValue(Locale(code)),
             appVersionProvider.overrideWith((ref) async => '1.0.0'),
           ],
-          child: const QuestlogApp(),
+          child: const ZaflingApp(),
         ),
       );
 

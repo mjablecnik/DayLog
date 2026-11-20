@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/calendar/event_type.dart';
-import 'package:questlog/ui/theme/tokens.dart';
+import 'package:zafling/core/event_type.dart';
+import 'package:zafling/theme/tokens.dart';
 
 double _channel(double c) =>
     c <= 0.03928 ? c / 12.92 : math.pow((c + 0.055) / 1.055, 2.4).toDouble();
@@ -34,10 +34,10 @@ double _distance(Color a, Color b) {
 }
 
 void main() {
-  final QuestlogPalette dark = QuestlogPalette.guildBoard;
-  final List<QuestlogPalette> all = <QuestlogPalette>[
-    QuestlogPalette.guildBoard,
-    QuestlogPalette.daylight,
+  final QuestPalette dark = QuestPalette.guildBoard;
+  final List<QuestPalette> all = <QuestPalette>[
+    QuestPalette.guildBoard,
+    QuestPalette.daylight,
   ];
 
   test('there is one distinct colour per type', () {
@@ -65,14 +65,14 @@ void main() {
   });
 
   test('the body text has at least 4.5:1 on the Soft_Chip fill in every palette', () {
-    for (final QuestlogPalette p in all) {
+    for (final QuestPalette p in all) {
       final Color fill = Color.alphaBlend(p.eventSoftFill(EventType.notableDay), p.board);
       expect(_contrast(p.text, fill), greaterThanOrEqualTo(4.5), reason: '${p.brightness}');
     }
   });
 
   test('the colours are the same in every palette', () {
-    for (final QuestlogPalette p in all) {
+    for (final QuestPalette p in all) {
       for (final EventType t in EventType.values) {
         expect(p.eventColor(t), dark.eventColor(t));
       }

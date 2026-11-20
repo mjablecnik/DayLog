@@ -8,32 +8,32 @@ import 'package:flutter/services.dart' show FontLoader;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/cadence.dart';
-import 'package:questlog/core/xp_rules.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/data/models.dart';
-import 'package:questlog/l10n/app_localizations.dart';
-import 'package:questlog/services/mission_service.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/services/recurrence_service.dart';
-import 'package:questlog/services/xp_engine.dart';
-import 'package:questlog/core/calendar/event_type.dart';
-import 'package:questlog/core/calendar/repeat_rule.dart';
-import 'package:questlog/data/calendar/calendar_models.dart';
-import 'package:questlog/services/calendar/calendar_service.dart';
-import 'package:questlog/ui/screens/board/board_screen.dart';
-import 'package:questlog/ui/screens/calendar/calendar_screen.dart';
-import 'package:questlog/ui/screens/mission_detail/mission_detail_screen.dart';
-import 'package:questlog/ui/screens/note_editor/note_editor_screen.dart';
-import 'package:questlog/ui/screens/notes/notes_screen.dart';
-import 'package:questlog/ui/screens/notes/trash_screen.dart';
-import 'package:questlog/services/notes/notes_service.dart';
-import 'package:questlog/ui/screens/missions/missions_screen.dart';
-import 'package:questlog/ui/screens/settings/settings_screen.dart';
-import 'package:questlog/ui/screens/shell/app_shell.dart';
-import 'package:questlog/ui/state/ui_providers.dart';
-import 'package:questlog/ui/theme/questlog_theme.dart';
-import 'package:questlog/ui/theme/tokens.dart';
+import 'package:zafling/quests/domain/cadence.dart';
+import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/quests/data/models.dart';
+import 'package:zafling/l10n/app_localizations.dart';
+import 'package:zafling/quests/services/mission_service.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/quests/services/recurrence_service.dart';
+import 'package:zafling/quests/services/xp_engine.dart';
+import 'package:zafling/core/event_type.dart';
+import 'package:zafling/calendar/domain/repeat_rule.dart';
+import 'package:zafling/calendar/data/calendar_models.dart';
+import 'package:zafling/calendar/services/calendar_service.dart';
+import 'package:zafling/quests/ui/board/board_screen.dart';
+import 'package:zafling/calendar/ui/screens/calendar_screen.dart';
+import 'package:zafling/quests/ui/mission_detail/mission_detail_screen.dart';
+import 'package:zafling/notes/ui/screens/note_editor/note_editor_screen.dart';
+import 'package:zafling/notes/ui/screens/notes/notes_screen.dart';
+import 'package:zafling/notes/ui/screens/notes/trash_screen.dart';
+import 'package:zafling/notes/services/notes_service.dart';
+import 'package:zafling/quests/ui/missions/missions_screen.dart';
+import 'package:zafling/settings/ui/settings_screen.dart';
+import 'package:zafling/shell/app_shell.dart';
+import 'package:zafling/settings/ui_providers.dart';
+import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/tokens.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/seed.dart';
@@ -82,7 +82,7 @@ class A11yEnv {
   A11yEnv._(this.tester, this.db, this.missionId);
 
   final WidgetTester tester;
-  final QuestlogDatabase db;
+  final AppDatabase db;
   final int missionId;
 
   /// Lets Drift streams deliver, then finishes animations.
@@ -114,7 +114,7 @@ class A11yEnv {
     double textScale = 1,
     Locale locale = const Locale('en'),
     bool reduceMotion = false,
-    QuestlogPalette palette = QuestlogPalette.guildBoard,
+    QuestPalette palette = QuestPalette.guildBoard,
     int startXp = 0,
     bool calendarEvents = false,
   }) async {
@@ -122,7 +122,7 @@ class A11yEnv {
     tester.view.physicalSize = Size(width, height);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    final QuestlogDatabase db = createTestDatabase();
+    final AppDatabase db = createTestDatabase();
     final FixedClock clock = FixedClock(a11yNow);
     final int missionId = await _seed(tester, db, clock, startXp, calendarEvents);
 
@@ -187,7 +187,7 @@ class A11yEnv {
 
   static Future<int> _seed(
     WidgetTester tester,
-    QuestlogDatabase db,
+    AppDatabase db,
     FixedClock clock,
     int startXp,
     bool calendarEvents,
@@ -328,7 +328,7 @@ List<String> spokenTexts(WidgetTester tester) {
 
 /// A week of events around the harness date: two Event_Tasks for today, a
 /// repeating lesson and a few days with several events.
-Future<void> _seedCalendar(QuestlogDatabase db, FixedClock clock) async {
+Future<void> _seedCalendar(AppDatabase db, FixedClock clock) async {
   final CalendarService calendar = CalendarService(db, XpEngine(db), clock);
   Future<void> add(
     String name,
@@ -365,7 +365,7 @@ Future<void> _seedCalendar(QuestlogDatabase db, FixedClock clock) async {
 
 /// Notes with long Czech names: a Folder with a Note inside (ids 1 and 4), a
 /// long Note in the root (2, the one the editor opens) and a trashed Note (3).
-Future<void> _seedNotes(QuestlogDatabase db, FixedClock clock) async {
+Future<void> _seedNotes(AppDatabase db, FixedClock clock) async {
   final NotesService notes = NotesService(db, clock);
   final folder = await notes.createFolder(
     name: 'Kompletní rekonstrukce koupelny včetně obkladů a podlahy',

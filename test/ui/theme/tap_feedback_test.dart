@@ -5,20 +5,20 @@ import 'package:flutter/gestures.dart' show kPressTimeout;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/ui/theme/questlog_theme.dart';
-import 'package:questlog/ui/theme/tokens.dart';
+import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/tokens.dart';
 
 /// Changed 2026-11-18 at Martin's request: a touch leaves no splash, highlight
 /// or hover tint on any control. State is shown by selection or an in-place
 /// fill (the effort rows, the segmented control), never by Material ink.
 void main() {
-  final List<QuestlogPalette> palettes = <QuestlogPalette>[
-    QuestlogPalette.guildBoard,
-    QuestlogPalette.daylight,
+  final List<QuestPalette> palettes = <QuestPalette>[
+    QuestPalette.guildBoard,
+    QuestPalette.daylight,
   ];
 
   test('the theme has no tap splash, highlight or hover for any palette', () {
-    for (final QuestlogPalette p in palettes) {
+    for (final QuestPalette p in palettes) {
       final ThemeData t = buildTheme(palette: p);
       expect(t.splashFactory, same(NoSplash.splashFactory));
       expect(t.splashColor, Colors.transparent);
@@ -29,7 +29,7 @@ void main() {
 
   test('buttons paint an overlay only for keyboard focus', () {
     final ThemeData t = buildTheme(
-      palette: QuestlogPalette.guildBoard,
+      palette: QuestPalette.guildBoard,
     );
     final List<ButtonStyle?> styles = <ButtonStyle?>[
       t.textButtonTheme.style,
@@ -58,9 +58,9 @@ void main() {
 
     final GlobalKey boundary = GlobalKey();
     final ThemeData theme = buildTheme(
-      palette: QuestlogPalette.guildBoard,
+      palette: QuestPalette.guildBoard,
     );
-    final QuestlogPalette p = QuestlogPalette.guildBoard;
+    final QuestPalette p = QuestPalette.guildBoard;
     final Key chip = const ValueKey('chip');
     final Key text = const ValueKey('text');
     final Key filled = const ValueKey('filled');

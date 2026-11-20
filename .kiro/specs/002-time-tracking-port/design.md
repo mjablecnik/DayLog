@@ -44,7 +44,7 @@ lib/time_tracking/
 ├── services/                        # timer_service(+freezed), alarm, notification, reminder, recurring_reminder, project, task, database_service
 │   └── native/                      # live_activity_channel, platform_channel
 ├── providers/                       # timer, history, statistics, reminder*, task, suggestions
-├── theme/                           # time_palette.dart (Midnight, Paper; was core/theme.dart)
+├── theme/                          # time_theme.dart (adapter from the App palette; was core/theme.dart)
 └── ui/
     ├── screens/                     # timer, history, statistics, reminder_action, reminder_settings
     ├── widgets/                     # cards, sheets, controls (split into sheets/, controls/, reminders/ if over 15)
@@ -90,14 +90,17 @@ The Shell imports only this file.
 
 Moved unchanged: `TimerStatus`, `TimerState` (freezed), `TimerNotifier`. Generated `timer_service.freezed.dart` stays committed.
 
-### 4. Time palette (`theme/time_palette.dart`)
+### 4. Time theme adapter (`theme/time_theme.dart`)
 
 ```dart
-enum TimePalette { midnight, paper }
-ThemeData timeTheme(Brightness brightness);   // dark → midnight, light → paper
+/// The colours TimeLog widgets read, derived from the App palette.
+class AppThemeData {
+  factory AppThemeData.fromPalette(AppPalette palette, Brightness brightness);
+}
+final timeThemeProvider = Provider<AppThemeData>((ref) => ...);   // follows the active theme
 ```
 
-`AppThemeData` and its fields stay; the `ember` theme is dropped from selection because no UI selects it in Legacy_Timelog (`ThemeDots` is commented out).
+TimeLog widgets keep reading `AppThemeData` fields, so they are not rewritten; the adapter maps each field to a palette role. TimeLog's own palettes (`ember`, `midnight`, `paper`) and the theme selection are removed. The activity colours stay computed by `activityEntryColor(type, subtype, isDark:)`.
 
 ### 5. Language and theme providers
 

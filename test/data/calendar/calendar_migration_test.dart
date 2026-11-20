@@ -4,11 +4,11 @@ import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
-import 'package:questlog/core/calendar/event_type.dart';
-import 'package:questlog/core/xp_rules.dart';
-import 'package:questlog/data/calendar/calendar_mappers.dart';
-import 'package:questlog/data/calendar/calendar_models.dart';
-import 'package:questlog/data/database.dart';
+import 'package:zafling/core/event_type.dart';
+import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:zafling/calendar/data/calendar_mappers.dart';
+import 'package:zafling/calendar/data/calendar_models.dart';
+import 'package:zafling/database/app_database.dart';
 
 import '../../helpers/generators.dart';
 import '../../helpers/test_database.dart';
@@ -16,7 +16,7 @@ import '../../helpers/test_database.dart';
 /// A schema 2 file is a schema 5 file without the calendar and notes tables, with
 /// `user_version = 2`. The [NativeDatabase.setup] callback runs right before
 /// Drift reads that version, so opening the file with it simulates an old install.
-QuestlogDatabase openAsSchema2(File file) => QuestlogDatabase.forTesting(
+AppDatabase openAsSchema2(File file) => AppDatabase.forTesting(
   NativeDatabase(
     file,
     setup: (dynamic raw) {
@@ -36,7 +36,7 @@ Future<void> main() async {
 
   setUp(() {
     dir = Directory.systemTemp.createTempSync('calendar_migration_');
-    file = File('${dir.path}/questlog.sqlite');
+    file = File('${dir.path}/zafling.sqlite');
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
@@ -49,7 +49,7 @@ Future<void> main() async {
     })
   >
   prepare(int quests, int missions) async {
-    final QuestlogDatabase db = QuestlogDatabase.forTesting(NativeDatabase(file));
+    final AppDatabase db = AppDatabase.forTesting(NativeDatabase(file));
     final DateTime now = DateTime(2026, 11, 15, 12);
     for (int i = 0; i < missions; i++) {
       await db.into(db.missions).insert(
@@ -81,7 +81,7 @@ Future<void> main() async {
   Future<void> expectMigrated(
     ({List<QuestRow> quests, List<MissionRow> missions, List<RecurringRuleRow> rules, AppStateRow state}) before,
   ) async {
-    final QuestlogDatabase db = openAsSchema2(file);
+    final AppDatabase db = openAsSchema2(file);
     expect(await db.select(db.calendarEvents).get(), hasLength(35));
     expect(await db.select(db.quests).get(), before.quests);
     expect(await db.select(db.missions).get(), before.missions);
@@ -89,7 +89,7 @@ Future<void> main() async {
     expect(await db.select(db.appState).getSingle(), before.state);
     await db.close();
 
-    final QuestlogDatabase again = QuestlogDatabase.forTesting(NativeDatabase(file));
+    final AppDatabase again = AppDatabase.forTesting(NativeDatabase(file));
     expect(await again.select(again.calendarEvents).get(), hasLength(35));
     await again.close();
   }
@@ -104,21 +104,21 @@ Future<void> main() async {
 
   test('a deleted holiday stays deleted on later starts', () async {
     await prepare(1, 0);
-    QuestlogDatabase db = openAsSchema2(file);
+    AppDatabase db = openAsSchema2(file);
     final CalendarEventRow row = (await db.select(db.calendarEvents).get()).first;
     await (db.delete(db.calendarEvents)..where((t) => t.id.equals(row.id))).go();
     await db.close();
-    db = QuestlogDatabase.forTesting(NativeDatabase(file));
+    db = AppDatabase.forTesting(NativeDatabase(file));
     expect(await db.select(db.calendarEvents).get(), hasLength(34));
     await db.close();
   });
 
   test('a fresh database and a migrated one hold the same events', () async {
-    final QuestlogDatabase fresh = createTestDatabase();
+    final AppDatabase fresh = createTestDatabase();
     final List<String> freshNames = (await fresh.select(fresh.calendarEvents).get()).map((r) => r.name).toList()..sort();
     await fresh.close();
     await prepare(0, 0);
-    final QuestlogDatabase migrated = openAsSchema2(file);
+    final AppDatabase migrated = openAsSchema2(file);
     final List<String> migratedNames = (await migrated.select(migrated.calendarEvents).get()).map((r) => r.name).toList()..sort();
     await migrated.close();
     expect(migratedNames, freshNames);
@@ -134,7 +134,7 @@ Future<void> main() async {
   );
 
   group('wall-clock storage', () {
-    late QuestlogDatabase db;
+    late AppDatabase db;
     setUp(() => db = createTestDatabase());
     tearDown(() => db.close());
 

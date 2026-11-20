@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/calendar/event_type.dart';
-import 'package:questlog/core/calendar/repeat_rule.dart';
-import 'package:questlog/data/calendar/calendar_filter_store.dart';
-import 'package:questlog/data/calendar/calendar_models.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/l10n/app_localizations.dart';
-import 'package:questlog/l10n/app_localizations_en.dart';
-import 'package:questlog/services/calendar/calendar_providers.dart';
-import 'package:questlog/services/calendar/calendar_service.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/ui/theme/questlog_theme.dart';
-import 'package:questlog/ui/theme/tokens.dart';
+import 'package:zafling/core/event_type.dart';
+import 'package:zafling/calendar/domain/repeat_rule.dart';
+import 'package:zafling/calendar/data/calendar_filter_store.dart';
+import 'package:zafling/calendar/data/calendar_models.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/l10n/app_localizations.dart';
+import 'package:zafling/l10n/app_localizations_en.dart';
+import 'package:zafling/calendar/services/calendar_providers.dart';
+import 'package:zafling/calendar/services/calendar_service.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/tokens.dart';
 
-import 'package:questlog/services/xp_engine.dart' as xp_engine;
+import 'package:zafling/quests/services/xp_engine.dart' as xp_engine;
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
@@ -27,7 +27,7 @@ final AppLocalizationsEn en = AppLocalizationsEn();
 /// in-memory database with a controllable clock. The built-in holidays are
 /// removed unless [keepSeed] is true, so a test sees only its own events.
 class CalendarUiHarness {
-  late QuestlogDatabase db;
+  late AppDatabase db;
   late FixedClock clock;
   late MemoryCalendarFilterStore filterStore;
 
@@ -63,7 +63,7 @@ class CalendarUiHarness {
         ],
         child: MaterialApp(
           theme: buildTheme(
-            palette: brightness == Brightness.dark ? QuestlogPalette.guildBoard : QuestlogPalette.daylight,
+            palette: brightness == Brightness.dark ? QuestPalette.guildBoard : QuestPalette.daylight,
           ),
           locale: const Locale('en'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,

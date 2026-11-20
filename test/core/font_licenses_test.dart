@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/font_licenses.dart';
+import 'package:zafling/core/font_licenses.dart';
 
 class _DiskBundle extends CachingAssetBundle {
   @override

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/app.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/ui/screens/mission_detail/mission_detail_screen.dart';
-import 'package:questlog/ui/screens/shell/questlog_tab_bar.dart';
-import 'package:questlog/ui/state/reward_queue.dart';
-import 'package:questlog/ui/state/ui_providers.dart';
-import 'package:questlog/ui/widgets/cards/mission_card.dart';
-import 'package:questlog/ui/widgets/reward/reward_card.dart';
+import 'package:zafling/app.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/quests/ui/mission_detail/mission_detail_screen.dart';
+import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/quests/ui/state/reward_queue.dart';
+import 'package:zafling/settings/ui_providers.dart';
+import 'package:zafling/quests/ui/cards/mission_card.dart';
+import 'package:zafling/quests/ui/reward/reward_card.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/seed.dart';
@@ -28,7 +28,7 @@ void main() {
     tester.view.physicalSize = const Size(430, 900);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    final QuestlogDatabase db = createTestDatabase();
+    final AppDatabase db = createTestDatabase();
 
     // Seeded before the first frame so no Drift stream is listening yet.
     await tester.runAsync(() async {
@@ -47,7 +47,7 @@ void main() {
           deviceLocaleProvider.overrideWithValue(const Locale('en')),
           appVersionProvider.overrideWith((ref) async => '1.0.0'),
         ],
-        child: const QuestlogApp(),
+        child: const ZaflingApp(),
       ),
     );
     await _settle(tester);

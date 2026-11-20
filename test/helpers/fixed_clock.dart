@@ -1,4 +1,4 @@
-import 'package:questlog/core/clock.dart';
+import 'package:zafling/core/clock.dart';
 
 /// A [Clock] whose time is set explicitly by the test.
 class FixedClock implements Clock {

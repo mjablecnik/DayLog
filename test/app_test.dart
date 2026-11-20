@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/app.dart';
-import 'package:questlog/data/preferences.dart';
-import 'package:questlog/l10n/app_localizations.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/ui/screens/shell/app_shell.dart';
-import 'package:questlog/ui/state/ui_providers.dart';
-import 'package:questlog/ui/theme/questlog_theme.dart';
-import 'package:questlog/ui/theme/tokens.dart';
+import 'package:zafling/app.dart';
+import 'package:zafling/database/preferences.dart';
+import 'package:zafling/l10n/app_localizations.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/shell/app_shell.dart';
+import 'package:zafling/settings/ui_providers.dart';
+import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/tokens.dart';
 
 import 'helpers/test_database.dart';
 
@@ -79,7 +79,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const QuestlogApp(home: _Probe()),
+        child: const ZaflingApp(home: _Probe()),
       ),
     );
     await tester.pumpAndSettle();
@@ -88,7 +88,7 @@ void main() {
 
     // German device, no choice yet: English, device brightness (light in tests).
     expect(find.text('Quests'), findsOneWidget);
-    expect(context().palette, QuestlogPalette.daylight);
+    expect(context().palette, QuestPalette.daylight);
     expect(Localizations.localeOf(context()), const Locale('en'));
 
     await settings.setLanguage(AppLanguage.cs);
@@ -111,12 +111,12 @@ void main() {
 
     await settings.setTheme(AppTheme.dark);
     await tester.pumpAndSettle();
-    expect(context().palette, QuestlogPalette.guildBoard);
+    expect(context().palette, QuestPalette.guildBoard);
     expect(Theme.of(context()).brightness, Brightness.dark);
 
     await settings.setTheme(AppTheme.light);
     await tester.pumpAndSettle();
-    expect(context().palette, QuestlogPalette.daylight);
+    expect(context().palette, QuestPalette.daylight);
 
     expect(context().displayText.headlineLarge!.fontFamily, 'Figtree');
 
@@ -145,7 +145,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const QuestlogApp(home: _Probe()),
+        child: const ZaflingApp(home: _Probe()),
       ),
     );
     await tester.pumpAndSettle();
@@ -171,7 +171,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final BuildContext context = tester.element(find.byType(_Pushed));
-    expect(context.palette, QuestlogPalette.guildBoard);
+    expect(context.palette, QuestPalette.guildBoard);
     expect(find.text('Questy'), findsWidgets);
     expect(
       created,
@@ -198,7 +198,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const QuestlogApp(home: _Probe()),
+        child: const ZaflingApp(home: _Probe()),
       ),
     );
     await tester.pumpAndSettle();
@@ -206,11 +206,11 @@ void main() {
 
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
     await tester.pumpAndSettle();
-    expect(context().palette, QuestlogPalette.guildBoard);
+    expect(context().palette, QuestPalette.guildBoard);
 
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
     await tester.pumpAndSettle();
-    expect(context().palette, QuestlogPalette.daylight);
+    expect(context().palette, QuestPalette.daylight);
   });
 
   testWidgets('default home is the shell, localized by the device locale', (
@@ -223,7 +223,7 @@ void main() {
           databaseProvider.overrideWithValue(db),
           deviceLocaleProvider.overrideWithValue(const Locale('cs')),
         ],
-        child: const QuestlogApp(),
+        child: const ZaflingApp(),
       ),
     );
     await tester.pumpAndSettle();

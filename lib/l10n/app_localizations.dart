@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// Application name shown on the splash and in the About group.
   ///
   /// In cs, this message translates to:
-  /// **'Questlog'**
+  /// **'Zafling'**
   String get app_name;
 
   /// Text under the logo on the splash screen while the database opens and Reconciliation runs.
@@ -2531,7 +2531,7 @@ abstract class AppLocalizations {
   /// Hint under the guide title.
   ///
   /// In cs, this message translates to:
-  /// **'Otevři QuestLog jedním klepnutím rovnou na vybrané obrazovce.'**
+  /// **'Otevři Zafling jedním klepnutím rovnou na vybrané obrazovce.'**
   String get settings_shortcutSubtitle;
 
   /// Label above the choice of the screen the shortcut opens.

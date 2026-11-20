@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// Requirement 19.3: every screen and sheet has a widget test on the in-memory
 /// database. The catalogue is the set of `*_screen.dart` files under
-/// `lib/ui/screens` and `*_sheet.dart` files under `lib/ui/sheets`; each needs
-/// a test under `test/ui` that names it and runs on `createTestDatabase()`
+/// every `ui/` folder and `*_sheet.dart` files likewise; each needs
+/// a test under `test/` that names it and runs on `createTestDatabase()`
 /// (directly or through a harness that does).
 void main() {
   String pascal(String snake) => snake
@@ -20,7 +20,7 @@ void main() {
           .where((File f) => f.path.endsWith('.dart'))
           .toList();
 
-  final List<File> tests = dartFiles('test/ui')
+  final List<File> tests = dartFiles('test')
       .where((File f) => !f.path.contains('/a11y/'))
       .where((File f) => f.path.endsWith('_test.dart'))
       .toList();
@@ -28,7 +28,7 @@ void main() {
     for (final File f in tests) f.path: f.readAsStringSync(),
   };
   final Map<String, String> harnesses = <String, String>{
-    for (final File f in dartFiles('test/ui'))
+    for (final File f in dartFiles('test'))
       if (f.uri.pathSegments.last.startsWith('_')) f.path: f.readAsStringSync(),
   };
 
@@ -43,10 +43,12 @@ void main() {
   }
 
   final List<String> catalogue = <String>[
-    ...dartFiles('lib/ui/screens')
+    ...dartFiles('lib')
+        .where((File f) => f.path.contains('/ui/') || f.path.startsWith('lib/shell/'))
         .map((File f) => f.uri.pathSegments.last)
         .where((String n) => n.endsWith('_screen.dart')),
-    ...dartFiles('lib/ui/sheets')
+    ...dartFiles('lib')
+        .where((File f) => f.path.contains('/ui/'))
         .map((File f) => f.uri.pathSegments.last)
         .where((String n) => n.endsWith('_sheet.dart')),
   ];
@@ -63,7 +65,7 @@ void main() {
         (MapEntry<String, String> e) =>
             e.value.contains(widget) || e.value.contains('show$widget'),
       );
-      expect(naming, isNotEmpty, reason: 'no test under test/ui names $widget');
+      expect(naming, isNotEmpty, reason: 'no test under test/ names $widget');
       expect(
         naming.any(
           (MapEntry<String, String> e) =>

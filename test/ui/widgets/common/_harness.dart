@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/l10n/app_localizations.dart';
-import 'package:questlog/ui/theme/questlog_theme.dart';
-import 'package:questlog/ui/theme/tokens.dart';
+import 'package:zafling/l10n/app_localizations.dart';
+import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/tokens.dart';
 
 /// Pumps [child] inside a themed, localized app with a Scaffold.
 Future<void> pumpCommon(
   WidgetTester tester,
   Widget child, {
   bool disableAnimations = false,
-  QuestlogPalette palette = QuestlogPalette.guildBoard,
+  QuestPalette palette = QuestPalette.guildBoard,
 }) {
   return tester.pumpWidget(
     MaterialApp(

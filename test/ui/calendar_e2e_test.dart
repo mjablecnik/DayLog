@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/l10n/app_localizations_en.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/ui/screens/shell/questlog_tab_bar.dart';
-import 'package:questlog/ui/widgets/calendar/event_task_card.dart';
+import 'package:zafling/l10n/app_localizations_en.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/calendar/ui/widgets/event_task_card.dart';
 
 import 'a11y/_a11y_harness.dart';
 
@@ -16,7 +16,7 @@ void main() {
   a11yTest('create an event, do it on the Board, delete it and undo', (tester, track) async {
     final A11yEnv env = await A11yEnv.pump(tester, Subject.shell);
     track(env);
-    final ProviderContainer container = ProviderScope.containerOf(tester.element(find.byType(QuestlogTabBar)));
+    final ProviderContainer container = ProviderScope.containerOf(tester.element(find.byType(ShellTabBar)));
 
     // A stream read is a chain of queries on timers in the fake zone, so settle
     // a few times (a loaded machine needs the extra rounds).

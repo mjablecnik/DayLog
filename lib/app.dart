@@ -3,17 +3,17 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'l10n/app_localizations.dart';
-import 'ui/screens/shell/app_shell.dart';
-import 'ui/state/quest_actions.dart';
-import 'ui/state/ui_providers.dart';
-import 'ui/theme/questlog_theme.dart';
-import 'ui/theme/tokens.dart';
-import 'ui/widgets/reward/reward_overlay.dart';
+import 'shell/app_shell.dart';
+import 'quests/ui/state/quest_actions.dart';
+import 'settings/ui_providers.dart';
+import 'theme/quest_theme.dart';
+import 'theme/tokens.dart';
+import 'quests/ui/reward/reward_overlay.dart';
 
 /// The application root: theme, locale and localization follow the settings
 /// live, so a change applies to every screen without rebuilding navigation.
-class QuestlogApp extends ConsumerWidget {
-  const QuestlogApp({super.key, this.home = const AppShell()});
+class ZaflingApp extends ConsumerWidget {
+  const ZaflingApp({super.key, this.home = const AppShell()});
 
   /// The root screen; tests swap in a probe.
   final Widget home;
@@ -32,8 +32,8 @@ class QuestlogApp extends ConsumerWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       locale: locale,
-      theme: buildTheme(palette: QuestlogPalette.daylight),
-      darkTheme: buildTheme(palette: QuestlogPalette.guildBoard),
+      theme: buildTheme(palette: QuestPalette.daylight),
+      darkTheme: buildTheme(palette: QuestPalette.guildBoard),
       themeMode: ref.watch(themeModeProvider),
       // The application-level Localizations does not tag its subtree, so screen
       // readers would keep the device voice without this.

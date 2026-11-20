@@ -50,8 +50,9 @@ Move the TimeLog 1.2.0 features into `lib/time_tracking/` of Zafling, add the Ti
     - `loadAppLocalizations()` reads the language through the bridge; remove the `app_language` and `selected_theme` keys
     - _Requirements: 8.1, 8.2, 8.3_
 
-  - [ ] 4.3 Move the palette
-    - `core/theme.dart` to `lib/time_tracking/theme/time_palette.dart` with `timeTheme(Brightness)`; hook it into `themeForDestination`
+  - [ ] 4.3 Replace the TimeLog palettes by an adapter
+    - `core/theme.dart` becomes `lib/time_tracking/theme/time_theme.dart`: `AppThemeData.fromPalette(AppPalette, Brightness)` and `timeThemeProvider`; delete the `ember`, `midnight` and `paper` definitions and the theme selection
+    - Map every field the widgets read to a role of the App palette; list the mapping in the checkpoint report
     - _Requirements: 8.2_
 
   - [ ]* 4.4 Port provider tests and write the suggestion and statistics property tests
@@ -66,7 +67,7 @@ Move the TimeLog 1.2.0 features into `lib/time_tracking/` of Zafling, add the Ti
     - _Requirements: 1.1, 3.2, 4.1, 9.2_
 
   - [ ] 5.1a Add the menu button and the fonts
-    - Place `ShellMenuButton` in the headers of Timer, History and Statistics
+    - Place `MenuButton` in the headers of Timer, History and Statistics
     - Add Sora and JetBrainsMono and their licence texts to `assets/fonts/` and `pubspec.yaml`; register the licences with `registerFontLicenses`
     - _Requirements: 9.5, 9.6_
 
@@ -122,7 +123,7 @@ Move the TimeLog 1.2.0 features into `lib/time_tracking/` of Zafling, add the Ti
     - _Requirements: 10.2, 10.3_
 
 - [ ] 9. Checkpoint — Time_Module is green
-  - Ensure `scripts/check.sh` passes; tag `v0.2.0` on the version commit; list the items Martin must check on the iPhone (alarm, Live Activity, notification taps, reminders); ask the user if questions arise
+  - Ensure `scripts/check.sh` passes; list the items Martin must check on the iPhone (alarm, Live Activity, notification taps, reminders); ask the user if questions arise
 
 ## Notes
 

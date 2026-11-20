@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/xp_rules.dart';
-import 'package:questlog/data/models.dart';
-import 'package:questlog/l10n/app_localizations.dart';
-import 'package:questlog/ui/theme/questlog_theme.dart';
-import 'package:questlog/ui/theme/tokens.dart';
+import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:zafling/quests/data/models.dart';
+import 'package:zafling/l10n/app_localizations.dart';
+import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/tokens.dart';
 
 /// Pumps [child] in a themed, localized app; width is generous unless set.
 Future<void> pumpCards(
@@ -12,7 +12,7 @@ Future<void> pumpCards(
   Widget child, {
   Locale locale = const Locale('en'),
   bool disableAnimations = false,
-  QuestlogPalette palette = QuestlogPalette.guildBoard,
+  QuestPalette palette = QuestPalette.guildBoard,
 }) {
   return tester.pumpWidget(
     MaterialApp(

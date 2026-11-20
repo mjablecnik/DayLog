@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:questlog/core/notes/note_node.dart';
+import 'package:zafling/notes/domain/note_node.dart';
 
 final DateTime treeEpoch = DateTime(2026, 11, 1, 12);
 

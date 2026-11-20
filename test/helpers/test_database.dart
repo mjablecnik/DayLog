@@ -1,9 +1,9 @@
 import 'package:drift/native.dart';
-import 'package:questlog/data/database.dart';
+import 'package:zafling/database/app_database.dart';
 
-/// A fresh [QuestlogDatabase] over an in-memory SQLite database.
+/// A fresh [AppDatabase] over an in-memory SQLite database.
 ///
 /// Close it with `await db.close()` in `tearDown`.
-QuestlogDatabase createTestDatabase() {
-  return QuestlogDatabase.forTesting(NativeDatabase.memory());
+AppDatabase createTestDatabase() {
+  return AppDatabase.forTesting(NativeDatabase.memory());
 }

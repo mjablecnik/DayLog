@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// `lib/core/notes/` is pure Dart: it may import only `dart:` libraries and the
+/// `lib/notes/domain/` is pure Dart: it may import only `dart:` libraries and the
 /// project's own `core` files, never Flutter, Drift or the data and UI layers.
 void main() {
-  final List<File> sources = Directory('lib/core/notes')
+  final List<File> sources = Directory('lib/notes/domain')
       .listSync()
       .whereType<File>()
       .where((File f) => f.path.endsWith('.dart'))

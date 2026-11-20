@@ -1,12 +1,12 @@
 import 'package:drift/drift.dart' show OrderingTerm;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
-import 'package:questlog/core/cadence.dart';
-import 'package:questlog/core/calendar/event_type.dart';
-import 'package:questlog/core/calendar/repeat_rule.dart';
-import 'package:questlog/data/calendar/calendar_models.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/services/calendar/calendar_service.dart';
+import 'package:zafling/quests/domain/cadence.dart';
+import 'package:zafling/core/event_type.dart';
+import 'package:zafling/calendar/domain/repeat_rule.dart';
+import 'package:zafling/calendar/data/calendar_models.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/calendar/services/calendar_service.dart';
 
 import '_harness.dart';
 
@@ -20,7 +20,7 @@ Future<void> withCalendar(Future<void> Function(CalendarHarness h) body) async {
 }
 
 /// Everything a deletion can touch, as comparable values.
-Future<List<String>> snapshotOf(QuestlogDatabase db) async {
+Future<List<String>> snapshotOf(AppDatabase db) async {
   final List<String> out = <String>[];
   for (final CalendarEventRow r in await (db.select(db.calendarEvents)..orderBy([(t) => OrderingTerm.asc(t.id)])).get()) {
     out.add('event $r');

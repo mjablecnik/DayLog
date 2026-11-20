@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/app.dart';
-import 'package:questlog/core/xp_rules.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/data/models.dart';
-import 'package:questlog/l10n/app_localizations_cs.dart';
-import 'package:questlog/l10n/app_localizations_en.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/services/quest_service.dart';
-import 'package:questlog/services/xp_engine.dart';
-import 'package:questlog/ui/screens/settings/settings_screen.dart';
-import 'package:questlog/ui/screens/shell/questlog_tab_bar.dart';
-import 'package:questlog/ui/state/reward_queue.dart';
-import 'package:questlog/ui/state/ui_providers.dart';
-import 'package:questlog/ui/theme/questlog_theme.dart';
-import 'package:questlog/ui/theme/tokens.dart';
-import 'package:questlog/ui/widgets/cards/check_circle.dart';
-import 'package:questlog/ui/widgets/reward/reward_card.dart';
+import 'package:zafling/app.dart';
+import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/quests/data/models.dart';
+import 'package:zafling/l10n/app_localizations_cs.dart';
+import 'package:zafling/l10n/app_localizations_en.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/quests/services/quest_service.dart';
+import 'package:zafling/quests/services/xp_engine.dart';
+import 'package:zafling/settings/ui/settings_screen.dart';
+import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/quests/ui/state/reward_queue.dart';
+import 'package:zafling/settings/ui_providers.dart';
+import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/tokens.dart';
+import 'package:zafling/quests/ui/cards/check_circle.dart';
+import 'package:zafling/quests/ui/reward/reward_card.dart';
 
 import '../helpers/fixed_clock.dart';
 import '../helpers/test_database.dart';
@@ -52,7 +52,7 @@ Finder _completeCheck(String name) => find.byWidgetPredicate(
       w is CheckCircle && w.semanticLabel == en.a11y_completeQuest(name),
 );
 
-QuestlogPalette _palette(WidgetTester tester) =>
+QuestPalette _palette(WidgetTester tester) =>
     tester.element(find.byType(SettingsScreen)).palette;
 
 void main() {
@@ -65,7 +65,7 @@ void main() {
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
     addTearDown(tester.platformDispatcher.clearAllTestValues);
 
-    final QuestlogDatabase db = createTestDatabase();
+    final AppDatabase db = createTestDatabase();
     // Monday 16 Nov 2026, 12:00 (Board_Day of 16 Nov).
     final FixedClock clock = FixedClock(DateTime(2026, 11, 16, 12));
     final SemanticsHandle semantics = tester.ensureSemantics();
@@ -95,11 +95,11 @@ void main() {
             deviceLocaleProvider.overrideWithValue(const Locale('en')),
             appVersionProvider.overrideWith((ref) async => '1.0.0'),
           ],
-          child: const QuestlogApp(),
+          child: const ZaflingApp(),
         ),
       );
       final ProviderContainer container = ProviderScope.containerOf(
-        tester.element(find.byType(QuestlogApp)),
+        tester.element(find.byType(ZaflingApp)),
       );
       await _settle(tester);
       await _settle(tester);
@@ -238,7 +238,7 @@ void main() {
 
       await _tap(tester, find.text(cs.settings_themeLight));
       expect(_palette(tester).isLight, isTrue);
-      expect(_palette(tester).board, QuestlogPalette.daylight.board);
+      expect(_palette(tester).board, QuestPalette.daylight.board);
       expect(find.text(cs.settings_version('1.0.0')), findsOneWidget);
 
       // ---- 6. Post a rule by hand (12.3) ------------------------------------

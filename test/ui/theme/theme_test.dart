@@ -1,30 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/ui/theme/questlog_theme.dart';
-import 'package:questlog/ui/theme/tokens.dart';
-import 'package:questlog/ui/theme/typography.dart';
+import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/tokens.dart';
+import 'package:zafling/theme/typography.dart';
 
 void main() {
-  final List<QuestlogPalette> palettes = <QuestlogPalette>[
-    QuestlogPalette.guildBoard,
-    QuestlogPalette.daylight,
+  final List<QuestPalette> palettes = <QuestPalette>[
+    QuestPalette.guildBoard,
+    QuestPalette.daylight,
   ];
 
   test('buildTheme succeeds for every palette', () {
-    for (final QuestlogPalette p in palettes) {
+    for (final QuestPalette p in palettes) {
       final ThemeData t = buildTheme(palette: p);
       expect(t.useMaterial3, isTrue);
       expect(t.brightness, p.brightness);
       expect(t.scaffoldBackgroundColor, p.board);
       expect(t.colorScheme.primary, p.brass);
-      expect(t.extension<QuestlogStyle>(), isNotNull);
+      expect(t.extension<AppStyle>(), isNotNull);
     }
   });
 
   test('every text, titles included, is Figtree', () {
     final ThemeData t = buildTheme(palette: palettes.first);
-    final QuestlogStyle s = t.extension<QuestlogStyle>()!;
+    final AppStyle s = t.extension<AppStyle>()!;
     expect(t.textTheme.bodyLarge!.fontFamily, 'Figtree');
     for (final TextStyle? style in <TextStyle?>[
       s.body.bodyLarge,
@@ -50,7 +50,7 @@ void main() {
   });
 
   test('display and body sizes follow the design', () {
-    final QuestlogPalette p = palettes.first;
+    final QuestPalette p = palettes.first;
     final TextTheme d = buildDisplayTextTheme(p);
     final TextTheme b = buildBodyTextTheme(p);
     expect(d.displayLarge!.fontSize, 48);
@@ -68,7 +68,7 @@ void main() {
   });
 
   test('line heights follow the artboards: 1.35 body, 1.1 display', () {
-    final QuestlogPalette p = palettes.first;
+    final QuestPalette p = palettes.first;
     final TextTheme d = buildDisplayTextTheme(p);
     final TextTheme b = buildBodyTextTheme(p);
     for (final TextStyle? style in <TextStyle?>[
@@ -93,7 +93,7 @@ void main() {
   });
 
   test('selection, cursor and handles are brass; sheets have no handle', () {
-    for (final QuestlogPalette p in palettes) {
+    for (final QuestPalette p in palettes) {
       final ThemeData t = buildTheme(palette: p);
       final TextSelectionThemeData sel = t.textSelectionTheme;
       expect(sel.cursorColor, p.brass);
@@ -116,13 +116,13 @@ void main() {
     }
   });
 
-  testWidgets('QuestlogStyle is reachable through the context getters', (
+  testWidgets('AppStyle is reachable through the context getters', (
     WidgetTester tester,
   ) async {
     late BuildContext captured;
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildTheme(palette: QuestlogPalette.daylight),
+        theme: buildTheme(palette: QuestPalette.daylight),
         home: Builder(
           builder: (BuildContext context) {
             captured = context;
@@ -131,7 +131,7 @@ void main() {
         ),
       ),
     );
-    expect(captured.palette, same(QuestlogPalette.daylight));
+    expect(captured.palette, same(QuestPalette.daylight));
     expect(captured.displayText.headlineLarge!.fontFamily, 'Figtree');
     expect(captured.bodyText.bodyLarge!.fontFamily, 'Figtree');
   });

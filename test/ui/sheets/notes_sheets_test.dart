@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/notes/note_node.dart';
-import 'package:questlog/core/notes/note_tree.dart';
-import 'package:questlog/ui/sheets/notes/add_sheet.dart';
-import 'package:questlog/ui/sheets/notes/link_sheet.dart';
-import 'package:questlog/ui/sheets/notes/move_sheet.dart';
-import 'package:questlog/ui/sheets/notes/name_sheet.dart';
+import 'package:zafling/notes/domain/note_node.dart';
+import 'package:zafling/notes/domain/note_tree.dart';
+import 'package:zafling/notes/ui/sheets/add_sheet.dart';
+import 'package:zafling/notes/ui/sheets/link_sheet.dart';
+import 'package:zafling/notes/ui/sheets/move_sheet.dart';
+import 'package:zafling/notes/ui/sheets/name_sheet.dart';
 
 import '../screens/notes/_notes_harness.dart';
 

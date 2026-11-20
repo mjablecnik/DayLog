@@ -1,9 +1,9 @@
-import 'package:questlog/core/calendar/event_type.dart';
-import 'package:questlog/core/calendar/repeat_rule.dart';
-import 'package:questlog/data/calendar/calendar_models.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/services/calendar/calendar_service.dart';
-import 'package:questlog/services/xp_engine.dart';
+import 'package:zafling/core/event_type.dart';
+import 'package:zafling/calendar/domain/repeat_rule.dart';
+import 'package:zafling/calendar/data/calendar_models.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/calendar/services/calendar_service.dart';
+import 'package:zafling/quests/services/xp_engine.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/test_database.dart';
@@ -16,7 +16,7 @@ DateTime d(int y, int m, int day) => DateTime(y, m, day);
 class CalendarHarness {
   CalendarHarness._(this.db, this.xp, this.clock, this.service);
 
-  final QuestlogDatabase db;
+  final AppDatabase db;
   final XpEngine xp;
   final FixedClock clock;
   final CalendarService service;
@@ -25,7 +25,7 @@ class CalendarHarness {
     DateTime? now,
     bool keepSeed = false,
   }) async {
-    final QuestlogDatabase db = createTestDatabase();
+    final AppDatabase db = createTestDatabase();
     if (!keepSeed) await db.delete(db.calendarEvents).go();
     final XpEngine xp = XpEngine(db);
     final FixedClock clock = FixedClock(now ?? DateTime(2026, 11, 19, 10));

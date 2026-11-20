@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get app_name => 'Questlog';
+  String get app_name => 'Zafling';
 
   @override
   String get app_splashLoading => 'Preparing your board…';
@@ -1674,7 +1674,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_shortcutSubtitle =>
-      'Open QuestLog on the screen you choose with a single tap.';
+      'Open Zafling on the screen you choose with a single tap.';
 
   @override
   String get settings_shortcutPickLabel => 'Which screen should the icon open?';

@@ -103,7 +103,7 @@ Add a Replace_Import of the QuestLog and TimeLog Export_Files to the App: a pure
     - _Requirements: 9.3_
 
 - [ ] 7. Checkpoint — import is verified
-  - Ensure `scripts/check.sh` passes; tag `v0.3.0` on the version commit; list the items Martin must check on the iPhone (file picker, import of both files, counts against the old apps); ask the user if questions arise
+  - Ensure `scripts/check.sh` passes; list the items Martin must check on the iPhone (file picker, import of both files, counts against the old apps); ask the user if questions arise
 
 ## Notes
 

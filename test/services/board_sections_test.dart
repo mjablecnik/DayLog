@@ -1,19 +1,19 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/errors.dart';
-import 'package:questlog/core/xp_rules.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/data/models.dart';
-import 'package:questlog/services/mission_service.dart';
-import 'package:questlog/services/quest_service.dart';
-import 'package:questlog/services/xp_engine.dart';
+import 'package:zafling/core/errors.dart';
+import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/quests/data/models.dart';
+import 'package:zafling/quests/services/mission_service.dart';
+import 'package:zafling/quests/services/quest_service.dart';
+import 'package:zafling/quests/services/xp_engine.dart';
 
 import '../helpers/fixed_clock.dart';
 import '../helpers/seed.dart';
 import '../helpers/test_database.dart';
 
 void main() {
-  late QuestlogDatabase db;
+  late AppDatabase db;
   late QuestService quests;
   late MissionService missions;
 
@@ -149,7 +149,7 @@ void main() {
   });
 
   test('upgrading a version 1 database puts loose Quests in Todo and keeps the Mission order', () async {
-    final upgraded = QuestlogDatabase.forTesting(
+    final upgraded = AppDatabase.forTesting(
       NativeDatabase.memory(setup: (raw) => raw.execute('''
       CREATE TABLE missions (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL,
         bonus TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'open', created_at INTEGER NOT NULL,

@@ -118,7 +118,7 @@ This is a pure move: behaviour, texts and look stay as in TimeLog 1.2.0. TimeLog
 #### Acceptance Criteria
 
 1. THE Time_Module SHALL read the language from the App setting and SHALL NOT read `app_language` from SharedPreferences.
-2. THE Time_Module SHALL read the theme mode from the App setting and use the Midnight palette in dark mode and the Paper palette in light mode.
+2. THE Time_Module SHALL read the active palette from the App theme (`context.palette`) and SHALL NOT define a palette of its own, so every screen of the Time_Module follows the blue theme in its light and dark variant.
 3. WHEN a notification is built without a BuildContext, THE Time_Module SHALL read the language from the App setting.
 4. THE Time_Module SHALL provide every string in Czech and English with keys prefixed `time_`.
 
@@ -132,7 +132,7 @@ This is a pure move: behaviour, texts and look stay as in TimeLog 1.2.0. TimeLog
 2. THE History_Screen and the Statistics_Screen SHALL be the Destinations `history` and `statistics`, without the bottom navigation bar of Legacy_Timelog.
 3. WHEN the Statistics Destination is selected, THE Shell SHALL call the Time_Module refresh hook.
 4. THE Time_Module SHALL NOT import another feature folder and SHALL expose only a `TimeTrackingBootstrap`, the three Destination widgets and its Settings group widgets.
-5. THE Timer_Screen, the History_Screen and the Statistics_Screen SHALL place the `ShellMenuButton` in their existing header.
+5. THE Timer_Screen, the History_Screen and the Statistics_Screen SHALL place the `MenuButton` in their existing header.
 6. THE Time_Module SHALL include the fonts Sora and JetBrainsMono and their licences in the bundled assets.
 
 ### Requirement 10: Equivalence with Legacy_Timelog

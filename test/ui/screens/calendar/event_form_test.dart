@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/calendar/event_type.dart';
-import 'package:questlog/core/calendar/repeat_rule.dart';
-import 'package:questlog/data/calendar/calendar_models.dart';
-import 'package:questlog/ui/screens/calendar/calendar_screen.dart';
-import 'package:questlog/ui/screens/calendar/event_form_screen.dart';
-import 'package:questlog/ui/widgets/calendar/event_chip.dart';
+import 'package:zafling/core/event_type.dart';
+import 'package:zafling/calendar/domain/repeat_rule.dart';
+import 'package:zafling/calendar/data/calendar_models.dart';
+import 'package:zafling/calendar/ui/screens/calendar_screen.dart';
+import 'package:zafling/calendar/ui/screens/event_form_screen.dart';
+import 'package:zafling/calendar/ui/widgets/event_chip.dart';
 
 import '_calendar_harness.dart';
 

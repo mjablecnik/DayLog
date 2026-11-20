@@ -1,12 +1,12 @@
 import 'package:drift/drift.dart';
-import 'package:questlog/core/xp_rules.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/data/models.dart';
+import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/quests/data/models.dart';
 
 /// Inserts a Mission row directly, bypassing the services, for tests that need a
 /// Mission in a particular state.
 Future<int> seedMission(
-  QuestlogDatabase db, {
+  AppDatabase db, {
   String name = 'Mission',
   MissionBonus bonus = MissionBonus.small,
   MissionStatus status = MissionStatus.open,
@@ -32,7 +32,7 @@ Future<int> seedMission(
 
 /// Inserts a Quest row directly, optionally already done.
 Future<int> seedQuest(
-  QuestlogDatabase db, {
+  AppDatabase db, {
   String name = 'Quest',
   Difficulty difficulty = Difficulty.normal,
   int? missionId,

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/app.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/l10n/app_localizations_en.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/ui/screens/shell/questlog_tab_bar.dart';
-import 'package:questlog/ui/state/ui_providers.dart';
-import 'package:questlog/ui/widgets/cards/check_circle.dart';
-import 'package:questlog/ui/widgets/reward/reward_card.dart';
+import 'package:zafling/app.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/l10n/app_localizations_en.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/settings/ui_providers.dart';
+import 'package:zafling/quests/ui/cards/check_circle.dart';
+import 'package:zafling/quests/ui/reward/reward_card.dart';
 
 import '../helpers/fixed_clock.dart';
 import '../helpers/seed.dart';
@@ -50,7 +50,7 @@ void main() {
           .setMockMethodCallHandler(SystemChannels.platform, null),
     );
 
-    final QuestlogDatabase db = createTestDatabase();
+    final AppDatabase db = createTestDatabase();
     final FixedClock clock = FixedClock(DateTime(2026, 11, 16, 12));
     await tester.runAsync(() async {
       final int mission = await seedMission(db, name: 'Only mission');
@@ -68,7 +68,7 @@ void main() {
           deviceLocaleProvider.overrideWithValue(const Locale('en')),
           appVersionProvider.overrideWith((ref) async => '1.0.0'),
         ],
-        child: const QuestlogApp(),
+        child: const ZaflingApp(),
       ),
     );
     await _settle(tester);

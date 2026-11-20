@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/xp_rules.dart';
-import 'package:questlog/data/models.dart';
-import 'package:questlog/l10n/app_localizations.dart';
-import 'package:questlog/ui/theme/tokens.dart';
-import 'package:questlog/ui/widgets/cards/check_circle.dart';
-import 'package:questlog/ui/widgets/cards/difficulty_pips.dart';
-import 'package:questlog/ui/widgets/cards/mission_card.dart';
-import 'package:questlog/ui/widgets/cards/quest_card.dart';
+import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:zafling/quests/data/models.dart';
+import 'package:zafling/l10n/app_localizations.dart';
+import 'package:zafling/theme/tokens.dart';
+import 'package:zafling/quests/ui/cards/check_circle.dart';
+import 'package:zafling/quests/ui/cards/difficulty_pips.dart';
+import 'package:zafling/quests/ui/cards/mission_card.dart';
+import 'package:zafling/quests/ui/cards/quest_card.dart';
 
 import '_cards_harness.dart';
 
@@ -261,7 +261,7 @@ void main() {
       await pumpCards(
         tester,
         QuestCard(quest: boardQuest(), onToggle: () {}),
-        palette: QuestlogPalette.daylight,
+        palette: QuestPalette.daylight,
       );
       final DecoratedBox box = tester.widget(
         find
@@ -275,15 +275,15 @@ void main() {
       expect(d.border, isNotNull);
       expect(
         (d.border! as Border).top.color,
-        QuestlogPalette.daylight.parchmentEdge,
+        QuestPalette.daylight.parchmentEdge,
       );
     });
 
-    final List<QuestlogPalette> darkPalettes = <QuestlogPalette>[
-      QuestlogPalette.guildBoard,
+    final List<QuestPalette> darkPalettes = <QuestPalette>[
+      QuestPalette.guildBoard,
     ];
     for (int i = 0; i < darkPalettes.length; i++) {
-      final QuestlogPalette p = darkPalettes[i];
+      final QuestPalette p = darkPalettes[i];
       testWidgets('dark theme: an open card is a raised dark card '
           '(palette #$i)', (tester) async {
         await pumpCards(
@@ -324,7 +324,7 @@ void main() {
     testWidgets('light theme: an open card keeps the parchment slip', (
       tester,
     ) async {
-      final QuestlogPalette p = QuestlogPalette.daylight;
+      final QuestPalette p = QuestPalette.daylight;
       await pumpCards(
         tester,
         QuestCard(quest: boardQuest(), onToggle: () {}),
@@ -511,7 +511,7 @@ void main() {
         final Text text = tester.widget<Text>(
           find.byKey(const ValueKey<String>('quest-deadline')),
         );
-        expect(text.style!.color, QuestlogPalette.guildBoard.destructiveText);
+        expect(text.style!.color, QuestPalette.guildBoard.destructiveText);
         await pumpCards(
           tester,
           QuestCard(

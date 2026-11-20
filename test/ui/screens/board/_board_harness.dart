@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/errors.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/data/models.dart';
-import 'package:questlog/l10n/app_localizations.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/services/quest_service.dart';
-import 'package:questlog/services/xp_engine.dart';
-import 'package:questlog/ui/screens/board/board_screen.dart';
-import 'package:questlog/ui/theme/questlog_theme.dart';
-import 'package:questlog/ui/theme/tokens.dart';
+import 'package:zafling/core/errors.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/quests/data/models.dart';
+import 'package:zafling/l10n/app_localizations.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/quests/services/quest_service.dart';
+import 'package:zafling/quests/services/xp_engine.dart';
+import 'package:zafling/quests/ui/board/board_screen.dart';
+import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/tokens.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
@@ -50,7 +50,7 @@ class SpyQuestService extends QuestService {
 /// Board_Screen over an in-memory database, a controllable clock and a spy
 /// service, in an English themed app.
 class BoardHarness {
-  late QuestlogDatabase db;
+  late AppDatabase db;
   late FixedClock clock;
   late SpyQuestService service;
 
@@ -74,7 +74,7 @@ class BoardHarness {
         ],
         child: MaterialApp(
           theme: buildTheme(
-            palette: QuestlogPalette.guildBoard,
+            palette: QuestPalette.guildBoard,
           ),
           locale: const Locale('en'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,

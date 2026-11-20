@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/app.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/l10n/app_localizations.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/ui/state/reward_queue.dart';
-import 'package:questlog/ui/state/ui_providers.dart';
-import 'package:questlog/ui/theme/tokens.dart';
-import 'package:questlog/ui/widgets/reward/reward_card.dart';
+import 'package:zafling/app.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/l10n/app_localizations.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/quests/ui/state/reward_queue.dart';
+import 'package:zafling/settings/ui_providers.dart';
+import 'package:zafling/theme/tokens.dart';
+import 'package:zafling/quests/ui/reward/reward_card.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/seed.dart';
@@ -38,7 +38,7 @@ void main() {
         FakeAccessibilityFeatures(disableAnimations: reduced);
     addTearDown(tester.platformDispatcher.clearAllTestValues);
 
-    final QuestlogDatabase db = createTestDatabase();
+    final AppDatabase db = createTestDatabase();
     await tester.runAsync(() => seedQuest(db, name: 'Milk'));
     await tester.pumpWidget(
       ProviderScope(
@@ -50,7 +50,7 @@ void main() {
           deviceLocaleProvider.overrideWithValue(const Locale('en')),
           appVersionProvider.overrideWith((ref) async => '1.0.0'),
         ],
-        child: const QuestlogApp(),
+        child: const ZaflingApp(),
       ),
     );
     for (int i = 0; i < 2; i++) {

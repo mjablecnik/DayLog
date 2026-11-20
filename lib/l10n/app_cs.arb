@@ -1,6 +1,6 @@
 {
   "@@locale": "cs",
-  "app_name": "Questlog",
+  "app_name": "Zafling",
   "@app_name": {
     "description": "Application name shown on the splash and in the About group."
   },
@@ -2276,7 +2276,7 @@
   "@settings_shortcutTitle": {
     "description": "Title of the Home Screen shortcut guide in Settings."
   },
-  "settings_shortcutSubtitle": "Otevři QuestLog jedním klepnutím rovnou na vybrané obrazovce.",
+  "settings_shortcutSubtitle": "Otevři Zafling jedním klepnutím rovnou na vybrané obrazovce.",
   "@settings_shortcutSubtitle": {
     "description": "Hint under the guide title."
   },

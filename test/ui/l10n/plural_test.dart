@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart'
     hide expect, test, group, setUp, tearDown, setUpAll, tearDownAll;
-import 'package:questlog/l10n/app_localizations.dart';
+import 'package:zafling/l10n/app_localizations.dart';
 
 /// Property 6: Czech and English plural forms of the Quest count label.
 ///

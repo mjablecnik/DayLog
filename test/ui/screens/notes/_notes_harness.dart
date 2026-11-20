@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:questlog/core/notes/note_node.dart';
-import 'package:questlog/data/database.dart';
-import 'package:questlog/l10n/app_localizations.dart';
-import 'package:questlog/services/notes/notes_providers.dart';
-import 'package:questlog/services/notes/notes_service.dart';
-import 'package:questlog/services/providers.dart';
-import 'package:questlog/ui/theme/questlog_theme.dart';
-import 'package:questlog/ui/theme/tokens.dart';
+import 'package:zafling/notes/domain/note_node.dart';
+import 'package:zafling/database/app_database.dart';
+import 'package:zafling/l10n/app_localizations.dart';
+import 'package:zafling/notes/services/notes_providers.dart';
+import 'package:zafling/notes/services/notes_service.dart';
+import 'package:zafling/quests/services/providers.dart';
+import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/tokens.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
@@ -16,7 +16,7 @@ import '../../../helpers/test_database.dart';
 /// An English themed app around a notes screen on a 390 by 844 phone, over an
 /// in-memory database with a controllable clock.
 class NotesUiHarness {
-  late QuestlogDatabase db;
+  late AppDatabase db;
   late FixedClock clock;
 
   NotesService get service => NotesService(db, clock);
@@ -29,7 +29,7 @@ class NotesUiHarness {
     double? textScale,
     Locale locale = const Locale('en'),
     Future<void> Function(NotesService service, FixedClock clock)? seed,
-    NotesService Function(QuestlogDatabase db, FixedClock clock)? serviceBuilder,
+    NotesService Function(AppDatabase db, FixedClock clock)? serviceBuilder,
   }) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
@@ -50,7 +50,7 @@ class NotesUiHarness {
         ],
         child: MaterialApp(
           theme: buildTheme(
-            palette: brightness == Brightness.dark ? QuestlogPalette.guildBoard : QuestlogPalette.daylight,
+            palette: brightness == Brightness.dark ? QuestPalette.guildBoard : QuestPalette.daylight,
           ),
           locale: locale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,

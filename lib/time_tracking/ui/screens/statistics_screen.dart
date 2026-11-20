@@ -115,7 +115,7 @@ class StatisticsScreen extends ConsumerWidget {
                   error: (error, _) => Center(
                     child: Text(
                       l10n.time_statsLoadFailed,
-                      style: TextStyle(color: theme.dim, fontFamily: 'Sora'),
+                      style: TextStyle(color: theme.dim),
                     ),
                   ),
                 ),

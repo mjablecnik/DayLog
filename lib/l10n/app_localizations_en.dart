@@ -2132,4 +2132,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time_durationIncreaseLabel => 'Lengthen the timer';
+
+  @override
+  String get time_timerStartLabel => 'Start the timer';
+
+  @override
+  String get time_timerPauseLabel => 'Pause the timer';
+
+  @override
+  String get time_timerResumeLabel => 'Resume the timer';
+
+  @override
+  String get time_timerStopLabel => 'Stop and log';
+
+  @override
+  String get time_timerFinishLabel => 'Finish now';
 }

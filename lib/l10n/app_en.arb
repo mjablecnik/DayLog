@@ -553,5 +553,10 @@
   "time_reminderDailyNotificationBody": "Time to start your timer!",
   "time_recurringReminderDefaultNotificationBody": "Tap to open",
   "time_durationDecreaseLabel": "Shorten the timer",
-  "time_durationIncreaseLabel": "Lengthen the timer"
+  "time_durationIncreaseLabel": "Lengthen the timer",
+  "time_timerStartLabel": "Start the timer",
+  "time_timerPauseLabel": "Pause the timer",
+  "time_timerResumeLabel": "Resume the timer",
+  "time_timerStopLabel": "Stop and log",
+  "time_timerFinishLabel": "Finish now"
 }

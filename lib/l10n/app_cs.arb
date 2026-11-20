@@ -2875,5 +2875,25 @@
   "time_durationIncreaseLabel": "Prodloužit časovač",
   "@time_durationIncreaseLabel": {
     "description": "Accessibility label of the plus button that lengthens the timer duration."
+  },
+  "time_timerStartLabel": "Spustit časovač",
+  "@time_timerStartLabel": {
+    "description": "Accessibility label of a timer control button: Start the timer."
+  },
+  "time_timerPauseLabel": "Pozastavit časovač",
+  "@time_timerPauseLabel": {
+    "description": "Accessibility label of a timer control button: Pause the timer."
+  },
+  "time_timerResumeLabel": "Pokračovat v časovači",
+  "@time_timerResumeLabel": {
+    "description": "Accessibility label of a timer control button: Resume the timer."
+  },
+  "time_timerStopLabel": "Zastavit a zapsat",
+  "@time_timerStopLabel": {
+    "description": "Accessibility label of a timer control button: Stop and log."
+  },
+  "time_timerFinishLabel": "Dokončit hned",
+  "@time_timerFinishLabel": {
+    "description": "Accessibility label of a timer control button: Finish now."
   }
 }

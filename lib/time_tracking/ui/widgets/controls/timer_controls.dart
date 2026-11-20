@@ -26,11 +26,13 @@ class TimerControls extends ConsumerWidget {
     final isRunning = status == TimerStatus.running;
     final isPaused = status == TimerStatus.paused;
 
+    final l10n = AppLocalizations.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _CircleButton(
           size: 52,
+          label: l10n.time_timerStopLabel,
           icon: Icons.stop_rounded,
           enabled: isRunning || isPaused,
           theme: theme,
@@ -40,6 +42,11 @@ class TimerControls extends ConsumerWidget {
         const SizedBox(width: 20),
         _CircleButton(
           size: 80,
+          label: isRunning
+              ? l10n.time_timerPauseLabel
+              : isPaused
+                  ? l10n.time_timerResumeLabel
+                  : l10n.time_timerStartLabel,
           icon: isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
           enabled: true,
           theme: theme,
@@ -58,6 +65,7 @@ class TimerControls extends ConsumerWidget {
         const SizedBox(width: 20),
         _CircleButton(
           size: 52,
+          label: l10n.time_timerFinishLabel,
           icon: Icons.flag_rounded,
           enabled: isRunning || isPaused,
           theme: theme,
@@ -89,7 +97,7 @@ class TimerControls extends ConsumerWidget {
             onPressed: () => Navigator.of(ctx).pop(false),
             child: Text(
               l10n.time_commonCancel,
-              style: TextStyle(color: theme.dim, fontFamily: 'Sora'),
+              style: TextStyle(color: theme.dim),
             ),
           ),
           TextButton(
@@ -113,6 +121,7 @@ class TimerControls extends ConsumerWidget {
 
 class _CircleButton extends StatelessWidget {
   final double size;
+  final String label;
   final IconData icon;
   final bool enabled;
   final AppThemeData theme;
@@ -121,6 +130,7 @@ class _CircleButton extends StatelessWidget {
 
   const _CircleButton({
     required this.size,
+    required this.label,
     required this.icon,
     required this.enabled,
     required this.theme,
@@ -138,7 +148,13 @@ class _CircleButton extends StatelessWidget {
             ? theme.text
             : theme.faint;
 
-    return Container(
+    return Semantics(
+      button: true,
+      enabled: active,
+      label: label,
+      excludeSemantics: true,
+      onTap: active ? onPressed : null,
+      child: Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
@@ -158,6 +174,7 @@ class _CircleButton extends StatelessWidget {
           child: Icon(icon, color: iconColor, size: size * 0.44),
         ),
       ),
+    ),
     );
   }
 }

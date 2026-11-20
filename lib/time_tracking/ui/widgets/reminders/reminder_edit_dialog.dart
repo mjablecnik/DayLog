@@ -166,14 +166,14 @@ class _ReminderEditDialogState extends ConsumerState<ReminderEditDialog> {
             onPressed: () => Navigator.of(ctx).pop(false),
             child: Text(
               l10n.time_commonBack,
-              style: TextStyle(color: widget.theme.dim, fontFamily: 'Sora'),
+              style: TextStyle(color: widget.theme.dim),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
             child: Text(
               l10n.time_reminderDiscardConfirm,
-              style: TextStyle(color: Colors.red[400], fontFamily: 'Sora'),
+              style: TextStyle(color: Colors.red[400]),
             ),
           ),
         ],
@@ -278,10 +278,10 @@ class _ReminderEditDialogState extends ConsumerState<ReminderEditDialog> {
                                 child: TextField(
                                   controller: _nameController,
                                   maxLength: 100,
-                                  style: TextStyle(color: theme.text, fontFamily: 'Sora'),
+                                  style: TextStyle(color: theme.text),
                                   decoration: InputDecoration(
                                     hintText: l10n.time_reminderNameHint,
-                                    hintStyle: TextStyle(color: theme.faint, fontFamily: 'Sora'),
+                                    hintStyle: TextStyle(color: theme.faint),
                                     border: InputBorder.none,
                                     counterStyle: TextStyle(color: theme.faint, fontSize: 11),
                                   ),

@@ -285,7 +285,7 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
                         decoration: InputDecoration(
                           hintText: l10n.time_descriptionHint,
                           hintStyle:
-                              TextStyle(color: theme.faint, fontFamily: 'Sora'),
+                              TextStyle(color: theme.faint),
                           border: InputBorder.none,
                           counterStyle:
                               TextStyle(color: theme.faint, fontSize: 11),

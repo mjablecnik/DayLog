@@ -69,7 +69,7 @@ class SuggestionField extends ConsumerWidget {
             ),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: theme.faint, fontFamily: 'Sora'),
+              hintStyle: TextStyle(color: theme.faint),
               border: InputBorder.none,
               counterStyle: TextStyle(color: theme.faint, fontSize: 11),
             ),
@@ -99,7 +99,7 @@ class SuggestionField extends ConsumerWidget {
                   return ListTile(
                     title: Text(
                       option,
-                      style: TextStyle(color: theme.text, fontFamily: 'Sora'),
+                      style: TextStyle(color: theme.text),
                     ),
                     onTap: () => onSelected(option),
                   );

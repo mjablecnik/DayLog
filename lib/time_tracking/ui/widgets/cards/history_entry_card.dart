@@ -66,7 +66,7 @@ class _HistoryEntryCardState extends ConsumerState<HistoryEntryCard> {
             onPressed: () => Navigator.of(ctx).pop(false),
             child: Text(
               l10n.time_commonCancel,
-              style: TextStyle(color: theme.dim, fontFamily: 'Sora'),
+              style: TextStyle(color: theme.dim),
             ),
           ),
           TextButton(

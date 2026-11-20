@@ -3421,6 +3421,36 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Prodloužit časovač'**
   String get time_durationIncreaseLabel;
+
+  /// Accessibility label of a timer control button: Start the timer.
+  ///
+  /// In cs, this message translates to:
+  /// **'Spustit časovač'**
+  String get time_timerStartLabel;
+
+  /// Accessibility label of a timer control button: Pause the timer.
+  ///
+  /// In cs, this message translates to:
+  /// **'Pozastavit časovač'**
+  String get time_timerPauseLabel;
+
+  /// Accessibility label of a timer control button: Resume the timer.
+  ///
+  /// In cs, this message translates to:
+  /// **'Pokračovat v časovači'**
+  String get time_timerResumeLabel;
+
+  /// Accessibility label of a timer control button: Stop and log.
+  ///
+  /// In cs, this message translates to:
+  /// **'Zastavit a zapsat'**
+  String get time_timerStopLabel;
+
+  /// Accessibility label of a timer control button: Finish now.
+  ///
+  /// In cs, this message translates to:
+  /// **'Dokončit hned'**
+  String get time_timerFinishLabel;
 }
 
 class _AppLocalizationsDelegate

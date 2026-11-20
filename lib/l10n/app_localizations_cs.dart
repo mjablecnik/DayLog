@@ -2180,4 +2180,19 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get time_durationIncreaseLabel => 'Prodloužit časovač';
+
+  @override
+  String get time_timerStartLabel => 'Spustit časovač';
+
+  @override
+  String get time_timerPauseLabel => 'Pozastavit časovač';
+
+  @override
+  String get time_timerResumeLabel => 'Pokračovat v časovači';
+
+  @override
+  String get time_timerStopLabel => 'Zastavit a zapsat';
+
+  @override
+  String get time_timerFinishLabel => 'Dokončit hned';
 }

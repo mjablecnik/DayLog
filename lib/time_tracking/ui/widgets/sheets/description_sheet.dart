@@ -322,7 +322,7 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
                       style: TextStyle(color: theme.text, fontSize: 15),
                       decoration: InputDecoration(
                         hintText: l10n.time_descriptionHint,
-                        hintStyle: TextStyle(color: theme.faint, fontFamily: 'Sora'),
+                        hintStyle: TextStyle(color: theme.faint),
                         border: InputBorder.none,
                         counterStyle: TextStyle(color: theme.faint, fontSize: 11),
                       ),

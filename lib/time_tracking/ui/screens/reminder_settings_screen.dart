@@ -44,13 +44,13 @@ class ReminderSettingsScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(l10n.time_commonBack, style: TextStyle(color: theme.dim, fontFamily: 'Sora')),
+            child: Text(l10n.time_commonBack, style: TextStyle(color: theme.dim)),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
             child: Text(
               l10n.time_commonDelete,
-              style: TextStyle(color: Colors.red[400], fontFamily: 'Sora'),
+              style: TextStyle(color: Colors.red[400]),
             ),
           ),
         ],
@@ -159,7 +159,7 @@ class ReminderSettingsScreen extends ConsumerWidget {
                 error: (error, _) => Center(
                   child: Text(
                     l10n.time_remindersLoadFailed,
-                    style: TextStyle(color: theme.dim, fontFamily: 'Sora'),
+                    style: TextStyle(color: theme.dim),
                   ),
                 ),
               ),

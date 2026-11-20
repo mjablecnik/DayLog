@@ -118,7 +118,7 @@ class HistoryScreen extends ConsumerWidget {
                   error: (error, _) => Center(
                     child: Text(
                       l10n.time_historyLoadError,
-                      style: TextStyle(color: theme.dim, fontFamily: 'Sora'),
+                      style: TextStyle(color: theme.dim),
                     ),
                   ),
                 ),

@@ -10,6 +10,7 @@ import '../../../ui_kit/common/announce.dart';
 import '../../../ui_kit/common/haptics.dart';
 import '../../../ui_kit/common/snackbar_host.dart';
 import 'reward_queue.dart';
+import '../../../database/providers.dart';
 
 /// Shows the message for a failed service call.
 ///

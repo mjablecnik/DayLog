@@ -15,6 +15,8 @@ import 'package:zafling/quests/ui/cards/check_circle.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 /// "Now" of every test: 12:00 on the Board_Day of 15 Nov 2026.
 final DateTime testNow = DateTime(2026, 11, 15, 12);

@@ -4,6 +4,8 @@ import '../../core/event_type.dart';
 import '../data/calendar_filter_store.dart';
 import '../../quests/services/providers.dart';
 import 'calendar_service.dart';
+import '../../database/providers.dart';
+import '../../core/clock_provider.dart';
 
 final calendarServiceProvider = Provider<CalendarService>(
   (ref) => CalendarService(

@@ -2,8 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domain/note_node.dart';
 import '../domain/note_tree.dart';
-import '../../quests/services/providers.dart';
 import 'notes_service.dart';
+import '../../database/providers.dart';
+import '../../core/clock_provider.dart';
 
 final notesServiceProvider = Provider<NotesService>(
   (ref) => NotesService(ref.watch(databaseProvider), ref.watch(clockProvider)),

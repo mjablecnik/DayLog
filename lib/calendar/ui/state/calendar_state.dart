@@ -7,8 +7,8 @@ import '../../domain/calendar_dates.dart';
 import '../../../core/event_type.dart';
 import '../../data/calendar_models.dart';
 import '../../services/calendar_providers.dart';
-import '../../../quests/services/providers.dart';
 import '../../../quests/ui/state/board_day.dart';
+import '../../../core/clock_provider.dart';
 
 DateTime _dateOnly(DateTime v) => DateTime(v.year, v.month, v.day);
 

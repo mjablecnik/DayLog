@@ -1,24 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/clock.dart';
 import '../domain/xp_rules.dart';
-import '../../database/app_database.dart';
 import '../data/models.dart';
 import 'mission_service.dart';
 import 'quest_service.dart';
 import 'recurrence_service.dart';
 import '../../settings/settings_service.dart';
 import 'xp_engine.dart';
-
-/// The app database. Tests override it with an in-memory database.
-final databaseProvider = Provider<AppDatabase>((ref) {
-  final db = AppDatabase();
-  ref.onDispose(db.close);
-  return db;
-});
-
-/// The source of the current time. Tests override it with a fixed clock.
-final clockProvider = Provider<Clock>((ref) => const SystemClock());
+import '../../database/providers.dart';
+import '../../core/clock_provider.dart';
 
 final xpEngineProvider = Provider<XpEngine>(
   (ref) => XpEngine(ref.watch(databaseProvider)),

@@ -11,8 +11,9 @@ import 'core/font_licenses.dart';
 import 'calendar/data/calendar_filter_store.dart';
 import 'database/app_database.dart';
 import 'calendar/services/calendar_providers.dart';
-import 'quests/services/providers.dart';
 import 'shell/deep_link.dart';
+import 'database/providers.dart';
+import 'core/clock_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

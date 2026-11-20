@@ -6,12 +6,13 @@ import 'package:zafling/database/app_database.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/notes/services/notes_providers.dart';
 import 'package:zafling/notes/services/notes_service.dart';
-import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/theme/quest_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 /// An English themed app around a notes screen on a 390 by 844 phone, over an
 /// in-memory database with a controllable clock.

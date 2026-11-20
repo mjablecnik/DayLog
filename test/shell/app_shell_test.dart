@@ -33,6 +33,8 @@ import '../helpers/fixed_clock.dart';
 import '../helpers/seed.dart';
 import '../helpers/shell_nav.dart';
 import '../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 /// Counts Reconciliation runs and lets a test hold, fail or fill each one.
 class SpyRecurrence extends RecurrenceService {

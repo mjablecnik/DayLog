@@ -8,7 +8,6 @@ import '../../../domain/note_title.dart';
 import '../../../domain/note_tree.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../services/notes_providers.dart';
-import '../../../../quests/services/providers.dart';
 import '../../sheets/add_sheet.dart';
 import '../../sheets/name_sheet.dart';
 import '../../state/notes_state.dart';
@@ -31,6 +30,7 @@ import 'note_row.dart';
 import 'notes_actions.dart';
 import 'notes_labels.dart';
 import 'trash_screen.dart';
+import '../../../../core/clock_provider.dart';
 
 /// The Poznámky tab: the Folders and Notes of the Current_Folder, with the add
 /// button, the Breadcrumb inside a Folder and the Trash button at the top level.

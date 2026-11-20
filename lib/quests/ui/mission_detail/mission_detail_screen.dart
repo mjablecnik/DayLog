@@ -24,6 +24,7 @@ import 'detail_sections.dart';
 import 'mission_actions.dart';
 import 'mission_header.dart';
 import 'mission_menu.dart';
+import '../../../database/providers.dart';
 
 /// One Mission with all of its Quests (requirement 10): progress, bonus, the
 /// reorderable open Quests, the done Quests of every day, the "···" menu and

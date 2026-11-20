@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../helpers/shell_nav.dart';
 import 'package:zafling/app.dart';
 import 'package:zafling/database/app_database.dart';
-import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/quests/ui/mission_detail/mission_detail_screen.dart';
 import 'package:zafling/shell/app_shell.dart';
 import 'package:zafling/shell/destination.dart';
@@ -16,6 +15,8 @@ import 'package:zafling/quests/ui/reward/reward_card.dart';
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/seed.dart';
 import '../../../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 Future<void> _settle(WidgetTester tester) async {
   await tester.runAsync(

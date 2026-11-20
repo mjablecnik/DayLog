@@ -10,7 +10,6 @@ import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/l10n/app_localizations_en.dart';
 import 'package:zafling/calendar/services/calendar_providers.dart';
 import 'package:zafling/calendar/services/calendar_service.dart';
-import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/theme/quest_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
@@ -18,6 +17,8 @@ import 'package:zafling/quests/services/xp_engine.dart' as xp_engine;
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 DateTime d(int y, int m, int day) => DateTime(y, m, day);
 

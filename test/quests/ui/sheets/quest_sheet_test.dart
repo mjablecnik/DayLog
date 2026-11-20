@@ -20,6 +20,8 @@ import 'package:zafling/quests/ui/widgets/effort_picker.dart';
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/seed.dart';
 import '../../../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 final AppLocalizationsEn l10n = AppLocalizationsEn();
 

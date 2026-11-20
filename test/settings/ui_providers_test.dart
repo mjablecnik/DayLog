@@ -8,6 +8,7 @@ import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/settings/ui_providers.dart';
 
 import '../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

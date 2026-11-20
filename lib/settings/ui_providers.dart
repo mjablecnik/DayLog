@@ -10,6 +10,8 @@ import '../quests/data/models.dart';
 import '../database/preferences.dart';
 import '../database/export/export_service.dart';
 import '../quests/services/providers.dart';
+import '../database/providers.dart';
+import '../core/clock_provider.dart';
 
 // The stream providers of every `watch*` query (settings, XP, board, missions,
 // rules) live in `services/providers.dart`; `settingsProvider` is the settings

@@ -7,7 +7,6 @@ import 'package:zafling/database/app_database.dart';
 import 'package:zafling/quests/data/models.dart';
 import 'package:zafling/l10n/app_localizations_cs.dart';
 import 'package:zafling/l10n/app_localizations_en.dart';
-import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/quests/services/quest_service.dart';
 import 'package:zafling/quests/services/xp_engine.dart';
 import 'package:zafling/settings/ui/settings_screen.dart';
@@ -23,6 +22,8 @@ import 'package:zafling/quests/ui/reward/reward_card.dart';
 import '../helpers/fixed_clock.dart';
 import '../helpers/shell_nav.dart';
 import '../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 final AppLocalizationsEn en = AppLocalizationsEn();
 final AppLocalizationsCs cs = AppLocalizationsCs();

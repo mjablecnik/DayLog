@@ -6,12 +6,13 @@ import 'package:zafling/calendar/data/calendar_filter_store.dart';
 import 'package:zafling/calendar/data/calendar_models.dart';
 import 'package:zafling/database/app_database.dart';
 import 'package:zafling/calendar/services/calendar_providers.dart';
-import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/quests/ui/state/board_day.dart';
 import 'package:zafling/calendar/ui/state/calendar_state.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 DateTime d(int y, int m, int day) => DateTime(y, m, day);
 

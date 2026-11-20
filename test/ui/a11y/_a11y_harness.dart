@@ -39,6 +39,8 @@ import '../../helpers/fixed_clock.dart';
 import '../../helpers/seed.dart';
 import '../../helpers/test_database.dart';
 import 'package:zafling/settings/ui/shortcut_guide.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 /// "Now" of every accessibility test: 12:00 on the Board_Day of 15 Nov 2026.
 final DateTime a11yNow = DateTime(2026, 11, 15, 12);

@@ -6,6 +6,8 @@ import 'package:zafling/quests/services/providers.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 void main() {
   test('providers wire the services onto one database and clock', () async {

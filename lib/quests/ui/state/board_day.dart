@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/board_day.dart';
-import '../../services/providers.dart';
+import '../../../core/clock_provider.dart';
 
 /// The calendar date of the current Board_Day; changes at Day_Start and on resume.
 final boardDayProvider = NotifierProvider<BoardDayNotifier, DateTime>(

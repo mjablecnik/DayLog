@@ -14,6 +14,8 @@ import 'package:zafling/theme/tokens.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 /// A [QuestService] that records reorder calls and can be told to fail.
 class SpyQuestService extends QuestService {

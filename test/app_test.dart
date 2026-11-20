@@ -11,6 +11,7 @@ import 'package:zafling/theme/quest_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 import 'helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
 
 class _Probe extends StatelessWidget {
   const _Probe();

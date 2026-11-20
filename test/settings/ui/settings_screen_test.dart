@@ -8,7 +8,6 @@ import 'package:zafling/database/app_database.dart';
 import 'package:zafling/database/preferences.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/database/export/export_service.dart';
-import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/settings/ui/settings_screen.dart';
 import 'package:zafling/settings/ui_providers.dart';
 import 'package:zafling/theme/quest_theme.dart';
@@ -17,6 +16,8 @@ import 'package:zafling/theme/tokens.dart';
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/test_database.dart';
 import 'package:zafling/settings/ui/shortcut_guide.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 /// The pages the shortcut guide offers in tests.
 const List<ShortcutTarget> testShortcutTargets = <ShortcutTarget>[

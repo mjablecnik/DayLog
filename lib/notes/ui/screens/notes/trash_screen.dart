@@ -7,7 +7,6 @@ import '../../../domain/note_tree.dart';
 import '../../../domain/trash_policy.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../services/notes_providers.dart';
-import '../../../../quests/services/providers.dart';
 import '../../../../quests/ui/state/quest_actions.dart' show showDomainError;
 import '../../../../theme/quest_theme.dart';
 import '../../../../theme/tokens.dart';
@@ -19,6 +18,7 @@ import '../../widgets/swipe_row.dart';
 import '../../../../ui_kit/sheet/confirm_destructive.dart';
 import 'trash_preview_screen.dart';
 import 'trash_row.dart';
+import '../../../../core/clock_provider.dart';
 
 /// The Koš screen: every Trashed_Node with the days left until its Purge, with
 /// Obnovit, Navždy and Vysypat koš.

@@ -11,7 +11,6 @@ import '../../../core/errors.dart';
 import '../../data/calendar_models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../services/calendar_providers.dart';
-import '../../../quests/services/providers.dart';
 import '../sheets/delete_event_sheet.dart';
 import '../../../theme/quest_theme.dart';
 import '../../../theme/tokens.dart';
@@ -21,6 +20,7 @@ import '../widgets/event_type_picker.dart';
 import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/sheet/confirm_destructive.dart';
 import 'calendar_labels.dart';
+import '../../../core/clock_provider.dart';
 
 /// Opens the event form: a new event ([presetDate]), an existing one
 /// ([editing], for the occurrence that starts on [occurrenceDate]) or a copy

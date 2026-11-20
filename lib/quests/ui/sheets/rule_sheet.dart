@@ -21,6 +21,7 @@ import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/common/app_segmented.dart';
 import '../../../ui_kit/sheet/confirm_destructive.dart';
 import '../../../ui_kit/sheet/app_sheet.dart';
+import '../../../core/clock_provider.dart';
 
 /// Opens the Rule_Sheet: create mode, or edit mode (with "Smazat pravidlo")
 /// when [editing] is given.

@@ -6,7 +6,6 @@ import 'package:zafling/shell/destination.dart';
 import 'package:zafling/app.dart';
 import 'package:zafling/database/app_database.dart';
 import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/quests/ui/state/reward_queue.dart';
 import 'package:zafling/settings/ui_providers.dart';
 import 'package:zafling/theme/tokens.dart';
@@ -15,6 +14,8 @@ import 'package:zafling/quests/ui/reward/reward_card.dart';
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/seed.dart';
 import '../../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 /// Requirement 16.5: when the device asks for reduced motion, slides, scales
 /// and rays give way to fades of at most 150 ms. Each widget family has its own

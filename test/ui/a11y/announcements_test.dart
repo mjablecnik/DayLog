@@ -7,7 +7,6 @@ import 'package:zafling/app.dart';
 import 'package:zafling/quests/domain/xp_rules.dart';
 import 'package:zafling/database/app_database.dart';
 import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/shell/app_shell.dart';
 import 'package:zafling/shell/destination.dart';
 import 'package:zafling/settings/ui_providers.dart';
@@ -17,6 +16,8 @@ import 'package:zafling/quests/ui/cards/mission_card.dart';
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/seed.dart';
 import '../../helpers/test_database.dart';
+import 'package:zafling/database/providers.dart';
+import 'package:zafling/core/clock_provider.dart';
 
 /// Requirement 16.4: completing and reopening a Quest, completing and reopening
 /// a Mission are spoken to screen-reader users, in the language of the app.

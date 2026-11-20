@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/shell/bottom_bar.dart';
+import 'package:zafling/shell/destination.dart';
 import 'package:zafling/theme/quest_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
@@ -34,8 +35,8 @@ void main() {
             home: Scaffold(
               body: Align(
                 alignment: Alignment.bottomCenter,
-                child: ShellTabBar(
-                  current: ShellTab.settings,
+                child: BottomBar(
+                  selected: Destination.settings,
                   onSelected: (_) {},
                 ),
               ),
@@ -45,8 +46,8 @@ void main() {
 
         expect(tester.takeException(), isNull);
         final List<Size> sizes = <Size>[
-          for (final ShellTab tab in ShellTab.values)
-            tester.getSize(find.byKey(ValueKey<ShellTab>(tab))),
+          for (final Destination tab in Destination.tabs)
+            tester.getSize(find.byKey(ValueKey<Destination>(tab))),
         ];
         expect(sizes, hasLength(5));
         for (final Size size in sizes) {
@@ -54,11 +55,11 @@ void main() {
           expect(size.height, greaterThanOrEqualTo(Metrics.touchTarget));
         }
         final AppLocalizations l = AppLocalizations.of(
-          tester.element(find.byType(ShellTabBar)),
+          tester.element(find.byType(BottomBar)),
         );
         for (final String label in <String>[
+          l.shell_tabTimer,
           l.app_tabQuests,
-          l.app_tabMissions,
           l.app_tabCalendar,
           l.app_tabNotes,
           l.app_tabSettings,
@@ -80,18 +81,18 @@ void main() {
         tester,
         Align(
           alignment: Alignment.bottomCenter,
-          child: ShellTabBar(current: ShellTab.missions, onSelected: (_) {}),
+          child: BottomBar(selected: Destination.quests, onSelected: (_) {}),
         ),
         palette: entry.$2,
       );
 
       final Iterable<InkWell> tabs = tester.widgetList<InkWell>(
         find.descendant(
-          of: find.byType(ShellTabBar),
+          of: find.byType(BottomBar),
           matching: find.byType(InkWell),
         ),
       );
-      expect(tabs, hasLength(ShellTab.values.length));
+      expect(tabs, hasLength(Destination.tabs.length));
       for (final InkWell tab in tabs) {
         expect(tab.hoverColor, Colors.transparent);
         expect(tab.focusColor, Colors.transparent);
@@ -118,21 +119,21 @@ void main() {
         tester,
         Align(
           alignment: Alignment.bottomCenter,
-          child: ShellTabBar(current: ShellTab.quests, onSelected: (_) {}),
+          child: BottomBar(selected: Destination.timer, onSelected: (_) {}),
         ),
         palette: entry.$2,
       );
 
       final TestGesture hold = await tester.startGesture(
         tester.getCenter(
-          find.byKey(const ValueKey<ShellTab>(ShellTab.missions)),
+          find.byKey(const ValueKey<Destination>(Destination.quests)),
         ),
       );
       await tester.pump(const Duration(milliseconds: 300));
 
       final RenderObject material = tester.renderObject(
         find.descendant(
-          of: find.byType(ShellTabBar),
+          of: find.byType(BottomBar),
           matching: find.byType(Material),
         ),
       );

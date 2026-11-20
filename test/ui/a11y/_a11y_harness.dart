@@ -38,6 +38,7 @@ import 'package:zafling/theme/tokens.dart';
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/seed.dart';
 import '../../helpers/test_database.dart';
+import 'package:zafling/settings/ui/shortcut_guide.dart';
 
 /// "Now" of every accessibility test: 12:00 on the Board_Day of 15 Nov 2026.
 final DateTime a11yNow = DateTime(2026, 11, 15, 12);
@@ -130,7 +131,7 @@ class A11yEnv {
       Subject.board => const BoardScreen(),
       Subject.missions => const MissionsScreen(),
       Subject.detail => MissionDetailScreen(missionId: missionId),
-      Subject.settings => const SettingsScreen(),
+      Subject.settings => const SettingsScreen(shortcutTargets: <ShortcutTarget>[ShortcutTarget(linkName: 'calendar', label: 'Calendar')]),
       Subject.shell => const AppShell(),
       Subject.calendar => const CalendarScreen(),
       Subject.notes => const NotesScreen(),

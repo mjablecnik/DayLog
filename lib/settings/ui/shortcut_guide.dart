@@ -1,48 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../core/app_identity.dart';
 import '../../l10n/app_localizations.dart';
 import '../../theme/quest_theme.dart';
 import '../../theme/tokens.dart';
 import '../../ui_kit/common/app_icon.dart';
 import '../../ui_kit/common/app_segmented.dart';
 import '../../ui_kit/common/snackbar_host.dart';
-import '../../shell/shell_tab_bar.dart';
 
-/// Settings guide for a Home Screen icon that opens Zafling on a chosen tab:
-/// pick the tab, copy its `zafling://` link, follow the Shortcuts steps.
+/// A page the guide can make a Home Screen icon for: the name in its
+/// `zafling://<name>` link and its localized label.
+@immutable
+class ShortcutTarget {
+  const ShortcutTarget({required this.linkName, required this.label});
+
+  final String linkName;
+  final String label;
+}
+
+/// Settings guide for a Home Screen icon that opens Zafling on a chosen page:
+/// pick the page, copy its `zafling://` link, follow the Shortcuts steps.
 ///
 /// Collapsed to one row by default so it does not push the rest of Settings
-/// down; the link itself is built from the same tab names the deep link
-/// handler reads (`shellTabFromUri`).
+/// down. The pages come from the shell, which also reads the links, so the two
+/// cannot disagree.
 class ShortcutGuide extends StatefulWidget {
-  const ShortcutGuide({super.key});
+  const ShortcutGuide({super.key, required this.targets});
+
+  final List<ShortcutTarget> targets;
 
   @override
   State<ShortcutGuide> createState() => _ShortcutGuideState();
 }
 
 class _ShortcutGuideState extends State<ShortcutGuide> {
+  /// The most targets in one row of the picker.
+  static const int _perRow = 4;
+
   bool _open = false;
-  ShellTab _target = ShellTab.calendar;
+  late String _target = widget.targets.any((ShortcutTarget t) => t.linkName == 'calendar')
+      ? 'calendar'
+      : widget.targets.first.linkName;
 
-  /// The tabs offered as a target; Settings itself is pointless to open.
-  static const List<ShellTab> _targets = <ShellTab>[
-    ShellTab.calendar,
-    ShellTab.quests,
-    ShellTab.missions,
-    ShellTab.notes,
-  ];
-
-  String get _link => 'zafling://${_target.name}';
-
-  String _tabName(AppLocalizations l, ShellTab tab) => switch (tab) {
-    ShellTab.quests => l.app_tabQuests,
-    ShellTab.missions => l.app_tabMissions,
-    ShellTab.calendar => l.app_tabCalendar,
-    ShellTab.notes => l.app_tabNotes,
-    ShellTab.settings => l.app_tabSettings,
-  };
+  String get _link => '$appLinkScheme://$_target';
 
   Future<void> _copy(BuildContext context) async {
     final l = AppLocalizations.of(context);
@@ -137,17 +138,17 @@ class _ShortcutGuideState extends State<ShortcutGuide> {
                 children: <Widget>[
                   Text(l.settings_shortcutPickLabel, style: small),
                   const SizedBox(height: Space.s8),
-                  AppSegmented<ShellTab>(
-                    options: <SegmentedOption<ShellTab>>[
-                      for (final ShellTab tab in _targets)
-                        SegmentedOption<ShellTab>(
-                          value: tab,
-                          label: _tabName(l, tab),
-                        ),
-                    ],
-                    selected: _target,
-                    onChanged: (ShellTab tab) => setState(() => _target = tab),
-                  ),
+                  for (int start = 0; start < widget.targets.length; start += _perRow) ...<Widget>[
+                    if (start > 0) const SizedBox(height: Space.s8),
+                    AppSegmented<String>(
+                      options: <SegmentedOption<String>>[
+                        for (final ShortcutTarget t in widget.targets.skip(start).take(_perRow))
+                          SegmentedOption<String>(value: t.linkName, label: t.label),
+                      ],
+                      selected: _target,
+                      onChanged: (String name) => setState(() => _target = name),
+                    ),
+                  ],
                   const SizedBox(height: Space.s16),
                   _LinkBox(link: _link, onCopy: () => _copy(context)),
                   const SizedBox(height: Space.s16),

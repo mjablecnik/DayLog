@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zafling/shell/app_shell.dart';
+import 'package:zafling/shell/destination.dart';
 import 'package:zafling/app.dart';
 import 'package:zafling/database/app_database.dart';
 import 'package:zafling/l10n/app_localizations.dart';
@@ -50,7 +52,7 @@ void main() {
           deviceLocaleProvider.overrideWithValue(const Locale('en')),
           appVersionProvider.overrideWith((ref) async => '1.0.0'),
         ],
-        child: const ZaflingApp(),
+        child: ZaflingApp(home: AppShell(initial: Destination.quests)),
       ),
     );
     for (int i = 0; i < 2; i++) {

@@ -19,15 +19,19 @@ import 'package:zafling/quests/ui/missions/missions_screen.dart';
 import 'package:zafling/notes/ui/screens/notes/notes_screen.dart';
 import 'package:zafling/settings/ui/settings_screen.dart';
 import 'package:zafling/shell/deep_link.dart';
-import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/shell/app_shell.dart';
+import 'package:zafling/shell/bottom_bar.dart';
+import 'package:zafling/shell/destination.dart';
 import 'package:zafling/shell/reconcile_banner.dart';
 import 'package:zafling/shell/splash_screen.dart';
 import 'package:zafling/settings/ui_providers.dart';
 import 'package:zafling/ui_kit/common/add_fab.dart';
+import 'package:zafling/ui_kit/common/menu_button.dart';
 import 'package:zafling/quests/ui/hero/hero_bar.dart';
 
 import '../helpers/fixed_clock.dart';
 import '../helpers/seed.dart';
+import '../helpers/shell_nav.dart';
 import '../helpers/test_database.dart';
 
 /// Counts Reconciliation runs and lets a test hold, fail or fill each one.
@@ -61,11 +65,12 @@ Mission _mission(int id, String name) => Mission(
   awardedBonus: null,
 );
 
-const Key _questsTab = ValueKey<ShellTab>(ShellTab.quests);
-const Key _missionsTab = ValueKey<ShellTab>(ShellTab.missions);
-const Key _settingsTab = ValueKey<ShellTab>(ShellTab.settings);
-const Key _calendarTab = ValueKey<ShellTab>(ShellTab.calendar);
-const Key _notesTab = ValueKey<ShellTab>(ShellTab.notes);
+const Key _timerTab = ValueKey<Destination>(Destination.timer);
+const Key _questsTab = ValueKey<Destination>(Destination.quests);
+const Key _missionsTab = ValueKey<Destination>(Destination.missions);
+const Key _settingsTab = ValueKey<Destination>(Destination.settings);
+const Key _calendarTab = ValueKey<Destination>(Destination.calendar);
+const Key _notesTab = ValueKey<Destination>(Destination.notes);
 
 void main() {
   late AppDatabase db;
@@ -108,6 +113,7 @@ void main() {
     Future<void> Function()? seed,
     void Function(SpyRecurrence spy)? prime,
     Stream<Uri>? links,
+    Destination initial = Destination.quests,
   }) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
@@ -126,7 +132,7 @@ void main() {
       if (links != null) deepLinksProvider.overrideWithValue(links),
     ];
     await tester.pumpWidget(
-      ProviderScope(overrides: overrides, child: const ZaflingApp()),
+      ProviderScope(overrides: overrides, child: ZaflingApp(home: AppShell(initial: initial))),
     );
     container = ProviderScope.containerOf(
       tester.element(find.byType(ZaflingApp)),
@@ -153,8 +159,15 @@ void main() {
     }
   }
 
-  int tabIndex(WidgetTester tester) =>
-      tester.widget<IndexedStack>(find.byType(IndexedStack)).index!;
+  Destination shown(WidgetTester tester) => Destination.values[
+      tester.widget<IndexedStack>(find.byType(IndexedStack)).index!];
+
+  /// Shows [destination]: a tab by a tap on the Bottom_Bar, any other page
+  /// through the menu button and the Drawer.
+  Future<void> open(WidgetTester tester, Destination destination) async {
+    await tapDestination(tester, destination);
+    await settle(tester);
+  }
 
   group('splash', () {
     shellTest('shows until the first Reconciliation finishes, then the Board', (
@@ -164,7 +177,7 @@ void main() {
       await tester.pump();
       expect(find.byType(SplashScreen), findsOneWidget);
       expect(find.text('Preparing your board…'), findsOneWidget);
-      expect(find.byType(ShellTabBar), findsNothing);
+      expect(find.byType(BottomBar), findsOneWidget);
       expect(find.byType(BoardScreen), findsNothing);
       expect(spy.calls, 1);
 
@@ -173,7 +186,7 @@ void main() {
       await tester.pump();
       expect(find.byType(SplashScreen), findsNothing);
       expect(find.byType(BoardScreen), findsOneWidget);
-      expect(find.byType(ShellTabBar), findsOneWidget);
+      expect(find.byType(BottomBar), findsOneWidget);
       expect(spy.calls, 1);
     });
 
@@ -191,7 +204,7 @@ void main() {
   });
 
   group('tabs', () {
-    shellTest('five tabs, Quests, Missions, Calendar, Notes, then Settings, switch on tap', (
+    shellTest('five tabs, Timer, Quests, Calendar, Notes, then Settings, switch on tap', (
       tester,
     ) async {
       await pumpApp(tester);
@@ -199,64 +212,96 @@ void main() {
 
       expect(
         find.descendant(
-          of: find.byType(ShellTabBar),
+          of: find.byType(BottomBar),
           matching: find.byType(InkWell),
         ),
         findsNWidgets(5),
       );
-      expect(find.byKey(_questsTab), findsOneWidget);
-      expect(find.byKey(_missionsTab), findsOneWidget);
-      expect(find.byKey(_calendarTab), findsOneWidget);
-      expect(find.byKey(_notesTab), findsOneWidget);
-      expect(find.byKey(_settingsTab), findsOneWidget);
-      expect(
-        find.descendant(
-          of: find.byType(ShellTabBar),
-          matching: find.text('Quests'),
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(
-          of: find.byType(ShellTabBar),
-          matching: find.text('Missions'),
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(
-          of: find.byType(ShellTabBar),
-          matching: find.text('Settings'),
-        ),
-        findsOneWidget,
-      );
-      expect(tabIndex(tester), 0);
+      for (final Destination tab in Destination.tabs) {
+        expect(find.byKey(ValueKey<Destination>(tab)), findsOneWidget);
+      }
+      expect(find.byKey(_missionsTab), findsNothing);
+      for (final String label in <String>['Timer', 'Quests', 'Calendar', 'Notes', 'Settings']) {
+        expect(
+          find.descendant(of: find.byType(BottomBar), matching: find.text(label)),
+          findsOneWidget,
+        );
+      }
+      expect(shown(tester), Destination.quests);
 
-      await tester.tap(find.byKey(_missionsTab));
-      await settle(tester);
-      expect(tabIndex(tester), 1);
+      await open(tester, Destination.timer);
+      expect(shown(tester), Destination.timer);
 
-      await tester.tap(find.byKey(_calendarTab));
-      await settle(tester);
-      expect(tabIndex(tester), 2);
+      await open(tester, Destination.calendar);
+      expect(shown(tester), Destination.calendar);
       expect(find.byType(CalendarScreen), findsOneWidget);
       expect(find.byType(HeroBar), findsNothing);
 
-      await tester.tap(find.byKey(_notesTab));
-      await settle(tester);
-      expect(tabIndex(tester), 3);
+      await open(tester, Destination.notes);
+      expect(shown(tester), Destination.notes);
       expect(find.byType(NotesScreen), findsOneWidget);
       expect(find.byType(HeroBar), findsNothing);
 
-      await tester.tap(find.byKey(_settingsTab));
-      await settle(tester);
-      expect(tabIndex(tester), 4);
+      await open(tester, Destination.settings);
+      expect(shown(tester), Destination.settings);
       expect(find.byType(SettingsScreen), findsOneWidget);
 
-      await tester.tap(find.byKey(_questsTab));
-      await settle(tester);
-      expect(tabIndex(tester), 0);
+      await open(tester, Destination.quests);
+      expect(shown(tester), Destination.quests);
       expect(find.byType(SettingsScreen), findsNothing);
+    });
+
+    shellTest('the Timer is the first page', (tester) async {
+      await pumpApp(tester, initial: Destination.timer);
+      await settle(tester);
+      expect(shown(tester), Destination.timer);
+      expect(
+        tester.widget<BottomBar>(find.byType(BottomBar)).selected,
+        Destination.timer,
+      );
+    });
+
+    shellTest('History, Statistics and Missions are in the Drawer, not in the bar', (
+      tester,
+    ) async {
+      await pumpApp(tester);
+      await settle(tester);
+      await tester.tap(find.byType(MenuButton).hitTestable().first);
+      await tester.pumpAndSettle();
+      for (final Destination d in Destination.drawerItems) {
+        expect(find.byKey(ValueKey<Destination>(d)), findsOneWidget);
+      }
+      expect(Destination.drawerItems, <Destination>[
+        Destination.history,
+        Destination.statistics,
+        Destination.missions,
+      ]);
+      for (final Destination d in Destination.tabs) {
+        // Only the bar has the tabs; the Drawer lists none of them.
+        expect(
+          find.descendant(of: find.byType(Drawer), matching: find.byKey(ValueKey<Destination>(d))),
+          findsNothing,
+        );
+      }
+    });
+
+    shellTest('a page from the Drawer marks its tab in the bar and closes the Drawer', (
+      tester,
+    ) async {
+      await pumpApp(tester, initial: Destination.timer);
+      await settle(tester);
+      await open(tester, Destination.missions);
+      expect(shown(tester), Destination.missions);
+      expect(find.byType(MissionsScreen), findsOneWidget);
+      expect(tester.widget<BottomBar>(find.byType(BottomBar)).selected, Destination.quests);
+      expect(find.byType(Drawer), findsNothing);
+
+      await open(tester, Destination.statistics);
+      expect(shown(tester), Destination.statistics);
+      expect(tester.widget<BottomBar>(find.byType(BottomBar)).selected, Destination.timer);
+
+      await open(tester, Destination.history);
+      expect(shown(tester), Destination.history);
     });
 
     shellTest('tabs have 44 px hit areas and a selected semantic state', (
@@ -264,23 +309,22 @@ void main() {
     ) async {
       await pumpApp(tester);
       await settle(tester);
-      for (final Key key in <Key>[_questsTab, _missionsTab, _calendarTab, _notesTab, _settingsTab]) {
+      for (final Key key in <Key>[_timerTab, _questsTab, _calendarTab, _notesTab, _settingsTab]) {
         final Size size = tester.getSize(find.byKey(key));
         expect(size.height, greaterThanOrEqualTo(44));
         expect(size.width, greaterThanOrEqualTo(44));
       }
       final handle = tester.ensureSemantics();
       final quests = tester.getSemantics(find.byKey(_questsTab));
-      final missions = tester.getSemantics(find.byKey(_missionsTab));
-      // `toString` is stable enough to read the flags without private API.
+      final timer = tester.getSemantics(find.byKey(_timerTab));
       expect(quests.label, 'Quests');
-      expect(missions.label, 'Missions');
+      expect(timer.label, 'Timer');
       expect(tester.getSemantics(find.byKey(_calendarTab)).label, 'Calendar');
       expect(tester.getSemantics(find.byKey(_notesTab)).label, 'Notes');
       expect(tester.getSemantics(find.byKey(_settingsTab)).label, 'Settings');
       expect(
         quests.flagsCollection.isSelected,
-        isNot(missions.flagsCollection.isSelected),
+        isNot(timer.flagsCollection.isSelected),
       );
       handle.dispose();
     });
@@ -290,14 +334,13 @@ void main() {
     ) async {
       await pumpApp(tester);
       await settle(tester);
-      await tester.tap(find.byKey(_settingsTab));
-      await settle(tester);
+      await open(tester, Destination.settings);
 
       expect(find.byType(SettingsScreen), findsOneWidget);
       expect(find.text('Back'), findsNothing);
       expect(find.byType(HeroBar), findsNothing);
       expect(find.byType(AddFab), findsNothing);
-      expect(find.byType(ShellTabBar), findsOneWidget);
+      expect(find.byType(BottomBar), findsOneWidget);
       expect(find.bySemanticsLabel('Settings'), findsWidgets);
     });
 
@@ -306,8 +349,7 @@ void main() {
     ) async {
       await pumpApp(tester);
       await settle(tester);
-      await tester.tap(find.byKey(_settingsTab));
-      await settle(tester);
+      await open(tester, Destination.settings);
       container
           .read(snackbarProvider.notifier)
           .show(const SnackMessage('Rule posted'));
@@ -315,7 +357,7 @@ void main() {
       await tester.pump();
       expect(find.text('Rule posted'), findsOneWidget);
 
-      await tester.tap(find.byKey(_questsTab));
+      await open(tester, Destination.quests);
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
     });
@@ -334,14 +376,13 @@ void main() {
     Future<void> checkRetention(
       WidgetTester tester, {
       required Type screen,
-      required Key tab,
-      required Key other,
+      required Destination page,
+      required Destination other,
       required Future<void> Function() seed,
     }) async {
       await pumpApp(tester, seed: seed);
       await settle(tester);
-      await tester.tap(find.byKey(tab));
-      await settle(tester);
+      await open(tester, page);
 
       final Finder lists = find.descendant(
         of: find.byType(screen),
@@ -353,10 +394,8 @@ void main() {
       final double before = offset(tester, screen);
       expect(before, greaterThan(0));
 
-      await tester.tap(find.byKey(other));
-      await settle(tester);
-      await tester.tap(find.byKey(tab));
-      await settle(tester);
+      await open(tester, other);
+      await open(tester, page);
       expect(offset(tester, screen), before);
     }
 
@@ -366,8 +405,8 @@ void main() {
       await checkRetention(
         tester,
         screen: MissionsScreen,
-        tab: _missionsTab,
-        other: _questsTab,
+        page: Destination.missions,
+        other: Destination.quests,
         seed: () async {
           for (int i = 0; i < 40; i++) {
             await seedMission(db, name: 'Mission $i');
@@ -382,8 +421,8 @@ void main() {
       await checkRetention(
         tester,
         screen: SettingsScreen,
-        tab: _settingsTab,
-        other: _questsTab,
+        page: Destination.settings,
+        other: Destination.quests,
         // Enough recurring rules to make the Settings list taller than the screen.
         seed: () async {
           for (int i = 0; i < 12; i++) {
@@ -407,8 +446,8 @@ void main() {
       await checkRetention(
         tester,
         screen: BoardScreen,
-        tab: _questsTab,
-        other: _missionsTab,
+        page: Destination.quests,
+        other: Destination.missions,
         seed: () async {
           for (int i = 0; i < 40; i++) {
             await seedQuest(db, name: 'Quest $i', sortOrder: i + 1);
@@ -426,10 +465,8 @@ void main() {
       await settle(tester);
       expect(spy.calls, 1);
 
-      await tester.tap(find.byKey(_missionsTab));
-      await settle(tester);
-      await tester.tap(find.byKey(_questsTab));
-      await settle(tester);
+      await open(tester, Destination.missions);
+      await open(tester, Destination.quests);
       // A resume without leaving the app (control centre) does not count.
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
@@ -569,9 +606,8 @@ void main() {
       );
       // The rest of the app is still there and usable.
       expect(find.byType(BoardScreen), findsOneWidget);
-      await tester.tap(find.byKey(_missionsTab));
-      await settle(tester);
-      expect(tabIndex(tester), 1);
+      await open(tester, Destination.missions);
+      expect(shown(tester), Destination.missions);
       expect(find.byType(ReconcileBanner), findsOneWidget);
 
       spy.failure = null;
@@ -606,13 +642,13 @@ void main() {
   });
 
   group('links', () {
-    test('shellTabFromUri reads zafling://<tab> and ignores the rest', () {
-      expect(shellTabFromUri(Uri.parse('zafling://calendar')), ShellTab.calendar);
-      expect(shellTabFromUri(Uri.parse('zafling://Notes')), ShellTab.notes);
-      expect(shellTabFromUri(Uri.parse('zafling:///missions')), ShellTab.missions);
-      expect(shellTabFromUri(Uri.parse('zafling://nowhere')), isNull);
-      expect(shellTabFromUri(Uri.parse('https://calendar')), isNull);
-      expect(shellTabFromUri(Uri.parse('zafling://')), isNull);
+    test('destinationFromUri reads zafling://<tab> and ignores the rest', () {
+      expect(destinationFromUri(Uri.parse('zafling://calendar')), Destination.calendar);
+      expect(destinationFromUri(Uri.parse('zafling://Notes')), Destination.notes);
+      expect(destinationFromUri(Uri.parse('zafling:///missions')), Destination.missions);
+      expect(destinationFromUri(Uri.parse('zafling://nowhere')), isNull);
+      expect(destinationFromUri(Uri.parse('https://calendar')), isNull);
+      expect(destinationFromUri(Uri.parse('zafling://')), isNull);
     });
 
     shellTest('a zafling://calendar link opens the Calendar tab, also when it arrives later', (tester) async {
@@ -623,10 +659,16 @@ void main() {
       expect(find.byType(BoardScreen), findsOneWidget);
       links.add(Uri.parse('zafling://calendar'));
       await settle(tester);
-      expect(tabIndex(tester), 2);
+      expect(shown(tester), Destination.calendar);
       links.add(Uri.parse('zafling://bogus'));
       await settle(tester);
-      expect(tabIndex(tester), 2);
+      expect(shown(tester), Destination.calendar);
+      links.add(Uri.parse('zafling://missions'));
+      await settle(tester);
+      expect(shown(tester), Destination.missions);
+      links.add(Uri.parse('zafling://timer'));
+      await settle(tester);
+      expect(shown(tester), Destination.timer);
     });
   });
 }

@@ -11,27 +11,38 @@ import '../quests/services/providers.dart';
 import '../quests/ui/state/board_day.dart';
 import '../settings/ui_providers.dart';
 import '../theme/quest_theme.dart';
+import '../ui_kit/common/menu_button.dart';
 import '../ui_kit/common/snackbar_host.dart';
 import '../quests/ui/board/board_screen.dart';
 import '../calendar/ui/screens/calendar_screen.dart';
 import '../quests/ui/missions/missions_screen.dart';
 import '../notes/ui/screens/notes/notes_screen.dart';
 import '../settings/ui/settings_screen.dart';
+import '../settings/ui/shortcut_guide.dart' show ShortcutTarget;
 import 'deep_link.dart';
-import 'shell_tab_bar.dart';
+import 'app_drawer.dart';
+import 'bottom_bar.dart';
+import 'destination.dart';
+import 'placeholder_screen.dart';
 import 'reconcile_banner.dart';
 import 'splash_screen.dart';
 
-/// Root screen: splash until the first Reconciliation has finished, then the
-/// five tabs (Questy, Mise, Kalendář, Poznámky, Nastavení). The reward overlay is hosted by `ZaflingApp`, above
-/// the Navigator, so it also covers pushed routes.
+/// Root screen: the Bottom_Bar with the five tabs (Timer, Questy, Kalendář,
+/// Poznámky, Nastavení), the Drawer with the other Destinations (History,
+/// Statistics, Missions) and the pages themselves. The Quest, Calendar and Notes
+/// pages show the splash until the first Reconciliation has finished; the
+/// timer pages do not wait for it. The reward overlay is hosted by `ZaflingApp`,
+/// above the Navigator, so it also covers pushed routes.
 ///
 /// Reconciliation runs at start, once per return from the background, when the
 /// Board_Day changes, and on retry. Requests made in the same turn are
 /// coalesced into one run, and a request made while a run is in flight triggers
 /// exactly one more run afterwards.
 class AppShell extends ConsumerStatefulWidget {
-  const AppShell({super.key});
+  const AppShell({super.key, this.initial = Destination.timer});
+
+  /// The page shown first; a deep link that launches the app replaces it.
+  final Destination initial;
 
   @override
   ConsumerState<AppShell> createState() => _AppShellState();
@@ -39,7 +50,8 @@ class AppShell extends ConsumerStatefulWidget {
 
 class _AppShellState extends ConsumerState<AppShell>
     with WidgetsBindingObserver {
-  ShellTab _tab = ShellTab.quests;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late Destination _destination = widget.initial;
   bool _ready = false;
   bool _failed = false;
 
@@ -53,7 +65,9 @@ class _AppShellState extends ConsumerState<AppShell>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _requestReconcile();
-    _links = ref.read(deepLinksProvider).listen(_openLink, onError: (Object _) {});
+    _links = ref
+        .read(deepLinksProvider)
+        .listen(_openLink, onError: (Object _) {});
   }
 
   @override
@@ -155,20 +169,25 @@ class _AppShellState extends ConsumerState<AppShell>
   }
 
   /// A `zafling://calendar` style link: closes what is open above the shell and
-  /// shows the tab. Anything else is ignored.
+  /// shows the Destination. Anything else is ignored.
   void _openLink(Uri uri) {
-    final ShellTab? tab = shellTabFromUri(uri);
-    if (tab == null || !mounted) return;
+    final Destination? destination = destinationFromUri(uri);
+    if (destination == null || !mounted) return;
     Navigator.of(context).popUntil((Route<dynamic> route) => route.isFirst);
-    _selectTab(tab);
+    _select(destination);
   }
 
-  void _selectTab(ShellTab tab) {
-    if (tab == _tab) return;
+  void _select(Destination destination) {
+    if (destination == _destination) return;
     // A message belongs to the screen that raised it (for example a Settings
-    // rule saved), so it does not follow the user to another tab.
+    // rule saved), so it does not follow the user to another page.
     ScaffoldMessenger.of(context).clearSnackBars();
-    setState(() => _tab = tab);
+    setState(() => _destination = destination);
+  }
+
+  void _selectFromDrawer(Destination destination) {
+    _scaffoldKey.currentState?.closeDrawer();
+    _select(destination);
   }
 
   @override
@@ -179,35 +198,59 @@ class _AppShellState extends ConsumerState<AppShell>
     );
     ref.listen<DateTime>(boardDayProvider, (_, _) => _requestReconcile());
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: context.palette.board,
-      body: _ready ? _buildTabs(context) : const SplashScreen(),
+    return ShellMenuScope(
+      open: () => _scaffoldKey.currentState?.openDrawer(),
+      child: Scaffold(
+        key: _scaffoldKey,
+        resizeToAvoidBottomInset: false,
+        backgroundColor: context.palette.board,
+        // The edge swipe collides with the iOS back swipe and with the reorder
+        // and slide gestures of the lists, so only the menu button opens it.
+        drawerEnableOpenDragGesture: false,
+        drawer: AppDrawer(selected: _destination, onSelect: _selectFromDrawer),
+        body: _buildPages(context),
+      ),
     );
   }
 
-  Widget _buildTabs(BuildContext context) {
+  Widget _buildPages(BuildContext context) {
+    // The pages that read the Quest data wait for the first Reconciliation.
+    Widget gated(Widget page) => _ready ? page : const SplashScreen();
     return Column(
       children: <Widget>[
         Expanded(
-          // All tabs stay mounted, so each keeps its scroll position.
+          // All pages stay mounted, so each keeps its scroll position.
           child: IndexedStack(
-            index: _tab.index,
+            index: _destination.index,
             children: <Widget>[
-              BoardScreen(),
-              MissionsScreen(),
-              CalendarScreen(),
-              NotesScreen(),
-              SettingsScreen(),
+              for (final Destination d in Destination.values)
+                switch (d) {
+                  Destination.timer ||
+                  Destination.history ||
+                  Destination.statistics => PlaceholderScreen(destination: d),
+                  Destination.quests => gated(BoardScreen()),
+                  Destination.missions => gated(MissionsScreen()),
+                  Destination.calendar => gated(CalendarScreen()),
+                  Destination.notes => gated(NotesScreen()),
+                  Destination.settings => SettingsScreen(
+                    shortcutTargets: _shortcutTargets(context),
+                  ),
+                },
             ],
           ),
         ),
         if (_failed) ReconcileBanner(onRetry: _requestReconcile),
-        ShellTabBar(
-          current: _tab,
-          onSelected: _selectTab,
-        ),
+        BottomBar(selected: _destination.tab, onSelected: _select),
       ],
     );
+  }
+
+  List<ShortcutTarget> _shortcutTargets(BuildContext context) {
+    final AppLocalizations l = AppLocalizations.of(context);
+    return <ShortcutTarget>[
+      for (final Destination d in Destination.values)
+        if (d != Destination.settings)
+          ShortcutTarget(linkName: d.linkName, label: d.label(l)),
+    ];
   }
 }

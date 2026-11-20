@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../calendar/data/calendar_models.dart';
 import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../ui_kit/common/menu_button.dart';
 import '../../services/providers.dart';
 import '../sheets/quest_sheet.dart';
 import '../state/board_day.dart';
@@ -94,7 +95,10 @@ class _BoardScreenState extends ConsumerState<BoardScreen> {
                 _TitleRow(
                   openCount: open == null
                       ? null
-                      : open.length + eventTasks.where((EventOccurrence o) => !o.isCompleted).length,
+                      : open.length +
+                            eventTasks
+                                .where((EventOccurrence o) => !o.isCompleted)
+                                .length,
                   today: today,
                 ),
                 const SizedBox(height: Space.s10),
@@ -138,29 +142,38 @@ class _TitleRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Space.s20),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
         children: <Widget>[
-          Semantics(
-            header: true,
-            child: Text(
-              l.board_title,
-              style: context.displayText.headlineLarge,
+          const MenuButton(),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: <Widget>[
+                Semantics(
+                  header: true,
+                  child: Text(
+                    l.board_title,
+                    style: context.displayText.headlineLarge,
+                  ),
+                ),
+                const SizedBox(width: Space.s12),
+                if (openCount != null)
+                  Expanded(
+                    child: Text(
+                      l.board_subtitle(openCount!, date),
+                      textAlign: TextAlign.end,
+                      // Two lines: with a two-digit count the Czech line is wider
+                      // than the space beside the title and must not lose the date.
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.bodyText.bodySmall!.copyWith(
+                        color: p.textDim,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
-          const SizedBox(width: Space.s12),
-          if (openCount != null)
-            Expanded(
-              child: Text(
-                l.board_subtitle(openCount!, date),
-                textAlign: TextAlign.end,
-                // Two lines: with a two-digit count the Czech line is wider
-                // than the space beside the title and must not lose the date.
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: context.bodyText.bodySmall!.copyWith(color: p.textDim),
-              ),
-            ),
         ],
       ),
     );

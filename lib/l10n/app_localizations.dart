@@ -2617,6 +2617,48 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Export se nepodařil. Zkus to prosím znovu.'**
   String get settings_exportFailed;
+
+  /// Label of the Timer tab in the bottom bar and of the Timer destination.
+  ///
+  /// In cs, this message translates to:
+  /// **'Časovač'**
+  String get shell_tabTimer;
+
+  /// Label of the History destination in the side drawer.
+  ///
+  /// In cs, this message translates to:
+  /// **'Historie'**
+  String get shell_destinationHistory;
+
+  /// Label of the Statistics destination in the side drawer.
+  ///
+  /// In cs, this message translates to:
+  /// **'Statistiky'**
+  String get shell_destinationStatistics;
+
+  /// Heading of the drawer group with History and Statistics.
+  ///
+  /// In cs, this message translates to:
+  /// **'Čas'**
+  String get shell_groupTime;
+
+  /// Heading of the drawer group with Missions.
+  ///
+  /// In cs, this message translates to:
+  /// **'Plánování'**
+  String get shell_groupPlanning;
+
+  /// Accessibility label of the button in a screen header that opens the side drawer.
+  ///
+  /// In cs, this message translates to:
+  /// **'Menu'**
+  String get shell_openMenu;
+
+  /// Temporary text of a destination whose feature is not moved into the app yet.
+  ///
+  /// In cs, this message translates to:
+  /// **'Tato stránka přijde s přesunem časovače.'**
+  String get shell_placeholderBody;
 }
 
 class _AppLocalizationsDelegate

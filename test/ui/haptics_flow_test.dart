@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../helpers/shell_nav.dart';
 import 'package:zafling/app.dart';
 import 'package:zafling/database/app_database.dart';
 import 'package:zafling/l10n/app_localizations_en.dart';
 import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/shell/app_shell.dart';
+import 'package:zafling/shell/destination.dart';
 import 'package:zafling/settings/ui_providers.dart';
 import 'package:zafling/quests/ui/cards/check_circle.dart';
 import 'package:zafling/quests/ui/reward/reward_card.dart';
@@ -68,7 +70,7 @@ void main() {
           deviceLocaleProvider.overrideWithValue(const Locale('en')),
           appVersionProvider.overrideWith((ref) async => '1.0.0'),
         ],
-        child: const ZaflingApp(),
+        child: ZaflingApp(home: AppShell(initial: Destination.quests)),
       ),
     );
     await _settle(tester);
@@ -87,7 +89,7 @@ void main() {
 
     // Completing a mission: open it (the Board lists no mission quests),
     // complete its last quest, then the reward's mission button.
-    await tester.tap(find.byKey(const ValueKey<ShellTab>(ShellTab.missions)));
+    await tapDestination(tester, Destination.missions);
     await _settle(tester);
     await tester.tap(find.text('Only mission'));
     await _settle(tester);
@@ -106,7 +108,7 @@ void main() {
     await _settle(tester);
     await tester.tap(find.bySemanticsLabel(en.common_back));
     await _settle(tester);
-    await tester.tap(find.byKey(const ValueKey<ShellTab>(ShellTab.quests)));
+    await tester.tap(find.byKey(const ValueKey<Destination>(Destination.quests)));
     await _settle(tester);
 
     // Lifting a card to reorder it.

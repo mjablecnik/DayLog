@@ -4,21 +4,20 @@ import '../l10n/app_localizations.dart';
 import '../theme/quest_theme.dart';
 import '../theme/tokens.dart';
 import '../ui_kit/common/app_icon.dart';
+import 'destination.dart';
 
-/// The four tabs of the shell; Settings lives in the bar, not behind a button.
-enum ShellTab { quests, missions, calendar, notes, settings }
-
-/// Bottom bar with the tabs Questy, Mise, Kalendář, Poznámky and Nastavení; the active one is
-/// brass, the others faint (see `.tabbar` in the design).
-class ShellTabBar extends StatelessWidget {
-  const ShellTabBar({
+/// Bottom bar with the tabs Timer, Questy, Kalendář, Poznámky and Nastavení; the
+/// active one is brass, the others faint (see `.tabbar` in the design).
+class BottomBar extends StatelessWidget {
+  const BottomBar({
     super.key,
-    required this.current,
+    required this.selected,
     required this.onSelected,
   });
 
-  final ShellTab current;
-  final ValueChanged<ShellTab> onSelected;
+  /// The tab to mark: the shown Destination's [Destination.tab].
+  final Destination selected;
+  final ValueChanged<Destination> onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -39,25 +38,13 @@ class ShellTabBar extends StatelessWidget {
             padding: const EdgeInsets.only(top: Space.s8, bottom: Space.s4),
             child: Row(
               children: <Widget>[
-                for (final ShellTab tab in ShellTab.values)
+                for (final Destination tab in Destination.tabs)
                   Expanded(
                     child: _TabItem(
-                      key: ValueKey<ShellTab>(tab),
-                      icon: switch (tab) {
-                        ShellTab.quests => IconAsset.quests,
-                        ShellTab.missions => IconAsset.missions,
-                        ShellTab.calendar => IconAsset.calendar,
-                        ShellTab.notes => IconAsset.notes,
-                        ShellTab.settings => IconAsset.gear,
-                      },
-                      label: switch (tab) {
-                        ShellTab.quests => l10n.app_tabQuests,
-                        ShellTab.missions => l10n.app_tabMissions,
-                        ShellTab.calendar => l10n.app_tabCalendar,
-                        ShellTab.notes => l10n.app_tabNotes,
-                        ShellTab.settings => l10n.app_tabSettings,
-                      },
-                      selected: tab == current,
+                      key: ValueKey<Destination>(tab),
+                      icon: tab.icon,
+                      label: tab.label(l10n),
+                      selected: tab == selected,
                       onTap: () => onSelected(tab),
                     ),
                   ),

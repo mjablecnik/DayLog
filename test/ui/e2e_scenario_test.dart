@@ -11,7 +11,8 @@ import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/quests/services/quest_service.dart';
 import 'package:zafling/quests/services/xp_engine.dart';
 import 'package:zafling/settings/ui/settings_screen.dart';
-import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/shell/app_shell.dart';
+import 'package:zafling/shell/destination.dart';
 import 'package:zafling/quests/ui/state/reward_queue.dart';
 import 'package:zafling/settings/ui_providers.dart';
 import 'package:zafling/theme/quest_theme.dart';
@@ -20,14 +21,12 @@ import 'package:zafling/quests/ui/cards/check_circle.dart';
 import 'package:zafling/quests/ui/reward/reward_card.dart';
 
 import '../helpers/fixed_clock.dart';
+import '../helpers/shell_nav.dart';
 import '../helpers/test_database.dart';
 
 final AppLocalizationsEn en = AppLocalizationsEn();
 final AppLocalizationsCs cs = AppLocalizationsCs();
 
-const Key _questsTab = ValueKey<ShellTab>(ShellTab.quests);
-const Key _missionsTab = ValueKey<ShellTab>(ShellTab.missions);
-const Key _settingsTab = ValueKey<ShellTab>(ShellTab.settings);
 
 /// Drift streams run on real async: give them time, then finish the frames.
 Future<void> _settle(WidgetTester tester) async {
@@ -39,6 +38,12 @@ Future<void> _settle(WidgetTester tester) async {
 
 Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.tap(finder);
+  await _settle(tester);
+}
+
+/// Shows a page: a tab by its bar button, the others through the Drawer.
+Future<void> _show(WidgetTester tester, Destination destination) async {
+  await tapDestination(tester, destination);
   await _settle(tester);
 }
 
@@ -95,7 +100,7 @@ void main() {
             deviceLocaleProvider.overrideWithValue(const Locale('en')),
             appVersionProvider.overrideWith((ref) async => '1.0.0'),
           ],
-          child: const ZaflingApp(),
+          child: ZaflingApp(home: AppShell(initial: Destination.quests)),
         ),
       );
       final ProviderContainer container = ProviderScope.containerOf(
@@ -110,7 +115,7 @@ void main() {
       expect(find.text(en.board_emptyTitle), findsOneWidget);
 
       // ---- 1. Create a Mission with two Quests (requirements 3.6, 9) -------
-      await _tap(tester, find.byKey(_missionsTab));
+      await _show(tester, Destination.missions);
       expect(find.text(en.missions_emptyTitle), findsOneWidget);
       await _tap(tester, find.byKey(const ValueKey<String>('add-fab')));
       expect(find.text(en.mission_sheetCreateTitle), findsOneWidget);
@@ -143,14 +148,14 @@ void main() {
       expect(find.text(en.missions_openCount(1)), findsOneWidget);
 
       // Both Quests belong to the Mission, so the Board does not list them.
-      await _tap(tester, find.byKey(_questsTab));
+      await _show(tester, Destination.quests);
       expect(find.text('Rake the leaves'), findsNothing);
       expect(find.text('Clean the gutters'), findsNothing);
       expect(find.text(en.board_emptyTitle), findsOneWidget);
       expect(find.text(en.board_subtitle(0, 'Monday, November 16')), findsOne);
 
       // ---- 2. Complete both Quests in the Mission, then the Mission -------
-      await _tap(tester, find.byKey(_missionsTab));
+      await _show(tester, Destination.missions);
       await _tap(tester, find.text('Autumn clean-up'));
       expect(find.text('Rake the leaves'), findsOneWidget);
       expect(find.text('Clean the gutters'), findsOneWidget);
@@ -183,7 +188,7 @@ void main() {
 
       // Back on the Board: the Mission's done Quests are not listed there.
       await _tap(tester, find.bySemanticsLabel(en.common_back));
-      await _tap(tester, find.byKey(_questsTab));
+      await _show(tester, Destination.quests);
       expect(find.text(en.board_doneSection.toUpperCase()), findsNothing);
       expect(find.text('Rake the leaves'), findsNothing);
       expect(find.text(en.board_emptyTitle), findsOneWidget);
@@ -194,7 +199,7 @@ void main() {
       expect(find.text(en.hero_xpRemaining(65, 3)), findsOneWidget);
 
       // ---- 3. Missions tab: "Completed today" with the earned bonus -------
-      await _tap(tester, find.byKey(_missionsTab));
+      await _show(tester, Destination.missions);
       expect(
         find.text(en.missions_sectionDoneToday.toUpperCase()),
         findsOneWidget,
@@ -216,7 +221,7 @@ void main() {
       );
       expect(find.text('Autumn clean-up'), findsNothing);
       expect(find.text(en.missions_emptyTitle), findsOneWidget);
-      await _tap(tester, find.byKey(_questsTab));
+      await _show(tester, Destination.quests);
       expect(find.text(en.board_doneSection.toUpperCase()), findsNothing);
       expect(find.text(en.board_emptyTitle), findsOneWidget);
       expect(find.text(en.board_subtitle(0, 'Tuesday, November 17')), findsOne);
@@ -224,7 +229,7 @@ void main() {
       expect(find.text(en.hero_level(2)), findsOneWidget);
 
       // ---- 5. Settings: language to Czech, theme to Light (11.x, 14.3) ----
-      await _tap(tester, find.byKey(_settingsTab));
+      await _show(tester, Destination.settings);
       expect(find.byType(SettingsScreen), findsOneWidget);
       // Screen title plus the tab label.
       expect(find.text(en.settings_title), findsNWidgets(2));
@@ -275,20 +280,20 @@ void main() {
       expect(find.text(cs.rule_postNow), findsNothing);
 
       // Leaving the Settings tab takes its message with it, then Missions.
-      await _tap(tester, find.byKey(_missionsTab));
+      await _show(tester, Destination.missions);
       expect(find.byType(SettingsScreen), findsNothing);
       expect(find.byType(SnackBar), findsNothing);
-      // Screen title plus the tab label.
-      expect(find.text(cs.missions_title), findsNWidgets(2));
+      // The screen title; Missions is no tab, so there is no tab label.
+      expect(find.text(cs.missions_title), findsOneWidget);
       expect(find.text(cs.missions_sectionOpen.toUpperCase()), findsOneWidget);
       expect(find.text('Water plants'), findsOneWidget);
       expect(find.text(cs.missions_remaining(25)), findsOneWidget);
       expect(find.text(cs.missions_openCount(1)), findsOneWidget);
       // The posted Quest belongs to the new Mission: Missions shows it, the
       // Board does not.
-      await _tap(tester, find.byKey(_questsTab));
+      await _show(tester, Destination.quests);
       expect(find.text('Fill the can'), findsNothing);
-      await _tap(tester, find.byKey(_missionsTab));
+      await _show(tester, Destination.missions);
       await _tap(tester, find.text('Water plants'));
       expect(find.text('Fill the can'), findsOneWidget);
     } finally {

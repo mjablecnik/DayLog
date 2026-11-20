@@ -1767,4 +1767,26 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get settings_exportFailed =>
       'Export se nepodařil. Zkus to prosím znovu.';
+
+  @override
+  String get shell_tabTimer => 'Časovač';
+
+  @override
+  String get shell_destinationHistory => 'Historie';
+
+  @override
+  String get shell_destinationStatistics => 'Statistiky';
+
+  @override
+  String get shell_groupTime => 'Čas';
+
+  @override
+  String get shell_groupPlanning => 'Plánování';
+
+  @override
+  String get shell_openMenu => 'Menu';
+
+  @override
+  String get shell_placeholderBody =>
+      'Tato stránka přijde s přesunem časovače.';
 }

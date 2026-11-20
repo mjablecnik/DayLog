@@ -2335,5 +2335,33 @@
   "settings_exportFailed": "Export se nepodařil. Zkus to prosím znovu.",
   "@settings_exportFailed": {
     "description": "Snackbar shown when the export could not be written or shared."
+  },
+  "shell_tabTimer": "Časovač",
+  "@shell_tabTimer": {
+    "description": "Label of the Timer tab in the bottom bar and of the Timer destination."
+  },
+  "shell_destinationHistory": "Historie",
+  "@shell_destinationHistory": {
+    "description": "Label of the History destination in the side drawer."
+  },
+  "shell_destinationStatistics": "Statistiky",
+  "@shell_destinationStatistics": {
+    "description": "Label of the Statistics destination in the side drawer."
+  },
+  "shell_groupTime": "Čas",
+  "@shell_groupTime": {
+    "description": "Heading of the drawer group with History and Statistics."
+  },
+  "shell_groupPlanning": "Plánování",
+  "@shell_groupPlanning": {
+    "description": "Heading of the drawer group with Missions."
+  },
+  "shell_openMenu": "Menu",
+  "@shell_openMenu": {
+    "description": "Accessibility label of the button in a screen header that opens the side drawer."
+  },
+  "shell_placeholderBody": "Tato stránka přijde s přesunem časovače.",
+  "@shell_placeholderBody": {
+    "description": "Temporary text of a destination whose feature is not moved into the app yet."
   }
 }

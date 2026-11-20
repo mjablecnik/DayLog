@@ -9,7 +9,8 @@ import 'package:zafling/notes/ui/screens/note_editor/note_editor_screen.dart';
 import 'package:zafling/notes/ui/screens/notes/folder_row.dart';
 import 'package:zafling/notes/ui/screens/notes/note_row.dart';
 import 'package:zafling/notes/ui/screens/notes/trash_row.dart';
-import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/shell/bottom_bar.dart';
+import 'package:zafling/shell/destination.dart';
 import 'package:super_editor/super_editor.dart';
 
 import 'a11y/_a11y_harness.dart';
@@ -21,7 +22,7 @@ void main() {
   a11yTest('folders, a formatted note, move, trash, restore and delete for good', (tester, track) async {
     final A11yEnv env = await A11yEnv.pump(tester, Subject.shell);
     track(env);
-    final ProviderContainer container = ProviderScope.containerOf(tester.element(find.byType(ShellTabBar)));
+    final ProviderContainer container = ProviderScope.containerOf(tester.element(find.byType(BottomBar)));
     final int? xpBefore = await tester.runAsync(() => container.read(xpEngineProvider).readTotal());
 
     Future<void> tap(Finder finder) async {
@@ -55,7 +56,7 @@ void main() {
     }
 
     // The Notes tab shows the seeded folder and the root note; the trashed note is not listed.
-    await tap(find.byKey(const ValueKey<ShellTab>(ShellTab.notes)));
+    await tap(find.byKey(const ValueKey<Destination>(Destination.notes)));
     expect(find.byType(FolderRow), findsOneWidget);
     expect(find.byType(NoteRow), findsOneWidget);
 

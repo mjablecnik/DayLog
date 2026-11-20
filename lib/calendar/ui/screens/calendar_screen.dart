@@ -11,6 +11,7 @@ import '../../../theme/quest_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/add_fab.dart';
 import '../../../ui_kit/common/app_icon.dart';
+import '../../../ui_kit/common/menu_button.dart';
 import 'calendar_labels.dart';
 import 'event_form_screen.dart';
 import 'event_search_screen.dart';
@@ -81,6 +82,7 @@ class _Header extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(Space.s8, Space.s4, Space.s8, Space.s8),
       child: Row(
         children: <Widget>[
+          const MenuButton(),
           _IconTap(
             icon: IconAsset.chevronLeft,
             label: l.calendar_prevMonth,

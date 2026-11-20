@@ -16,6 +16,15 @@ import 'package:zafling/theme/tokens.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/test_database.dart';
+import 'package:zafling/settings/ui/shortcut_guide.dart';
+
+/// The pages the shortcut guide offers in tests.
+const List<ShortcutTarget> testShortcutTargets = <ShortcutTarget>[
+  ShortcutTarget(linkName: 'calendar', label: 'Calendar'),
+  ShortcutTarget(linkName: 'quests', label: 'Quests'),
+  ShortcutTarget(linkName: 'missions', label: 'Missions'),
+  ShortcutTarget(linkName: 'notes', label: 'Notes'),
+];
 
 /// A stand-in for the app root: the same providers drive locale and theme.
 class _TestApp extends ConsumerWidget {
@@ -30,7 +39,7 @@ class _TestApp extends ConsumerWidget {
       locale: ref.watch(effectiveLocaleProvider),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const SettingsScreen(),
+      home: const SettingsScreen(shortcutTargets: testShortcutTargets),
     );
   }
 }

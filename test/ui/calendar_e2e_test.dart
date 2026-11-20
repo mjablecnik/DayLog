@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zafling/l10n/app_localizations_en.dart';
 import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/shell/bottom_bar.dart';
+import 'package:zafling/shell/destination.dart';
 import 'package:zafling/calendar/ui/widgets/event_task_card.dart';
 
 import 'a11y/_a11y_harness.dart';
@@ -16,7 +17,7 @@ void main() {
   a11yTest('create an event, do it on the Board, delete it and undo', (tester, track) async {
     final A11yEnv env = await A11yEnv.pump(tester, Subject.shell);
     track(env);
-    final ProviderContainer container = ProviderScope.containerOf(tester.element(find.byType(ShellTabBar)));
+    final ProviderContainer container = ProviderScope.containerOf(tester.element(find.byType(BottomBar)));
 
     // A stream read is a chain of queries on timers in the fake zone, so settle
     // a few times (a loaded machine needs the extra rounds).
@@ -28,7 +29,7 @@ void main() {
     }
 
     // The seeded 17 November public holiday exists but is no Event_Task.
-    await tap(find.byKey(const ValueKey<ShellTab>(ShellTab.calendar)));
+    await tap(find.byKey(const ValueKey<Destination>(Destination.calendar)));
     expect(find.text('Den boje za svobodu a demokracii'), findsOneWidget);
     expect(find.byType(EventTaskCard), findsNothing);
 
@@ -42,13 +43,13 @@ void main() {
     expect(find.text('Popřát Evě'), findsWidgets);
 
     // On the Board it is a task worth 25 XP (a timed one-hour event); do it.
-    await tap(find.byKey(const ValueKey<ShellTab>(ShellTab.quests)));
+    await tap(find.byKey(const ValueKey<Destination>(Destination.quests)));
     expect(find.byType(EventTaskCard), findsOneWidget);
     await tap(find.bySemanticsLabel(en.a11y_completeEvent('Popřát Evě')));
     expect(await tester.runAsync(() => container.read(xpEngineProvider).readTotal()), 25);
 
     // Delete it from its detail and bring it back with Undo.
-    await tap(find.byKey(const ValueKey<ShellTab>(ShellTab.calendar)));
+    await tap(find.byKey(const ValueKey<Destination>(Destination.calendar)));
     await tap(find.byKey(const ValueKey<String>('day-2026-11-15')));
     await tap(find.text('Popřát Evě').last);
     await tap(find.byKey(const ValueKey<String>('detail-menu')));

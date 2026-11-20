@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../ui_kit/common/menu_button.dart';
 import '../../services/providers.dart';
 import '../sheets/mission_sheet.dart';
 import '../state/board_day.dart';
@@ -176,26 +177,33 @@ class _TitleRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Space.s20),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
         children: <Widget>[
-          Semantics(
-            header: true,
-            child: Text(
-              l.missions_title,
-              style: context.displayText.headlineLarge,
-            ),
-          ),
-          const SizedBox(width: Space.s12),
+          const MenuButton(),
           Expanded(
-            child: Text(
-              parts.join(' · '),
-              textAlign: TextAlign.end,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: context.bodyText.bodySmall!.copyWith(
-                color: context.palette.textDim,
-              ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: <Widget>[
+                Semantics(
+                  header: true,
+                  child: Text(
+                    l.missions_title,
+                    style: context.displayText.headlineLarge,
+                  ),
+                ),
+                const SizedBox(width: Space.s12),
+                Expanded(
+                  child: Text(
+                    parts.join(' · '),
+                    textAlign: TextAlign.end,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.bodyText.bodySmall!.copyWith(
+                      color: context.palette.textDim,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -333,10 +341,7 @@ class _MissionListState extends ConsumerState<_MissionList> {
                   return ReorderableDelayedDragStartListener(
                     key: ValueKey<int>(m.id),
                     index: index,
-                    child: Semantics(
-                      hint: l.a11y_dragHint,
-                      child: row(m),
-                    ),
+                    child: Semantics(hint: l.a11y_dragHint, child: row(m)),
                   );
                 },
               ),

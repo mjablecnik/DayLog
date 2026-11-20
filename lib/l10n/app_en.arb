@@ -419,5 +419,12 @@
   "settings_groupData": "Data",
   "settings_exportTitle": "Export data",
   "settings_exportSubtitle": "Saves all data into one file you can move elsewhere.",
-  "settings_exportFailed": "The export failed. Please try again."
+  "settings_exportFailed": "The export failed. Please try again.",
+  "shell_tabTimer": "Timer",
+  "shell_destinationHistory": "History",
+  "shell_destinationStatistics": "Statistics",
+  "shell_groupTime": "Time",
+  "shell_groupPlanning": "Planning",
+  "shell_openMenu": "Menu",
+  "shell_placeholderBody": "This page arrives with the move of the timer."
 }

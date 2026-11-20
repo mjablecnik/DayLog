@@ -12,6 +12,7 @@ import '../ui_providers.dart';
 import '../../theme/quest_theme.dart';
 import '../../theme/tokens.dart';
 import '../../ui_kit/common/app_icon.dart';
+import '../../ui_kit/common/menu_button.dart';
 import '../../ui_kit/common/app_segmented.dart';
 import '../../ui_kit/common/snackbar_host.dart';
 import 'export_row.dart';
@@ -25,7 +26,10 @@ import 'shortcut_guide.dart';
 /// a change of language or theme repaints this screen in place: the list keeps
 /// its scroll position and nothing falls back to a loading state.
 class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({super.key, required this.shortcutTargets});
+
+  /// The pages the Home Screen shortcut guide offers.
+  final List<ShortcutTarget> shortcutTargets;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,12 +47,19 @@ class SettingsScreen extends ConsumerWidget {
             Space.s24,
           ),
           children: <Widget>[
-            Semantics(
-              header: true,
-              child: Text(
-                l.settings_title,
-                style: context.displayText.headlineLarge,
-              ),
+            Row(
+              children: <Widget>[
+                const MenuButton(),
+                Expanded(
+                  child: Semantics(
+                    header: true,
+                    child: Text(
+                      l.settings_title,
+                      style: context.displayText.headlineLarge,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: Space.s24),
             _Group(
@@ -71,7 +82,7 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: Space.s24),
             _Group(
               label: l.settings_shortcutTitle,
-              child: const ShortcutGuide(),
+              child: ShortcutGuide(targets: shortcutTargets),
             ),
             const SizedBox(height: Space.s24),
             _Group(label: l.settings_groupData, child: const ExportRow()),

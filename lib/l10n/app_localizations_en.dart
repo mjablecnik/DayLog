@@ -1724,4 +1724,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_exportFailed => 'The export failed. Please try again.';
+
+  @override
+  String get shell_tabTimer => 'Timer';
+
+  @override
+  String get shell_destinationHistory => 'History';
+
+  @override
+  String get shell_destinationStatistics => 'Statistics';
+
+  @override
+  String get shell_groupTime => 'Time';
+
+  @override
+  String get shell_groupPlanning => 'Planning';
+
+  @override
+  String get shell_openMenu => 'Menu';
+
+  @override
+  String get shell_placeholderBody =>
+      'This page arrives with the move of the timer.';
 }

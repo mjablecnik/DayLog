@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../../helpers/shell_nav.dart';
 import 'package:zafling/app.dart';
 import 'package:zafling/quests/domain/xp_rules.dart';
 import 'package:zafling/database/app_database.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/shell/shell_tab_bar.dart';
+import 'package:zafling/shell/app_shell.dart';
+import 'package:zafling/shell/destination.dart';
 import 'package:zafling/settings/ui_providers.dart';
 import 'package:zafling/quests/ui/cards/check_circle.dart';
 import 'package:zafling/quests/ui/cards/mission_card.dart';
@@ -70,7 +72,7 @@ void main() {
             deviceLocaleProvider.overrideWithValue(Locale(code)),
             appVersionProvider.overrideWith((ref) async => '1.0.0'),
           ],
-          child: const ZaflingApp(),
+          child: ZaflingApp(home: AppShell(initial: Destination.quests)),
         ),
       );
 
@@ -107,7 +109,7 @@ void main() {
       expect(said(l10n.a11y_questReopened('Milk')), true);
 
       // Mission completed, from the button of the Mission detail.
-      await tester.tap(find.byKey(const ValueKey<ShellTab>(ShellTab.missions)));
+      await tapDestination(tester, Destination.missions);
       await settle();
       await tester.tap(find.byType(MissionCard));
       await settle();

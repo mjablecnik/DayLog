@@ -44,6 +44,10 @@ abstract final class IconAsset {
   static const code = 'code';
   static const checklist = 'checklist';
   static const bold = 'bold';
+  static const menu = 'menu';
+  static const timer = 'timer';
+  static const history = 'history';
+  static const statistics = 'statistics';
 }
 
 /// A bundled SVG icon drawn with `currentColor` strokes, tinted by [color] or

@@ -1,0 +1,461 @@
+import 'dart:async';
+
+import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/legacy.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../domain/activity_types.dart';
+import '../domain/config.dart';
+import 'alarm_service.dart';
+import 'native/live_activity_channel.dart';
+import 'notification_service.dart';
+
+part 'timer_service.freezed.dart';
+
+enum TimerStatus { idle, running, paused, ringing, logging }
+
+enum LogTrigger { stop, finish }
+
+@freezed
+abstract class TimerState with _$TimerState {
+  const factory TimerState({
+    required TimerStatus status,
+    required int totalSeconds,
+    required int secondsLeft,
+    DateTime? sessionStart,
+    DateTime? endAt,
+    String? prefillDescription,
+    String? prefillActivityType,
+    String? prefillProject,
+    String? prefillSubtype,
+    String? prefillCustomName,
+    LogTrigger? logTrigger,
+  }) = _TimerState;
+}
+
+const _kTimerStatus = 'timer_status';
+const _kTimerEndAt = 'timer_endAt';
+const _kTimerSessionStart = 'timer_sessionStart';
+const _kTimerTotalSeconds = 'timer_totalSeconds';
+const _kTimerSecondsLeft = 'timer_secondsLeft';
+const _kPrefillDescription = 'timer_prefillDescription';
+const _kPrefillActivityType = 'timer_prefillActivityType';
+const _kPrefillProject = 'timer_prefillProject';
+const _kPrefillSubtype = 'timer_prefillSubtype';
+const _kPrefillCustomName = 'timer_prefillCustomName';
+// Legacy key of versions before subtypes; read once and removed.
+const _kLegacyPrefillEntertainmentType = 'timer_prefillEntertainmentType';
+
+class TimerNotifier extends StateNotifier<TimerState> with WidgetsBindingObserver {
+  Timer? _ticker;
+  final AlarmService _alarm;
+  final LiveActivityChannel _liveActivity;
+  final NotificationService _notifications;
+  bool _isForeground = true;
+
+  /// Resolves once persisted timer state (if any) has been applied to
+  /// [state]. Callers that need an accurate idle check right after creating
+  /// the notifier (e.g. auto-starting from a notification tap) should await
+  /// this first.
+  late final Future<void> restored;
+
+  TimerNotifier(this._alarm, this._liveActivity, this._notifications)
+      : super(TimerState(
+          status: TimerStatus.idle,
+          totalSeconds: TimerConfig.defaultDurationMinutes * 60,
+          secondsLeft: TimerConfig.defaultDurationMinutes * 60,
+        )) {
+    WidgetsBinding.instance.addObserver(this);
+    _liveActivity.setLockScreenActionHandler(_handleLockScreenAction);
+    restored = _restoreState();
+  }
+
+  @override
+  void dispose() {
+    _ticker?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _isForeground = state == AppLifecycleState.resumed;
+    if (state == AppLifecycleState.resumed) {
+      _recalculate();
+      if (this.state.status == TimerStatus.ringing) {
+        dismissRinging();
+      }
+    }
+  }
+
+  Future<void> _restoreState() async {
+    final prefs = await SharedPreferences.getInstance();
+    final statusStr = prefs.getString(_kTimerStatus);
+    if (statusStr == null) return;
+
+    final prefillDescription = prefs.getString(_kPrefillDescription);
+    final prefillActivityType = prefs.getString(_kPrefillActivityType);
+    final prefillProject = prefs.getString(_kPrefillProject);
+    var prefillSubtype = prefs.getString(_kPrefillSubtype);
+    final prefillCustomName = prefs.getString(_kPrefillCustomName);
+
+    // A draft saved by a version before subtypes: map the old entertainment
+    // value to the new subtype key and drop the old key.
+    final legacyEntertainment = prefs.getString(_kLegacyPrefillEntertainmentType);
+    if (legacyEntertainment != null) {
+      if (prefillSubtype == null && prefillActivityType == 'Zábava') {
+        if (legacyEntertainment == 'Aktivní zábava') prefillSubtype = 'active';
+        if (legacyEntertainment == 'Pasivní zábava') prefillSubtype = 'passive';
+      }
+      await prefs.remove(_kLegacyPrefillEntertainmentType);
+    }
+    // Ignore a subtype that the type does not define.
+    if (prefillSubtype != null &&
+        (prefillActivityType == null ||
+            subtypeOf(prefillActivityType, prefillSubtype) == null)) {
+      prefillSubtype = null;
+    }
+
+    final totalSeconds =
+        prefs.getInt(_kTimerTotalSeconds) ?? (TimerConfig.defaultDurationMinutes * 60);
+    final secondsLeftSaved = prefs.getInt(_kTimerSecondsLeft) ?? totalSeconds;
+    final sessionStartMs = prefs.getInt(_kTimerSessionStart);
+    final endAtMs = prefs.getInt(_kTimerEndAt);
+
+    final sessionStart = sessionStartMs != null
+        ? DateTime.fromMillisecondsSinceEpoch(sessionStartMs)
+        : null;
+    final savedEndAt =
+        endAtMs != null ? DateTime.fromMillisecondsSinceEpoch(endAtMs) : null;
+
+    if (statusStr == TimerStatus.running.name && savedEndAt != null) {
+      final secondsLeft = savedEndAt.difference(DateTime.now()).inSeconds;
+      if (secondsLeft <= 0) {
+        state = TimerState(
+          status: TimerStatus.ringing,
+          totalSeconds: totalSeconds,
+          secondsLeft: 0,
+          sessionStart: sessionStart,
+          endAt: null,
+        );
+        _alarm.play();
+        _saveState();
+      } else {
+        state = TimerState(
+          status: TimerStatus.running,
+          totalSeconds: totalSeconds,
+          secondsLeft: secondsLeft,
+          sessionStart: sessionStart,
+          endAt: savedEndAt,
+        );
+        _startTicker();
+      }
+    } else if (statusStr == TimerStatus.paused.name) {
+      state = TimerState(
+        status: TimerStatus.paused,
+        totalSeconds: totalSeconds,
+        secondsLeft: secondsLeftSaved,
+        sessionStart: sessionStart,
+        endAt: null,
+      );
+    } else if (statusStr == TimerStatus.ringing.name) {
+      state = TimerState(
+        status: TimerStatus.logging,
+        totalSeconds: totalSeconds,
+        secondsLeft: 0,
+        sessionStart: sessionStart,
+        endAt: null,
+        logTrigger: LogTrigger.finish,
+      );
+    }
+
+    if (prefillDescription != null ||
+        prefillActivityType != null ||
+        prefillProject != null ||
+        prefillSubtype != null ||
+        prefillCustomName != null) {
+      state = state.copyWith(
+        prefillDescription: prefillDescription,
+        prefillActivityType: prefillActivityType,
+        prefillProject: prefillProject,
+        prefillSubtype: prefillSubtype,
+        prefillCustomName: prefillCustomName,
+      );
+    }
+  }
+
+  void _saveState() {
+    final s = state;
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString(_kTimerStatus, s.status.name);
+      prefs.setInt(_kTimerTotalSeconds, s.totalSeconds);
+      prefs.setInt(_kTimerSecondsLeft, s.secondsLeft);
+      if (s.sessionStart != null) {
+        prefs.setInt(_kTimerSessionStart, s.sessionStart!.millisecondsSinceEpoch);
+      } else {
+        prefs.remove(_kTimerSessionStart);
+      }
+      if (s.endAt != null) {
+        prefs.setInt(_kTimerEndAt, s.endAt!.millisecondsSinceEpoch);
+      } else {
+        prefs.remove(_kTimerEndAt);
+      }
+    });
+  }
+
+  void _clearPersistedState() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.remove(_kTimerStatus);
+      prefs.remove(_kTimerEndAt);
+      prefs.remove(_kTimerSessionStart);
+      prefs.remove(_kTimerTotalSeconds);
+      prefs.remove(_kTimerSecondsLeft);
+    });
+  }
+
+  void start() {
+    if (state.status != TimerStatus.idle) return;
+    final now = DateTime.now();
+    final endAt = now.add(Duration(seconds: state.secondsLeft));
+    state = state.copyWith(
+      status: TimerStatus.running,
+      sessionStart: now,
+      endAt: endAt,
+    );
+    _startTicker();
+    _saveState();
+    _liveActivity.startActivity(endAt: endAt, totalSeconds: state.totalSeconds);
+    _notifications.scheduleTimerNotification(endAt: endAt);
+  }
+
+  void pause() {
+    if (state.status != TimerStatus.running) return;
+    _ticker?.cancel();
+    _ticker = null;
+    state = state.copyWith(
+      status: TimerStatus.paused,
+      endAt: null,
+    );
+    _saveState();
+    _liveActivity.updateActivity(update: LiveActivityUpdate.paused);
+    _notifications.cancelTimerNotification();
+  }
+
+  void resume() {
+    if (state.status != TimerStatus.paused) return;
+    final endAt = DateTime.now().add(Duration(seconds: state.secondsLeft));
+    state = state.copyWith(
+      status: TimerStatus.running,
+      endAt: endAt,
+    );
+    _startTicker();
+    _saveState();
+    _liveActivity.updateActivity(update: LiveActivityUpdate.resumed, endAt: endAt);
+    _notifications.scheduleTimerNotification(endAt: endAt);
+  }
+
+  void setDuration(int minutes) {
+    if (state.status != TimerStatus.idle) return;
+    final seconds = (minutes * 60).clamp(60, 86400);
+    state = state.copyWith(totalSeconds: seconds, secondsLeft: seconds);
+  }
+
+  void stop() {
+    _ticker?.cancel();
+    _ticker = null;
+    _alarm.stop();
+    _liveActivity.endActivity();
+    _notifications.cancelTimerNotification();
+    state = TimerState(
+      status: TimerStatus.idle,
+      totalSeconds: state.totalSeconds,
+      secondsLeft: state.totalSeconds,
+    );
+    _clearPersistedState();
+  }
+
+  void finishNow() {
+    if (state.status != TimerStatus.running && state.status != TimerStatus.paused) return;
+    _ticker?.cancel();
+    _ticker = null;
+    _notifications.cancelTimerNotification();
+    final finishTime = DateTime.now();
+    state = state.copyWith(
+      status: TimerStatus.logging,
+      secondsLeft: 0,
+      endAt: finishTime,
+      logTrigger: LogTrigger.finish,
+    );
+    _saveState();
+    _liveActivity.updateActivity(update: LiveActivityUpdate.completed);
+  }
+
+  void stopAndLog() {
+    if (state.status != TimerStatus.running && state.status != TimerStatus.paused) return;
+    _ticker?.cancel();
+    _ticker = null;
+    _notifications.cancelTimerNotification();
+    _liveActivity.endActivity();
+    final finishTime = DateTime.now();
+    state = state.copyWith(
+      status: TimerStatus.logging,
+      secondsLeft: 0,
+      endAt: finishTime,
+      logTrigger: LogTrigger.stop,
+    );
+    _saveState();
+    clearPrefill();
+  }
+
+  void dismissRinging() {
+    if (state.status != TimerStatus.ringing) return;
+    _alarm.stop();
+    _liveActivity.endActivity();
+    state = state.copyWith(status: TimerStatus.logging, logTrigger: LogTrigger.finish);
+    // Keep persisted state as 'ringing' so if app is killed during logging,
+    // next launch shows ringing state again for the user to dismiss.
+  }
+
+  void autoRestart() {
+    final now = DateTime.now();
+    final totalSeconds = state.totalSeconds;
+    final endAt = now.add(Duration(seconds: totalSeconds));
+    state = TimerState(
+      status: TimerStatus.running,
+      totalSeconds: totalSeconds,
+      secondsLeft: totalSeconds,
+      sessionStart: now,
+      endAt: endAt,
+    );
+    _startTicker();
+    _saveState();
+    _liveActivity.startActivity(endAt: endAt, totalSeconds: totalSeconds);
+    _notifications.scheduleTimerNotification(endAt: endAt);
+  }
+
+  void savePrefill(
+    String description,
+    String activityType, {
+    String? project,
+    String? subtype,
+    String? customName,
+  }) {
+    state = state.copyWith(
+      prefillDescription: description,
+      prefillActivityType: activityType,
+      prefillProject: project,
+      prefillSubtype: subtype,
+      prefillCustomName: customName,
+    );
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString(_kPrefillDescription, description);
+      prefs.setString(_kPrefillActivityType, activityType);
+      if (project != null && project.isNotEmpty) {
+        prefs.setString(_kPrefillProject, project);
+      } else {
+        prefs.remove(_kPrefillProject);
+      }
+      if (subtype != null && subtype.isNotEmpty) {
+        prefs.setString(_kPrefillSubtype, subtype);
+      } else {
+        prefs.remove(_kPrefillSubtype);
+      }
+      if (customName != null && customName.isNotEmpty) {
+        prefs.setString(_kPrefillCustomName, customName);
+      } else {
+        prefs.remove(_kPrefillCustomName);
+      }
+    });
+  }
+
+  void clearPrefill() {
+    state = state.copyWith(
+      prefillDescription: null,
+      prefillActivityType: null,
+      prefillProject: null,
+      prefillSubtype: null,
+      prefillCustomName: null,
+    );
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.remove(_kPrefillDescription);
+      prefs.remove(_kPrefillActivityType);
+      prefs.remove(_kPrefillProject);
+      prefs.remove(_kPrefillSubtype);
+      prefs.remove(_kPrefillCustomName);
+      prefs.remove(_kLegacyPrefillEntertainmentType);
+    });
+  }
+
+  void _handleLockScreenAction(String action, {int? endAtMs}) {
+    switch (action) {
+      case 'pause':
+        pause();
+      case 'resume':
+        if (endAtMs != null) {
+          // Resume with the endAt calculated by the widget intent
+          _resumeWithEndAt(DateTime.fromMillisecondsSinceEpoch(endAtMs));
+        } else {
+          resume();
+        }
+      case 'stop':
+        stop();
+    }
+  }
+
+  void _resumeWithEndAt(DateTime endAt) {
+    if (state.status != TimerStatus.paused) return;
+    final secondsLeft = endAt.difference(DateTime.now()).inSeconds;
+    if (secondsLeft <= 0) return;
+    state = state.copyWith(
+      status: TimerStatus.running,
+      secondsLeft: secondsLeft,
+      endAt: endAt,
+    );
+    _startTicker();
+    _saveState();
+    // Live Activity already updated by the intent, no need to update again
+    _notifications.scheduleTimerNotification(endAt: endAt);
+  }
+
+  void _startTicker() {
+    _ticker?.cancel();
+    _recalculate();
+    _ticker = Timer.periodic(const Duration(seconds: 1), (_) => _recalculate());
+  }
+
+  void _recalculate() {
+    if (state.status != TimerStatus.running) return;
+    final endAt = state.endAt;
+    if (endAt == null) return;
+    final remaining = endAt.difference(DateTime.now());
+    final secondsLeft = remaining.inMilliseconds > 0
+        ? (remaining.inMilliseconds / 1000).ceil()
+        : 0;
+    if (secondsLeft <= 0) {
+      _ticker?.cancel();
+      _ticker = null;
+      if (_isForeground) {
+        state = state.copyWith(
+          status: TimerStatus.logging,
+          secondsLeft: 0,
+          endAt: null,
+          logTrigger: LogTrigger.finish,
+        );
+        _saveState();
+        _notifications.cancelTimerNotification();
+      } else {
+        state = state.copyWith(
+          status: TimerStatus.ringing,
+          secondsLeft: 0,
+          endAt: null,
+        );
+        _saveState();
+        _alarm.play();
+        _liveActivity.updateActivity(update: LiveActivityUpdate.completed);
+      }
+    } else {
+      state = state.copyWith(secondsLeft: secondsLeft);
+    }
+  }
+}

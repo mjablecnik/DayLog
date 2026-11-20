@@ -17,6 +17,11 @@ import '../quests/data/models.dart';
 import '../notes/data/notes_tables.dart';
 import 'preferences.dart';
 import '../quests/data/tables.dart';
+import '../time_tracking/data/completion_record.dart';
+import '../time_tracking/data/recurring_reminder.dart';
+import '../time_tracking/data/task.dart';
+import '../time_tracking/data/task_project.dart';
+import '../time_tracking/data/time_entry.dart';
 
 part 'app_database.g.dart';
 
@@ -32,6 +37,11 @@ part 'app_database.g.dart';
     CalendarCompletions,
     CalendarAddresses,
     NoteNodes,
+    TimeEntries,
+    RecurringReminders,
+    CompletionRecords,
+    TaskProjects,
+    Tasks,
   ],
 )
 class AppDatabase extends _$AppDatabase {

@@ -2360,8 +2360,802 @@
   "@shell_openMenu": {
     "description": "Accessibility label of the button in a screen header that opens the side drawer."
   },
-  "shell_placeholderBody": "Tato stránka přijde s přesunem časovače.",
-  "@shell_placeholderBody": {
-    "description": "Temporary text of a destination whose feature is not moved into the app yet."
+  "time_commonCancel": "Zrušit",
+  "@time_commonCancel": {
+    "description": "Time tracking text: \"Cancel\""
+  },
+  "time_commonBack": "Zpět",
+  "@time_commonBack": {
+    "description": "Time tracking text: \"Back\""
+  },
+  "time_commonSave": "Uložit",
+  "@time_commonSave": {
+    "description": "Time tracking text: \"Save\""
+  },
+  "time_commonDelete": "Smazat",
+  "@time_commonDelete": {
+    "description": "Time tracking text: \"Delete\""
+  },
+  "time_commonSubmit": "Uložit",
+  "@time_commonSubmit": {
+    "description": "Time tracking text: \"Submit\""
+  },
+  "time_commonSkip": "Přeskočit",
+  "@time_commonSkip": {
+    "description": "Time tracking text: \"Skip\""
+  },
+  "time_commonReset": "Resetovat",
+  "@time_commonReset": {
+    "description": "Time tracking text: \"Reset\""
+  },
+  "time_commonCreate": "Vytvořit",
+  "@time_commonCreate": {
+    "description": "Time tracking text: \"Create\""
+  },
+  "time_commonUnassigned": "Nepřiřazeno",
+  "@time_commonUnassigned": {
+    "description": "Time tracking text: \"Unassigned\""
+  },
+  "time_errorDatabaseUnavailable": "Databáze není dostupná. Zkuste to prosím znovu.",
+  "@time_errorDatabaseUnavailable": {
+    "description": "Time tracking text: \"Database unavailable. Please try again.\""
+  },
+  "time_errorSaveEntryFailed": "Uložení záznamu se nezdařilo. Zkuste to prosím znovu.",
+  "@time_errorSaveEntryFailed": {
+    "description": "Time tracking text: \"Failed to save entry. Please try again.\""
+  },
+  "time_errorSaveFailed": "Uložení se nezdařilo. Zkuste to prosím znovu.",
+  "@time_errorSaveFailed": {
+    "description": "Time tracking text: \"Failed to save. Please try again.\""
+  },
+  "time_errorDescriptionEmpty": "Popis nesmí být prázdný.",
+  "@time_errorDescriptionEmpty": {
+    "description": "Time tracking text: \"Description cannot be empty.\""
+  },
+  "time_errorEndBeforeStart": "Konec musí být po začátku.",
+  "@time_errorEndBeforeStart": {
+    "description": "Time tracking text: \"End time must be after start time.\""
+  },
+  "time_errorGeneric": "Něco se pokazilo. Zkuste to prosím znovu.",
+  "@time_errorGeneric": {
+    "description": "Time tracking text: \"Something went wrong. Please try again.\""
+  },
+  "time_projectNameHint": "Název projektu...",
+  "@time_projectNameHint": {
+    "description": "Time tracking text: \"Project name...\""
+  },
+  "time_projectNameFieldHint": "Název projektu",
+  "@time_projectNameFieldHint": {
+    "description": "Time tracking text: \"Project name\""
+  },
+  "time_descriptionHint": "Popiš, na čem jsi pracoval/a...",
+  "@time_descriptionHint": {
+    "description": "Time tracking text: \"Describe what you worked on...\""
+  },
+  "time_timeFieldStart": "Začátek",
+  "@time_timeFieldStart": {
+    "description": "Time tracking text: \"Start\""
+  },
+  "time_timeFieldEnd": "Konec",
+  "@time_timeFieldEnd": {
+    "description": "Time tracking text: \"End\""
+  },
+  "time_durationMinutesLabel": "{minutes} min",
+  "@time_durationMinutesLabel": {
+    "description": "Time tracking text: \"{minutes} min\"",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "time_durationMinutesOnly": "{minutes}m",
+  "@time_durationMinutesOnly": {
+    "description": "Time tracking text: \"{minutes}m\"",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "time_durationHoursOnly": "{hours}h",
+  "@time_durationHoursOnly": {
+    "description": "Time tracking text: \"{hours}h\"",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "time_durationHoursMinutes": "{hours}h {minutes}m",
+  "@time_durationHoursMinutes": {
+    "description": "Time tracking text: \"{hours}h {minutes}m\"",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "time_weekdayMon": "Po",
+  "@time_weekdayMon": {
+    "description": "Time tracking text: \"Mo\""
+  },
+  "time_weekdayTue": "Út",
+  "@time_weekdayTue": {
+    "description": "Time tracking text: \"Tu\""
+  },
+  "time_weekdayWed": "St",
+  "@time_weekdayWed": {
+    "description": "Time tracking text: \"We\""
+  },
+  "time_weekdayThu": "Čt",
+  "@time_weekdayThu": {
+    "description": "Time tracking text: \"Th\""
+  },
+  "time_weekdayFri": "Pá",
+  "@time_weekdayFri": {
+    "description": "Time tracking text: \"Fr\""
+  },
+  "time_weekdaySat": "So",
+  "@time_weekdaySat": {
+    "description": "Time tracking text: \"Sa\""
+  },
+  "time_weekdaySun": "Ne",
+  "@time_weekdaySun": {
+    "description": "Time tracking text: \"Su\""
+  },
+  "time_activityWork": "Práce",
+  "@time_activityWork": {
+    "description": "Time tracking text: \"Work\""
+  },
+  "time_activityHousework": "Domácí práce",
+  "@time_activityHousework": {
+    "description": "Time tracking text: \"Housework\""
+  },
+  "time_activityCommute": "Cestování",
+  "@time_activityCommute": {
+    "description": "Time tracking text: \"Travel\""
+  },
+  "time_activityEntertainment": "Zábava",
+  "@time_activityEntertainment": {
+    "description": "Time tracking text: \"Entertainment\""
+  },
+  "time_activityExercise": "Cvičení",
+  "@time_activityExercise": {
+    "description": "Time tracking text: \"Exercise\""
+  },
+  "time_activitySelfDevelopment": "Seberozvoj",
+  "@time_activitySelfDevelopment": {
+    "description": "Time tracking text: \"Self-development\""
+  },
+  "time_activityRest": "Odpočinek",
+  "@time_activityRest": {
+    "description": "Time tracking text: \"Rest\""
+  },
+  "time_activityHygiene": "Hygiena",
+  "@time_activityHygiene": {
+    "description": "Time tracking text: \"Hygiene\""
+  },
+  "time_activityMeal": "Jídlo",
+  "@time_activityMeal": {
+    "description": "Time tracking text: \"Meal\""
+  },
+  "time_activityMeeting": "Meeting",
+  "@time_activityMeeting": {
+    "description": "Time tracking text: \"Meeting\""
+  },
+  "time_activityCommunication": "Komunikace",
+  "@time_activityCommunication": {
+    "description": "Time tracking text: \"Communication\""
+  },
+  "time_activityOther": "Ostatní",
+  "@time_activityOther": {
+    "description": "Time tracking text: \"Other\""
+  },
+  "time_subtypePaid": "Placená",
+  "@time_subtypePaid": {
+    "description": "Time tracking text: \"Paid\""
+  },
+  "time_subtypeUnpaid": "Neplacená",
+  "@time_subtypeUnpaid": {
+    "description": "Time tracking text: \"Unpaid\""
+  },
+  "time_subtypeEntertainmentActive": "Aktivní zábava",
+  "@time_subtypeEntertainmentActive": {
+    "description": "Time tracking text: \"Active entertainment\""
+  },
+  "time_subtypeEntertainmentPassive": "Pasivní zábava",
+  "@time_subtypeEntertainmentPassive": {
+    "description": "Time tracking text: \"Passive entertainment\""
+  },
+  "time_subtypeWalk": "Procházka",
+  "@time_subtypeWalk": {
+    "description": "Time tracking text: \"Walk\""
+  },
+  "time_subtypeRunning": "Běhání",
+  "@time_subtypeRunning": {
+    "description": "Time tracking text: \"Running\""
+  },
+  "time_subtypeGym": "Posilovna",
+  "@time_subtypeGym": {
+    "description": "Time tracking text: \"Gym\""
+  },
+  "time_subtypeBooks": "Čtení knih",
+  "@time_subtypeBooks": {
+    "description": "Time tracking text: \"Reading books\""
+  },
+  "time_subtypeStudy": "Studium",
+  "@time_subtypeStudy": {
+    "description": "Time tracking text: \"Study\""
+  },
+  "time_subtypeAi": "Konzultace s AI",
+  "@time_subtypeAi": {
+    "description": "Time tracking text: \"AI consultation\""
+  },
+  "time_subtypeRestActive": "Aktivní odpočinek",
+  "@time_subtypeRestActive": {
+    "description": "Time tracking text: \"Active rest\""
+  },
+  "time_subtypeRestPassive": "Pasivní odpočinek",
+  "@time_subtypeRestPassive": {
+    "description": "Time tracking text: \"Passive rest\""
+  },
+  "time_subtypeGeneral": "Obecná",
+  "@time_subtypeGeneral": {
+    "description": "Time tracking text: \"General\""
+  },
+  "time_subtypeToilet": "Toaleta",
+  "@time_subtypeToilet": {
+    "description": "Time tracking text: \"Toilet\""
+  },
+  "time_subtypeBreakfast": "Snídaně",
+  "@time_subtypeBreakfast": {
+    "description": "Time tracking text: \"Breakfast\""
+  },
+  "time_subtypeLunch": "Oběd",
+  "@time_subtypeLunch": {
+    "description": "Time tracking text: \"Lunch\""
+  },
+  "time_subtypeDinner": "Večeře",
+  "@time_subtypeDinner": {
+    "description": "Time tracking text: \"Dinner\""
+  },
+  "time_subtypeSnack": "Svačina",
+  "@time_subtypeSnack": {
+    "description": "Time tracking text: \"Snack\""
+  },
+  "time_subtypeShopping": "Nákup",
+  "@time_subtypeShopping": {
+    "description": "Time tracking text: \"Shopping\""
+  },
+  "time_scopeWorkPaid": "Placená práce",
+  "@time_scopeWorkPaid": {
+    "description": "Time tracking text: \"Paid work\""
+  },
+  "time_scopeWorkUnpaid": "Neplacená práce",
+  "@time_scopeWorkUnpaid": {
+    "description": "Time tracking text: \"Unpaid work\""
+  },
+  "time_scopeHousework": "Domácí práce",
+  "@time_scopeHousework": {
+    "description": "Time tracking text: \"Housework\""
+  },
+  "time_scopeOther": "Ostatní",
+  "@time_scopeOther": {
+    "description": "Time tracking text: \"Other\""
+  },
+  "time_pickerTypeCaption": "Typ",
+  "@time_pickerTypeCaption": {
+    "description": "Time tracking text: \"Type\""
+  },
+  "time_pickerSubtypeHeading": "Upřesni: {type}",
+  "@time_pickerSubtypeHeading": {
+    "description": "Time tracking text: \"Refine: {type}\"",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "time_pickerSubtypeHint": "Vyber jednu možnost",
+  "@time_pickerSubtypeHint": {
+    "description": "Time tracking text: \"Choose one\""
+  },
+  "time_customNameHint": "Co jsi dělal?",
+  "@time_customNameHint": {
+    "description": "Time tracking text: \"What did you do?\""
+  },
+  "time_statsByCustomName": "Ostatní podle názvu",
+  "@time_statsByCustomName": {
+    "description": "Time tracking text: \"Other by name\""
+  },
+  "time_taskProjectCategoryCaption": "Kategorie",
+  "@time_taskProjectCategoryCaption": {
+    "description": "Time tracking text: \"Category\""
+  },
+  "time_taskProjectEditCategory": "Upravit kategorii",
+  "@time_taskProjectEditCategory": {
+    "description": "Time tracking text: \"Edit category\""
+  },
+  "time_taskProjectChipSemantics": "{name}, {category}",
+  "@time_taskProjectChipSemantics": {
+    "description": "Time tracking text: \"{name}, {category}\"",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "time_timerPrefillTooltip": "Předvyplnit popis",
+  "@time_timerPrefillTooltip": {
+    "description": "Time tracking text: \"Pre-fill description\""
+  },
+  "time_timerPhaseReady": "PŘIPRAVENO",
+  "@time_timerPhaseReady": {
+    "description": "Time tracking text: \"READY\""
+  },
+  "time_timerPhaseFocus": "SOUSTŘEDĚNÍ",
+  "@time_timerPhaseFocus": {
+    "description": "Time tracking text: \"FOCUS\""
+  },
+  "time_timerPhasePaused": "PAUZA",
+  "@time_timerPhasePaused": {
+    "description": "Time tracking text: \"PAUSED\""
+  },
+  "time_timerPhaseTimeUp": "ČAS VYPRŠEL",
+  "@time_timerPhaseTimeUp": {
+    "description": "Time tracking text: \"TIME UP\""
+  },
+  "time_timerPhaseLogging": "UKLÁDÁNÍ",
+  "@time_timerPhaseLogging": {
+    "description": "Time tracking text: \"LOGGING\""
+  },
+  "time_timerResetTitle": "Resetovat časovač?",
+  "@time_timerResetTitle": {
+    "description": "Time tracking text: \"Reset timer?\""
+  },
+  "time_timerResetBody": "Opravdu chcete resetovat časovač?",
+  "@time_timerResetBody": {
+    "description": "Time tracking text: \"Do you really want to reset the timer?\""
+  },
+  "time_timerTimeUpTitle": "Čas vypršel!",
+  "@time_timerTimeUpTitle": {
+    "description": "Time tracking text: \"Time is up!\""
+  },
+  "time_ringingDismiss": "Zavřít",
+  "@time_ringingDismiss": {
+    "description": "Time tracking text: \"Dismiss\""
+  },
+  "time_descriptionClearFormTooltip": "Vymazat formulář",
+  "@time_descriptionClearFormTooltip": {
+    "description": "Time tracking text: \"Clear form\""
+  },
+  "time_descriptionTitle": "Co se ti podařilo?",
+  "@time_descriptionTitle": {
+    "description": "Time tracking text: \"What did you accomplish?\""
+  },
+  "time_prefillSaveDraft": "Uložit koncept",
+  "@time_prefillSaveDraft": {
+    "description": "Time tracking text: \"Save Draft\""
+  },
+  "time_editSheetTitle": "Upravit popis",
+  "@time_editSheetTitle": {
+    "description": "Time tracking text: \"Edit description\""
+  },
+  "time_manualEntryTitle": "Přidat záznam",
+  "@time_manualEntryTitle": {
+    "description": "Time tracking text: \"Add entry\""
+  },
+  "time_historyTitle": "Historie",
+  "@time_historyTitle": {
+    "description": "Time tracking text: \"History\""
+  },
+  "time_historyLoadError": "Načtení záznamů se nezdařilo.",
+  "@time_historyLoadError": {
+    "description": "Time tracking text: \"Failed to load entries.\""
+  },
+  "time_historyEntryCount": "{count, plural, one{{count} záznam} few{{count} záznamy} other{{count} záznamů}}",
+  "@time_historyEntryCount": {
+    "description": "Time tracking text: \"{count, plural, one{{count} entry} other{{count} entries}}\"",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "time_historyTotalLabel": "Celkem: {duration}",
+  "@time_historyTotalLabel": {
+    "description": "Time tracking text: \"Total: {duration}\"",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "time_historyDeleteEntryTitle": "Smazat záznam?",
+  "@time_historyDeleteEntryTitle": {
+    "description": "Time tracking text: \"Delete entry?\""
+  },
+  "time_historyDeleteEntryBody": "Tuto akci nelze vrátit zpět.",
+  "@time_historyDeleteEntryBody": {
+    "description": "Time tracking text: \"This action cannot be undone.\""
+  },
+  "time_historyDbUnavailableShort": "Databáze není dostupná.",
+  "@time_historyDbUnavailableShort": {
+    "description": "Time tracking text: \"Database unavailable.\""
+  },
+  "time_historyDeleteEntryFailed": "Smazání záznamu se nezdařilo.",
+  "@time_historyDeleteEntryFailed": {
+    "description": "Time tracking text: \"Failed to delete entry.\""
+  },
+  "time_historyEmptyTitle": "Pro tento den nejsou žádné záznamy",
+  "@time_historyEmptyTitle": {
+    "description": "Time tracking text: \"No entries for this day\""
+  },
+  "time_historyEmptySubtitle": "Spusť časovač a začni sledovat svou práci",
+  "@time_historyEmptySubtitle": {
+    "description": "Time tracking text: \"Start a timer to log your work\""
+  },
+  "time_dayToday": "Dnes",
+  "@time_dayToday": {
+    "description": "Time tracking text: \"Today\""
+  },
+  "time_dayYesterday": "Včera",
+  "@time_dayYesterday": {
+    "description": "Time tracking text: \"Yesterday\""
+  },
+  "time_tasksTitle": "Úkoly",
+  "@time_tasksTitle": {
+    "description": "Time tracking text: \"Tasks\""
+  },
+  "time_taskCreateFailed": "Vytvoření úkolu se nezdařilo.",
+  "@time_taskCreateFailed": {
+    "description": "Time tracking text: \"Failed to create task.\""
+  },
+  "time_taskReorderFailed": "Přesunutí úkolu se nezdařilo.",
+  "@time_taskReorderFailed": {
+    "description": "Time tracking text: \"Failed to move task.\""
+  },
+  "time_tasksShowArchived": "Zobrazit archivované úkoly",
+  "@time_tasksShowArchived": {
+    "description": "Time tracking text: \"Show archived tasks\""
+  },
+  "time_tasksLoadFailed": "Načtení úkolů se nezdařilo.",
+  "@time_tasksLoadFailed": {
+    "description": "Time tracking text: \"Failed to load tasks.\""
+  },
+  "time_tasksEmptyTitle": "Zatím žádné úkoly",
+  "@time_tasksEmptyTitle": {
+    "description": "Time tracking text: \"No tasks yet\""
+  },
+  "time_tasksEmptySubtitle": "Klepnutím na + vytvoř první úkol",
+  "@time_tasksEmptySubtitle": {
+    "description": "Time tracking text: \"Tap + to create your first task\""
+  },
+  "time_tasksArchivedHeader": "Archivováno",
+  "@time_tasksArchivedHeader": {
+    "description": "Time tracking text: \"Archived\""
+  },
+  "time_taskToggleFailed": "Nepodařilo se aktualizovat stav úkolu.",
+  "@time_taskToggleFailed": {
+    "description": "Time tracking text: \"Failed to update task status.\""
+  },
+  "time_taskUnarchiveFailed": "Nepodařilo se obnovit úkol.",
+  "@time_taskUnarchiveFailed": {
+    "description": "Time tracking text: \"Failed to restore task.\""
+  },
+  "time_taskSaveFailed": "Nepodařilo se uložit úkol.",
+  "@time_taskSaveFailed": {
+    "description": "Time tracking text: \"Failed to save task.\""
+  },
+  "time_taskDeleteTitle": "Smazat úkol?",
+  "@time_taskDeleteTitle": {
+    "description": "Time tracking text: \"Delete task?\""
+  },
+  "time_taskDeleteBody": "\"{title}\" bude trvale odstraněn.",
+  "@time_taskDeleteBody": {
+    "description": "Time tracking text: \"'{title}' will be permanently removed.\"",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "time_taskDeleteFailed": "Nepodařilo se smazat úkol.",
+  "@time_taskDeleteFailed": {
+    "description": "Time tracking text: \"Failed to delete task.\""
+  },
+  "time_taskEditTitle": "Upravit úkol",
+  "@time_taskEditTitle": {
+    "description": "Time tracking text: \"Edit task\""
+  },
+  "time_taskNewTitle": "Nový úkol",
+  "@time_taskNewTitle": {
+    "description": "Time tracking text: \"New task\""
+  },
+  "time_taskTitleHint": "Název úkolu",
+  "@time_taskTitleHint": {
+    "description": "Time tracking text: \"Task title\""
+  },
+  "time_taskDescriptionHint": "Popis (volitelné)",
+  "@time_taskDescriptionHint": {
+    "description": "Time tracking text: \"Description (optional)\""
+  },
+  "time_taskDeadlineHint": "Termín (volitelné)",
+  "@time_taskDeadlineHint": {
+    "description": "Time tracking text: \"Deadline (optional)\""
+  },
+  "time_projectCreateFailed": "Vytvoření projektu se nezdařilo.",
+  "@time_projectCreateFailed": {
+    "description": "Time tracking text: \"Failed to create project.\""
+  },
+  "time_projectDeleteTitle": "Smazat projekt \"{name}\"?",
+  "@time_projectDeleteTitle": {
+    "description": "Time tracking text: \"Delete project '{name}'?\"",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "time_projectDeleteBody": "Všechny úkoly v tomto projektu budou trvale smazány.",
+  "@time_projectDeleteBody": {
+    "description": "Time tracking text: \"All tasks in this project will be permanently deleted.\""
+  },
+  "time_projectDeleteFailed": "Smazání projektu se nezdařilo.",
+  "@time_projectDeleteFailed": {
+    "description": "Time tracking text: \"Failed to delete project.\""
+  },
+  "time_projectCreateTitle": "Nový projekt",
+  "@time_projectCreateTitle": {
+    "description": "Time tracking text: \"New project\""
+  },
+  "time_statsTitle": "Statistiky",
+  "@time_statsTitle": {
+    "description": "Time tracking text: \"Statistics\""
+  },
+  "time_statsPeriodDay": "Den",
+  "@time_statsPeriodDay": {
+    "description": "Time tracking text: \"Day\""
+  },
+  "time_statsPeriodWeek": "Týden",
+  "@time_statsPeriodWeek": {
+    "description": "Time tracking text: \"Week\""
+  },
+  "time_statsLoadFailed": "Nepodařilo se načíst statistiky.",
+  "@time_statsLoadFailed": {
+    "description": "Time tracking text: \"Failed to load statistics.\""
+  },
+  "time_statsThisWeek": "Tento týden",
+  "@time_statsThisWeek": {
+    "description": "Time tracking text: \"This week\""
+  },
+  "time_statsNoEntriesPeriod": "Žádné záznamy pro toto období",
+  "@time_statsNoEntriesPeriod": {
+    "description": "Time tracking text: \"No entries for this period\""
+  },
+  "time_statsByActivityType": "Podle typu aktivity",
+  "@time_statsByActivityType": {
+    "description": "Time tracking text: \"By activity type\""
+  },
+  "time_statsByProject": "Podle projektu",
+  "@time_statsByProject": {
+    "description": "Time tracking text: \"By project\""
+  },
+  "time_statsTotalTracked": "Celkem sledováno",
+  "@time_statsTotalTracked": {
+    "description": "Time tracking text: \"Total tracked\""
+  },
+  "time_statsUntrackedTime": "Nesledovaný čas",
+  "@time_statsUntrackedTime": {
+    "description": "Time tracking text: \"Untracked time\""
+  },
+  "time_navStats": "Statistiky",
+  "@time_navStats": {
+    "description": "Time tracking text: \"Stats\""
+  },
+  "time_navTimer": "Časovač",
+  "@time_navTimer": {
+    "description": "Time tracking text: \"Timer\""
+  },
+  "time_settingsTitle": "Nastavení",
+  "@time_settingsTitle": {
+    "description": "Time tracking text: \"Settings\""
+  },
+  "time_settingsDailyReminderSection": "Denní připomínka",
+  "@time_settingsDailyReminderSection": {
+    "description": "Time tracking text: \"Daily reminder\""
+  },
+  "time_settingsReminderToggleLabel": "Připomínat spuštění časovače",
+  "@time_settingsReminderToggleLabel": {
+    "description": "Time tracking text: \"Remind me to start the timer\""
+  },
+  "time_settingsReminderTimeLabel": "Čas připomínky",
+  "@time_settingsReminderTimeLabel": {
+    "description": "Time tracking text: \"Reminder time\""
+  },
+  "time_settingsRecurringRemindersLabel": "Opakované připomínky",
+  "@time_settingsRecurringRemindersLabel": {
+    "description": "Time tracking text: \"Recurring reminders\""
+  },
+  "time_settingsDataSection": "Data",
+  "@time_settingsDataSection": {
+    "description": "Time tracking text: \"Data\""
+  },
+  "time_settingsExportButton": "Exportovat data",
+  "@time_settingsExportButton": {
+    "description": "Time tracking text: \"Export data\""
+  },
+  "time_settingsExportHint": "Uloží všechna data do jednoho souboru, který přeneseš jinam.",
+  "@time_settingsExportHint": {
+    "description": "Time tracking text: \"Saves all data into one file you can move elsewhere.\""
+  },
+  "time_settingsExportFailed": "Export se nepodařil. Zkus to prosím znovu.",
+  "@time_settingsExportFailed": {
+    "description": "Time tracking text: \"The export failed. Please try again.\""
+  },
+  "time_settingsTestingSection": "Testování",
+  "@time_settingsTestingSection": {
+    "description": "Time tracking text: \"Testing\""
+  },
+  "time_settingsTestNotificationButton": "Testovací notifikace (za 5 s)",
+  "@time_settingsTestNotificationButton": {
+    "description": "Time tracking text: \"Test notification (in 5 s)\""
+  },
+  "time_settingsShowModalDebugButton": "Zobrazit modal přímo (debug)",
+  "@time_settingsShowModalDebugButton": {
+    "description": "Time tracking text: \"Show modal directly (debug)\""
+  },
+  "time_settingsNotificationsDisabled": "Oznámení jsou zakázána. Povolte je v nastavení telefonu.",
+  "@time_settingsNotificationsDisabled": {
+    "description": "Time tracking text: \"Notifications are disabled. Enable them in your phone's settings.\""
+  },
+  "time_settingsNoRemindersYet": "Nejdříve vytvořte alespoň jednu opakovanou připomínku.",
+  "@time_settingsNoRemindersYet": {
+    "description": "Time tracking text: \"First create at least one recurring reminder.\""
+  },
+  "time_settingsTestNotificationTitle": "🧪 Test: {name}",
+  "@time_settingsTestNotificationTitle": {
+    "description": "Time tracking text: \"🧪 Test: {name}\"",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "time_settingsTestNotificationScheduled": "Testovací notifikace přijde za 5 sekund.",
+  "@time_settingsTestNotificationScheduled": {
+    "description": "Time tracking text: \"Test notification will arrive in 5 seconds.\""
+  },
+  "time_settingsNoReminder": "Žádná připomínka.",
+  "@time_settingsNoReminder": {
+    "description": "Time tracking text: \"No reminder.\""
+  },
+  "time_settingsLanguageSection": "Jazyk",
+  "@time_settingsLanguageSection": {
+    "description": "Time tracking text: \"Language\""
+  },
+  "time_reminderDeleteTitle": "Smazat připomínku?",
+  "@time_reminderDeleteTitle": {
+    "description": "Time tracking text: \"Delete reminder?\""
+  },
+  "time_reminderDeleteBody": "Připomínka „{name}“ bude trvale smazána.",
+  "@time_reminderDeleteBody": {
+    "description": "Time tracking text: \"Reminder '{name}' will be permanently deleted.\"",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "time_reminderDeleteFailed": "Smazání připomínky se nezdařilo.",
+  "@time_reminderDeleteFailed": {
+    "description": "Time tracking text: \"Failed to delete reminder.\""
+  },
+  "time_remindersEmptyTitle": "Zatím nemáte žádné připomínky",
+  "@time_remindersEmptyTitle": {
+    "description": "Time tracking text: \"You don't have any reminders yet\""
+  },
+  "time_remindersEmptySubtitle": "Klepnutím na + vytvoř první připomínku",
+  "@time_remindersEmptySubtitle": {
+    "description": "Time tracking text: \"Tap + to create your first reminder\""
+  },
+  "time_remindersLoadFailed": "Nepodařilo se načíst připomínky.",
+  "@time_remindersLoadFailed": {
+    "description": "Time tracking text: \"Failed to load reminders.\""
+  },
+  "time_reminderSnooze": "Odložit",
+  "@time_reminderSnooze": {
+    "description": "Time tracking text: \"Snooze\""
+  },
+  "time_reminderDone": "Hotovo",
+  "@time_reminderDone": {
+    "description": "Time tracking text: \"Done\""
+  },
+  "time_reminderCompletionUpdateFailed": "Nepodařilo se aktualizovat stav dokončení.",
+  "@time_reminderCompletionUpdateFailed": {
+    "description": "Time tracking text: \"Failed to update completion status.\""
+  },
+  "time_reminderActiveToggleFailed": "Nepodařilo se aktualizovat připomínku.",
+  "@time_reminderActiveToggleFailed": {
+    "description": "Time tracking text: \"Failed to update reminder.\""
+  },
+  "time_reminderCapacityError": "Nedostatek volných oznámení: k dispozici {available}, potřeba {required}.",
+  "@time_reminderCapacityError": {
+    "description": "Time tracking text: \"Not enough notification slots: {available} available, {required} needed.\"",
+    "placeholders": {
+      "available": {
+        "type": "int"
+      },
+      "required": {
+        "type": "int"
+      }
+    }
+  },
+  "time_reminderDiscardTitle": "Zahodit změny?",
+  "@time_reminderDiscardTitle": {
+    "description": "Time tracking text: \"Discard changes?\""
+  },
+  "time_reminderDiscardBody": "Neuložené změny budou ztraceny.",
+  "@time_reminderDiscardBody": {
+    "description": "Time tracking text: \"Unsaved changes will be lost.\""
+  },
+  "time_reminderDiscardConfirm": "Zahodit",
+  "@time_reminderDiscardConfirm": {
+    "description": "Time tracking text: \"Discard\""
+  },
+  "time_reminderEditTitle": "Upravit připomínku",
+  "@time_reminderEditTitle": {
+    "description": "Time tracking text: \"Edit reminder\""
+  },
+  "time_reminderNewTitle": "Nová připomínka",
+  "@time_reminderNewTitle": {
+    "description": "Time tracking text: \"New reminder\""
+  },
+  "time_reminderNameHint": "Název",
+  "@time_reminderNameHint": {
+    "description": "Time tracking text: \"Name\""
+  },
+  "time_reminderFromLabel": "Od",
+  "@time_reminderFromLabel": {
+    "description": "Time tracking text: \"From\""
+  },
+  "time_reminderToLabel": "Do",
+  "@time_reminderToLabel": {
+    "description": "Time tracking text: \"To\""
+  },
+  "time_reminderOvernightNote": "Okno přesahuje přes půlnoc do dalšího dne.",
+  "@time_reminderOvernightNote": {
+    "description": "Time tracking text: \"Window spans past midnight into the next day.\""
+  },
+  "time_reminderIntervalLabel": "Interval opakování",
+  "@time_reminderIntervalLabel": {
+    "description": "Time tracking text: \"Repeat interval\""
+  },
+  "time_reminderActiveDaysLabel": "Aktivní dny",
+  "@time_reminderActiveDaysLabel": {
+    "description": "Time tracking text: \"Active days\""
+  },
+  "time_reminderActiveLabel": "Aktivní",
+  "@time_reminderActiveLabel": {
+    "description": "Time tracking text: \"Active\""
+  },
+  "time_reminderEditBarrierLabel": "Dialog pro úpravu připomínky",
+  "@time_reminderEditBarrierLabel": {
+    "description": "Time tracking text: \"Reminder edit dialog\""
+  },
+  "time_reminderDailyNotificationBody": "Čas spustit časovač!",
+  "@time_reminderDailyNotificationBody": {
+    "description": "Time tracking text: \"Time to start your timer!\""
+  },
+  "time_recurringReminderDefaultNotificationBody": "Klepni pro otevření",
+  "@time_recurringReminderDefaultNotificationBody": {
+    "description": "Time tracking text: \"Tap to open\""
   }
 }

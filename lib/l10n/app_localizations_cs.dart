@@ -1787,6 +1787,595 @@ class AppLocalizationsCs extends AppLocalizations {
   String get shell_openMenu => 'Menu';
 
   @override
-  String get shell_placeholderBody =>
-      'Tato stránka přijde s přesunem časovače.';
+  String get time_commonCancel => 'Zrušit';
+
+  @override
+  String get time_commonBack => 'Zpět';
+
+  @override
+  String get time_commonSave => 'Uložit';
+
+  @override
+  String get time_commonDelete => 'Smazat';
+
+  @override
+  String get time_commonSubmit => 'Uložit';
+
+  @override
+  String get time_commonSkip => 'Přeskočit';
+
+  @override
+  String get time_commonReset => 'Resetovat';
+
+  @override
+  String get time_commonCreate => 'Vytvořit';
+
+  @override
+  String get time_commonUnassigned => 'Nepřiřazeno';
+
+  @override
+  String get time_errorDatabaseUnavailable =>
+      'Databáze není dostupná. Zkuste to prosím znovu.';
+
+  @override
+  String get time_errorSaveEntryFailed =>
+      'Uložení záznamu se nezdařilo. Zkuste to prosím znovu.';
+
+  @override
+  String get time_errorSaveFailed =>
+      'Uložení se nezdařilo. Zkuste to prosím znovu.';
+
+  @override
+  String get time_errorDescriptionEmpty => 'Popis nesmí být prázdný.';
+
+  @override
+  String get time_errorEndBeforeStart => 'Konec musí být po začátku.';
+
+  @override
+  String get time_errorGeneric => 'Něco se pokazilo. Zkuste to prosím znovu.';
+
+  @override
+  String get time_projectNameHint => 'Název projektu...';
+
+  @override
+  String get time_projectNameFieldHint => 'Název projektu';
+
+  @override
+  String get time_descriptionHint => 'Popiš, na čem jsi pracoval/a...';
+
+  @override
+  String get time_timeFieldStart => 'Začátek';
+
+  @override
+  String get time_timeFieldEnd => 'Konec';
+
+  @override
+  String time_durationMinutesLabel(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String time_durationMinutesOnly(int minutes) {
+    return '${minutes}m';
+  }
+
+  @override
+  String time_durationHoursOnly(int hours) {
+    return '${hours}h';
+  }
+
+  @override
+  String time_durationHoursMinutes(int hours, int minutes) {
+    return '${hours}h ${minutes}m';
+  }
+
+  @override
+  String get time_weekdayMon => 'Po';
+
+  @override
+  String get time_weekdayTue => 'Út';
+
+  @override
+  String get time_weekdayWed => 'St';
+
+  @override
+  String get time_weekdayThu => 'Čt';
+
+  @override
+  String get time_weekdayFri => 'Pá';
+
+  @override
+  String get time_weekdaySat => 'So';
+
+  @override
+  String get time_weekdaySun => 'Ne';
+
+  @override
+  String get time_activityWork => 'Práce';
+
+  @override
+  String get time_activityHousework => 'Domácí práce';
+
+  @override
+  String get time_activityCommute => 'Cestování';
+
+  @override
+  String get time_activityEntertainment => 'Zábava';
+
+  @override
+  String get time_activityExercise => 'Cvičení';
+
+  @override
+  String get time_activitySelfDevelopment => 'Seberozvoj';
+
+  @override
+  String get time_activityRest => 'Odpočinek';
+
+  @override
+  String get time_activityHygiene => 'Hygiena';
+
+  @override
+  String get time_activityMeal => 'Jídlo';
+
+  @override
+  String get time_activityMeeting => 'Meeting';
+
+  @override
+  String get time_activityCommunication => 'Komunikace';
+
+  @override
+  String get time_activityOther => 'Ostatní';
+
+  @override
+  String get time_subtypePaid => 'Placená';
+
+  @override
+  String get time_subtypeUnpaid => 'Neplacená';
+
+  @override
+  String get time_subtypeEntertainmentActive => 'Aktivní zábava';
+
+  @override
+  String get time_subtypeEntertainmentPassive => 'Pasivní zábava';
+
+  @override
+  String get time_subtypeWalk => 'Procházka';
+
+  @override
+  String get time_subtypeRunning => 'Běhání';
+
+  @override
+  String get time_subtypeGym => 'Posilovna';
+
+  @override
+  String get time_subtypeBooks => 'Čtení knih';
+
+  @override
+  String get time_subtypeStudy => 'Studium';
+
+  @override
+  String get time_subtypeAi => 'Konzultace s AI';
+
+  @override
+  String get time_subtypeRestActive => 'Aktivní odpočinek';
+
+  @override
+  String get time_subtypeRestPassive => 'Pasivní odpočinek';
+
+  @override
+  String get time_subtypeGeneral => 'Obecná';
+
+  @override
+  String get time_subtypeToilet => 'Toaleta';
+
+  @override
+  String get time_subtypeBreakfast => 'Snídaně';
+
+  @override
+  String get time_subtypeLunch => 'Oběd';
+
+  @override
+  String get time_subtypeDinner => 'Večeře';
+
+  @override
+  String get time_subtypeSnack => 'Svačina';
+
+  @override
+  String get time_subtypeShopping => 'Nákup';
+
+  @override
+  String get time_scopeWorkPaid => 'Placená práce';
+
+  @override
+  String get time_scopeWorkUnpaid => 'Neplacená práce';
+
+  @override
+  String get time_scopeHousework => 'Domácí práce';
+
+  @override
+  String get time_scopeOther => 'Ostatní';
+
+  @override
+  String get time_pickerTypeCaption => 'Typ';
+
+  @override
+  String time_pickerSubtypeHeading(String type) {
+    return 'Upřesni: $type';
+  }
+
+  @override
+  String get time_pickerSubtypeHint => 'Vyber jednu možnost';
+
+  @override
+  String get time_customNameHint => 'Co jsi dělal?';
+
+  @override
+  String get time_statsByCustomName => 'Ostatní podle názvu';
+
+  @override
+  String get time_taskProjectCategoryCaption => 'Kategorie';
+
+  @override
+  String get time_taskProjectEditCategory => 'Upravit kategorii';
+
+  @override
+  String time_taskProjectChipSemantics(String name, String category) {
+    return '$name, $category';
+  }
+
+  @override
+  String get time_timerPrefillTooltip => 'Předvyplnit popis';
+
+  @override
+  String get time_timerPhaseReady => 'PŘIPRAVENO';
+
+  @override
+  String get time_timerPhaseFocus => 'SOUSTŘEDĚNÍ';
+
+  @override
+  String get time_timerPhasePaused => 'PAUZA';
+
+  @override
+  String get time_timerPhaseTimeUp => 'ČAS VYPRŠEL';
+
+  @override
+  String get time_timerPhaseLogging => 'UKLÁDÁNÍ';
+
+  @override
+  String get time_timerResetTitle => 'Resetovat časovač?';
+
+  @override
+  String get time_timerResetBody => 'Opravdu chcete resetovat časovač?';
+
+  @override
+  String get time_timerTimeUpTitle => 'Čas vypršel!';
+
+  @override
+  String get time_ringingDismiss => 'Zavřít';
+
+  @override
+  String get time_descriptionClearFormTooltip => 'Vymazat formulář';
+
+  @override
+  String get time_descriptionTitle => 'Co se ti podařilo?';
+
+  @override
+  String get time_prefillSaveDraft => 'Uložit koncept';
+
+  @override
+  String get time_editSheetTitle => 'Upravit popis';
+
+  @override
+  String get time_manualEntryTitle => 'Přidat záznam';
+
+  @override
+  String get time_historyTitle => 'Historie';
+
+  @override
+  String get time_historyLoadError => 'Načtení záznamů se nezdařilo.';
+
+  @override
+  String time_historyEntryCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count záznamů',
+      few: '$count záznamy',
+      one: '$count záznam',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String time_historyTotalLabel(String duration) {
+    return 'Celkem: $duration';
+  }
+
+  @override
+  String get time_historyDeleteEntryTitle => 'Smazat záznam?';
+
+  @override
+  String get time_historyDeleteEntryBody => 'Tuto akci nelze vrátit zpět.';
+
+  @override
+  String get time_historyDbUnavailableShort => 'Databáze není dostupná.';
+
+  @override
+  String get time_historyDeleteEntryFailed => 'Smazání záznamu se nezdařilo.';
+
+  @override
+  String get time_historyEmptyTitle => 'Pro tento den nejsou žádné záznamy';
+
+  @override
+  String get time_historyEmptySubtitle =>
+      'Spusť časovač a začni sledovat svou práci';
+
+  @override
+  String get time_dayToday => 'Dnes';
+
+  @override
+  String get time_dayYesterday => 'Včera';
+
+  @override
+  String get time_tasksTitle => 'Úkoly';
+
+  @override
+  String get time_taskCreateFailed => 'Vytvoření úkolu se nezdařilo.';
+
+  @override
+  String get time_taskReorderFailed => 'Přesunutí úkolu se nezdařilo.';
+
+  @override
+  String get time_tasksShowArchived => 'Zobrazit archivované úkoly';
+
+  @override
+  String get time_tasksLoadFailed => 'Načtení úkolů se nezdařilo.';
+
+  @override
+  String get time_tasksEmptyTitle => 'Zatím žádné úkoly';
+
+  @override
+  String get time_tasksEmptySubtitle => 'Klepnutím na + vytvoř první úkol';
+
+  @override
+  String get time_tasksArchivedHeader => 'Archivováno';
+
+  @override
+  String get time_taskToggleFailed => 'Nepodařilo se aktualizovat stav úkolu.';
+
+  @override
+  String get time_taskUnarchiveFailed => 'Nepodařilo se obnovit úkol.';
+
+  @override
+  String get time_taskSaveFailed => 'Nepodařilo se uložit úkol.';
+
+  @override
+  String get time_taskDeleteTitle => 'Smazat úkol?';
+
+  @override
+  String time_taskDeleteBody(String title) {
+    return '\"$title\" bude trvale odstraněn.';
+  }
+
+  @override
+  String get time_taskDeleteFailed => 'Nepodařilo se smazat úkol.';
+
+  @override
+  String get time_taskEditTitle => 'Upravit úkol';
+
+  @override
+  String get time_taskNewTitle => 'Nový úkol';
+
+  @override
+  String get time_taskTitleHint => 'Název úkolu';
+
+  @override
+  String get time_taskDescriptionHint => 'Popis (volitelné)';
+
+  @override
+  String get time_taskDeadlineHint => 'Termín (volitelné)';
+
+  @override
+  String get time_projectCreateFailed => 'Vytvoření projektu se nezdařilo.';
+
+  @override
+  String time_projectDeleteTitle(String name) {
+    return 'Smazat projekt \"$name\"?';
+  }
+
+  @override
+  String get time_projectDeleteBody =>
+      'Všechny úkoly v tomto projektu budou trvale smazány.';
+
+  @override
+  String get time_projectDeleteFailed => 'Smazání projektu se nezdařilo.';
+
+  @override
+  String get time_projectCreateTitle => 'Nový projekt';
+
+  @override
+  String get time_statsTitle => 'Statistiky';
+
+  @override
+  String get time_statsPeriodDay => 'Den';
+
+  @override
+  String get time_statsPeriodWeek => 'Týden';
+
+  @override
+  String get time_statsLoadFailed => 'Nepodařilo se načíst statistiky.';
+
+  @override
+  String get time_statsThisWeek => 'Tento týden';
+
+  @override
+  String get time_statsNoEntriesPeriod => 'Žádné záznamy pro toto období';
+
+  @override
+  String get time_statsByActivityType => 'Podle typu aktivity';
+
+  @override
+  String get time_statsByProject => 'Podle projektu';
+
+  @override
+  String get time_statsTotalTracked => 'Celkem sledováno';
+
+  @override
+  String get time_statsUntrackedTime => 'Nesledovaný čas';
+
+  @override
+  String get time_navStats => 'Statistiky';
+
+  @override
+  String get time_navTimer => 'Časovač';
+
+  @override
+  String get time_settingsTitle => 'Nastavení';
+
+  @override
+  String get time_settingsDailyReminderSection => 'Denní připomínka';
+
+  @override
+  String get time_settingsReminderToggleLabel => 'Připomínat spuštění časovače';
+
+  @override
+  String get time_settingsReminderTimeLabel => 'Čas připomínky';
+
+  @override
+  String get time_settingsRecurringRemindersLabel => 'Opakované připomínky';
+
+  @override
+  String get time_settingsDataSection => 'Data';
+
+  @override
+  String get time_settingsExportButton => 'Exportovat data';
+
+  @override
+  String get time_settingsExportHint =>
+      'Uloží všechna data do jednoho souboru, který přeneseš jinam.';
+
+  @override
+  String get time_settingsExportFailed =>
+      'Export se nepodařil. Zkus to prosím znovu.';
+
+  @override
+  String get time_settingsTestingSection => 'Testování';
+
+  @override
+  String get time_settingsTestNotificationButton =>
+      'Testovací notifikace (za 5 s)';
+
+  @override
+  String get time_settingsShowModalDebugButton =>
+      'Zobrazit modal přímo (debug)';
+
+  @override
+  String get time_settingsNotificationsDisabled =>
+      'Oznámení jsou zakázána. Povolte je v nastavení telefonu.';
+
+  @override
+  String get time_settingsNoRemindersYet =>
+      'Nejdříve vytvořte alespoň jednu opakovanou připomínku.';
+
+  @override
+  String time_settingsTestNotificationTitle(String name) {
+    return '🧪 Test: $name';
+  }
+
+  @override
+  String get time_settingsTestNotificationScheduled =>
+      'Testovací notifikace přijde za 5 sekund.';
+
+  @override
+  String get time_settingsNoReminder => 'Žádná připomínka.';
+
+  @override
+  String get time_settingsLanguageSection => 'Jazyk';
+
+  @override
+  String get time_reminderDeleteTitle => 'Smazat připomínku?';
+
+  @override
+  String time_reminderDeleteBody(String name) {
+    return 'Připomínka „$name“ bude trvale smazána.';
+  }
+
+  @override
+  String get time_reminderDeleteFailed => 'Smazání připomínky se nezdařilo.';
+
+  @override
+  String get time_remindersEmptyTitle => 'Zatím nemáte žádné připomínky';
+
+  @override
+  String get time_remindersEmptySubtitle =>
+      'Klepnutím na + vytvoř první připomínku';
+
+  @override
+  String get time_remindersLoadFailed => 'Nepodařilo se načíst připomínky.';
+
+  @override
+  String get time_reminderSnooze => 'Odložit';
+
+  @override
+  String get time_reminderDone => 'Hotovo';
+
+  @override
+  String get time_reminderCompletionUpdateFailed =>
+      'Nepodařilo se aktualizovat stav dokončení.';
+
+  @override
+  String get time_reminderActiveToggleFailed =>
+      'Nepodařilo se aktualizovat připomínku.';
+
+  @override
+  String time_reminderCapacityError(int available, int required) {
+    return 'Nedostatek volných oznámení: k dispozici $available, potřeba $required.';
+  }
+
+  @override
+  String get time_reminderDiscardTitle => 'Zahodit změny?';
+
+  @override
+  String get time_reminderDiscardBody => 'Neuložené změny budou ztraceny.';
+
+  @override
+  String get time_reminderDiscardConfirm => 'Zahodit';
+
+  @override
+  String get time_reminderEditTitle => 'Upravit připomínku';
+
+  @override
+  String get time_reminderNewTitle => 'Nová připomínka';
+
+  @override
+  String get time_reminderNameHint => 'Název';
+
+  @override
+  String get time_reminderFromLabel => 'Od';
+
+  @override
+  String get time_reminderToLabel => 'Do';
+
+  @override
+  String get time_reminderOvernightNote =>
+      'Okno přesahuje přes půlnoc do dalšího dne.';
+
+  @override
+  String get time_reminderIntervalLabel => 'Interval opakování';
+
+  @override
+  String get time_reminderActiveDaysLabel => 'Aktivní dny';
+
+  @override
+  String get time_reminderActiveLabel => 'Aktivní';
+
+  @override
+  String get time_reminderEditBarrierLabel => 'Dialog pro úpravu připomínky';
+
+  @override
+  String get time_reminderDailyNotificationBody => 'Čas spustit časovač!';
+
+  @override
+  String get time_recurringReminderDefaultNotificationBody =>
+      'Klepni pro otevření';
 }

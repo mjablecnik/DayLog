@@ -2654,11 +2654,1091 @@ abstract class AppLocalizations {
   /// **'Menu'**
   String get shell_openMenu;
 
-  /// Temporary text of a destination whose feature is not moved into the app yet.
+  /// Time tracking text: "Cancel"
   ///
   /// In cs, this message translates to:
-  /// **'Tato stránka přijde s přesunem časovače.'**
-  String get shell_placeholderBody;
+  /// **'Zrušit'**
+  String get time_commonCancel;
+
+  /// Time tracking text: "Back"
+  ///
+  /// In cs, this message translates to:
+  /// **'Zpět'**
+  String get time_commonBack;
+
+  /// Time tracking text: "Save"
+  ///
+  /// In cs, this message translates to:
+  /// **'Uložit'**
+  String get time_commonSave;
+
+  /// Time tracking text: "Delete"
+  ///
+  /// In cs, this message translates to:
+  /// **'Smazat'**
+  String get time_commonDelete;
+
+  /// Time tracking text: "Submit"
+  ///
+  /// In cs, this message translates to:
+  /// **'Uložit'**
+  String get time_commonSubmit;
+
+  /// Time tracking text: "Skip"
+  ///
+  /// In cs, this message translates to:
+  /// **'Přeskočit'**
+  String get time_commonSkip;
+
+  /// Time tracking text: "Reset"
+  ///
+  /// In cs, this message translates to:
+  /// **'Resetovat'**
+  String get time_commonReset;
+
+  /// Time tracking text: "Create"
+  ///
+  /// In cs, this message translates to:
+  /// **'Vytvořit'**
+  String get time_commonCreate;
+
+  /// Time tracking text: "Unassigned"
+  ///
+  /// In cs, this message translates to:
+  /// **'Nepřiřazeno'**
+  String get time_commonUnassigned;
+
+  /// Time tracking text: "Database unavailable. Please try again."
+  ///
+  /// In cs, this message translates to:
+  /// **'Databáze není dostupná. Zkuste to prosím znovu.'**
+  String get time_errorDatabaseUnavailable;
+
+  /// Time tracking text: "Failed to save entry. Please try again."
+  ///
+  /// In cs, this message translates to:
+  /// **'Uložení záznamu se nezdařilo. Zkuste to prosím znovu.'**
+  String get time_errorSaveEntryFailed;
+
+  /// Time tracking text: "Failed to save. Please try again."
+  ///
+  /// In cs, this message translates to:
+  /// **'Uložení se nezdařilo. Zkuste to prosím znovu.'**
+  String get time_errorSaveFailed;
+
+  /// Time tracking text: "Description cannot be empty."
+  ///
+  /// In cs, this message translates to:
+  /// **'Popis nesmí být prázdný.'**
+  String get time_errorDescriptionEmpty;
+
+  /// Time tracking text: "End time must be after start time."
+  ///
+  /// In cs, this message translates to:
+  /// **'Konec musí být po začátku.'**
+  String get time_errorEndBeforeStart;
+
+  /// Time tracking text: "Something went wrong. Please try again."
+  ///
+  /// In cs, this message translates to:
+  /// **'Něco se pokazilo. Zkuste to prosím znovu.'**
+  String get time_errorGeneric;
+
+  /// Time tracking text: "Project name..."
+  ///
+  /// In cs, this message translates to:
+  /// **'Název projektu...'**
+  String get time_projectNameHint;
+
+  /// Time tracking text: "Project name"
+  ///
+  /// In cs, this message translates to:
+  /// **'Název projektu'**
+  String get time_projectNameFieldHint;
+
+  /// Time tracking text: "Describe what you worked on..."
+  ///
+  /// In cs, this message translates to:
+  /// **'Popiš, na čem jsi pracoval/a...'**
+  String get time_descriptionHint;
+
+  /// Time tracking text: "Start"
+  ///
+  /// In cs, this message translates to:
+  /// **'Začátek'**
+  String get time_timeFieldStart;
+
+  /// Time tracking text: "End"
+  ///
+  /// In cs, this message translates to:
+  /// **'Konec'**
+  String get time_timeFieldEnd;
+
+  /// Time tracking text: "{minutes} min"
+  ///
+  /// In cs, this message translates to:
+  /// **'{minutes} min'**
+  String time_durationMinutesLabel(int minutes);
+
+  /// Time tracking text: "{minutes}m"
+  ///
+  /// In cs, this message translates to:
+  /// **'{minutes}m'**
+  String time_durationMinutesOnly(int minutes);
+
+  /// Time tracking text: "{hours}h"
+  ///
+  /// In cs, this message translates to:
+  /// **'{hours}h'**
+  String time_durationHoursOnly(int hours);
+
+  /// Time tracking text: "{hours}h {minutes}m"
+  ///
+  /// In cs, this message translates to:
+  /// **'{hours}h {minutes}m'**
+  String time_durationHoursMinutes(int hours, int minutes);
+
+  /// Time tracking text: "Mo"
+  ///
+  /// In cs, this message translates to:
+  /// **'Po'**
+  String get time_weekdayMon;
+
+  /// Time tracking text: "Tu"
+  ///
+  /// In cs, this message translates to:
+  /// **'Út'**
+  String get time_weekdayTue;
+
+  /// Time tracking text: "We"
+  ///
+  /// In cs, this message translates to:
+  /// **'St'**
+  String get time_weekdayWed;
+
+  /// Time tracking text: "Th"
+  ///
+  /// In cs, this message translates to:
+  /// **'Čt'**
+  String get time_weekdayThu;
+
+  /// Time tracking text: "Fr"
+  ///
+  /// In cs, this message translates to:
+  /// **'Pá'**
+  String get time_weekdayFri;
+
+  /// Time tracking text: "Sa"
+  ///
+  /// In cs, this message translates to:
+  /// **'So'**
+  String get time_weekdaySat;
+
+  /// Time tracking text: "Su"
+  ///
+  /// In cs, this message translates to:
+  /// **'Ne'**
+  String get time_weekdaySun;
+
+  /// Time tracking text: "Work"
+  ///
+  /// In cs, this message translates to:
+  /// **'Práce'**
+  String get time_activityWork;
+
+  /// Time tracking text: "Housework"
+  ///
+  /// In cs, this message translates to:
+  /// **'Domácí práce'**
+  String get time_activityHousework;
+
+  /// Time tracking text: "Travel"
+  ///
+  /// In cs, this message translates to:
+  /// **'Cestování'**
+  String get time_activityCommute;
+
+  /// Time tracking text: "Entertainment"
+  ///
+  /// In cs, this message translates to:
+  /// **'Zábava'**
+  String get time_activityEntertainment;
+
+  /// Time tracking text: "Exercise"
+  ///
+  /// In cs, this message translates to:
+  /// **'Cvičení'**
+  String get time_activityExercise;
+
+  /// Time tracking text: "Self-development"
+  ///
+  /// In cs, this message translates to:
+  /// **'Seberozvoj'**
+  String get time_activitySelfDevelopment;
+
+  /// Time tracking text: "Rest"
+  ///
+  /// In cs, this message translates to:
+  /// **'Odpočinek'**
+  String get time_activityRest;
+
+  /// Time tracking text: "Hygiene"
+  ///
+  /// In cs, this message translates to:
+  /// **'Hygiena'**
+  String get time_activityHygiene;
+
+  /// Time tracking text: "Meal"
+  ///
+  /// In cs, this message translates to:
+  /// **'Jídlo'**
+  String get time_activityMeal;
+
+  /// Time tracking text: "Meeting"
+  ///
+  /// In cs, this message translates to:
+  /// **'Meeting'**
+  String get time_activityMeeting;
+
+  /// Time tracking text: "Communication"
+  ///
+  /// In cs, this message translates to:
+  /// **'Komunikace'**
+  String get time_activityCommunication;
+
+  /// Time tracking text: "Other"
+  ///
+  /// In cs, this message translates to:
+  /// **'Ostatní'**
+  String get time_activityOther;
+
+  /// Time tracking text: "Paid"
+  ///
+  /// In cs, this message translates to:
+  /// **'Placená'**
+  String get time_subtypePaid;
+
+  /// Time tracking text: "Unpaid"
+  ///
+  /// In cs, this message translates to:
+  /// **'Neplacená'**
+  String get time_subtypeUnpaid;
+
+  /// Time tracking text: "Active entertainment"
+  ///
+  /// In cs, this message translates to:
+  /// **'Aktivní zábava'**
+  String get time_subtypeEntertainmentActive;
+
+  /// Time tracking text: "Passive entertainment"
+  ///
+  /// In cs, this message translates to:
+  /// **'Pasivní zábava'**
+  String get time_subtypeEntertainmentPassive;
+
+  /// Time tracking text: "Walk"
+  ///
+  /// In cs, this message translates to:
+  /// **'Procházka'**
+  String get time_subtypeWalk;
+
+  /// Time tracking text: "Running"
+  ///
+  /// In cs, this message translates to:
+  /// **'Běhání'**
+  String get time_subtypeRunning;
+
+  /// Time tracking text: "Gym"
+  ///
+  /// In cs, this message translates to:
+  /// **'Posilovna'**
+  String get time_subtypeGym;
+
+  /// Time tracking text: "Reading books"
+  ///
+  /// In cs, this message translates to:
+  /// **'Čtení knih'**
+  String get time_subtypeBooks;
+
+  /// Time tracking text: "Study"
+  ///
+  /// In cs, this message translates to:
+  /// **'Studium'**
+  String get time_subtypeStudy;
+
+  /// Time tracking text: "AI consultation"
+  ///
+  /// In cs, this message translates to:
+  /// **'Konzultace s AI'**
+  String get time_subtypeAi;
+
+  /// Time tracking text: "Active rest"
+  ///
+  /// In cs, this message translates to:
+  /// **'Aktivní odpočinek'**
+  String get time_subtypeRestActive;
+
+  /// Time tracking text: "Passive rest"
+  ///
+  /// In cs, this message translates to:
+  /// **'Pasivní odpočinek'**
+  String get time_subtypeRestPassive;
+
+  /// Time tracking text: "General"
+  ///
+  /// In cs, this message translates to:
+  /// **'Obecná'**
+  String get time_subtypeGeneral;
+
+  /// Time tracking text: "Toilet"
+  ///
+  /// In cs, this message translates to:
+  /// **'Toaleta'**
+  String get time_subtypeToilet;
+
+  /// Time tracking text: "Breakfast"
+  ///
+  /// In cs, this message translates to:
+  /// **'Snídaně'**
+  String get time_subtypeBreakfast;
+
+  /// Time tracking text: "Lunch"
+  ///
+  /// In cs, this message translates to:
+  /// **'Oběd'**
+  String get time_subtypeLunch;
+
+  /// Time tracking text: "Dinner"
+  ///
+  /// In cs, this message translates to:
+  /// **'Večeře'**
+  String get time_subtypeDinner;
+
+  /// Time tracking text: "Snack"
+  ///
+  /// In cs, this message translates to:
+  /// **'Svačina'**
+  String get time_subtypeSnack;
+
+  /// Time tracking text: "Shopping"
+  ///
+  /// In cs, this message translates to:
+  /// **'Nákup'**
+  String get time_subtypeShopping;
+
+  /// Time tracking text: "Paid work"
+  ///
+  /// In cs, this message translates to:
+  /// **'Placená práce'**
+  String get time_scopeWorkPaid;
+
+  /// Time tracking text: "Unpaid work"
+  ///
+  /// In cs, this message translates to:
+  /// **'Neplacená práce'**
+  String get time_scopeWorkUnpaid;
+
+  /// Time tracking text: "Housework"
+  ///
+  /// In cs, this message translates to:
+  /// **'Domácí práce'**
+  String get time_scopeHousework;
+
+  /// Time tracking text: "Other"
+  ///
+  /// In cs, this message translates to:
+  /// **'Ostatní'**
+  String get time_scopeOther;
+
+  /// Time tracking text: "Type"
+  ///
+  /// In cs, this message translates to:
+  /// **'Typ'**
+  String get time_pickerTypeCaption;
+
+  /// Time tracking text: "Refine: {type}"
+  ///
+  /// In cs, this message translates to:
+  /// **'Upřesni: {type}'**
+  String time_pickerSubtypeHeading(String type);
+
+  /// Time tracking text: "Choose one"
+  ///
+  /// In cs, this message translates to:
+  /// **'Vyber jednu možnost'**
+  String get time_pickerSubtypeHint;
+
+  /// Time tracking text: "What did you do?"
+  ///
+  /// In cs, this message translates to:
+  /// **'Co jsi dělal?'**
+  String get time_customNameHint;
+
+  /// Time tracking text: "Other by name"
+  ///
+  /// In cs, this message translates to:
+  /// **'Ostatní podle názvu'**
+  String get time_statsByCustomName;
+
+  /// Time tracking text: "Category"
+  ///
+  /// In cs, this message translates to:
+  /// **'Kategorie'**
+  String get time_taskProjectCategoryCaption;
+
+  /// Time tracking text: "Edit category"
+  ///
+  /// In cs, this message translates to:
+  /// **'Upravit kategorii'**
+  String get time_taskProjectEditCategory;
+
+  /// Time tracking text: "{name}, {category}"
+  ///
+  /// In cs, this message translates to:
+  /// **'{name}, {category}'**
+  String time_taskProjectChipSemantics(String name, String category);
+
+  /// Time tracking text: "Pre-fill description"
+  ///
+  /// In cs, this message translates to:
+  /// **'Předvyplnit popis'**
+  String get time_timerPrefillTooltip;
+
+  /// Time tracking text: "READY"
+  ///
+  /// In cs, this message translates to:
+  /// **'PŘIPRAVENO'**
+  String get time_timerPhaseReady;
+
+  /// Time tracking text: "FOCUS"
+  ///
+  /// In cs, this message translates to:
+  /// **'SOUSTŘEDĚNÍ'**
+  String get time_timerPhaseFocus;
+
+  /// Time tracking text: "PAUSED"
+  ///
+  /// In cs, this message translates to:
+  /// **'PAUZA'**
+  String get time_timerPhasePaused;
+
+  /// Time tracking text: "TIME UP"
+  ///
+  /// In cs, this message translates to:
+  /// **'ČAS VYPRŠEL'**
+  String get time_timerPhaseTimeUp;
+
+  /// Time tracking text: "LOGGING"
+  ///
+  /// In cs, this message translates to:
+  /// **'UKLÁDÁNÍ'**
+  String get time_timerPhaseLogging;
+
+  /// Time tracking text: "Reset timer?"
+  ///
+  /// In cs, this message translates to:
+  /// **'Resetovat časovač?'**
+  String get time_timerResetTitle;
+
+  /// Time tracking text: "Do you really want to reset the timer?"
+  ///
+  /// In cs, this message translates to:
+  /// **'Opravdu chcete resetovat časovač?'**
+  String get time_timerResetBody;
+
+  /// Time tracking text: "Time is up!"
+  ///
+  /// In cs, this message translates to:
+  /// **'Čas vypršel!'**
+  String get time_timerTimeUpTitle;
+
+  /// Time tracking text: "Dismiss"
+  ///
+  /// In cs, this message translates to:
+  /// **'Zavřít'**
+  String get time_ringingDismiss;
+
+  /// Time tracking text: "Clear form"
+  ///
+  /// In cs, this message translates to:
+  /// **'Vymazat formulář'**
+  String get time_descriptionClearFormTooltip;
+
+  /// Time tracking text: "What did you accomplish?"
+  ///
+  /// In cs, this message translates to:
+  /// **'Co se ti podařilo?'**
+  String get time_descriptionTitle;
+
+  /// Time tracking text: "Save Draft"
+  ///
+  /// In cs, this message translates to:
+  /// **'Uložit koncept'**
+  String get time_prefillSaveDraft;
+
+  /// Time tracking text: "Edit description"
+  ///
+  /// In cs, this message translates to:
+  /// **'Upravit popis'**
+  String get time_editSheetTitle;
+
+  /// Time tracking text: "Add entry"
+  ///
+  /// In cs, this message translates to:
+  /// **'Přidat záznam'**
+  String get time_manualEntryTitle;
+
+  /// Time tracking text: "History"
+  ///
+  /// In cs, this message translates to:
+  /// **'Historie'**
+  String get time_historyTitle;
+
+  /// Time tracking text: "Failed to load entries."
+  ///
+  /// In cs, this message translates to:
+  /// **'Načtení záznamů se nezdařilo.'**
+  String get time_historyLoadError;
+
+  /// Time tracking text: "{count, plural, one{{count} entry} other{{count} entries}}"
+  ///
+  /// In cs, this message translates to:
+  /// **'{count, plural, one{{count} záznam} few{{count} záznamy} other{{count} záznamů}}'**
+  String time_historyEntryCount(int count);
+
+  /// Time tracking text: "Total: {duration}"
+  ///
+  /// In cs, this message translates to:
+  /// **'Celkem: {duration}'**
+  String time_historyTotalLabel(String duration);
+
+  /// Time tracking text: "Delete entry?"
+  ///
+  /// In cs, this message translates to:
+  /// **'Smazat záznam?'**
+  String get time_historyDeleteEntryTitle;
+
+  /// Time tracking text: "This action cannot be undone."
+  ///
+  /// In cs, this message translates to:
+  /// **'Tuto akci nelze vrátit zpět.'**
+  String get time_historyDeleteEntryBody;
+
+  /// Time tracking text: "Database unavailable."
+  ///
+  /// In cs, this message translates to:
+  /// **'Databáze není dostupná.'**
+  String get time_historyDbUnavailableShort;
+
+  /// Time tracking text: "Failed to delete entry."
+  ///
+  /// In cs, this message translates to:
+  /// **'Smazání záznamu se nezdařilo.'**
+  String get time_historyDeleteEntryFailed;
+
+  /// Time tracking text: "No entries for this day"
+  ///
+  /// In cs, this message translates to:
+  /// **'Pro tento den nejsou žádné záznamy'**
+  String get time_historyEmptyTitle;
+
+  /// Time tracking text: "Start a timer to log your work"
+  ///
+  /// In cs, this message translates to:
+  /// **'Spusť časovač a začni sledovat svou práci'**
+  String get time_historyEmptySubtitle;
+
+  /// Time tracking text: "Today"
+  ///
+  /// In cs, this message translates to:
+  /// **'Dnes'**
+  String get time_dayToday;
+
+  /// Time tracking text: "Yesterday"
+  ///
+  /// In cs, this message translates to:
+  /// **'Včera'**
+  String get time_dayYesterday;
+
+  /// Time tracking text: "Tasks"
+  ///
+  /// In cs, this message translates to:
+  /// **'Úkoly'**
+  String get time_tasksTitle;
+
+  /// Time tracking text: "Failed to create task."
+  ///
+  /// In cs, this message translates to:
+  /// **'Vytvoření úkolu se nezdařilo.'**
+  String get time_taskCreateFailed;
+
+  /// Time tracking text: "Failed to move task."
+  ///
+  /// In cs, this message translates to:
+  /// **'Přesunutí úkolu se nezdařilo.'**
+  String get time_taskReorderFailed;
+
+  /// Time tracking text: "Show archived tasks"
+  ///
+  /// In cs, this message translates to:
+  /// **'Zobrazit archivované úkoly'**
+  String get time_tasksShowArchived;
+
+  /// Time tracking text: "Failed to load tasks."
+  ///
+  /// In cs, this message translates to:
+  /// **'Načtení úkolů se nezdařilo.'**
+  String get time_tasksLoadFailed;
+
+  /// Time tracking text: "No tasks yet"
+  ///
+  /// In cs, this message translates to:
+  /// **'Zatím žádné úkoly'**
+  String get time_tasksEmptyTitle;
+
+  /// Time tracking text: "Tap + to create your first task"
+  ///
+  /// In cs, this message translates to:
+  /// **'Klepnutím na + vytvoř první úkol'**
+  String get time_tasksEmptySubtitle;
+
+  /// Time tracking text: "Archived"
+  ///
+  /// In cs, this message translates to:
+  /// **'Archivováno'**
+  String get time_tasksArchivedHeader;
+
+  /// Time tracking text: "Failed to update task status."
+  ///
+  /// In cs, this message translates to:
+  /// **'Nepodařilo se aktualizovat stav úkolu.'**
+  String get time_taskToggleFailed;
+
+  /// Time tracking text: "Failed to restore task."
+  ///
+  /// In cs, this message translates to:
+  /// **'Nepodařilo se obnovit úkol.'**
+  String get time_taskUnarchiveFailed;
+
+  /// Time tracking text: "Failed to save task."
+  ///
+  /// In cs, this message translates to:
+  /// **'Nepodařilo se uložit úkol.'**
+  String get time_taskSaveFailed;
+
+  /// Time tracking text: "Delete task?"
+  ///
+  /// In cs, this message translates to:
+  /// **'Smazat úkol?'**
+  String get time_taskDeleteTitle;
+
+  /// Time tracking text: "'{title}' will be permanently removed."
+  ///
+  /// In cs, this message translates to:
+  /// **'\"{title}\" bude trvale odstraněn.'**
+  String time_taskDeleteBody(String title);
+
+  /// Time tracking text: "Failed to delete task."
+  ///
+  /// In cs, this message translates to:
+  /// **'Nepodařilo se smazat úkol.'**
+  String get time_taskDeleteFailed;
+
+  /// Time tracking text: "Edit task"
+  ///
+  /// In cs, this message translates to:
+  /// **'Upravit úkol'**
+  String get time_taskEditTitle;
+
+  /// Time tracking text: "New task"
+  ///
+  /// In cs, this message translates to:
+  /// **'Nový úkol'**
+  String get time_taskNewTitle;
+
+  /// Time tracking text: "Task title"
+  ///
+  /// In cs, this message translates to:
+  /// **'Název úkolu'**
+  String get time_taskTitleHint;
+
+  /// Time tracking text: "Description (optional)"
+  ///
+  /// In cs, this message translates to:
+  /// **'Popis (volitelné)'**
+  String get time_taskDescriptionHint;
+
+  /// Time tracking text: "Deadline (optional)"
+  ///
+  /// In cs, this message translates to:
+  /// **'Termín (volitelné)'**
+  String get time_taskDeadlineHint;
+
+  /// Time tracking text: "Failed to create project."
+  ///
+  /// In cs, this message translates to:
+  /// **'Vytvoření projektu se nezdařilo.'**
+  String get time_projectCreateFailed;
+
+  /// Time tracking text: "Delete project '{name}'?"
+  ///
+  /// In cs, this message translates to:
+  /// **'Smazat projekt \"{name}\"?'**
+  String time_projectDeleteTitle(String name);
+
+  /// Time tracking text: "All tasks in this project will be permanently deleted."
+  ///
+  /// In cs, this message translates to:
+  /// **'Všechny úkoly v tomto projektu budou trvale smazány.'**
+  String get time_projectDeleteBody;
+
+  /// Time tracking text: "Failed to delete project."
+  ///
+  /// In cs, this message translates to:
+  /// **'Smazání projektu se nezdařilo.'**
+  String get time_projectDeleteFailed;
+
+  /// Time tracking text: "New project"
+  ///
+  /// In cs, this message translates to:
+  /// **'Nový projekt'**
+  String get time_projectCreateTitle;
+
+  /// Time tracking text: "Statistics"
+  ///
+  /// In cs, this message translates to:
+  /// **'Statistiky'**
+  String get time_statsTitle;
+
+  /// Time tracking text: "Day"
+  ///
+  /// In cs, this message translates to:
+  /// **'Den'**
+  String get time_statsPeriodDay;
+
+  /// Time tracking text: "Week"
+  ///
+  /// In cs, this message translates to:
+  /// **'Týden'**
+  String get time_statsPeriodWeek;
+
+  /// Time tracking text: "Failed to load statistics."
+  ///
+  /// In cs, this message translates to:
+  /// **'Nepodařilo se načíst statistiky.'**
+  String get time_statsLoadFailed;
+
+  /// Time tracking text: "This week"
+  ///
+  /// In cs, this message translates to:
+  /// **'Tento týden'**
+  String get time_statsThisWeek;
+
+  /// Time tracking text: "No entries for this period"
+  ///
+  /// In cs, this message translates to:
+  /// **'Žádné záznamy pro toto období'**
+  String get time_statsNoEntriesPeriod;
+
+  /// Time tracking text: "By activity type"
+  ///
+  /// In cs, this message translates to:
+  /// **'Podle typu aktivity'**
+  String get time_statsByActivityType;
+
+  /// Time tracking text: "By project"
+  ///
+  /// In cs, this message translates to:
+  /// **'Podle projektu'**
+  String get time_statsByProject;
+
+  /// Time tracking text: "Total tracked"
+  ///
+  /// In cs, this message translates to:
+  /// **'Celkem sledováno'**
+  String get time_statsTotalTracked;
+
+  /// Time tracking text: "Untracked time"
+  ///
+  /// In cs, this message translates to:
+  /// **'Nesledovaný čas'**
+  String get time_statsUntrackedTime;
+
+  /// Time tracking text: "Stats"
+  ///
+  /// In cs, this message translates to:
+  /// **'Statistiky'**
+  String get time_navStats;
+
+  /// Time tracking text: "Timer"
+  ///
+  /// In cs, this message translates to:
+  /// **'Časovač'**
+  String get time_navTimer;
+
+  /// Time tracking text: "Settings"
+  ///
+  /// In cs, this message translates to:
+  /// **'Nastavení'**
+  String get time_settingsTitle;
+
+  /// Time tracking text: "Daily reminder"
+  ///
+  /// In cs, this message translates to:
+  /// **'Denní připomínka'**
+  String get time_settingsDailyReminderSection;
+
+  /// Time tracking text: "Remind me to start the timer"
+  ///
+  /// In cs, this message translates to:
+  /// **'Připomínat spuštění časovače'**
+  String get time_settingsReminderToggleLabel;
+
+  /// Time tracking text: "Reminder time"
+  ///
+  /// In cs, this message translates to:
+  /// **'Čas připomínky'**
+  String get time_settingsReminderTimeLabel;
+
+  /// Time tracking text: "Recurring reminders"
+  ///
+  /// In cs, this message translates to:
+  /// **'Opakované připomínky'**
+  String get time_settingsRecurringRemindersLabel;
+
+  /// Time tracking text: "Data"
+  ///
+  /// In cs, this message translates to:
+  /// **'Data'**
+  String get time_settingsDataSection;
+
+  /// Time tracking text: "Export data"
+  ///
+  /// In cs, this message translates to:
+  /// **'Exportovat data'**
+  String get time_settingsExportButton;
+
+  /// Time tracking text: "Saves all data into one file you can move elsewhere."
+  ///
+  /// In cs, this message translates to:
+  /// **'Uloží všechna data do jednoho souboru, který přeneseš jinam.'**
+  String get time_settingsExportHint;
+
+  /// Time tracking text: "The export failed. Please try again."
+  ///
+  /// In cs, this message translates to:
+  /// **'Export se nepodařil. Zkus to prosím znovu.'**
+  String get time_settingsExportFailed;
+
+  /// Time tracking text: "Testing"
+  ///
+  /// In cs, this message translates to:
+  /// **'Testování'**
+  String get time_settingsTestingSection;
+
+  /// Time tracking text: "Test notification (in 5 s)"
+  ///
+  /// In cs, this message translates to:
+  /// **'Testovací notifikace (za 5 s)'**
+  String get time_settingsTestNotificationButton;
+
+  /// Time tracking text: "Show modal directly (debug)"
+  ///
+  /// In cs, this message translates to:
+  /// **'Zobrazit modal přímo (debug)'**
+  String get time_settingsShowModalDebugButton;
+
+  /// Time tracking text: "Notifications are disabled. Enable them in your phone's settings."
+  ///
+  /// In cs, this message translates to:
+  /// **'Oznámení jsou zakázána. Povolte je v nastavení telefonu.'**
+  String get time_settingsNotificationsDisabled;
+
+  /// Time tracking text: "First create at least one recurring reminder."
+  ///
+  /// In cs, this message translates to:
+  /// **'Nejdříve vytvořte alespoň jednu opakovanou připomínku.'**
+  String get time_settingsNoRemindersYet;
+
+  /// Time tracking text: "🧪 Test: {name}"
+  ///
+  /// In cs, this message translates to:
+  /// **'🧪 Test: {name}'**
+  String time_settingsTestNotificationTitle(String name);
+
+  /// Time tracking text: "Test notification will arrive in 5 seconds."
+  ///
+  /// In cs, this message translates to:
+  /// **'Testovací notifikace přijde za 5 sekund.'**
+  String get time_settingsTestNotificationScheduled;
+
+  /// Time tracking text: "No reminder."
+  ///
+  /// In cs, this message translates to:
+  /// **'Žádná připomínka.'**
+  String get time_settingsNoReminder;
+
+  /// Time tracking text: "Language"
+  ///
+  /// In cs, this message translates to:
+  /// **'Jazyk'**
+  String get time_settingsLanguageSection;
+
+  /// Time tracking text: "Delete reminder?"
+  ///
+  /// In cs, this message translates to:
+  /// **'Smazat připomínku?'**
+  String get time_reminderDeleteTitle;
+
+  /// Time tracking text: "Reminder '{name}' will be permanently deleted."
+  ///
+  /// In cs, this message translates to:
+  /// **'Připomínka „{name}“ bude trvale smazána.'**
+  String time_reminderDeleteBody(String name);
+
+  /// Time tracking text: "Failed to delete reminder."
+  ///
+  /// In cs, this message translates to:
+  /// **'Smazání připomínky se nezdařilo.'**
+  String get time_reminderDeleteFailed;
+
+  /// Time tracking text: "You don't have any reminders yet"
+  ///
+  /// In cs, this message translates to:
+  /// **'Zatím nemáte žádné připomínky'**
+  String get time_remindersEmptyTitle;
+
+  /// Time tracking text: "Tap + to create your first reminder"
+  ///
+  /// In cs, this message translates to:
+  /// **'Klepnutím na + vytvoř první připomínku'**
+  String get time_remindersEmptySubtitle;
+
+  /// Time tracking text: "Failed to load reminders."
+  ///
+  /// In cs, this message translates to:
+  /// **'Nepodařilo se načíst připomínky.'**
+  String get time_remindersLoadFailed;
+
+  /// Time tracking text: "Snooze"
+  ///
+  /// In cs, this message translates to:
+  /// **'Odložit'**
+  String get time_reminderSnooze;
+
+  /// Time tracking text: "Done"
+  ///
+  /// In cs, this message translates to:
+  /// **'Hotovo'**
+  String get time_reminderDone;
+
+  /// Time tracking text: "Failed to update completion status."
+  ///
+  /// In cs, this message translates to:
+  /// **'Nepodařilo se aktualizovat stav dokončení.'**
+  String get time_reminderCompletionUpdateFailed;
+
+  /// Time tracking text: "Failed to update reminder."
+  ///
+  /// In cs, this message translates to:
+  /// **'Nepodařilo se aktualizovat připomínku.'**
+  String get time_reminderActiveToggleFailed;
+
+  /// Time tracking text: "Not enough notification slots: {available} available, {required} needed."
+  ///
+  /// In cs, this message translates to:
+  /// **'Nedostatek volných oznámení: k dispozici {available}, potřeba {required}.'**
+  String time_reminderCapacityError(int available, int required);
+
+  /// Time tracking text: "Discard changes?"
+  ///
+  /// In cs, this message translates to:
+  /// **'Zahodit změny?'**
+  String get time_reminderDiscardTitle;
+
+  /// Time tracking text: "Unsaved changes will be lost."
+  ///
+  /// In cs, this message translates to:
+  /// **'Neuložené změny budou ztraceny.'**
+  String get time_reminderDiscardBody;
+
+  /// Time tracking text: "Discard"
+  ///
+  /// In cs, this message translates to:
+  /// **'Zahodit'**
+  String get time_reminderDiscardConfirm;
+
+  /// Time tracking text: "Edit reminder"
+  ///
+  /// In cs, this message translates to:
+  /// **'Upravit připomínku'**
+  String get time_reminderEditTitle;
+
+  /// Time tracking text: "New reminder"
+  ///
+  /// In cs, this message translates to:
+  /// **'Nová připomínka'**
+  String get time_reminderNewTitle;
+
+  /// Time tracking text: "Name"
+  ///
+  /// In cs, this message translates to:
+  /// **'Název'**
+  String get time_reminderNameHint;
+
+  /// Time tracking text: "From"
+  ///
+  /// In cs, this message translates to:
+  /// **'Od'**
+  String get time_reminderFromLabel;
+
+  /// Time tracking text: "To"
+  ///
+  /// In cs, this message translates to:
+  /// **'Do'**
+  String get time_reminderToLabel;
+
+  /// Time tracking text: "Window spans past midnight into the next day."
+  ///
+  /// In cs, this message translates to:
+  /// **'Okno přesahuje přes půlnoc do dalšího dne.'**
+  String get time_reminderOvernightNote;
+
+  /// Time tracking text: "Repeat interval"
+  ///
+  /// In cs, this message translates to:
+  /// **'Interval opakování'**
+  String get time_reminderIntervalLabel;
+
+  /// Time tracking text: "Active days"
+  ///
+  /// In cs, this message translates to:
+  /// **'Aktivní dny'**
+  String get time_reminderActiveDaysLabel;
+
+  /// Time tracking text: "Active"
+  ///
+  /// In cs, this message translates to:
+  /// **'Aktivní'**
+  String get time_reminderActiveLabel;
+
+  /// Time tracking text: "Reminder edit dialog"
+  ///
+  /// In cs, this message translates to:
+  /// **'Dialog pro úpravu připomínky'**
+  String get time_reminderEditBarrierLabel;
+
+  /// Time tracking text: "Time to start your timer!"
+  ///
+  /// In cs, this message translates to:
+  /// **'Čas spustit časovač!'**
+  String get time_reminderDailyNotificationBody;
+
+  /// Time tracking text: "Tap to open"
+  ///
+  /// In cs, this message translates to:
+  /// **'Klepni pro otevření'**
+  String get time_recurringReminderDefaultNotificationBody;
 }
 
 class _AppLocalizationsDelegate

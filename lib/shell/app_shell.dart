@@ -19,11 +19,11 @@ import '../quests/ui/missions/missions_screen.dart';
 import '../notes/ui/screens/notes/notes_screen.dart';
 import '../settings/ui/settings_screen.dart';
 import '../settings/ui/shortcut_guide.dart' show ShortcutTarget;
+import '../time_tracking/time_tracking.dart';
 import 'deep_link.dart';
 import 'app_drawer.dart';
 import 'bottom_bar.dart';
 import 'destination.dart';
-import 'placeholder_screen.dart';
 import 'reconcile_banner.dart';
 import 'splash_screen.dart';
 
@@ -182,6 +182,8 @@ class _AppShellState extends ConsumerState<AppShell>
     // A message belongs to the screen that raised it (for example a Settings
     // rule saved), so it does not follow the user to another page.
     ScaffoldMessenger.of(context).clearSnackBars();
+    // The figures of the Statistics page are recomputed on every visit.
+    if (destination == Destination.statistics) refreshStatistics(ref);
     setState(() => _destination = destination);
   }
 
@@ -225,9 +227,9 @@ class _AppShellState extends ConsumerState<AppShell>
             children: <Widget>[
               for (final Destination d in Destination.values)
                 switch (d) {
-                  Destination.timer ||
-                  Destination.history ||
-                  Destination.statistics => PlaceholderScreen(destination: d),
+                  Destination.timer => const TimerScreen(),
+                  Destination.history => const HistoryScreen(),
+                  Destination.statistics => const StatisticsScreen(),
                   Destination.quests => gated(BoardScreen()),
                   Destination.missions => gated(MissionsScreen()),
                   Destination.calendar => gated(CalendarScreen()),

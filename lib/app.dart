@@ -8,12 +8,16 @@ import 'quests/ui/state/quest_actions.dart';
 import 'settings/ui_providers.dart';
 import 'theme/quest_theme.dart';
 import 'theme/tokens.dart';
+import 'time_tracking/time_tracking.dart' show ReminderActionHost;
 import 'quests/ui/reward/reward_overlay.dart';
 
 /// The application root: theme, locale and localization follow the settings
 /// live, so a change applies to every screen without rebuilding navigation.
 class ZaflingApp extends ConsumerWidget {
-  const ZaflingApp({super.key, this.home = const AppShell()});
+  const ZaflingApp({
+    super.key,
+    this.home = const ReminderActionHost(child: AppShell()),
+  });
 
   /// The root screen; tests swap in a probe.
   final Widget home;

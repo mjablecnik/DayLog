@@ -1744,6 +1744,589 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shell_openMenu => 'Menu';
 
   @override
-  String get shell_placeholderBody =>
-      'This page arrives with the move of the timer.';
+  String get time_commonCancel => 'Cancel';
+
+  @override
+  String get time_commonBack => 'Back';
+
+  @override
+  String get time_commonSave => 'Save';
+
+  @override
+  String get time_commonDelete => 'Delete';
+
+  @override
+  String get time_commonSubmit => 'Submit';
+
+  @override
+  String get time_commonSkip => 'Skip';
+
+  @override
+  String get time_commonReset => 'Reset';
+
+  @override
+  String get time_commonCreate => 'Create';
+
+  @override
+  String get time_commonUnassigned => 'Unassigned';
+
+  @override
+  String get time_errorDatabaseUnavailable =>
+      'Database unavailable. Please try again.';
+
+  @override
+  String get time_errorSaveEntryFailed =>
+      'Failed to save entry. Please try again.';
+
+  @override
+  String get time_errorSaveFailed => 'Failed to save. Please try again.';
+
+  @override
+  String get time_errorDescriptionEmpty => 'Description cannot be empty.';
+
+  @override
+  String get time_errorEndBeforeStart => 'End time must be after start time.';
+
+  @override
+  String get time_errorGeneric => 'Something went wrong. Please try again.';
+
+  @override
+  String get time_projectNameHint => 'Project name...';
+
+  @override
+  String get time_projectNameFieldHint => 'Project name';
+
+  @override
+  String get time_descriptionHint => 'Describe what you worked on...';
+
+  @override
+  String get time_timeFieldStart => 'Start';
+
+  @override
+  String get time_timeFieldEnd => 'End';
+
+  @override
+  String time_durationMinutesLabel(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String time_durationMinutesOnly(int minutes) {
+    return '${minutes}m';
+  }
+
+  @override
+  String time_durationHoursOnly(int hours) {
+    return '${hours}h';
+  }
+
+  @override
+  String time_durationHoursMinutes(int hours, int minutes) {
+    return '${hours}h ${minutes}m';
+  }
+
+  @override
+  String get time_weekdayMon => 'Mo';
+
+  @override
+  String get time_weekdayTue => 'Tu';
+
+  @override
+  String get time_weekdayWed => 'We';
+
+  @override
+  String get time_weekdayThu => 'Th';
+
+  @override
+  String get time_weekdayFri => 'Fr';
+
+  @override
+  String get time_weekdaySat => 'Sa';
+
+  @override
+  String get time_weekdaySun => 'Su';
+
+  @override
+  String get time_activityWork => 'Work';
+
+  @override
+  String get time_activityHousework => 'Housework';
+
+  @override
+  String get time_activityCommute => 'Travel';
+
+  @override
+  String get time_activityEntertainment => 'Entertainment';
+
+  @override
+  String get time_activityExercise => 'Exercise';
+
+  @override
+  String get time_activitySelfDevelopment => 'Self-development';
+
+  @override
+  String get time_activityRest => 'Rest';
+
+  @override
+  String get time_activityHygiene => 'Hygiene';
+
+  @override
+  String get time_activityMeal => 'Meal';
+
+  @override
+  String get time_activityMeeting => 'Meeting';
+
+  @override
+  String get time_activityCommunication => 'Communication';
+
+  @override
+  String get time_activityOther => 'Other';
+
+  @override
+  String get time_subtypePaid => 'Paid';
+
+  @override
+  String get time_subtypeUnpaid => 'Unpaid';
+
+  @override
+  String get time_subtypeEntertainmentActive => 'Active entertainment';
+
+  @override
+  String get time_subtypeEntertainmentPassive => 'Passive entertainment';
+
+  @override
+  String get time_subtypeWalk => 'Walk';
+
+  @override
+  String get time_subtypeRunning => 'Running';
+
+  @override
+  String get time_subtypeGym => 'Gym';
+
+  @override
+  String get time_subtypeBooks => 'Reading books';
+
+  @override
+  String get time_subtypeStudy => 'Study';
+
+  @override
+  String get time_subtypeAi => 'AI consultation';
+
+  @override
+  String get time_subtypeRestActive => 'Active rest';
+
+  @override
+  String get time_subtypeRestPassive => 'Passive rest';
+
+  @override
+  String get time_subtypeGeneral => 'General';
+
+  @override
+  String get time_subtypeToilet => 'Toilet';
+
+  @override
+  String get time_subtypeBreakfast => 'Breakfast';
+
+  @override
+  String get time_subtypeLunch => 'Lunch';
+
+  @override
+  String get time_subtypeDinner => 'Dinner';
+
+  @override
+  String get time_subtypeSnack => 'Snack';
+
+  @override
+  String get time_subtypeShopping => 'Shopping';
+
+  @override
+  String get time_scopeWorkPaid => 'Paid work';
+
+  @override
+  String get time_scopeWorkUnpaid => 'Unpaid work';
+
+  @override
+  String get time_scopeHousework => 'Housework';
+
+  @override
+  String get time_scopeOther => 'Other';
+
+  @override
+  String get time_pickerTypeCaption => 'Type';
+
+  @override
+  String time_pickerSubtypeHeading(String type) {
+    return 'Refine: $type';
+  }
+
+  @override
+  String get time_pickerSubtypeHint => 'Choose one';
+
+  @override
+  String get time_customNameHint => 'What did you do?';
+
+  @override
+  String get time_statsByCustomName => 'Other by name';
+
+  @override
+  String get time_taskProjectCategoryCaption => 'Category';
+
+  @override
+  String get time_taskProjectEditCategory => 'Edit category';
+
+  @override
+  String time_taskProjectChipSemantics(String name, String category) {
+    return '$name, $category';
+  }
+
+  @override
+  String get time_timerPrefillTooltip => 'Pre-fill description';
+
+  @override
+  String get time_timerPhaseReady => 'READY';
+
+  @override
+  String get time_timerPhaseFocus => 'FOCUS';
+
+  @override
+  String get time_timerPhasePaused => 'PAUSED';
+
+  @override
+  String get time_timerPhaseTimeUp => 'TIME UP';
+
+  @override
+  String get time_timerPhaseLogging => 'LOGGING';
+
+  @override
+  String get time_timerResetTitle => 'Reset timer?';
+
+  @override
+  String get time_timerResetBody => 'Do you really want to reset the timer?';
+
+  @override
+  String get time_timerTimeUpTitle => 'Time is up!';
+
+  @override
+  String get time_ringingDismiss => 'Dismiss';
+
+  @override
+  String get time_descriptionClearFormTooltip => 'Clear form';
+
+  @override
+  String get time_descriptionTitle => 'What did you accomplish?';
+
+  @override
+  String get time_prefillSaveDraft => 'Save Draft';
+
+  @override
+  String get time_editSheetTitle => 'Edit description';
+
+  @override
+  String get time_manualEntryTitle => 'Add entry';
+
+  @override
+  String get time_historyTitle => 'History';
+
+  @override
+  String get time_historyLoadError => 'Failed to load entries.';
+
+  @override
+  String time_historyEntryCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count entries',
+      one: '$count entry',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String time_historyTotalLabel(String duration) {
+    return 'Total: $duration';
+  }
+
+  @override
+  String get time_historyDeleteEntryTitle => 'Delete entry?';
+
+  @override
+  String get time_historyDeleteEntryBody => 'This action cannot be undone.';
+
+  @override
+  String get time_historyDbUnavailableShort => 'Database unavailable.';
+
+  @override
+  String get time_historyDeleteEntryFailed => 'Failed to delete entry.';
+
+  @override
+  String get time_historyEmptyTitle => 'No entries for this day';
+
+  @override
+  String get time_historyEmptySubtitle => 'Start a timer to log your work';
+
+  @override
+  String get time_dayToday => 'Today';
+
+  @override
+  String get time_dayYesterday => 'Yesterday';
+
+  @override
+  String get time_tasksTitle => 'Tasks';
+
+  @override
+  String get time_taskCreateFailed => 'Failed to create task.';
+
+  @override
+  String get time_taskReorderFailed => 'Failed to move task.';
+
+  @override
+  String get time_tasksShowArchived => 'Show archived tasks';
+
+  @override
+  String get time_tasksLoadFailed => 'Failed to load tasks.';
+
+  @override
+  String get time_tasksEmptyTitle => 'No tasks yet';
+
+  @override
+  String get time_tasksEmptySubtitle => 'Tap + to create your first task';
+
+  @override
+  String get time_tasksArchivedHeader => 'Archived';
+
+  @override
+  String get time_taskToggleFailed => 'Failed to update task status.';
+
+  @override
+  String get time_taskUnarchiveFailed => 'Failed to restore task.';
+
+  @override
+  String get time_taskSaveFailed => 'Failed to save task.';
+
+  @override
+  String get time_taskDeleteTitle => 'Delete task?';
+
+  @override
+  String time_taskDeleteBody(String title) {
+    return '\"$title\" will be permanently removed.';
+  }
+
+  @override
+  String get time_taskDeleteFailed => 'Failed to delete task.';
+
+  @override
+  String get time_taskEditTitle => 'Edit task';
+
+  @override
+  String get time_taskNewTitle => 'New task';
+
+  @override
+  String get time_taskTitleHint => 'Task title';
+
+  @override
+  String get time_taskDescriptionHint => 'Description (optional)';
+
+  @override
+  String get time_taskDeadlineHint => 'Deadline (optional)';
+
+  @override
+  String get time_projectCreateFailed => 'Failed to create project.';
+
+  @override
+  String time_projectDeleteTitle(String name) {
+    return 'Delete project \"$name\"?';
+  }
+
+  @override
+  String get time_projectDeleteBody =>
+      'All tasks in this project will be permanently deleted.';
+
+  @override
+  String get time_projectDeleteFailed => 'Failed to delete project.';
+
+  @override
+  String get time_projectCreateTitle => 'New project';
+
+  @override
+  String get time_statsTitle => 'Statistics';
+
+  @override
+  String get time_statsPeriodDay => 'Day';
+
+  @override
+  String get time_statsPeriodWeek => 'Week';
+
+  @override
+  String get time_statsLoadFailed => 'Failed to load statistics.';
+
+  @override
+  String get time_statsThisWeek => 'This week';
+
+  @override
+  String get time_statsNoEntriesPeriod => 'No entries for this period';
+
+  @override
+  String get time_statsByActivityType => 'By activity type';
+
+  @override
+  String get time_statsByProject => 'By project';
+
+  @override
+  String get time_statsTotalTracked => 'Total tracked';
+
+  @override
+  String get time_statsUntrackedTime => 'Untracked time';
+
+  @override
+  String get time_navStats => 'Stats';
+
+  @override
+  String get time_navTimer => 'Timer';
+
+  @override
+  String get time_settingsTitle => 'Settings';
+
+  @override
+  String get time_settingsDailyReminderSection => 'Daily reminder';
+
+  @override
+  String get time_settingsReminderToggleLabel => 'Remind me to start the timer';
+
+  @override
+  String get time_settingsReminderTimeLabel => 'Reminder time';
+
+  @override
+  String get time_settingsRecurringRemindersLabel => 'Recurring reminders';
+
+  @override
+  String get time_settingsDataSection => 'Data';
+
+  @override
+  String get time_settingsExportButton => 'Export data';
+
+  @override
+  String get time_settingsExportHint =>
+      'Saves all data into one file you can move elsewhere.';
+
+  @override
+  String get time_settingsExportFailed =>
+      'The export failed. Please try again.';
+
+  @override
+  String get time_settingsTestingSection => 'Testing';
+
+  @override
+  String get time_settingsTestNotificationButton =>
+      'Test notification (in 5 s)';
+
+  @override
+  String get time_settingsShowModalDebugButton => 'Show modal directly (debug)';
+
+  @override
+  String get time_settingsNotificationsDisabled =>
+      'Notifications are disabled. Enable them in your phone\'s settings.';
+
+  @override
+  String get time_settingsNoRemindersYet =>
+      'First create at least one recurring reminder.';
+
+  @override
+  String time_settingsTestNotificationTitle(String name) {
+    return '🧪 Test: $name';
+  }
+
+  @override
+  String get time_settingsTestNotificationScheduled =>
+      'Test notification will arrive in 5 seconds.';
+
+  @override
+  String get time_settingsNoReminder => 'No reminder.';
+
+  @override
+  String get time_settingsLanguageSection => 'Language';
+
+  @override
+  String get time_reminderDeleteTitle => 'Delete reminder?';
+
+  @override
+  String time_reminderDeleteBody(String name) {
+    return 'Reminder \"$name\" will be permanently deleted.';
+  }
+
+  @override
+  String get time_reminderDeleteFailed => 'Failed to delete reminder.';
+
+  @override
+  String get time_remindersEmptyTitle => 'You don\'t have any reminders yet';
+
+  @override
+  String get time_remindersEmptySubtitle =>
+      'Tap + to create your first reminder';
+
+  @override
+  String get time_remindersLoadFailed => 'Failed to load reminders.';
+
+  @override
+  String get time_reminderSnooze => 'Snooze';
+
+  @override
+  String get time_reminderDone => 'Done';
+
+  @override
+  String get time_reminderCompletionUpdateFailed =>
+      'Failed to update completion status.';
+
+  @override
+  String get time_reminderActiveToggleFailed => 'Failed to update reminder.';
+
+  @override
+  String time_reminderCapacityError(int available, int required) {
+    return 'Not enough notification slots: $available available, $required needed.';
+  }
+
+  @override
+  String get time_reminderDiscardTitle => 'Discard changes?';
+
+  @override
+  String get time_reminderDiscardBody => 'Unsaved changes will be lost.';
+
+  @override
+  String get time_reminderDiscardConfirm => 'Discard';
+
+  @override
+  String get time_reminderEditTitle => 'Edit reminder';
+
+  @override
+  String get time_reminderNewTitle => 'New reminder';
+
+  @override
+  String get time_reminderNameHint => 'Name';
+
+  @override
+  String get time_reminderFromLabel => 'From';
+
+  @override
+  String get time_reminderToLabel => 'To';
+
+  @override
+  String get time_reminderOvernightNote =>
+      'Window spans past midnight into the next day.';
+
+  @override
+  String get time_reminderIntervalLabel => 'Repeat interval';
+
+  @override
+  String get time_reminderActiveDaysLabel => 'Active days';
+
+  @override
+  String get time_reminderActiveLabel => 'Active';
+
+  @override
+  String get time_reminderEditBarrierLabel => 'Reminder edit dialog';
+
+  @override
+  String get time_reminderDailyNotificationBody => 'Time to start your timer!';
+
+  @override
+  String get time_recurringReminderDefaultNotificationBody => 'Tap to open';
 }

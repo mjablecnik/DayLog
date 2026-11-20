@@ -6,5 +6,9 @@ Things to clean up before the first release (delete lines as they are done).
 - `settings/ui_providers.dart` is imported by features: decide whether it belongs in `core`.
 - `AppSettings` and models sit in `quests/data/models.dart` but belong to settings.
 - Test files not moved by the path rule: `test/services/*`, `test/data/*`, `test/ui/*` still use the old layout; mirror them under the feature folders.
-- `PlaceholderScreen` and the `shell_placeholderBody` strings are temporary; delete them when the TimeLog port lands.
 - `test/ui/*` (widgets, sheets, screens) still sit in the old layout; mirror them under `test/<feature>/ui` and update `catalogue_test.dart`.
+- `lib/time_tracking/` keeps TimeLog's literal paddings, font sizes, durations and `DateTime.now()` calls: the token and clock guard tests skip it. Move them to `Space`/`Metrics` tokens and the `Clock`, then drop the exemption.
+- TimeLog screens read `AppThemeData` (an adapter over the palette); move them to `context.palette` and delete the adapter.
+- Time tracking tests still sit flat under `test/time_tracking/` (a copy of TimeLog's layout): mirror `lib/time_tracking/`.
+- `lib/time_tracking/data/time_tracking_queries.dart` is a long extension: split reminders, completions, tasks and entries.
+- Tasks (service, providers, tables) have no screen: decide whether to keep them (project suggestions read them).

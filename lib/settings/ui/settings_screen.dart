@@ -13,6 +13,7 @@ import '../../theme/quest_theme.dart';
 import '../../theme/tokens.dart';
 import '../../ui_kit/common/app_icon.dart';
 import '../../ui_kit/common/menu_button.dart';
+import '../../ui_kit/common/settings_group.dart';
 import '../../ui_kit/common/app_segmented.dart';
 import '../../ui_kit/common/snackbar_host.dart';
 import 'export_row.dart';
@@ -26,10 +27,19 @@ import 'shortcut_guide.dart';
 /// a change of language or theme repaints this screen in place: the list keeps
 /// its scroll position and nothing falls back to a loading state.
 class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({super.key, required this.shortcutTargets});
+  const SettingsScreen({
+    super.key,
+    required this.shortcutTargets,
+    this.moduleGroups = const <Widget>[],
+  });
 
   /// The pages the Home Screen shortcut guide offers.
   final List<ShortcutTarget> shortcutTargets;
+
+  /// Groups of the other features (for example the reminders), shown between
+  /// the shortcut guide and the data group. The shell supplies them, so this
+  /// screen does not know the features.
+  final List<Widget> moduleGroups;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,17 +72,17 @@ class SettingsScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: Space.s24),
-            _Group(
+            SettingsGroup(
               label: l.settings_groupProfile,
               child: const _HeroNameField(),
             ),
             const SizedBox(height: Space.s24),
-            _Group(
+            SettingsGroup(
               label: l.settings_groupLanguage,
               child: const _LanguageControl(),
             ),
             const SizedBox(height: Space.s24),
-            _Group(
+            SettingsGroup(
               label: l.settings_groupAppearance,
               child: const _ThemeControl(),
             ),
@@ -80,45 +90,21 @@ class SettingsScreen extends ConsumerWidget {
             // This one draws its own group header.
             const RulesSection(),
             const SizedBox(height: Space.s24),
-            _Group(
+            SettingsGroup(
               label: l.settings_shortcutTitle,
               child: ShortcutGuide(targets: shortcutTargets),
             ),
             const SizedBox(height: Space.s24),
-            _Group(label: l.settings_groupData, child: const ExportRow()),
+            for (final Widget group in moduleGroups) ...<Widget>[
+              group,
+              const SizedBox(height: Space.s24),
+            ],
+            SettingsGroup(label: l.settings_groupData, child: const ExportRow()),
             const SizedBox(height: Space.s24),
-            _Group(label: l.settings_groupAbout, child: const _AboutRow()),
+            SettingsGroup(label: l.settings_groupAbout, child: const _AboutRow()),
           ],
         ),
       ),
-    );
-  }
-}
-
-/// A caps label above its content.
-class _Group extends StatelessWidget {
-  const _Group({required this.label, required this.child});
-
-  final String label;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Semantics(
-          header: true,
-          child: Text(
-            label.toUpperCase(),
-            style: context.bodyText.labelSmall!.copyWith(
-              color: context.palette.textFaint,
-            ),
-          ),
-        ),
-        const SizedBox(height: Space.s8),
-        child,
-      ],
     );
   }
 }

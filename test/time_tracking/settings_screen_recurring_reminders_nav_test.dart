@@ -1,15 +1,14 @@
-import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:zafling/database/app_database.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/time_tracking/ui/screens/reminder_settings_screen.dart';
 import 'package:zafling/time_tracking/ui/screens/time_settings_groups.dart';
 import '../helpers/time_theme.dart';
 import 'package:zafling/database/providers.dart';
+import '../helpers/test_database.dart';
 
 void main() {
   setUp(() {
@@ -19,7 +18,7 @@ void main() {
   testWidgets(
     'tapping "Opakované připomínky" in Settings navigates to ReminderSettingsScreen',
     (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final db = createTestDatabase();
       addTearDown(db.close);
 
       final container = ProviderContainer(

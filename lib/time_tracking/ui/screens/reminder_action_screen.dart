@@ -23,7 +23,11 @@ class _ReminderActionScreenState extends ConsumerState<ReminderActionScreen> {
   @override
   void initState() {
     super.initState();
-    _load();
+    // After the first frame: loading changes a provider, which Riverpod does
+    // not allow while the tree is building.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _load();
+    });
   }
 
   Future<void> _load() async {

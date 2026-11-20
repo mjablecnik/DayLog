@@ -1,4 +1,3 @@
-import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,6 +9,7 @@ import 'package:zafling/time_tracking/providers/database_provider.dart';
 import 'package:zafling/time_tracking/ui/widgets/sheets/edit_sheet.dart';
 import '../helpers/time_theme.dart';
 import 'package:zafling/database/providers.dart';
+import '../helpers/test_database.dart';
 
 Future<void> _setTimeViaPicker(
   WidgetTester tester, {
@@ -52,7 +52,7 @@ void main() {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
 
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final db = createTestDatabase();
       addTearDown(db.close);
 
       final originalStart = DateTime(2026, 1, 15, 9, 0);

@@ -1,10 +1,9 @@
 import 'dart:math';
 
-import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:zafling/database/app_database.dart';
 import 'package:zafling/time_tracking/services/task_service.dart';
+import '../helpers/test_database.dart';
 
 // Feature: task-management, Property 7: Task list filtering and ordering
 //
@@ -23,7 +22,7 @@ void main() {
       final random = Random(20260820);
 
       for (var iteration = 0; iteration < 100; iteration++) {
-        final db = AppDatabase.forTesting(NativeDatabase.memory());
+        final db = createTestDatabase();
         final service = TaskService(db);
 
         try {

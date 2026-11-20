@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:drift/drift.dart' show Value;
-import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +12,7 @@ import 'package:zafling/time_tracking/providers/database_provider.dart';
 import 'package:zafling/time_tracking/providers/task_providers.dart';
 import 'package:zafling/time_tracking/services/project_service.dart';
 import 'package:zafling/database/providers.dart';
+import '../../helpers/test_database.dart';
 
 // Feature: activity-subtypes
 
@@ -148,7 +148,7 @@ void main() {
     late ProviderContainer container;
 
     setUp(() {
-      db = AppDatabase.forTesting(NativeDatabase.memory());
+      db = createTestDatabase();
       container = ProviderContainer(
         overrides: [databaseProvider.overrideWithValue(db)],
       );
@@ -238,7 +238,7 @@ void main() {
 
     for (var iteration = 0; iteration < 100; iteration++) {
       SharedPreferences.setMockInitialValues({});
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final db = createTestDatabase();
       final container = ProviderContainer(
         overrides: [databaseProvider.overrideWithValue(db)],
       );

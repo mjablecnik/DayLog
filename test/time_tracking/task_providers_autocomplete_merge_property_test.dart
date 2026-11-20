@@ -1,15 +1,14 @@
 import 'dart:math';
 
-import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:zafling/time_tracking/domain/activity_types.dart';
-import 'package:zafling/database/app_database.dart';
 import 'package:zafling/time_tracking/providers/task_providers.dart';
 import 'package:zafling/time_tracking/services/project_service.dart';
 import 'package:zafling/database/providers.dart';
+import '../helpers/test_database.dart';
 
 // Feature: task-management, Property 15: Merged autocomplete list — unique names, task projects first
 //
@@ -46,7 +45,7 @@ void main() {
 
       for (var iteration = 0; iteration < 100; iteration++) {
         SharedPreferences.setMockInitialValues({});
-        final db = AppDatabase.forTesting(NativeDatabase.memory());
+        final db = createTestDatabase();
         final container = ProviderContainer(
           overrides: [databaseProvider.overrideWithValue(db)],
         );

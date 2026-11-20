@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:drift/drift.dart' show Value;
-import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +20,7 @@ import 'package:zafling/time_tracking/ui/widgets/sheets/edit_sheet.dart';
 import 'package:zafling/time_tracking/ui/widgets/sheets/manual_entry_sheet.dart';
 import '../../helpers/time_theme.dart';
 import 'package:zafling/database/providers.dart';
+import '../../helpers/test_database.dart';
 
 // Feature: activity-subtypes
 
@@ -36,7 +36,7 @@ Future<ProviderContainer> _pump(
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
 
-  final db = database ?? AppDatabase.forTesting(NativeDatabase.memory());
+  final db = database ?? createTestDatabase();
   addTearDown(db.close);
   final container = ProviderContainer(
     overrides: [databaseProvider.overrideWithValue(db)],
@@ -312,7 +312,7 @@ void main() {
     }
 
     testWidgets('Práce paid with a project', (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final db = createTestDatabase();
       await openAndSave(tester, db, fill: () async {
         await tester.enterText(find.byType(TextField).first, 'Client');
         await tester.pump();
@@ -325,7 +325,7 @@ void main() {
     });
 
     testWidgets('Cvičení walk without a project', (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final db = createTestDatabase();
       await openAndSave(tester, db, fill: () async {
         await tester.enterText(find.byType(TextField).first, 'discarded project');
         await tester.tap(find.byKey(const ValueKey('type-chip-Cvičení')));
@@ -338,7 +338,7 @@ void main() {
     });
 
     testWidgets('Ostatní needs a name before it can be submitted', (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final db = createTestDatabase();
       await _pump(
         tester,
         ManualEntrySheet(theme: testTimeTheme, selectedDay: DateTime(2026, 1, 15)),
@@ -385,7 +385,7 @@ void main() {
 
     testWidgets('a legacy entry without a subtype gets the first one preselected and saves it',
         (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final db = createTestDatabase();
       final entry = await insert(db, type: 'Zábava');
       await _pump(tester, EditSheet(theme: testTimeTheme, entry: entry),
           database: db, scrollable: false);
@@ -406,7 +406,7 @@ void main() {
 
     testWidgets('changing the type clears the project and stores the new subtype and name',
         (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final db = createTestDatabase();
       final entry = await insert(db, type: 'Práce', subtype: 'unpaid', project: 'App');
       await _pump(tester, EditSheet(theme: testTimeTheme, entry: entry),
           database: db, scrollable: false);
@@ -435,7 +435,7 @@ void main() {
 
     testWidgets('editing a subtype entry saves its project name in the matching category',
         (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final db = createTestDatabase();
       final entry = await insert(db, type: 'Práce', subtype: 'unpaid', project: 'App');
       await _pump(tester, EditSheet(theme: testTimeTheme, entry: entry),
           database: db, scrollable: false);
@@ -482,7 +482,7 @@ void main() {
 
     testWidgets('Ostatní cannot be submitted without a name, but Skip still saves',
         (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final db = createTestDatabase();
       await _pump(tester, sheet(), database: db, scrollable: false);
 
       await tester.tap(find.byKey(const ValueKey('type-chip-Ostatní')));
@@ -504,7 +504,7 @@ void main() {
 
     testWidgets('submitting stores the subtype, remembers the name and restores it next time',
         (tester) async {
-      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final db = createTestDatabase();
       await _pump(tester, sheet(), database: db, scrollable: false);
 
       await tester.tap(find.byKey(const ValueKey('type-chip-Seberozvoj')));

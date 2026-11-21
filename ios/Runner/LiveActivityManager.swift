@@ -35,6 +35,12 @@ class LiveActivityManager {
     ) -> Bool {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return false }
 
+        // An activity left over from a run that was killed would stay on the lock
+        // screen beside the new one, so end every old one first.
+        for old in Activity<DayLogAttributes>.activities {
+            Task { await old.end(nil, dismissalPolicy: .immediate) }
+        }
+
         let attributes = DayLogAttributes(
             totalSeconds: totalSeconds,
             completedText: completedText,
@@ -106,10 +112,10 @@ class LiveActivityManager {
     }
 
     func endLiveActivity() {
-        guard let activity = currentActivity else { return }
         currentActivity = nil
-        Task {
-            await activity.end(nil, dismissalPolicy: .immediate)
+        // Every activity of the app, not only the one this object remembers.
+        for activity in Activity<DayLogAttributes>.activities {
+            Task { await activity.end(nil, dismissalPolicy: .immediate) }
         }
     }
 

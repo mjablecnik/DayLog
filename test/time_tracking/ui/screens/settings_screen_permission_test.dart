@@ -7,7 +7,7 @@ import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/time_tracking/providers/reminder_provider.dart';
 import 'package:zafling/time_tracking/services/reminder_service.dart';
 import 'package:zafling/time_tracking/ui/screens/time_settings_groups.dart';
-import '../helpers/time_theme.dart';
+import '../../../helpers/time_theme.dart';
 
 class _DeniedReminderService extends ReminderService {
   _DeniedReminderService() : super(loadLocalizations: () async => lookupAppLocalizations(const Locale('en')));

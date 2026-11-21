@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:zafling/time_tracking/services/task_service.dart';
-import '../helpers/test_database.dart';
+import '../../../helpers/test_database.dart';
 
 // Feature: task-management, Property 6: Task update persistence
 //

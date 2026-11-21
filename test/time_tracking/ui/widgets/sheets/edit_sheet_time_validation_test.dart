@@ -7,9 +7,9 @@ import 'package:zafling/database/app_database.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/time_tracking/providers/database_provider.dart';
 import 'package:zafling/time_tracking/ui/widgets/sheets/edit_sheet.dart';
-import '../helpers/time_theme.dart';
+import '../../../../helpers/time_theme.dart';
 import 'package:zafling/database/providers.dart';
-import '../helpers/test_database.dart';
+import '../../../../helpers/test_database.dart';
 
 Future<void> _setTimeViaPicker(
   WidgetTester tester, {

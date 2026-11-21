@@ -6,14 +6,15 @@ import 'package:zafling/database/app_database.dart';
 import 'package:zafling/database/providers.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/time_tracking/data/time_tracking_queries.dart';
+import 'package:zafling/time_tracking/domain/config.dart';
 import 'package:zafling/time_tracking/ui/screens/history_screen.dart';
 import 'package:zafling/time_tracking/ui/screens/reminder_action_screen.dart';
 import 'package:zafling/time_tracking/ui/screens/reminder_settings_screen.dart';
 import 'package:zafling/time_tracking/ui/screens/statistics_screen.dart';
 import 'package:zafling/time_tracking/ui/screens/timer_screen.dart';
 
-import '../../helpers/test_database.dart';
-import '../../helpers/time_theme.dart';
+import '../../../helpers/test_database.dart';
+import '../../../helpers/time_theme.dart';
 
 /// Smoke tests of the time tracking pages on an in-memory database: each page
 /// opens, shows its title and its data, and closes without a pending timer.
@@ -56,8 +57,11 @@ void main() {
   }
 
   Future<void> seedEntry(AppDatabase db) async {
+    // The pages show the logical day, which starts at 03:00: before that hour the
+    // current day is still yesterday.
     final DateTime now = DateTime.now();
-    final DateTime start = DateTime(now.year, now.month, now.day, 10);
+    final DateTime logicalToday = now.hour < dayStartHour ? now.subtract(const Duration(days: 1)) : now;
+    final DateTime start = DateTime(logicalToday.year, logicalToday.month, logicalToday.day, 10);
     await db
         .into(db.timeEntries)
         .insert(

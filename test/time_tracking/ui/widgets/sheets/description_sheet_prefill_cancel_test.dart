@@ -9,7 +9,7 @@ import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/time_tracking/providers/timer_provider.dart';
 import 'package:zafling/time_tracking/services/timer_service.dart';
 import 'package:zafling/time_tracking/ui/screens/timer_screen.dart';
-import '../helpers/time_theme.dart';
+import '../../../../helpers/time_theme.dart';
 
 void main() {
   final binding = TestWidgetsFlutterBinding.ensureInitialized();

@@ -8,7 +8,7 @@ import 'package:zafling/time_tracking/domain/activity_types.dart';
 import 'package:zafling/time_tracking/providers/task_providers.dart';
 import 'package:zafling/time_tracking/services/project_service.dart';
 import 'package:zafling/database/providers.dart';
-import '../helpers/test_database.dart';
+import '../../helpers/test_database.dart';
 
 // Feature: task-management, Property 15: Merged autocomplete list — unique names, task projects first
 //

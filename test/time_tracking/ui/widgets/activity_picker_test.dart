@@ -18,9 +18,9 @@ import 'package:zafling/time_tracking/ui/widgets/activity_picker/activity_picker
 import 'package:zafling/time_tracking/ui/widgets/sheets/description_sheet.dart';
 import 'package:zafling/time_tracking/ui/widgets/sheets/edit_sheet.dart';
 import 'package:zafling/time_tracking/ui/widgets/sheets/manual_entry_sheet.dart';
-import '../../helpers/time_theme.dart';
+import '../../../helpers/time_theme.dart';
 import 'package:zafling/database/providers.dart';
-import '../../helpers/test_database.dart';
+import '../../../helpers/test_database.dart';
 
 // Feature: activity-subtypes
 

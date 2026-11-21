@@ -110,40 +110,6 @@ class _TimerScreenState extends ConsumerState<TimerScreen> {
     });
   }
 
-  void _showPrefillSheet(BuildContext context, AppThemeData theme, TimerState timerState) {
-    if (_sheetOpen) return;
-    _sheetOpen = true;
-
-    final notifier = ref.read(timerProvider.notifier);
-    if (timerState.status == TimerStatus.running) {
-      notifier.pause();
-    }
-
-    showModalBottomSheet<void>(
-      context: context,
-      isDismissible: false,
-      enableDrag: false,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => DescriptionSheet(
-        theme: theme,
-        sessionStart: timerState.sessionStart ?? DateTime.now(),
-        endedAt: DateTime.now(),
-        initialDescription: timerState.prefillDescription,
-        initialActivityType: timerState.prefillActivityType,
-        initialProject: timerState.prefillProject,
-        initialSubtype: timerState.prefillSubtype,
-        initialCustomName: timerState.prefillCustomName,
-        isPrefillMode: true,
-      ),
-    ).whenComplete(() {
-      _sheetOpen = false;
-      if (ref.read(timerProvider).status == TimerStatus.paused) {
-        notifier.resume();
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = AppThemeData.of(context);
@@ -261,21 +227,6 @@ class _TimerScreenState extends ConsumerState<TimerScreen> {
 
                 // Controls
                 TimerControls(theme: theme, adjustedMinutes: _adjustedMinutes),
-
-                if (status == TimerStatus.running || status == TimerStatus.paused) ...[
-                  const SizedBox(height: 16),
-                  Tooltip(
-                    message: l10n.time_timerPrefillTooltip,
-                    child: TextButton.icon(
-                    onPressed: () => _showPrefillSheet(context, theme, timerState),
-                    icon: Icon(Icons.edit_note_rounded, color: theme.dim),
-                    label: Text(
-                      l10n.time_timerPrefillTooltip,
-                      style: TextStyle(color: theme.dim, fontSize: 13),
-                    ),
-                    ),
-                  ),
-                ],
 
                 const Spacer(),
               ],

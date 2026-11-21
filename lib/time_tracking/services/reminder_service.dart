@@ -1,24 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
-import '../providers/app_settings_bridge.dart' show LocalizationsLoader;
 import 'recurring_reminder_service.dart' show recurringReminderBackgroundHandler;
 
-/// Schedules/cancels the daily "start your timer" reminder notification via
-/// `flutter_local_notifications`. Separate from [NotificationService], which
-/// handles one-shot timer-completion alerts through a native method channel.
+/// Owns the `flutter_local_notifications` plugin: initialization, the
+/// notification permission and the launch payload. Separate from
+/// [NotificationService], which handles one-shot timer-completion alerts
+/// through a native method channel.
 class ReminderService {
-  ReminderService({required this._loadLocalizations});
-
-  final LocalizationsLoader _loadLocalizations;
-
   static const int notificationId = 1001;
-  static const String channelId = 'daily_reminder';
-  static const String channelName = 'Daily Reminder';
-  static const String startTimerPayload = 'start_timer';
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
@@ -87,31 +79,10 @@ class ReminderService {
     return granted ?? false;
   }
 
-  /// Schedule (or reschedule) a daily repeating notification at [time].
-  Future<void> scheduleDailyReminder(TimeOfDay time) async {
-    final l10n = await _loadLocalizations();
-    await _plugin.zonedSchedule(
-      id: notificationId,
-      scheduledDate: _nextInstanceOf(time),
-      title: l10n.app_name,
-      body: l10n.time_reminderDailyNotificationBody,
-      payload: startTimerPayload,
-      notificationDetails: const NotificationDetails(
-        android: AndroidNotificationDetails(
-          channelId,
-          channelName,
-          importance: Importance.high,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
-  }
-
-  /// Cancel the scheduled daily reminder, if any.
-  Future<void> cancelReminder() async {
+  /// Cancels the daily reminder that earlier versions could schedule. The
+  /// feature is gone, but a notification scheduled by an older run would keep
+  /// firing.
+  Future<void> cancelLegacyDailyReminder() async {
     await _plugin.cancel(id: notificationId);
   }
 
@@ -131,21 +102,5 @@ class ReminderService {
       // Not supported on this platform.
     }
     return null;
-  }
-
-  tz.TZDateTime _nextInstanceOf(TimeOfDay time) {
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduled = tz.TZDateTime(
-      tz.local,
-      now.year,
-      now.month,
-      now.day,
-      time.hour,
-      time.minute,
-    );
-    if (scheduled.isBefore(now)) {
-      scheduled = scheduled.add(const Duration(days: 1));
-    }
-    return scheduled;
   }
 }

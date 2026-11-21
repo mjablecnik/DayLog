@@ -6,8 +6,6 @@ import 'providers/reminder_action_provider.dart';
 import 'providers/reminder_provider.dart';
 import 'providers/timer_provider.dart';
 import 'services/recurring_reminder_service.dart';
-import 'services/reminder_service.dart';
-import 'services/timer_service.dart';
 
 /// SharedPreferences key that carries the id of a tapped reminder across a
 /// suspension: the Dart callback may fire while the widget tree is suspended on
@@ -27,10 +25,10 @@ class TimeTrackingBootstrap {
   final ProviderContainer _container;
 
   /// Brings the feature in line with preferences an import has just written:
-  /// the reminder settings are read again and the notifications re-scheduled.
+  /// the daily reminder an old export may bring back is removed and the
+  /// recurring reminders are re-scheduled.
   Future<void> refreshAfterImport() async {
-    _container.invalidate(reminderProvider);
-    await rescheduleReminderIfEnabled(_container.read(reminderServiceProvider));
+    await removeLegacyDailyReminder(_container.read(reminderServiceProvider));
     await _container.read(recurringReminderServiceProvider).rescheduleAll();
   }
 
@@ -41,19 +39,8 @@ class TimeTrackingBootstrap {
 
     final reminderService = _container.read(reminderServiceProvider);
 
-    void autoStartIfIdle() {
-      final state = _container.read(timerProvider);
-      if (state.status == TimerStatus.idle) {
-        _container.read(timerProvider.notifier).start();
-      }
-    }
-
     await reminderService.initialize(
       onNotificationTap: (payload) {
-        if (payload == ReminderService.startTimerPayload) {
-          autoStartIfIdle();
-          return;
-        }
         final reminderId = parseReminderIdFromPayload(payload);
         if (reminderId != null) {
           // Persisted so the value survives a suspended Dart isolate; the host
@@ -76,24 +63,20 @@ class TimeTrackingBootstrap {
     }
 
     final launchPayload = await reminderService.getLaunchPayload();
-    if (launchPayload == ReminderService.startTimerPayload) {
-      await _container.read(timerProvider.notifier).restored;
-      autoStartIfIdle();
-    } else {
-      final launchReminderId = parseReminderIdFromPayload(launchPayload);
-      if (launchReminderId != null) {
-        // Only once: iOS returns the same launch details on every call until
-        // the app is relaunched with a different intent.
-        final lastHandled = prefs.getInt(_kHandledLaunchReminderIdKey);
-        if (lastHandled != launchReminderId) {
-          await prefs.setInt(_kHandledLaunchReminderIdKey, launchReminderId);
-          _container.read(pendingReminderActionProvider.notifier).state = launchReminderId;
-        }
+    final launchReminderId = parseReminderIdFromPayload(launchPayload);
+    if (launchReminderId != null) {
+      // Only once: iOS returns the same launch details on every call until
+      // the app is relaunched with a different intent.
+      final lastHandled = prefs.getInt(_kHandledLaunchReminderIdKey);
+      if (lastHandled != launchReminderId) {
+        await prefs.setInt(_kHandledLaunchReminderIdKey, launchReminderId);
+        _container.read(pendingReminderActionProvider.notifier).state = launchReminderId;
       }
     }
+  
 
     await settingsReady();
-    await rescheduleReminderIfEnabled(reminderService);
+    await removeLegacyDailyReminder(reminderService);
     await _container.read(recurringReminderServiceProvider).rescheduleAll();
   }
 }

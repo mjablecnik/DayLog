@@ -1,0 +1,728 @@
+<title>DayLog redesign</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: review sheet, round 2. Part A pairs (now / new) per screen; part B two navigation concepts, states + a clickable prototype each. */
+:root {
+  --bg: #F2F5F9; --surface: #FFFFFF; --fg: #15202B; --muted: #56636F; --line: #DCE4EE;
+  --accent: #2B7287; --accent-soft: rgba(43,114,135,.12); --warn: #B0632A; --good: #2F7D4F;
+  --font: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0B0F14; --surface: #141B24; --fg: #E6EAF2; --muted: #9AA6B4; --line: #253244; --accent: #78B4C4; --accent-soft: rgba(120,180,196,.16); --warn: #E59A62; --good: #7CC79A; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0B0F14; --surface: #141B24; --fg: #E6EAF2; --muted: #9AA6B4; --line: #253244; --accent: #78B4C4; --accent-soft: rgba(120,180,196,.16); --warn: #E59A62; --good: #7CC79A; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1340px; margin: 0 auto; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(30px, 4.4vw, 46px); font-weight: 800; letter-spacing: -.02em; }
+h2 { font-size: 28px; font-weight: 800; letter-spacing: -.015em; }
+h3 { font-size: 17px; font-weight: 700; }
+p { margin: 0; }
+.lead { font-size: 16.5px; color: var(--muted); max-width: 70ch; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+header.top { padding-block: 40px 24px; display: grid; gap: 14px; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding-inline: max(16px, env(safe-area-inset-left, 0px)); padding-block: 10px; }
+.bar .wrap { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.jump a { text-decoration: none; color: var(--fg); font-weight: 600; font-size: 14px; padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+.jump a:hover { border-color: var(--accent); }
+.seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; align-items: center; }
+.seg span { font-size: 13px; color: var(--muted); padding-inline: 8px 4px; }
+.seg button { font: inherit; font-size: 14px; font-weight: 600; border: 0; background: transparent; color: var(--muted); padding: 5px 12px; border-radius: 999px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px; }
+ul.l { margin: 0; padding-left: 18px; display: grid; gap: 7px; }
+ul.l li::marker { color: var(--accent); }
+ul.l.bad li::marker { color: var(--warn); }
+ul.l.good li::marker { color: var(--good); }
+.panel h3 small { font-weight: 500; color: var(--muted); font-size: 14px; }
+section.part { padding-block: 56px 8px; border-top: 1px solid var(--line); margin-top: 48px; scroll-margin-top: 70px; display: grid; gap: 24px; }
+.pairs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 620px), 1fr)); gap: 40px 28px; }
+.pair { display: grid; gap: 14px; min-width: 0; align-content: start; }
+.pair-h { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.pair-h h3 { font-size: 21px; }
+.phones { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 6px; }
+.ph { display: grid; gap: 8px; justify-items: start; flex: none; }
+.ph > span { font-size: 13px; font-weight: 700; color: var(--muted); }
+.pill { font-size: 11.5px; font-weight: 700; letter-spacing: .04em; padding: 3px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+.row { display: grid; grid-auto-flow: column; grid-auto-columns: 289px; gap: 22px; overflow-x: auto; padding-bottom: 12px; }
+.col { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.col > b { font-size: 15px; }
+.col > p { font-size: 13.5px; color: var(--muted); }
+.note { font-size: 13.5px; color: var(--muted); }
+.pf { width: 289px; height: 625px; border-radius: 30px; overflow: hidden; position: relative; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(10,20,30,.10); background: #000; flex: none; }
+.pf > img { width: 100%; height: 100%; display: block; }
+.pf > .scr { position: absolute; left: 0; top: 0; width: 390px; height: 844px; transform: scale(.741); transform-origin: 0 0; }
+#mocks[data-app="light"] img.dk, #mocks[data-app="dark"] img.lt { display: none; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+code { font-size: 13px; background: var(--accent-soft); padding: 1px 6px; border-radius: 6px; }
+.variant-h { display: grid; gap: 8px; }
+.variant-h .tag { justify-self: start; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; background: var(--fg); color: var(--bg); }
+.proto { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
+.proto-side { display: grid; gap: 10px; max-width: 46ch; align-content: start; min-width: 0; }
+.kbd { display: inline-block; font-size: 12.5px; font-weight: 700; padding: 1px 7px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); }
+
+/* =====================  APP MOCKUPS  ===================== */
+#mocks[data-app="light"] .scr {
+  --bg:#EDF1F6; --raised:#F8FAFD; --card:#FFFFFF; --line:rgba(21,32,43,.08); --line2:rgba(21,32,43,.13);
+  --tx:#15202B; --dim:rgba(21,32,43,.68); --faint:rgba(21,32,43,.46); --ac:#2B7287; --acs:rgba(43,114,135,.13);
+  --onac:#F4FAFC; --tone:rgba(21,32,43,.05); --sh:0 1px 2px rgba(21,32,43,.05),0 6px 18px rgba(21,32,43,.06);
+  --scrim:rgba(21,32,43,.45); --sheet:#F8FAFD;
+  --glow-ring:drop-shadow(0 0 5px rgba(43,114,135,.30)); --glow-btn:0 4px 16px rgba(43,114,135,.32);
+  --work:#8F1B21; --meet:#A766F1; --dance:#EE7AA8; --navi:rgba(21,32,43,.58);
+}
+#mocks[data-app="dark"] .scr {
+  --bg:#0F1319; --raised:#161D27; --card:#18202B; --line:rgba(230,234,242,.08); --line2:rgba(230,234,242,.14);
+  --tx:#E6EAF2; --dim:rgba(230,234,242,.68); --faint:rgba(230,234,242,.42); --ac:#78B4C4; --acs:rgba(120,180,196,.16);
+  --onac:#08131A; --tone:rgba(230,234,242,.06); --sh:none;
+  --scrim:rgba(7,10,16,.72); --sheet:#18202B;
+  --glow-ring:drop-shadow(0 0 9px rgba(120,180,196,.55)); --glow-btn:0 0 26px rgba(120,180,196,.45);
+  --work:#BC2D34; --meet:#B27CF0; --dance:#EE7AA8; --navi:rgba(230,234,242,.55);
+}
+.scr { background: var(--bg); color: var(--tx); font-family: var(--font); display: flex; flex-direction: column; overflow: hidden; font-size: 16px; line-height: 1.3; position: relative; }
+.scr * { box-sizing: border-box; }
+.scr svg.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.scr svg.i.f { fill: currentColor; stroke: none; }
+.scr .grow { flex: 1; }
+.scr .body { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+.tb { height: 64px; display: flex; align-items: center; gap: 6px; padding: 0 12px; flex: none; }
+.ib { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; color: var(--dim); }
+.ib.t { background: var(--tone); }
+.ib[data-act] { cursor: pointer; }
+.ttl { font-weight: 750; letter-spacing: -.015em; font-size: 22px; }
+.ttl .yr { font-weight: 500; color: var(--dim); }
+.cap { font-size: 12px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--faint); }
+.tab-num { font-variant-numeric: tabular-nums; }
+
+/* bottom bar: flat, round-1 "small" style */
+.nav { height: 84px; flex: none; display: flex; align-items: stretch; background: var(--raised); border-top: 1px solid var(--line); padding: 0 6px 18px; }
+.nav a { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 12px; font-weight: 500; color: var(--navi); cursor: pointer; }
+.nav a.on { color: var(--ac); font-weight: 700; }
+.nav .mod { flex: none; width: 66px; display: grid; place-items: center; cursor: pointer; }
+.nav .mod > div { width: 50px; height: 50px; border-radius: 16px; background: var(--ac); color: var(--onac); display: grid; place-items: center; box-shadow: var(--glow-btn); }
+.nav .vsep { width: 1px; background: var(--line2); margin: 16px 6px; flex: none; }
+.nav.left a { flex: 0 1 92px; }
+
+/* timer */
+.ring { position: relative; display: grid; place-items: center; }
+.ring > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ring .trk { fill: none; stroke: var(--line2); }
+.ring .arc { fill: none; stroke: var(--ac); stroke-linecap: round; filter: var(--glow-ring); }
+.ring .c { position: relative; display: grid; justify-items: center; gap: 6px; }
+.time { font-weight: 600; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1; }
+.stepper { display: inline-flex; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 4px; gap: 4px; box-shadow: var(--sh); }
+.stepper .sb { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--tone); color: var(--tx); }
+.stepper span { min-width: 84px; text-align: center; font-weight: 650; font-size: 17px; }
+.pri { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; background: var(--ac); color: var(--onac); box-shadow: var(--glow-btn); }
+.pri svg.i { width: 32px; height: 32px; }
+.sec { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: var(--card); border: 1px solid var(--line2); color: var(--tx); }
+.cbx { display: grid; justify-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--dim); }
+.cbx.dis { opacity: .5; }
+
+/* stats */
+.segc { display: inline-flex; background: var(--tone); border-radius: 12px; padding: 3px; }
+.segc b { font-size: 14px; font-weight: 600; padding: 7px 16px; border-radius: 9px; color: var(--dim); }
+.segc b.on { background: var(--card); color: var(--tx); box-shadow: var(--sh); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; }
+.tl { position: relative; height: 34px; border-radius: 8px; background: var(--tone); overflow: hidden; }
+.tl i { position: absolute; top: 0; bottom: 0; border-radius: 0; }
+.tl .g { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line2); }
+.ticks { display: flex; justify-content: space-between; font-size: 11px; color: var(--faint); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.bar8 { height: 8px; border-radius: 4px; background: var(--tone); overflow: hidden; }
+.bar8 > i { display: block; height: 100%; border-radius: 4px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; flex: none; display: inline-block; }
+.kv { display: flex; align-items: center; gap: 10px; }
+.kv .v { margin-left: auto; color: var(--dim); font-variant-numeric: tabular-nums; font-size: 14.5px; }
+
+/* quests */
+.qc { display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
+.chk { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--line2); flex: none; }
+.qn { font-size: 17px; font-weight: 600; }
+.pips { display: inline-flex; gap: 3px; align-items: center; }
+.pips i { width: 12px; height: 4px; border-radius: 2px; background: var(--line2); display: block; }
+.pips i.on { background: var(--ac); }
+.xpp { font-size: 14px; font-weight: 750; color: var(--ac); background: var(--acs); padding: 5px 10px; border-radius: 999px; font-variant-numeric: tabular-nums; }
+.meta { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--dim); margin-top: 4px; }
+.fab { position: absolute; right: 20px; bottom: 20px; width: 58px; height: 58px; border-radius: 18px; background: var(--ac); color: var(--onac); display: grid; place-items: center; box-shadow: var(--glow-btn); }
+.grp { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.grp > * + * { border-top: 1px solid var(--line); }
+
+/* calendar */
+.cg { display: grid; grid-template-columns: repeat(7, 1fr); }
+.cg .wd { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: var(--faint); text-align: center; padding: 6px 0; }
+.cg .cell { border-top: 1px solid var(--line); padding: 4px 3px 2px; position: relative; min-width: 0; }
+.cg .cell.out { background: var(--tone); }
+.cg .cell.out .dn { color: var(--faint); }
+.dn { font-size: 13px; font-weight: 600; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; margin: 0 auto 3px; font-variant-numeric: tabular-nums; }
+.cell.today .dn { background: var(--ac); color: var(--onac); }
+.cell.pick { background: var(--acs); }
+.ev { --c: #888; font-size: 11px; font-weight: 650; line-height: 1; padding: 4px 4px; border-radius: 5px; margin-top: 2px; white-space: nowrap; overflow: hidden;
+  background: color-mix(in srgb, var(--c) 26%, var(--bg)); color: color-mix(in srgb, var(--c) 40%, var(--tx)); position: relative; }
+.ev.span2 { width: 200%; z-index: 1; }
+
+/* settings */
+.row-s { display: flex; align-items: center; gap: 14px; padding: 13px 16px; min-height: 56px; }
+.row-s .tt { font-size: 16px; font-weight: 600; }
+.row-s .vv { margin-left: auto; color: var(--dim); font-size: 14.5px; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.row-s .chev { color: var(--faint); width: 20px; height: 20px; }
+.ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--acs); color: var(--ac); flex: none; }
+.ic svg.i { width: 19px; height: 19px; }
+.sg { display: flex; background: var(--tone); border-radius: 12px; padding: 3px; }
+.sg b { flex: 1; text-align: center; font-size: 14.5px; font-weight: 600; padding: 6px; border-radius: 9px; color: var(--dim); display: flex; gap: 6px; justify-content: center; align-items: center; }
+.sg b.on { background: var(--card); color: var(--ac); box-shadow: var(--sh); }
+.sg b svg.i { width: 18px; height: 18px; }
+
+/* overlays: sheet, drawer, launcher */
+.scrim { position: absolute; inset: 0; background: var(--scrim); z-index: 4; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; background: var(--sheet); border-radius: 28px 28px 0 0; z-index: 5; padding: 10px 20px 30px; }
+.handle { width: 40px; height: 5px; border-radius: 3px; background: var(--line2); margin: 0 auto 14px; }
+.drawer { position: absolute; left: 0; top: 0; bottom: 0; width: 312px; background: var(--sheet); z-index: 5; border-radius: 0 26px 26px 0; padding: 22px 16px; display: flex; flex-direction: column; gap: 6px; }
+.dm { display: flex; align-items: center; gap: 14px; padding: 10px 12px; border-radius: 16px; cursor: pointer; }
+.dm.on { background: var(--acs); }
+.dm .mi { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; background: var(--tone); color: var(--tx); flex: none; }
+.dm.on .mi { background: var(--ac); color: var(--onac); }
+.dm .mn { font-size: 17px; font-weight: 650; }
+.dm.on .mn { color: var(--ac); }
+.dsub { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 8px 68px; margin-top: -4px; }
+.dsub b { font-size: 13px; font-weight: 600; padding: 5px 11px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); color: var(--dim); cursor: pointer; }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 14px; display: grid; gap: 10px; cursor: pointer; min-height: 112px; align-content: start; }
+.tile.on { border: 2px solid var(--ac); background: color-mix(in srgb, var(--ac) 8%, var(--card)); padding: 13px; }
+.tile .mi { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--acs); color: var(--ac); }
+.tile.on .mi { background: var(--ac); color: var(--onac); }
+.tile .mn { font-size: 17px; font-weight: 700; }
+.tile .ms { font-size: 12.5px; color: var(--dim); margin-top: -6px; }
+.skel { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: grid; gap: 10px; }
+.skel i { display: block; height: 10px; border-radius: 5px; background: var(--tone); }
+.skel i.s { width: 45%; height: 12px; background: var(--line2); }
+@media (prefers-reduced-motion: no-preference) { .jump a, .seg button { transition: background .15s, border-color .15s; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l4 2"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></symbol>
+  <symbol id="i-quests" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M12 11h4M12 16h4M8 11h.01M8 16h.01"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2.5"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2.5"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></symbol>
+  <symbol id="i-flagm" viewBox="0 0 24 24"><path d="M4 22V4h12l-2 4 2 4H4"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-cl" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-cr" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 6h18M7 12h10M10 18h4"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-mon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M10 2v7.31M14 9.3V2M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></symbol>
+  <symbol id="i-half" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 2.5v19a9.5 9.5 0 0 0 0-19z" fill="currentColor"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+</svg>
+
+<style>
+/* round 3 additions */
+.scr .ttl { font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { --c: var(--ac); display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); font-size: 15px; font-weight: 600; color: var(--tx); }
+.chip .dot { width: 8px; height: 8px; background: var(--c); }
+.chip.on { background: color-mix(in srgb, var(--c) 20%, var(--card)); border-color: color-mix(in srgb, var(--c) 50%, transparent); color: color-mix(in srgb, var(--c) 45%, var(--tx)); }
+.fld { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; }
+.fld.focus { border: 2px solid var(--ac); padding: 9px 13px; }
+.fld small { display: block; font-size: 12px; color: var(--faint); font-weight: 600; }
+.fld .val { font-size: 17px; font-weight: 600; }
+.fld .ph { font-size: 16px; color: var(--faint); }
+.btn { height: 54px; border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; font-size: 16.5px; }
+.btn.bp { background: var(--ac); color: var(--onac); box-shadow: var(--glow-btn); }
+.btn.ton { background: var(--tone); color: var(--tx); }
+.btn.dst { background: #D96B5A; color: #2B0F0A; }
+.btn.dis { opacity: .45; box-shadow: none; }
+.sw { width: 50px; height: 30px; border-radius: 15px; background: var(--ac); position: relative; flex: none; }
+.sw::after { content: ""; position: absolute; top: 3px; right: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.sw.off { background: var(--line2); }
+.sw.off::after { right: auto; left: 3px; }
+.dlg { position: absolute; left: 26px; right: 26px; top: 50%; transform: translateY(-50%); background: var(--sheet); border-radius: 26px; padding: 24px 22px 20px; z-index: 5; display: grid; gap: 10px; }
+.sheet-h { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.sheet-h .st { flex: 1; font-size: 22px; font-weight: 600; letter-spacing: -.015em; }
+.hrow { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--card); }
+.tcol { font-size: 13.5px; color: var(--dim); text-align: right; line-height: 1.45; font-variant-numeric: tabular-nums; width: 42px; flex: none; }
+.vbar { width: 4px; align-self: stretch; border-radius: 2px; flex: none; }
+.tchip { --c: var(--ac); font-size: 12.5px; font-weight: 650; padding: 3px 8px; border-radius: 8px; background: color-mix(in srgb, var(--c) 20%, var(--card)); color: color-mix(in srgb, var(--c) 45%, var(--tx)); }
+.swipe { position: relative; overflow: hidden; }
+.swipe .acts { position: absolute; top: 0; bottom: 0; right: 0; display: flex; }
+.swipe .acts div { width: 78px; display: grid; place-items: center; align-content: center; gap: 3px; font-size: 13px; font-weight: 650; }
+.swipe .slid { transform: translateX(-156px); position: relative; z-index: 1; border-right: 1px solid var(--line); }
+.addrow { display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: var(--ac); font-weight: 650; font-size: 15.5px; }
+.chkd { width: 24px; height: 24px; border-radius: 50%; background: var(--ac); color: var(--onac); display: grid; place-items: center; flex: none; }
+.chkd svg.i { width: 15px; height: 15px; stroke-width: 3; }
+.eff { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.eff > div { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; display: grid; gap: 3px; }
+.eff > div.on { border: 2px solid var(--ac); padding: 11px 13px; background: color-mix(in srgb, var(--ac) 8%, var(--card)); }
+.eff b { font-size: 16px; }
+.eff span { font-size: 13px; color: var(--dim); }
+.eff .x { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; font-weight: 750; color: var(--ac); font-size: 14px; }
+.days { display: flex; justify-content: space-between; }
+.days b { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 700; background: var(--ac); color: var(--onac); }
+.days b.off { background: var(--tone); color: var(--dim); }
+.badge { position: absolute; top: 4px; right: 4px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--ac); color: var(--onac); font-size: 11px; font-weight: 800; display: grid; place-items: center; padding: 0 4px; }
+.flag-b { display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: .04em; padding: 3px 9px; border-radius: 999px; background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+.rules { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 14px; }
+.rule { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; display: grid; gap: 6px; align-content: start; }
+.rule b { font-size: 15.5px; }
+.rule p { font-size: 14px; color: var(--muted); }
+.rule .n { font-size: 12px; font-weight: 800; color: var(--accent); letter-spacing: .06em; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-arrowup" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">DayLog · návrh vzhledu · kolo 3 · 21. 11. 2026</div>
+    <h1>Zbytek aplikace</h1>
+    <p class="lead">Prošel jsem všech zbývajících asi šedesát obrazovek. Vlastní náhled mají jen ty, kde se mění něco podstatného. Ostatní se řídí pravidly konzistence níže a jsou popsané v tabulce na konci. Všechny náhledy už mají navigaci po modulech (tlačítko modulu vlevo) a nadpisy tloušťky 600.</p>
+    <p class="note">Předchozí kola: <a href="round1.html" style="color:var(--accent);font-weight:600">kolo 1 (malá, střední, velká)</a> · <a href="round2.html" style="color:var(--accent);font-weight:600">kolo 2 (sjednocení a navigace)</a></p>
+  </header>
+</div>
+
+<div class="bar">
+  <div class="wrap">
+    <nav class="jump" aria-label="Části">
+      <a href="#zjisteni">Zjištění</a>
+      <a href="#pravidla">Pravidla</a>
+      <a href="#cas">Časovač</a>
+      <a href="#quest">Questy</a>
+      <a href="#pozn">Poznámky</a>
+      <a href="#nast">Nastavení</a>
+      <a href="#ostatni">Bez náhledu</a>
+    </nav>
+    <div class="seg" role="group" aria-label="Téma náhledů">
+      <span>Téma náhledů</span>
+      <button type="button" id="t-light" aria-pressed="true">Světlé</button>
+      <button type="button" id="t-dark" aria-pressed="false">Tmavé</button>
+    </div>
+  </div>
+</div>
+
+<main id="mocks" data-app="light">
+<div class="wrap">
+
+<section id="zjisteni" style="scroll-margin-top:70px;margin-top:24px">
+  <div class="grid2">
+    <div class="panel">
+      <h3>Hlavní zjištění</h3>
+      <ul class="l bad">
+        <li><b>Dva vizuální světy.</b> Obrazovky z TimeLogu (Historie, připomínky, záznam, dialogy) mají šedé karty s obrysem, tužku a koš v každé kartě a formuláře ve vystředěném dialogu. Obrazovky z QuestLogu mají bílé karty, sheety a velká tlačítka. Tohle je nejviditelnější stopa sloučení.</li>
+        <li><b>Pět způsobů, jak jít zpět:</b> „‹ Mise“ jako odkaz, „‹“, „←“, „✕“ a hamburger uprostřed obrazovky ve složce poznámek.</li>
+        <li><b>Sheety mají dvě podoby:</b> „Zrušit“ vlevo nahoře s obřím vystředěným nadpisem, nebo nadpis vlevo bez zavírání.</li>
+        <li><b>Chyby:</b> useknutý nadpis „Home Screen shor…“, ve složce poznámek je hamburger pod drobečkovou navigací a zdvojený název v detailu události.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Jak to řeším</h3>
+      <ul class="l">
+        <li>Všechno přechází na jeden vzor, odvozený z obrazovek, které jsme už odsouhlasili (QuestLog styl plus úpravy z kol 1 a 2).</li>
+        <li>Vznikl seznam <b>12 pravidel konzistence</b>. Podle nich se budou upravovat i obrazovky bez náhledu a stejný seznam půjde do specu pro implementaci.</li>
+        <li>Náhled má <b>10 obrazovek</b>, kde je změna nejvíc vidět. Dvě z nich mění i chování a jsou označené <span class="flag-b">ZMĚNA CHOVÁNÍ</span>, ty potřebují tvůj souhlas zvlášť.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="pravidla">
+  <div class="variant-h">
+    <div class="eyebrow">Platí pro celou aplikaci</div>
+    <h2>Pravidla konzistence</h2>
+    <p class="lead">Na těchhle pravidlech stojí všechny náhledy níže i všechny obrazovky bez náhledu.</p>
+  </div>
+  <div class="rules">
+    <div class="rule"><span class="n">01 · HLAVIČKA</span><b>Titulek 22 px, tloušťka 600</b><p>Vlevo menu (když je drawer zapnutý) nebo zpět, vpravo nejvýš dvě tónovaná ikonová tlačítka. Pod titulkem případně podtitulek (datum, počet). Žádné obří 48px nadpisy.</p></div>
+    <div class="rule"><span class="n">02 · ZPĚT</span><b>Vždy šipka ← vlevo</b><p>Nikdy textový odkaz „‹ Mise“. Obrazovka otevřená „přes“ jinou (detail události) má ✕. Drobečková navigace jen jako podtitulek.</p></div>
+    <div class="rule"><span class="n">03 · SPODNÍ LIŠTA</span><b>Jen na záložkách modulu</b><p>Detaily, editory a podstránky Nastavení ji nemají, mají celou výšku pro obsah (jako dnes detail mise).</p></div>
+    <div class="rule"><span class="n">04 · SEZNAMY</span><b>Seskupená karta s oddělovači</b><p>Položky stejného druhu jsou v jedné kartě. Samostatná karta je jen pro souhrn (úroveň, profil, dlaždice čísel).</p></div>
+    <div class="rule"><span class="n">05 · AKCE U POLOŽKY</span><b>Klepnout = otevřít, táhnout doleva = Upravit / Smazat</b><p>Jako dnes u questů. Žádná tužka a koš v každé kartě.</p></div>
+    <div class="rule"><span class="n">06 · SHEETY</span><b>Táhlo, nadpis vlevo + ✕, hlavní tlačítko dole</b><p>Formuláře jsou vždy v sheetu, nikdy ve vystředěném dialogu. Žádné „Zrušit“ vlevo nahoře.</p></div>
+    <div class="rule"><span class="n">07 · DIALOGY</span><b>Jen pro potvrzení</b><p>Nadpis, jedna věta, dvě stejně velká tlačítka vedle sebe: Zrušit (tónované) a akce (accent, u mazání červená).</p></div>
+    <div class="rule"><span class="n">08 · ŠTÍTKY A VÝBĚR</span><b>Vybrané = tónované barvou</b><p>Typ aktivity a události barvou typu s barevnou tečkou, ostatní accentem. Bez tlusté obrysové čáry.</p></div>
+    <div class="rule"><span class="n">09 · POLE</span><b>Karta s jemným rámečkem</b><p>Popisek malým písmem nad hodnotou, aktivní pole má accent rámeček. Stejné ve všech formulářích.</p></div>
+    <div class="rule"><span class="n">10 · PŘIDAT DO SEZNAMU</span><b>Řádek „+ Přidat …“ na konci karty</b><p>V accent barvě, uvnitř seskupené karty, místo čárkovaného boxu.</p></div>
+    <div class="rule"><span class="n">11 · TLAČÍTKA</span><b>Hlavní, tónované, červené</b><p>Hlavní je accent s jemnou září, vedlejší tónované, destruktivní červené. Obrysová tlačítka se nepoužívají.</p></div>
+    <div class="rule"><span class="n">12 · PRÁZDNÉ STAVY</span><b>Ikona, nadpis, jedna věta</b><p>Ikona v tónovaném kruhu, krátký text a případně hlavní tlačítko. Stejně ve všech modulech.</p></div>
+  </div>
+</section>
+
+<section class="part" id="cas">
+  <div class="variant-h"><div class="eyebrow">Modul Časovač</div><h2>Historie, záznam a potvrzení</h2></div>
+  <div class="pairs">
+    <div class="pair">
+      <div class="pair-h"><h3>Historie</h3><span class="flag-b">ZMĚNA CHOVÁNÍ</span></div>
+      <div class="phones">
+        <div class="ph"><span>Teď</span><div class="pf"><img class="lt" src="shots/light-history.png" alt="Současná historie, světlé"><img class="dk" src="shots/dark-history.png" alt="Současná historie, tmavé"></div></div>
+        <div class="ph"><span>Nově</span><div class="pf"><div class="scr" data-m="history"></div></div></div>
+      </div>
+      <ul class="l">
+        <li>Záznamy jsou jedna seskupená karta: čas od–do vlevo, barevný proužek typu, název, štítek typu a délka vpravo. Den se dá přečíst jako časová osa.</li>
+        <li>Souhrn dne (počet záznamů, celkem) jako dva štítky pod navigací dnem, stejně jako ve Statistikách.</li>
+        <li><b>Změna chování:</b> tužka a koš v každé kartě zmizí. Klepnutí na záznam ho otevře k úpravě, tažení doleva ukáže Upravit / Smazat, stejně jako u questů (pravidlo 05). V náhledu je první řádek zobrazený vytažený.</li>
+        <li>Historie je záložka modulu, takže nemá šipku zpět. Plus pro nový záznam je vpravo nahoře.</li>
+      </ul>
+    </div>
+    <div class="pair">
+      <div class="pair-h"><h3>Sheet záznamu</h3><span class="pill">„Co jsi udělal?“, přidání i úprava</span></div>
+      <div class="phones">
+        <div class="ph"><span>Teď</span><div class="pf"><img class="lt" src="shots/light-logsheet.png" alt="Současný sheet záznamu, světlé"><img class="dk" src="shots/dark-logsheet.png" alt="Současný sheet záznamu, tmavé"></div></div>
+        <div class="ph"><span>Nově</span><div class="pf"><div class="scr" data-m="logsheet"></div></div></div>
+      </div>
+      <ul class="l">
+        <li>Typy mají barevnou tečku, takže barvu typu poznáš už při výběru, ne až ve statistikách.</li>
+        <li>Vybraný typ je tónovaný svou barvou a nemá obrys (pravidlo 08).</li>
+        <li>Upřesnění (Placená / Neplacená) je segmentový přepínač v tlumeném panelu, ne druhá řada tabletek v růžovém rámečku.</li>
+        <li>Pole projektu a popisu jsou bílé karty s rámečkem (pravidlo 09). Stejný sheet slouží pro přidání a úpravu záznamu v Historii.</li>
+      </ul>
+    </div>
+    <div class="pair">
+      <div class="pair-h"><h3>Potvrzovací dialog</h3><span class="pill">reset, mazání všude</span></div>
+      <div class="phones">
+        <div class="ph"><span>Teď</span><div class="pf"><img class="lt" src="shots/light-dialog.png" alt="Současný dialog, světlé"><img class="dk" src="shots/dark-dialog.png" alt="Současný dialog, tmavé"></div></div>
+        <div class="ph"><span>Nově</span><div class="pf"><div class="scr" data-m="dialog"></div></div></div>
+      </div>
+      <ul class="l">
+        <li>Jeden vzor pro všechna potvrzení v aplikaci: reset časovače, smazání záznamu, questu, mise, události, připomínky i vysypání koše.</li>
+        <li>Dvě stejně velká tlačítka. Destruktivní akce je červené tlačítko, ne jen červený text, takže se nedá splést.</li>
+        <li>Ikona nahoře říká, že jde o vážnou věc. U nedestruktivních potvrzení (Vyvěsit hned) je ikona i tlačítko v accent barvě.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="quest">
+  <div class="variant-h"><div class="eyebrow">Modul Questy</div><h2>Mise a nový quest</h2></div>
+  <div class="pairs">
+    <div class="pair">
+      <div class="pair-h"><h3>Mise</h3><span class="pill">záložka modulu</span></div>
+      <div class="phones">
+        <div class="ph"><span>Teď</span><div class="pf"><img class="lt" src="shots/light-missions.png" alt="Současné mise, světlé"><img class="dk" src="shots/dark-missions.png" alt="Současné mise, tmavé"></div></div>
+        <div class="ph"><span>Nově</span><div class="pf"><div class="scr" data-m="missions"></div></div></div>
+      </div>
+      <ul class="l">
+        <li>Stejná karta úrovně jako na Nástěnce. Oba pohledy modulu Questy tak vypadají jako jedna rodina.</li>
+        <li>Číslo v kruhu zůstává jako dnes: kolik questů ještě zbývá do splnění mise. Kruh kolem něj se plní podle postupu, takže je na první pohled vidět, která mise je skoro hotová.</li>
+        <li>Bonus za dokončení je tabletka „+200 XP“ vpravo, bez kapitálek „ON COMPLETION“.</li>
+      </ul>
+    </div>
+    <div class="pair">
+      <div class="pair-h"><h3>Detail mise</h3><span class="pill">bez spodní lišty</span></div>
+      <div class="phones">
+        <div class="ph"><span>Teď</span><div class="pf"><img class="lt" src="shots/light-mission.png" alt="Současný detail mise, světlé"><img class="dk" src="shots/dark-mission.png" alt="Současný detail mise, tmavé"></div></div>
+        <div class="ph"><span>Nově</span><div class="pf"><div class="scr" data-m="mission"></div></div></div>
+      </div>
+      <ul class="l">
+        <li>Hlavička podle pravidel: šipka zpět, „Mise“ a menu ⋯. Název mise je 28 px místo 48 px a nevytlačuje obsah.</li>
+        <li>Zbývající i splněné questy jsou seskupené karty. „Přidat quest do mise“ je řádek na konci karty (pravidlo 10).</li>
+        <li>Splněný quest má plný kroužek s fajfkou a přeškrtnutý název. Stejně bude vypadat i v sekci „Splněno dnes“ na Nástěnce.</li>
+      </ul>
+    </div>
+    <div class="pair">
+      <div class="pair-h"><h3>Nový quest</h3><span class="pill">vzor pro všechny formulářové sheety</span></div>
+      <div class="phones">
+        <div class="ph"><span>Teď</span><div class="pf"><img class="lt" src="shots/light-questadd.png" alt="Současný nový quest, světlé"><img class="dk" src="shots/dark-questadd.png" alt="Současný nový quest, tmavé"></div></div>
+        <div class="ph"><span>Nově</span><div class="pf"><div class="scr" data-m="questadd"></div></div></div>
+      </div>
+      <ul class="l">
+        <li>Hlavička sheetu podle pravidla 06: nadpis vlevo a ✕. „Zrušit“ a vystředěný obří nadpis zmizí.</li>
+        <li>Námaha jako mřížka 2×2 místo čtyř vysokých řádků. Celý formulář se tak vejde bez scrollování až po Nástěnku a hlavní tlačítko.</li>
+        <li>Nástěnka (Dnes / Todo) je segmentový přepínač, protože se vybírá jedna ze dvou možností.</li>
+        <li>Stejný vzor dostanou Upravit quest, Nová mise, Pravidelná mise a Nová událost.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="pozn">
+  <div class="variant-h"><div class="eyebrow">Modul Poznámky</div><h2>Seznam a složka</h2></div>
+  <div class="pairs">
+    <div class="pair">
+      <div class="pair-h"><h3>Poznámky</h3><span class="pill">záložka modulu</span></div>
+      <div class="phones">
+        <div class="ph"><span>Teď</span><div class="pf"><img class="lt" src="shots/light-notes.png" alt="Současné poznámky, světlé"><img class="dk" src="shots/dark-notes.png" alt="Současné poznámky, tmavé"></div></div>
+        <div class="ph"><span>Nově</span><div class="pf"><div class="scr" data-m="notes"></div></div></div>
+      </div>
+      <ul class="l">
+        <li>Složky i poznámky jsou seskupené karty. Počet poznámek ve složce je vpravo, takže se názvy čtou jako seznam.</li>
+        <li>Souhrn „2 složky · 1 poznámka“ je pod titulkem, ne vedle něj. Koš je tónované ikonové tlačítko s odznakem.</li>
+        <li>Datum u poznámky je krátké (14. 11.) a náhled textu je pod názvem.</li>
+      </ul>
+    </div>
+    <div class="pair">
+      <div class="pair-h"><h3>Složka</h3><span class="pill">oprava hlavičky</span></div>
+      <div class="phones">
+        <div class="ph"><span>Teď</span><div class="pf"><img class="lt" src="shots/light-folder.png" alt="Současná složka, světlé"><img class="dk" src="shots/dark-folder.png" alt="Současná složka, tmavé"></div></div>
+        <div class="ph"><span>Nově</span><div class="pf"><div class="scr" data-m="folder"></div></div></div>
+      </div>
+      <ul class="l">
+        <li>Dnes jsou nad sebou tři úrovně navigace: „‹ Notes“, drobečky a pak hamburger s obřím titulkem. Nově jedna hlavička: zpět, název složky a menu ⋯.</li>
+        <li>Drobečková navigace „Poznámky › Osobní“ je podtitulek. U hlouběji vnořených složek je pořád jasné, kde jsi.</li>
+        <li>Spodní lišta zůstává, protože složka je pořád hlavní pohled modulu Poznámky.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="nast">
+  <div class="variant-h"><div class="eyebrow">Nastavení</div><h2>Opakované připomínky</h2></div>
+  <div class="pairs">
+    <div class="pair">
+      <div class="pair-h"><h3>Seznam připomínek</h3><span class="flag-b">ZMĚNA CHOVÁNÍ</span></div>
+      <div class="phones">
+        <div class="ph"><span>Teď</span><div class="pf"><img class="lt" src="shots/light-reminders.png" alt="Současné připomínky, světlé"><img class="dk" src="shots/dark-reminders.png" alt="Současné připomínky, tmavé"></div></div>
+        <div class="ph"><span>Nově</span><div class="pf"><div class="scr" data-m="reminders"></div></div></div>
+      </div>
+      <ul class="l">
+        <li>Připomínky jsou řádky v seskupené kartě: kroužek „hotovo“ vlevo (dnes čtvereček), název, časové okno s intervalem, dny a přepínač Aktivní vpravo.</li>
+        <li>Kroužek je stejný jako u questů, takže „označit jako hotové“ vypadá v celé aplikaci stejně.</li>
+        <li>Neaktivní připomínka je ztlumená celá, ne jen její název.</li>
+        <li><b>Změna chování:</b> tužka a koš zmizí, stejně jako v Historii. Klepnutí otevře úpravu, tažení doleva nabídne Smazat.</li>
+      </ul>
+    </div>
+    <div class="pair">
+      <div class="pair-h"><h3>Nová připomínka</h3><span class="flag-b">ZMĚNA CHOVÁNÍ</span></div>
+      <div class="phones">
+        <div class="ph"><span>Teď</span><div class="pf"><img class="lt" src="shots/light-reminderadd.png" alt="Současná nová připomínka, světlé"><img class="dk" src="shots/dark-reminderadd.png" alt="Současná nová připomínka, tmavé"></div></div>
+        <div class="ph"><span>Nově</span><div class="pf"><div class="scr" data-m="reminderadd"></div></div></div>
+      </div>
+      <ul class="l">
+        <li><b>Změna chování:</b> formulář je sheet zespodu místo vystředěného dialogu (pravidlo 06), stejně jako všechny ostatní formuláře.</li>
+        <li>Interval je segmentový přepínač v jedné řadě místo pěti tabletek ve dvou řadách.</li>
+        <li>Pole Od a Do mají stejný vzhled jako ostatní pole a poznámka o půlnoci je pod nimi drobným písmem.</li>
+        <li>Uložit je hlavní tlačítko přes celou šířku dole. Zrušení je ✕ nahoře nebo stažení sheetu dolů.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="ostatni">
+  <div class="variant-h">
+    <div class="eyebrow">Bez náhledu</div>
+    <h2>Ostatní obrazovky</h2>
+    <p class="lead">Tady jen platí pravidla výše nebo vzor z některého náhledu. U každé obrazovky je napsané, čím se řídí, aby to bylo jasné i pro implementaci.</p>
+  </div>
+  <div class="panel">
+    <div class="tbl"><table>
+      <tr><th>Modul</th><th>Obrazovka</th><th>Jak bude vypadat</th></tr>
+      <tr><td>Časovač</td><td>Běžící, pauza, čas vypršel</td><td>Rozložení jako v klidu (kolo 2), jen play je pauza a vedlejší tlačítka mají plnou sytost.</td></tr>
+      <tr><td></td><td>Úprava a přidání záznamu</td><td>Stejný sheet jako „Co jsi udělal?“, nahoře přibudou pole Začátek a Konec (pravidlo 09).</td></tr>
+      <tr><td></td><td>Smazání záznamu, reset</td><td>Potvrzovací dialog.</td></tr>
+      <tr><td></td><td>Statistiky, týden</td><td>Jako den (kolo 2). Časová osa po dnech, popisky hodin jen jednou dole, ostré hrany bloků.</td></tr>
+      <tr><td>Questy</td><td>Akce po přejetí</td><td>Beze změny chování. Upravit je tónované, Smazat červené, zaoblení jako u karty.</td></tr>
+      <tr><td></td><td>Splněný quest, Splněno dnes</td><td>Plný kroužek s fajfkou a přeškrtnutý název, jako v detailu mise.</td></tr>
+      <tr><td></td><td>Upravit quest, nová mise, přidat quest do mise</td><td>Vzor „Nový quest“.</td></tr>
+      <tr><td></td><td>Menu mise</td><td>Sheet s řádky (ikona + text), Smazat misi červeně a oddělené.</td></tr>
+      <tr><td></td><td>Připraveno k dokončení</td><td>V detailu mise velké hlavní tlačítko „Dokončit misi“ nad seznamem.</td></tr>
+      <tr><td></td><td>Odměna a nová úroveň</td><td><b>Zůstává, jak je.</b> Je to nejoriginálnější místo aplikace. Jen nové barvy z tokenů, záře a tlačítko podle pravidla 11.</td></tr>
+      <tr><td>Kalendář</td><td>Detail události</td><td>Zůstává celoobrazovkový s ✕. Název se už neopakuje v hlavičce, štítek typu je tlumený a tlačítko Upravit je hlavní tlačítko dole.</td></tr>
+      <tr><td></td><td>Nová a úprava události</td><td>Hlavička zpět + titulek + Uložit. Typy zůstávají v mřížce s tečkou (už teď odpovídá pravidlu 08), pole podle pravidla 09.</td></tr>
+      <tr><td></td><td>Hledání</td><td>Pole hledání v hlavičce, výsledky v seskupené kartě s datem vpravo.</td></tr>
+      <tr><td></td><td>Filtr typů</td><td>Sheet podle pravidla 06, přepínače zůstávají, „Hotovo“ je hlavní tlačítko.</td></tr>
+      <tr><td></td><td>Menu události, smazání, opakovaná událost</td><td>Sheet s řádky a potvrzovací dialog. Volba „jen tuto / všechny“ jako dva řádky v sheetu.</td></tr>
+      <tr><td>Poznámky</td><td>Editor</td><td>Hlavička zpět (název složky) + ⋯ + Hotovo, titulek poznámky 26 px / 600. Lišta formátování beze změny.</td></tr>
+      <tr><td></td><td>Menu poznámky, menu Přidat, Přesunout</td><td>Sheet s řádky (ikona v tónovaném čtverci, název, popis), jako dnešní „Přidat“, jen s hlavičkou podle pravidla 06.</td></tr>
+      <tr><td></td><td>Koš</td><td>Hlavička podle pravidel, info box tónovaný, položky v seskupené kartě, Obnovit jako malé tónované tlačítko, Vysypat koš červené dole.</td></tr>
+      <tr><td>Nastavení</td><td>Pravidelné mise</td><td>Seskupená karta, „Vyvěsit hned“ jako malé tónované tlačítko, „+ Přidat pravidelnou misi“ jako řádek na konci.</td></tr>
+      <tr><td></td><td>Nová a úprava pravidelné mise</td><td>Vzor „Nový quest“. Odměna jako segmentový přepínač (už dnes), opakování jako štítky.</td></tr>
+      <tr><td></td><td>Vyvěsit hned</td><td>Potvrzovací dialog v accent barvě.</td></tr>
+      <tr><td></td><td>Zkratka na ploše</td><td>Opraví se useknutý titulek. Výběr obrazovky jako seskupený seznam po modulech s přepínačem (radio), kroky postupu číslované jako dnes.</td></tr>
+      <tr><td></td><td>Upravit připomínku</td><td>Stejný sheet jako Nová připomínka.</td></tr>
+      <tr><td></td><td>Testování, Licence</td><td>Seskupené řádky. Nová skupina Experimenty (tlačítko modulu vlevo/vpravo, drawer, tloušťka nadpisů).</td></tr>
+      <tr><td>Celá aplikace</td><td>Drawer</td><td>Nahrazený navigací po modulech z kola 2, volitelně přejetím od okraje.</td></tr>
+      <tr><td></td><td>Prázdné stavy</td><td>Pravidlo 12, v každém modulu stejně.</td></tr>
+    </table></div>
+  </div>
+  <div class="panel" style="margin-top:16px">
+    <h3>Na co se tě zeptám</h3>
+    <ul class="l">
+      <li>Souhlasíš se dvěma změnami chování: klepnutí a tažení místo tužky a koše (Historie, připomínky) a formulář připomínky jako sheet?</li>
+      <li>Sedí ti pravidla konzistence? Půjdou téměř beze změny do specu.</li>
+      <li>Chceš u některé obrazovky z tabulky přece jen vidět náhled?</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+</main>
+
+<script>
+(function () {
+  var NAVS = {
+    timer: [['i-clock','Časovač'],['i-history','Historie'],['i-chart','Statistiky']],
+    quests: [['i-quests','Questy'],['i-flagm','Mise']],
+    notes: [['i-pen','Poznámky']]
+  };
+  var MODICON = { timer: 'i-clock', quests: 'i-quests', notes: 'i-pen' };
+  function ic(id, cls, st) { return '<svg class="i' + (cls ? ' ' + cls : '') + '"' + (st ? ' style="' + st + '"' : '') + '><use href="#' + id + '"/></svg>'; }
+  function nav(key, active) {
+    var items = NAVS[key];
+    return '<nav class="nav' + (items.length === 1 ? ' left' : '') + '"><div class="mod"><div>' + ic(MODICON[key]) + '</div></div><div class="vsep"></div>' +
+      items.map(function (it, i) { return '<a class="' + (i === active ? 'on' : '') + '">' + ic(it[0]) + '<span>' + it[1] + '</span></a>'; }).join('') + '</nav>';
+  }
+  function tb(title, o) {
+    o = o || {};
+    var left = o.back ? '<div class="ib">' + ic('i-back') + '</div>' : (o.close ? '<div class="ib">' + ic('i-x') + '</div>' : '<div style="width:8px"></div>');
+    var t = o.sub ? '<div style="min-width:0"><div class="ttl">' + title + '</div><div style="font-size:12.5px;color:var(--dim)">' + o.sub + '</div></div>' : '<div class="ttl">' + title + '</div>';
+    return '<div class="tb">' + left + t + '<div class="grow"></div>' + (o.right || '') + '</div>';
+  }
+  function tib(id, extra) { return '<div class="ib t" style="position:relative">' + ic(id) + (extra || '') + '</div>'; }
+  function pips(p) { var s = '<span class="pips">'; for (var i = 0; i < 4; i++) s += '<i class="' + (i < p ? 'on' : '') + '"></i>'; return s + '</span>'; }
+  function levelCard() {
+    return '<div style="background:var(--acs);border-radius:22px;padding:16px;display:flex;align-items:center;gap:16px;margin-bottom:22px"><div class="ring" style="width:64px;height:64px;flex:none"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="none" stroke="var(--line2)" stroke-width="6"/><circle cx="32" cy="32" r="28" fill="none" stroke="var(--ac)" stroke-width="6" stroke-linecap="round" stroke-dasharray="21.1 175.9" transform="rotate(-90 32 32)"/></svg><div class="c" style="font-weight:800;font-size:24px;color:var(--ac)">4</div></div>' +
+      '<div style="flex:1;min-width:0"><div style="font-size:13px;color:var(--dim)">Martin</div><div style="font-size:19px;font-weight:800">Úroveň 4</div><div style="font-size:13px;color:var(--dim);margin-top:2px"><b class="tab-num" style="color:var(--tx)">30</b> / 250 XP · ještě 220</div></div></div>';
+  }
+  function timerBg(running) {
+    return tb('Časovač') + '<div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;padding-bottom:20px">' +
+      '<div class="ring" style="width:290px;height:290px"><svg viewBox="0 0 290 290"><circle class="trk" cx="145" cy="145" r="137" stroke-width="8"/><circle class="arc" cx="145" cy="145" r="137" stroke-width="8" stroke-dasharray="' + (running ? '855 861' : '861 861') + '" transform="rotate(-90 145 145)"/></svg><div class="c"><div class="time" style="font-size:80px">' + (running ? '24:57' : '20:00') + '</div></div></div>' +
+      (running ? '<div style="height:52px"></div>' : '<div class="stepper"><div class="sb">' + ic('i-minus') + '</div><span>20 min</span><div class="sb">' + ic('i-plus') + '</div></div>') +
+      '<div style="display:flex;align-items:flex-start;gap:30px"><div class="cbx' + (running ? '' : ' dis') + '"><div class="sec">' + ic('i-stop', 'f') + '</div>Zapsat</div><div class="pri">' + (running ? '<svg class="i f" style="width:30px;height:30px" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1.5"/><rect x="14" y="4" width="4" height="16" rx="1.5"/></svg>' : ic('i-play', 'f')) + '</div><div class="cbx' + (running ? '' : ' dis') + '"><div class="sec">' + ic('i-flag') + '</div>Dokončit</div></div></div>' + nav('timer', 0);
+  }
+
+  var M = {};
+  M.history = function () {
+    var row1 = '<div class="swipe"><div class="acts"><div style="background:var(--tone);color:var(--tx)">' + ic('i-pen', '', 'width:20px;height:20px') + 'Upravit</div><div style="background:#D96B5A;color:#2B0F0A">' + ic('i-trash', '', 'width:20px;height:20px') + 'Smazat</div></div>' +
+      '<div class="hrow slid"><div class="tcol">09:45<br>10:15</div><div class="vbar" style="background:var(--meet)"></div><div style="flex:1;min-width:0"><div style="font-weight:650;font-size:16px">Standup</div><div style="margin-top:5px"><span class="tchip" style="--c:var(--meet)">Meeting</span></div></div><div style="font-weight:650;font-size:14.5px" class="tab-num">30m</div></div></div>';
+    var row2 = '<div class="hrow"><div class="tcol">08:00<br>09:30</div><div class="vbar" style="background:var(--work)"></div><div style="flex:1;min-width:0"><div style="font-weight:650;font-size:16px">Návrh API</div><div style="margin-top:5px;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim)"><span class="tchip" style="--c:var(--work)">Práce</span>DayLog · Placená</div></div><div style="font-weight:650;font-size:14.5px" class="tab-num">1h 30m</div></div>';
+    return tb('Historie', { right: tib('i-plus') }) +
+      '<div class="body" style="padding:4px 20px;display:flex;flex-direction:column;gap:14px">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between"><div class="ib t" style="width:40px;height:40px">' + ic('i-cl') + '</div><div style="text-align:center"><div style="font-size:19px;font-weight:750">Dnes</div><div style="font-size:13px;color:var(--dim)">sobota 21. listopadu</div></div><div class="ib t" style="width:40px;height:40px;opacity:.4">' + ic('i-cr') + '</div></div>' +
+      '<div style="display:flex;gap:8px"><span class="xpp" style="background:var(--tone);color:var(--tx);font-size:13px">2 záznamy</span><span class="xpp" style="font-size:13px">celkem 2 h</span></div>' +
+      '<div class="grp">' + row1 + row2 + '</div>' +
+      '<p style="font-size:12.5px;color:var(--faint);text-align:center">Klepnutím upravíš · tažením doleva smažeš</p></div>' + nav('timer', 1);
+  };
+  var TYPES = [['Práce','#B33A40',1],['Domácí práce','#D66A0A'],['Meeting','#A766F1'],['Komunikace','#F0429C'],['Cestování','#7A8BA4'],['Zábava','#1F9989'],['Cvičení','#9D8810'],['Seberozvoj','#4F9A25'],['Odpočinek','#2F5BD8'],['Hygiena','#1796C8'],['Jídlo','#9A6C3E'],['Ostatní','#8A94A3']];
+  M.logsheet = function () {
+    var chips = TYPES.map(function (t) { return '<span class="chip' + (t[2] ? ' on' : '') + '" style="--c:' + t[1] + '"><span class="dot"></span>' + t[0] + '</span>'; }).join('');
+    return timerBg(false) + '<div class="scrim"></div><div class="sheet" style="top:96px;padding-bottom:22px;display:flex;flex-direction:column;gap:14px"><div class="handle" style="margin-bottom:0"></div>' +
+      '<div class="sheet-h" style="margin:0"><div class="st">Co jsi udělal?</div>' + tib('i-refresh') + '</div>' +
+      '<div class="cap">Typ</div><div class="chips">' + chips + '</div>' +
+      '<div style="background:var(--tone);border-radius:16px;padding:12px 14px;display:grid;gap:10px"><div style="display:flex;justify-content:space-between;font-size:13.5px"><b style="color:var(--dim)">Upřesnit · Práce</b><span style="color:var(--faint)">vyber jednu</span></div><div class="sg" style="background:var(--tone)"><b class="on">Placená</b><b>Neplacená</b></div></div>' +
+      '<div class="fld"><span class="ph">Název projektu…</span></div>' +
+      '<div class="fld" style="height:96px;position:relative"><span class="ph">Popiš, na čem jsi pracoval…</span><span style="position:absolute;right:12px;bottom:8px;font-size:12px;color:var(--faint)">0/500</span></div>' +
+      '<div class="grow"></div><div class="btn bp dis">Uložit</div><div style="text-align:center;font-weight:650;color:var(--dim);font-size:15px;margin-top:-4px">Přeskočit</div></div>';
+  };
+  M.dialog = function () {
+    return timerBg(true) + '<div class="scrim"></div><div class="dlg">' +
+      '<div style="width:48px;height:48px;border-radius:50%;background:color-mix(in srgb,#D96B5A 22%,transparent);color:#D96B5A;display:grid;place-items:center;margin-bottom:4px">' + ic('i-alert') + '</div>' +
+      '<div style="font-size:21px;font-weight:700;letter-spacing:-.01em">Resetovat časovač?</div>' +
+      '<div style="font-size:15.5px;color:var(--dim);line-height:1.45">Odpočet se zastaví a nic se nezapíše.</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px"><div class="btn ton">Zrušit</div><div class="btn dst">Resetovat</div></div></div>';
+  };
+  function missionRow(name, done, total, rem, xp) {
+    var C = 2 * Math.PI * 20, p = C * done / total;
+    return '<div class="qc" style="padding:14px 16px"><div class="ring" style="width:50px;height:50px;flex:none"><svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="var(--line2)" stroke-width="5"/><circle cx="25" cy="25" r="20" fill="none" stroke="var(--ac)" stroke-width="5" stroke-linecap="round" stroke-dasharray="' + p.toFixed(1) + ' ' + C.toFixed(1) + '" transform="rotate(-90 25 25)"/></svg><div class="c" style="font-size:18px;font-weight:800">' + (total - done) + '</div></div>' +
+      '<div style="flex:1;min-width:0"><div class="qn" style="font-size:16.5px">' + name + '</div><div class="meta">Zbývá ' + rem + ' XP</div></div><span class="xpp">+' + xp + ' XP</span></div>';
+  }
+  M.missions = function () {
+    return tb('Mise', { sub: '2 rozpracované' }) + '<div class="body" style="padding:6px 20px 0">' + levelCard() +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><b style="font-size:17px">Rozpracované</b><span style="color:var(--faint);font-weight:600">2</span></div>' +
+      '<div class="grp">' + missionRow('Naučit se ABAP', 1, 2, 25, 200) + missionRow('Přestěhovat pracovnu', 0, 1, 100, 100) + '</div>' +
+      '<div class="fab">' + ic('i-plus') + '</div></div>' + nav('quests', 1);
+  };
+  M.mission = function () {
+    return tb('Mise', { back: true, right: tib('i-dots') }) + '<div class="body" style="padding:4px 20px 0">' +
+      '<div style="font-size:28px;font-weight:700;letter-spacing:-.02em">Naučit se ABAP</div>' +
+      '<div style="font-size:14.5px;color:var(--dim);margin-top:4px">1 ze 2 questů splněno</div>' +
+      '<div class="card" style="padding:14px 16px;margin:16px 0 22px;display:grid;gap:10px"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:15px">Postup</b><span class="xpp" style="font-size:12.5px;padding:3px 9px">+200 XP za dokončení</span></div><div class="bar8"><i style="width:50%;background:var(--ac)"></i></div></div>' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><b style="font-size:17px">Zbývá</b><span class="grow"></span><span style="font-size:13px;color:var(--dim)">1 quest · 25 XP</span></div>' +
+      '<div class="grp" style="margin-bottom:22px"><div class="qc" style="padding:12px 16px"><div class="chk" style="width:24px;height:24px"></div><div style="flex:1;min-width:0"><div class="qn" style="font-size:16px">Přečíst kapitolu o ABAP SQL</div><div class="meta">' + pips(2) + '</div></div><span class="xpp">+25</span></div>' +
+      '<div class="addrow">' + ic('i-plus', '', 'width:20px;height:20px') + 'Přidat quest do mise</div></div>' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><b style="font-size:17px">Splněno</b><span class="grow"></span><span style="font-size:13px;color:var(--dim)">1 quest · 50 XP</span></div>' +
+      '<div class="grp"><div class="qc" style="padding:12px 16px"><div class="chkd">' + ic('i-check') + '</div><div style="flex:1;min-width:0"><div class="qn" style="font-size:16px;text-decoration:line-through;color:var(--faint)">Napsat první report</div><div class="meta">včera</div></div><span class="xpp" style="opacity:.6">+50</span></div></div></div>';
+  };
+  M.questadd = function () {
+    var board = tb('Nástěnka', { sub: 'sobota 21. listopadu' }) + '<div class="body"></div>' + nav('quests', 0);
+    var eff = [['Chvilka','do ~30 min',10,1],['Hodinka','do ~2 h',25,2],['Část dne','2–4 h',50,3],['Celý den','celý den',100,4]];
+    return board + '<div class="scrim"></div><div class="sheet" style="top:44px;padding-bottom:22px;display:flex;flex-direction:column;gap:12px"><div class="handle" style="margin-bottom:0"></div>' +
+      '<div class="sheet-h" style="margin:0"><div class="st">Nový quest</div>' + tib('i-x') + '</div>' +
+      '<div class="cap">Co je třeba vykonat</div><div class="fld focus"><span class="ph">Pověsit prádlo</span></div>' +
+      '<div class="cap" style="margin-top:4px">Námaha</div><div class="eff">' + eff.map(function (e) { return '<div class="' + (e[3] === 2 ? 'on' : '') + '"><b>' + e[0] + '</b><span>' + e[1] + '</span><div class="x">+' + e[2] + ' XP' + pips(e[3]) + '</div></div>'; }).join('') + '</div>' +
+      '<p style="font-size:12.5px;color:var(--faint);line-height:1.4">Vybírej podle času. Cesta, čekání nebo něco nepříjemného? Jdi o stupeň výš.</p>' +
+      '<div class="cap">Součást mise</div><div class="chips"><span class="chip on">Bez mise</span><span class="chip">Naučit se ABAP</span><span class="chip">Přestěhovat pracovnu</span></div>' +
+      '<div class="cap" style="margin-top:4px">Nástěnka</div><div class="sg"><b>Dnes</b><b class="on">Todo</b></div>' +
+      '<div class="grow"></div><div class="btn bp">' + ic('i-arrowup', '', 'width:20px;height:20px') + 'Vyvěsit quest</div></div>';
+  };
+  M.notes = function () {
+    function frow(name, n) { return '<div class="row-s"><div class="ic" style="width:40px;height:40px;border-radius:12px">' + ic('i-folder') + '</div><div class="tt">' + name + '</div><div class="vv">' + n + ic('i-cr', 'chev') + '</div></div>'; }
+    return tb('Poznámky', { sub: '2 složky · 1 poznámka', right: tib('i-trash', '<span class="badge">1</span>') }) +
+      '<div class="body" style="padding:6px 20px 0">' +
+      '<div class="cap" style="margin-bottom:10px;padding-left:4px">Složky</div><div class="grp" style="margin-bottom:22px">' + frow('Osobní', '1 poznámka') + frow('Práce', '1 poznámka') + '</div>' +
+      '<div class="cap" style="margin-bottom:10px;padding-left:4px">Poznámky</div><div class="grp"><div style="padding:14px 16px"><div style="display:flex;align-items:baseline;gap:8px"><b style="font-size:16px;font-weight:650">Nákupní seznam</b><span class="grow"></span><span style="font-size:13px;color:var(--faint)" class="tab-num">14. 11.</span></div><div style="font-size:14.5px;color:var(--dim);margin-top:3px">mléko, chleba, káva</div></div></div>' +
+      '<div class="fab">' + ic('i-plus') + '</div></div>' + nav('notes', 0);
+  };
+  M.folder = function () {
+    return tb('Osobní', { back: true, sub: 'Poznámky › Osobní', right: tib('i-dots') }) +
+      '<div class="body" style="padding:6px 20px 0">' +
+      '<div class="cap" style="margin-bottom:10px;padding-left:4px">Poznámky · 1</div><div class="grp"><div style="padding:14px 16px"><div style="display:flex;align-items:baseline;gap:8px"><b style="font-size:16px;font-weight:650">Dárky</b><span class="grow"></span><span style="font-size:13px;color:var(--faint)" class="tab-num">14. 11.</span></div><div style="font-size:14.5px;color:var(--dim);margin-top:3px">Petr: kniha</div></div></div>' +
+      '<div class="fab">' + ic('i-plus') + '</div></div>' + nav('notes', 0);
+  };
+  function remRow(name, win, days, on) {
+    return '<div class="qc" style="padding:14px 16px;align-items:flex-start' + (on ? '' : ';opacity:.5') + '"><div class="chk" style="width:24px;height:24px;margin-top:2px"></div><div style="flex:1;min-width:0"><div class="qn" style="font-size:16.5px">' + name + '</div><div style="font-size:14px;color:var(--dim);margin-top:3px" class="tab-num">' + win + '</div><div style="font-size:13px;color:var(--faint);margin-top:2px">' + days + '</div></div><div class="sw' + (on ? '' : ' off') + '" style="margin-top:2px"></div></div>';
+  }
+  M.reminders = function () {
+    return tb('Opakované připomínky', { back: true, right: tib('i-plus') }) + '<div class="body" style="padding:6px 20px 0;display:flex;flex-direction:column;gap:12px">' +
+      '<div class="grp">' + remRow('Napít se vody', '09:00–17:00 · každých 60 min', 'Po–Pá', true) + remRow('Protáhnout se', '10:00–16:00 · každých 120 min', 'Každý den', false) + '</div>' +
+      '<p style="font-size:12.5px;color:var(--faint);text-align:center">Klepnutím upravíš · tažením doleva smažeš · kroužkem označíš jako hotové</p></div>';
+  };
+  M.reminderadd = function () {
+    var bg = tb('Opakované připomínky', { back: true, right: tib('i-plus') }) + '<div class="body" style="padding:6px 20px 0"><div class="grp">' + remRow('Napít se vody', '09:00–17:00 · každých 60 min', 'Po–Pá', true) + '</div></div>';
+    var days = ['Po','Út','St','Čt','Pá','So','Ne'].map(function (d) { return '<b>' + d + '</b>'; }).join('');
+    return bg + '<div class="scrim"></div><div class="sheet" style="top:150px;padding-bottom:22px;display:flex;flex-direction:column;gap:12px"><div class="handle" style="margin-bottom:0"></div>' +
+      '<div class="sheet-h" style="margin:0"><div class="st">Nová připomínka</div>' + tib('i-x') + '</div>' +
+      '<div class="fld focus" style="display:flex;justify-content:space-between;align-items:center"><span class="ph">Název</span><span style="font-size:12px;color:var(--faint)">0/100</span></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fld"><small>Od</small><div class="val tab-num">08:00</div></div><div class="fld"><small>Do</small><div class="val tab-num">00:00</div></div></div>' +
+      '<p style="font-size:13px;color:var(--ac);margin-top:-4px">Okno přesahuje přes půlnoc do dalšího dne.</p>' +
+      '<div class="cap">Interval opakování</div><div class="sg"><b style="font-size:13.5px">30</b><b class="on" style="font-size:13.5px">60</b><b style="font-size:13.5px">120</b><b style="font-size:13.5px">180</b><b style="font-size:13.5px">240</b></div>' +
+      '<div style="font-size:12px;color:var(--faint);margin-top:-6px;text-align:right">minut</div>' +
+      '<div class="cap">Aktivní dny</div><div class="days">' + days + '</div>' +
+      '<div class="card" style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:4px"><b style="font-weight:600">Aktivní</b><div class="sw"></div></div>' +
+      '<div class="grow"></div><div class="btn bp dis">Uložit</div></div>';
+  };
+
+  document.querySelectorAll('.scr[data-m]').forEach(function (el) { el.innerHTML = M[el.dataset.m](); });
+
+  var root = document.getElementById('mocks'), bL = document.getElementById('t-light'), bD = document.getElementById('t-dark');
+  function set(t) { root.dataset.app = t; bL.setAttribute('aria-pressed', t === 'light'); bD.setAttribute('aria-pressed', t === 'dark'); try { localStorage.setItem('daylog-preview-theme', t); } catch (e) {} }
+  var saved = null; try { saved = localStorage.getItem('daylog-preview-theme'); } catch (e) {}
+  var pageDark = document.documentElement.dataset.theme === 'dark' || (document.documentElement.dataset.theme !== 'light' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  set(saved || (pageDark ? 'dark' : 'light'));
+  bL.addEventListener('click', function () { set('light'); });
+  bD.addEventListener('click', function () { set('dark'); });
+})();
+</script>

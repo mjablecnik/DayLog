@@ -1,0 +1,1114 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DayLog redesign</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: a review sheet. Per screen a row of four phones (now / small / medium / large) with the reasons under each. */
+:root {
+  --bg: #F2F5F9;
+  --surface: #FFFFFF;
+  --fg: #15202B;
+  --muted: #56636F;
+  --line: #DCE4EE;
+  --accent: #2B7287;
+  --accent-soft: rgba(43,114,135,.12);
+  --warn: #B0632A;
+  --font: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0F14; --surface: #141B24; --fg: #E6EAF2; --muted: #9AA6B4; --line: #253244;
+    --accent: #78B4C4; --accent-soft: rgba(120,180,196,.16); --warn: #E59A62; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0F14; --surface: #141B24; --fg: #E6EAF2; --muted: #9AA6B4; --line: #253244;
+  --accent: #78B4C4; --accent-soft: rgba(120,180,196,.16); --warn: #E59A62; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1340px; margin: 0 auto; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(30px, 4.4vw, 46px); font-weight: 800; letter-spacing: -.02em; }
+h2 { font-size: 28px; font-weight: 800; letter-spacing: -.015em; }
+h3 { font-size: 17px; font-weight: 700; }
+p { margin: 0; }
+.lead { font-size: 17px; color: var(--muted); max-width: 68ch; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+header.top { padding-block: 40px 24px; display: grid; gap: 14px; }
+
+/* sticky bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)); padding-block: 10px;
+}
+.bar .wrap { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.jump a { text-decoration: none; color: var(--fg); font-weight: 600; font-size: 14px; padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+.jump a:hover { border-color: var(--accent); }
+.seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; align-items: center; }
+.seg span { font-size: 13px; color: var(--muted); padding-inline: 8px 4px; }
+.seg button { font: inherit; font-size: 14px; font-weight: 600; border: 0; background: transparent; color: var(--muted); padding: 5px 12px; border-radius: 999px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* verdict */
+.verdict { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px; margin-block: 28px 8px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.score { display: flex; align-items: baseline; gap: 10px; }
+.score b { font-size: 44px; font-weight: 800; color: var(--accent); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.score span { color: var(--muted); }
+ul.l { margin: 0; padding-left: 18px; display: grid; gap: 7px; }
+ul.l li::marker { color: var(--accent); }
+ul.l.bad li::marker { color: var(--warn); }
+.panel h3 small { font-weight: 500; color: var(--muted); font-size: 14px; }
+
+/* screen sections */
+section.screen { padding-block: 56px 8px; border-top: 1px solid var(--line); margin-top: 48px; scroll-margin-top: 70px; display: grid; gap: 20px; }
+.screen-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 24px 40px; align-items: start; }
+@media (max-width: 860px) { .screen-head { grid-template-columns: 1fr; } }
+.screen-head .now { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 20px; display: grid; gap: 8px; }
+.row { display: grid; grid-auto-flow: column; grid-auto-columns: 300px; gap: 22px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x proximity; }
+.col { display: grid; gap: 12px; align-content: start; scroll-snap-align: start; min-width: 0; }
+.col-h { display: flex; align-items: center; gap: 8px; min-height: 28px; }
+.col-h b { font-size: 16px; }
+.pill { font-size: 11.5px; font-weight: 700; letter-spacing: .04em; padding: 3px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+.pill.now { background: color-mix(in srgb, var(--muted) 16%, transparent); color: var(--muted); }
+.col ul.l { font-size: 14px; }
+.note { font-size: 13px; color: var(--muted); }
+
+/* phone frame */
+.pf { width: 289px; height: 625px; border-radius: 30px; overflow: hidden; position: relative; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(10,20,30,.10); background: #000; }
+.pf > img { width: 100%; height: 100%; display: block; }
+.pf > .scr { position: absolute; left: 0; top: 0; width: 390px; height: 844px; transform: scale(.741); transform-origin: 0 0; }
+#mocks[data-app="light"] img.dk, #mocks[data-app="dark"] img.lt { display: none; }
+
+/* tables */
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+code { font-size: 13px; background: var(--accent-soft); padding: 1px 6px; border-radius: 6px; }
+
+/* =====================  APP MOCKUPS  ===================== */
+#mocks[data-app="light"] .scr {
+  --bg:#EDF1F6; --raised:#F8FAFD; --card:#FFFFFF; --line:rgba(21,32,43,.08); --line2:rgba(21,32,43,.13);
+  --tx:#15202B; --dim:rgba(21,32,43,.68); --faint:rgba(21,32,43,.46); --ac:#2B7287; --ac2:#1F5A6B; --acs:rgba(43,114,135,.13);
+  --onac:#F4FAFC; --tone:rgba(21,32,43,.05); --sh:0 1px 2px rgba(21,32,43,.05),0 6px 18px rgba(21,32,43,.06);
+  --hero:linear-gradient(155deg,#307E94 0%,#1D5466 100%); --onhero:#FFFFFF;
+  --work:#8F1B21; --work2:#C23A40; --meet:#A766F1; --dance:#EE7AA8;
+}
+#mocks[data-app="dark"] .scr {
+  --bg:#0F1319; --raised:#161D27; --card:#18202B; --line:rgba(230,234,242,.08); --line2:rgba(230,234,242,.14);
+  --tx:#E6EAF2; --dim:rgba(230,234,242,.68); --faint:rgba(230,234,242,.42); --ac:#78B4C4; --ac2:#5C9BAD; --acs:rgba(120,180,196,.16);
+  --onac:#08131A; --tone:rgba(230,234,242,.06); --sh:none;
+  --hero:linear-gradient(155deg,#21505F 0%,#14303A 100%); --onhero:#F2F8FA;
+  --work:#BC2D34; --work2:#D9595E; --meet:#B27CF0; --dance:#EE7AA8;
+}
+.scr { background: var(--bg); color: var(--tx); font-family: var(--font); display: flex; flex-direction: column; overflow: hidden; font-size: 16px; line-height: 1.3; }
+.scr * { box-sizing: border-box; }
+.scr svg.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.scr svg.i.f { fill: currentColor; stroke: none; }
+.scr .grow { flex: 1; }
+.scr .body { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+.tb { height: 64px; display: flex; align-items: center; gap: 6px; padding: 0 12px; flex: none; }
+.ib { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; color: var(--dim); }
+.ib.t { background: var(--tone); }
+.ttl { font-weight: 750; letter-spacing: -.015em; }
+.cap { font-size: 12px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--faint); }
+.tab-num { font-variant-numeric: tabular-nums; }
+
+/* bottom nav */
+.nav { height: 84px; flex: none; display: flex; background: var(--raised); border-top: 1px solid var(--line); padding: 0 4px 18px; }
+.nav a { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 12px; font-weight: 500; color: var(--faint); }
+.nav a.on { color: var(--ac); font-weight: 700; }
+.nav.flat a { color: color-mix(in srgb, var(--tx) 58%, transparent); }
+.nav.flat a.on { color: var(--ac); }
+.nav.pill a .pi { width: 58px; height: 32px; border-radius: 16px; display: grid; place-items: center; }
+.nav.pill a.on .pi { background: var(--acs); }
+.nav.pill a { color: color-mix(in srgb, var(--tx) 58%, transparent); }
+.nav.pill a.on { color: var(--ac); }
+
+/* timer */
+.ring { position: relative; display: grid; place-items: center; }
+.ring > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ring .trk { fill: none; stroke: var(--line2); }
+.ring .arc { fill: none; stroke: var(--ac); stroke-linecap: round; }
+.ring .c { position: relative; display: grid; justify-items: center; gap: 6px; }
+.time { font-weight: 600; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1; }
+.phase { font-size: 12.5px; font-weight: 700; letter-spacing: .12em; color: var(--ac); background: var(--acs); padding: 5px 11px; border-radius: 999px; }
+.stepper { display: inline-flex; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 4px; gap: 4px; box-shadow: var(--sh); }
+.stepper .sb { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--tone); color: var(--tx); }
+.stepper span { min-width: 84px; text-align: center; font-weight: 650; font-size: 17px; }
+.pri { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; background: var(--ac); color: var(--onac); box-shadow: 0 8px 22px color-mix(in srgb, var(--ac) 35%, transparent); }
+.pri svg.i { width: 32px; height: 32px; }
+.sec { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: var(--card); border: 1px solid var(--line2); color: var(--tx); }
+.sec.dis { opacity: .42; }
+.cbx { display: grid; justify-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--dim); }
+.cbx.dis { opacity: .5; }
+.cbx.dis .sec { opacity: 1; }
+
+/* stats */
+.segc { display: inline-flex; background: var(--tone); border-radius: 12px; padding: 3px; }
+.segc b { font-size: 14px; font-weight: 600; padding: 7px 16px; border-radius: 9px; color: var(--dim); }
+.segc b.on { background: var(--card); color: var(--tx); box-shadow: var(--sh); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; }
+.tl { position: relative; height: 34px; border-radius: 8px; background: var(--tone); overflow: hidden; }
+.tl i { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
+.tl .g { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line2); }
+.ticks { display: flex; justify-content: space-between; font-size: 11px; color: var(--faint); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.bar8 { height: 8px; border-radius: 4px; background: var(--tone); overflow: hidden; }
+.bar8 > i { display: block; height: 100%; border-radius: 4px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; flex: none; display: inline-block; }
+.kv { display: flex; align-items: center; gap: 10px; }
+.kv .v { margin-left: auto; color: var(--dim); font-variant-numeric: tabular-nums; font-size: 14.5px; }
+
+/* quests */
+.qc { display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
+.chk { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--line2); flex: none; }
+.qn { font-size: 17px; font-weight: 600; }
+.pips { display: inline-flex; gap: 3px; align-items: center; }
+.pips i { width: 9px; height: 9px; transform: rotate(45deg); border-radius: 2px; background: var(--line2); display: block; }
+.pips i.on { background: var(--ac); }
+.pips.bars i { transform: none; width: 12px; height: 4px; border-radius: 2px; }
+.xp { font-weight: 800; color: var(--ac); font-variant-numeric: tabular-nums; }
+.xpp { font-size: 14px; font-weight: 750; color: var(--ac); background: var(--acs); padding: 5px 10px; border-radius: 999px; font-variant-numeric: tabular-nums; }
+.meta { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--dim); margin-top: 5px; }
+.fab { position: absolute; right: 20px; bottom: 20px; width: 58px; height: 58px; border-radius: 18px; background: var(--ac); color: var(--onac); display: grid; place-items: center; box-shadow: 0 8px 20px color-mix(in srgb, var(--ac) 30%, transparent); }
+.fab.ext { width: auto; padding: 0 20px 0 16px; display: flex; gap: 8px; font-weight: 700; font-size: 16px; height: 56px; border-radius: 18px; }
+.grp { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.grp > * + * { border-top: 1px solid var(--line); }
+
+/* calendar */
+.cg { display: grid; grid-template-columns: repeat(7, 1fr); }
+.cg .wd { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: var(--faint); text-align: center; padding: 6px 0; }
+.cg .cell { border-top: 1px solid var(--line); padding: 4px 3px 2px; position: relative; min-width: 0; }
+.cg .cell + .cell:not(:nth-child(7n+1)) { }
+.cg .cell.out { background: var(--tone); }
+.cg .cell.out .dn { color: var(--faint); }
+.dn { font-size: 13px; font-weight: 600; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; margin: 0 auto 3px; font-variant-numeric: tabular-nums; }
+.cell.today .dn { background: var(--ac); color: var(--onac); }
+.cell.sel { background: var(--acs); }
+.ev { --c: #888; font-size: 11px; font-weight: 650; line-height: 1; padding: 4px 4px; border-radius: 5px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: clip;
+  background: color-mix(in srgb, var(--c) 26%, var(--bg)); color: color-mix(in srgb, var(--c) 40%, var(--tx)); position: relative; }
+.ev.span2 { width: calc(200% + 0px); z-index: 1; }
+.evd { display: flex; gap: 3px; justify-content: center; margin-top: 2px; }
+.evd i { width: 6px; height: 6px; border-radius: 50%; background: var(--c); display: block; }
+.evl { display: grid; gap: 3px; padding: 0 2px; }
+.evl i { height: 4px; border-radius: 2px; background: var(--c); display: block; }
+
+/* settings */
+.row-s { display: flex; align-items: center; gap: 14px; padding: 13px 16px; min-height: 56px; }
+.row-s .tt { font-size: 16px; font-weight: 600; }
+.row-s .st { font-size: 13.5px; color: var(--dim); margin-top: 2px; }
+.row-s .vv { margin-left: auto; color: var(--dim); font-size: 14.5px; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.row-s .chev { color: var(--faint); width: 20px; height: 20px; }
+.ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--acs); color: var(--ac); flex: none; }
+.ic svg.i { width: 19px; height: 19px; }
+.sg { display: flex; background: var(--tone); border-radius: 12px; padding: 3px; }
+.sg b { flex: 1; text-align: center; font-size: 14.5px; font-weight: 600; padding: 9px 6px; border-radius: 9px; color: var(--dim); display: flex; gap: 6px; justify-content: center; align-items: center; }
+.sg b.on { background: var(--card); color: var(--ac); box-shadow: var(--sh); }
+.sg b svg.i { width: 18px; height: 18px; }
+@media (prefers-reduced-motion: no-preference) { .jump a, .seg button { transition: background .15s, border-color .15s; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l4 2"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></symbol>
+  <symbol id="i-quests" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M12 11h4M12 16h4M8 11h.01M8 16h.01"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2.5"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2.5"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-cl" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-cr" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 6h18M7 12h10M10 18h4"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-mon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M10 2v7.31M14 9.3V2M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7ZM14 2v4a2 2 0 0 0 2 2h4M16 13H8M16 17H8"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></symbol>
+  <symbol id="i-half" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 2.5v19a9.5 9.5 0 0 0 0-19z" fill="currentColor"/></symbol>
+  <symbol id="i-flagm" viewBox="0 0 24 24"><path d="M4 22V4h12l-2 4 2 4H4"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">DayLog · návrh vzhledu · 21. 11. 2026</div>
+    <h1>Jak by mohl DayLog vypadat</h1>
+    <p class="lead">Pět klíčových obrazovek, každá ve třech úrovních zásahu. Vlevo je vždy současný stav ze screenshotu, vedle malá, střední a velká změna. Funkce zůstávají stejné, mění se jen vzhled a uspořádání. Modrá zůstává základem motivu.</p>
+  </header>
+</div>
+
+<div class="bar">
+  <div class="wrap">
+    <nav class="jump" aria-label="Obrazovky">
+      <a href="#hodnoceni">Hodnocení</a>
+      <a href="#casovac">Časovač</a>
+      <a href="#statistiky">Statistiky</a>
+      <a href="#questy">Questy</a>
+      <a href="#kalendar">Kalendář</a>
+      <a href="#nastaveni">Nastavení</a>
+      <a href="#rozhodnuti">Rozhodnutí</a>
+    </nav>
+    <div class="seg" role="group" aria-label="Téma náhledů">
+      <span>Téma náhledů</span>
+      <button type="button" id="t-light" aria-pressed="true">Světlé</button>
+      <button type="button" id="t-dark" aria-pressed="false">Tmavé</button>
+    </div>
+  </div>
+</div>
+
+<main id="mocks" data-app="light">
+<div class="wrap">
+
+<!-- ===================== VERDICT ===================== -->
+<section id="hodnoceni" style="scroll-margin-top:70px">
+  <div class="verdict">
+    <div class="panel">
+      <div class="eyebrow">Celkový dojem</div>
+      <div class="score"><b>6,5 / 10</b><span>dobrý základ, nedotažené detaily</span></div>
+      <p>Aplikace je čistá a klidná. Barvy jsou dobře vybrané a tmavé téma je zvládnuté lépe než u většiny aplikací. Je ale znát, že vznikla spojením dvou aplikací. Každá obrazovka má trochu jinou hlavičku, jiné karty a jiný způsob, jak ukazuje to hlavní. Chybí jednotný řád a jasná hierarchie.</p>
+      <h3>Co funguje</h3>
+      <ul class="l">
+        <li>Petrolejově modrá na studeně šedém pozadí. Je klidná, nekřičí a dobře se čte.</li>
+        <li>Tmavé téma není čistě černé, má modrý nádech a správně ztlumené povrchy.</li>
+        <li>Figtree je dobrá volba písma. Čísla v časovači a XP mají charakter.</li>
+        <li>Dotykové plochy jsou velké a primární akce jsou jasné (play, +).</li>
+        <li>Nástěnka questů je přehledná a odměna (+25) je vidět hned.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="eyebrow">Co je potřeba zlepšit napříč aplikací</div>
+      <ul class="l bad">
+        <li><b>Tři různé hlavičky.</b> Časovač nemá titulek, Nástěnka, Kalendář a Nastavení mají obří 48px titulek, Statistiky mají hamburger i šipku zpět zároveň.</li>
+        <li><b>Spodní lišta.</b> Popisky jsou roztažené proložením (T i m e r) a hůř se čtou. Neaktivní ikony mají nízký kontrast a aktivní záložku poznáš jen podle barvy.</li>
+        <li><b>Nejednotné povrchy.</b> Řádek, který otevírá podstránku, je jednou bílá karta se stínem a jindy modrý text bez karty. Souhrnná čísla ve Statistikách vypadají jako textová pole.</li>
+        <li><b>Prázdné místo.</b> Časovač i Statistiky nechávají spodní třetinu obrazovky prázdnou a obsah není vyvážený.</li>
+        <li><b>Záře ve světlém tématu.</b> Měkký modrý stín kolem kruhu a tlačítek působí rozmazaně. V tmavém tématu funguje.</li>
+        <li><b>Překryvy.</b> Plovoucí + v kalendáři zakrývá události z 5. 12. a obsah Nastavení při scrollu podjíždí pod titulek, který nemá pozadí.</li>
+        <li><b>Hustota.</b> Hodně prvků je v samostatné kartě nebo sekci, a tak se dlouho scrolluje a málo vidí.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:16px">
+    <h3>Co znamenají tři úrovně <small>· platí pro všech pět obrazovek</small></h3>
+    <div class="tbl"><table>
+      <tr><th>Úroveň</th><th>Co se mění</th><th>Zásah do kódu</th></tr>
+      <tr><td><span class="pill">Malá</span></td><td>Opravy a doladění: kontrast, velikosti, rozestupy, jednotné karty, bez záře, oprava překryvů. Rozložení obrazovek zůstává.</td><td>Hlavně tokeny v <code>lib/theme/</code> a styly existujících widgetů. Nízké riziko, změní se goldeny.</td></tr>
+      <tr><td><span class="pill">Střední</span></td><td>Totéž plus nové uspořádání: souhrn nahoře, seskupené seznamy, jednotná hlavička a lišta s indikátorem, popisky u tlačítek.</td><td>Pár nových sdílených komponent v <code>ui_kit/</code> (hlavička, seskupený seznam, dlaždice čísla, lišta). Přestavba layoutu pěti obrazovek.</td></tr>
+      <tr><td><span class="pill">Velká</span></td><td>Výraznější vizuální identita: modré hero plochy, nové grafy (oblouk, donut), náhledy témat, bohatší karty.</td><td>Nové komponenty a víc vlastního kreslení (CustomPainter). Nejvíc práce, ale aplikace bude působit nejvíc jako hotový produkt.</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- ===================== TIMER ===================== -->
+<section class="screen" id="casovac">
+  <div class="screen-head">
+    <div style="display:grid;gap:10px">
+      <div class="eyebrow">Obrazovka 1</div>
+      <h2>Časovač</h2>
+      <p class="lead" style="font-size:15.5px">Hlavní obrazovka aplikace. Čas a hlavní tlačítko musí být čitelné i při rychlém pohledu a vedlejší akce musí být srozumitelné bez hádání.</p>
+    </div>
+    <div class="now">
+      <h3>Co mi vadí teď</h3>
+      <ul class="l bad">
+        <li>Kruh nic neříká: v klidu je plný a při běhu skoro plný. Chybí stopa, proti které by bylo ubývání vidět.</li>
+        <li>Stav „PŘIPRAVENO“ je pod kruhem, daleko od času, ke kterému patří.</li>
+        <li>Stop a vlajka nemají popisky. Že vlajka znamená „Dokončit hned“, nikdo neuhodne. V klidu jsou šedé, ale nevypadají jasně neaktivní.</li>
+        <li>Nastavení délky (− 20 min +) je malé a vizuálně odtržené od zbytku.</li>
+        <li>Spodní pětina obrazovky je prázdná a měkká záře ve světlém tématu působí rozmazaně.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="col-h"><b>Teď</b><span class="pill now">screenshot</span></div>
+      <div class="pf"><img class="lt" src="shots/light-timer.png" alt="Současný časovač, světlé téma"><img class="dk" src="shots/dark-timer.png" alt="Současný časovač, tmavé téma"></div>
+    </div>
+
+    <!-- Timer S -->
+    <div class="col">
+      <div class="col-h"><b>Malá změna</b><span class="pill">doladění</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-menu"/></svg></div><div class="grow"></div><div class="ib"><svg class="i"><use href="#i-history"/></svg></div><div class="ib"><svg class="i"><use href="#i-chart"/></svg></div></div>
+        <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;padding-bottom:20px">
+          <div class="ring" style="width:290px;height:290px">
+            <svg viewBox="0 0 290 290"><circle class="trk" cx="145" cy="145" r="137" stroke-width="8"/><circle class="arc" cx="145" cy="145" r="137" stroke-width="8"/></svg>
+            <div class="c"><div class="time" style="font-size:80px">20:00</div><div class="phase">PŘIPRAVENO</div></div>
+          </div>
+          <div class="stepper"><div class="sb"><svg class="i"><use href="#i-minus"/></svg></div><span>20 min</span><div class="sb"><svg class="i"><use href="#i-plus"/></svg></div></div>
+          <div style="display:flex;align-items:flex-start;gap:30px">
+            <div class="cbx dis"><div class="sec"><svg class="i f"><use href="#i-stop"/></svg></div>Zapsat</div>
+            <div class="pri"><svg class="i f"><use href="#i-play"/></svg></div>
+            <div class="cbx dis"><div class="sec"><svg class="i"><use href="#i-flag"/></svg></div>Dokončit</div>
+          </div>
+        </div>
+        <nav class="nav flat" data-active="0"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Kruh dostává tenkou šedou stopu. Ubývání času je tak vidět od první vteřiny.</li>
+        <li>Stav se přesouvá do kruhu pod čas jako malý štítek.</li>
+        <li>Vedlejší tlačítka mají krátký popisek („Zapsat“, „Dokončit“) a v klidu jsou zřetelně ztlumená.</li>
+        <li>Délka je jeden ovládací prvek ve tvaru tabletky, ne dva osamocené kroužky.</li>
+        <li>Bez záře, jen jemný stín pod play. Popisky v liště bez proložení.</li>
+      </ul>
+    </div>
+
+    <!-- Timer M -->
+    <div class="col">
+      <div class="col-h"><b>Střední změna</b><span class="pill">nové uspořádání</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-menu"/></svg></div><div class="ttl" style="font-size:21px">Časovač</div><div class="grow"></div><div class="ib t"><svg class="i"><use href="#i-history"/></svg></div><div class="ib t"><svg class="i"><use href="#i-chart"/></svg></div></div>
+        <div class="body" style="display:flex;flex-direction:column;align-items:center;padding:30px 20px 18px">
+          <div class="ring" style="width:310px;height:310px">
+            <svg viewBox="0 0 310 310"><circle class="trk" cx="155" cy="155" r="143" stroke-width="12"/><circle class="arc" cx="155" cy="155" r="143" stroke-width="12"/><circle cx="155" cy="12" r="11" fill="var(--card)" stroke="var(--ac)" stroke-width="4"/></svg>
+            <div class="c" style="gap:14px">
+              <div class="phase">PŘIPRAVENO</div>
+              <div class="time" style="font-size:84px">20:00</div>
+              <div style="display:flex;align-items:center;gap:6px;color:var(--dim)">
+                <div class="ib t" style="width:38px;height:38px;border-radius:50%"><svg class="i" style="width:20px;height:20px"><use href="#i-minus"/></svg></div>
+                <span style="font-weight:650;min-width:70px;text-align:center;color:var(--tx)">20 min</span>
+                <div class="ib t" style="width:38px;height:38px;border-radius:50%"><svg class="i" style="width:20px;height:20px"><use href="#i-plus"/></svg></div>
+              </div>
+            </div>
+          </div>
+          <div class="grow"></div>
+          <div class="card" style="width:100%;border-radius:28px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh)">
+            <div class="cbx dis" style="width:84px"><div class="sec" style="width:52px;height:52px"><svg class="i f"><use href="#i-stop"/></svg></div>Zapsat</div>
+            <div class="pri"><svg class="i f"><use href="#i-play"/></svg></div>
+            <div class="cbx dis" style="width:84px"><div class="sec" style="width:52px;height:52px"><svg class="i"><use href="#i-flag"/></svg></div>Dokončit</div>
+          </div>
+        </div>
+        <nav class="nav pill" data-active="0"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Jednotná hlavička jako na ostatních obrazovkách: menu, titulek a tónovaná tlačítka vpravo.</li>
+        <li>Všechno o čase je uvnitř kruhu: stav nahoře, čas uprostřed, délka dole. Jeden pohled, jedno místo.</li>
+        <li>Jezdec na konci oblouku ukazuje, kde čas právě je.</li>
+        <li>Ovládání sedí v plovoucím doku dole u palce a vyplňuje prázdné místo.</li>
+        <li>Lišta s indikátorem (tabletka za ikonou), aktivní záložka je jasná i bez barvy.</li>
+      </ul>
+    </div>
+
+    <!-- Timer L -->
+    <div class="col">
+      <div class="col-h"><b>Velká změna</b><span class="pill">nová identita</span></div>
+      <div class="pf"><div class="scr">
+        <div style="background:var(--hero);color:var(--onhero);border-radius:0 0 34px 34px;padding-bottom:26px;flex:none">
+          <div class="tb"><div class="ib" style="color:inherit"><svg class="i"><use href="#i-menu"/></svg></div><div class="ttl" style="font-size:21px">Časovač</div><div class="grow"></div><div class="ib" style="color:inherit;background:rgba(255,255,255,.14)"><svg class="i"><use href="#i-history"/></svg></div><div class="ib" style="color:inherit;background:rgba(255,255,255,.14)"><svg class="i"><use href="#i-chart"/></svg></div></div>
+          <div class="ring" style="width:300px;height:300px;margin:8px auto 0">
+            <svg viewBox="0 0 300 300"><circle cx="150" cy="150" r="130" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="14" stroke-linecap="round" stroke-dasharray="612.6 816.8" transform="rotate(135 150 150)"/><circle cx="150" cy="150" r="130" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-dasharray="612.6 816.8" transform="rotate(135 150 150)"/></svg>
+            <div class="c" style="gap:10px;margin-top:-6px">
+              <div style="font-size:12.5px;font-weight:700;letter-spacing:.14em;opacity:.8">PŘIPRAVENO</div>
+              <div class="time" style="font-size:76px;font-weight:650">20:00</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:center;gap:10px;margin-top:-30px;position:relative">
+            <div style="width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center"><svg class="i"><use href="#i-minus"/></svg></div>
+            <div style="height:46px;padding:0 18px;border-radius:23px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-weight:700;font-size:17px">20 min</div>
+            <div style="width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center"><svg class="i"><use href="#i-plus"/></svg></div>
+          </div>
+        </div>
+        <div class="body" style="padding:26px 20px 18px;display:flex;flex-direction:column;gap:12px;justify-content:flex-end">
+          <div style="height:64px;border-radius:22px;background:var(--ac);color:var(--onac);display:flex;align-items:center;justify-content:center;gap:10px;font-size:19px;font-weight:750;box-shadow:0 8px 22px color-mix(in srgb,var(--ac) 30%,transparent)"><svg class="i f"><use href="#i-play"/></svg>Spustit</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;opacity:.5">
+            <div class="card" style="height:54px;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:650;font-size:15px"><svg class="i f" style="width:20px;height:20px"><use href="#i-stop"/></svg>Zastavit a zapsat</div>
+            <div class="card" style="height:54px;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:650;font-size:15px"><svg class="i" style="width:20px;height:20px"><use href="#i-flag"/></svg>Dokončit hned</div>
+          </div>
+        </div>
+        <nav class="nav pill" data-active="0"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Horní polovina je modrá hero plocha, takže časovač má vlastní tvář a je to nejvýraznější místo v aplikaci.</li>
+        <li>Oblouk 270° místo kruhu, otevřený dole pro ovládání délky. Čte se jako budík.</li>
+        <li>Akce jsou tlačítka s celým textem („Spustit“, „Zastavit a zapsat“, „Dokončit hned“), takže nikdo nemusí hádat.</li>
+        <li>Hlavní tlačítko je široké a dole, jednoduše dosažitelné palcem.</li>
+        <li>Při běhu by se modrá plocha mohla jemně měnit podle stavu (pauza = ztlumená).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STATS ===================== -->
+<section class="screen" id="statistiky">
+  <div class="screen-head">
+    <div style="display:grid;gap:10px">
+      <div class="eyebrow">Obrazovka 2</div>
+      <h2>Statistiky</h2>
+      <p class="lead" style="font-size:15.5px">Odpověď na otázku „kolik a na co jsem dnes/tento týden dal čas“. Hlavní čísla patří nahoru, detail pod ně.</p>
+    </div>
+    <div class="now">
+      <h3>Co mi vadí teď</h3>
+      <ul class="l bad">
+        <li>Dvojitá navigace: hamburger i šipka zpět vedle sebe.</li>
+        <li>Nejdůležitější čísla (celkem 2 h, nesledováno 14 h) jsou až dole a vypadají jako textová pole.</li>
+        <li>Časová osa je šedý pruh v šedé kartě s nízkým kontrastem. V týdnu se popisky 3–6–9… opakují sedmkrát.</li>
+        <li>Tenké pruhy a podtypy (Placená) splývají s hlavním řádkem.</li>
+        <li>Polovina obrazovky zůstává prázdná.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="col-h"><b>Teď</b><span class="pill now">screenshot</span></div>
+      <div class="pf"><img class="lt" src="shots/light-stats.png" alt="Současné statistiky, světlé téma"><img class="dk" src="shots/dark-stats.png" alt="Současné statistiky, tmavé téma"></div>
+    </div>
+
+    <!-- Stats S -->
+    <div class="col">
+      <div class="col-h"><b>Malá změna</b><span class="pill">doladění</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-back"/></svg></div><div class="ttl" style="font-size:22px">Statistiky</div></div>
+        <div class="body" style="padding:4px 20px;display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;justify-content:center"><div class="segc"><b class="on">Den</b><b>Týden</b></div></div>
+          <div style="display:flex;justify-content:center;align-items:center;gap:18px;color:var(--dim)"><svg class="i"><use href="#i-cl"/></svg><b style="font-size:19px;color:var(--tx)">Dnes</b><svg class="i" style="opacity:.35"><use href="#i-cr"/></svg></div>
+          <div class="card" style="padding:16px">
+            <div class="tl"><i style="left:22.9%;width:6.3%;background:var(--work)"></i><i style="left:30.2%;width:2.1%;background:var(--meet)"></i></div>
+            <div class="ticks"><span>3</span><span>6</span><span>9</span><span>12</span><span>15</span><span>18</span><span>21</span><span>0</span><span>3</span></div>
+          </div>
+          <div class="cap">Podle typu aktivity</div>
+          <div style="display:grid;gap:8px">
+            <div class="kv"><span style="font-size:16px;font-weight:600">Práce</span><span class="v">1h 30m · 75 %</span></div>
+            <div class="bar8"><i style="width:75%;background:var(--work)"></i></div>
+            <div class="kv" style="padding-left:14px;font-size:14px;color:var(--dim)"><span class="dot" style="background:var(--work)"></span>Placená<span class="v" style="font-size:13.5px">1h 30m</span></div>
+          </div>
+          <div style="display:grid;gap:8px">
+            <div class="kv"><span style="font-size:16px;font-weight:600">Meeting</span><span class="v">30m · 25 %</span></div>
+            <div class="bar8"><i style="width:25%;background:var(--meet)"></i></div>
+          </div>
+          <div class="cap">Podle projektu</div>
+          <div class="kv"><span class="dot" style="background:var(--work)"></span><span style="font-weight:600">DayLog</span><span class="v">1h 30m</span></div>
+          <div class="grp">
+            <div class="kv" style="padding:14px 16px"><span>Celkem sledováno</span><span class="v" style="color:var(--tx);font-weight:750;font-size:16px">2 h</span></div>
+            <div class="kv" style="padding:14px 16px"><span>Nesledovaný čas</span><span class="v" style="color:var(--tx);font-weight:750;font-size:16px">14 h</span></div>
+          </div>
+        </div>
+        <nav class="nav flat" data-active="0"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Na podstránce jen šipka zpět, hamburger zmizí (do menu se jde z hlavní obrazovky).</li>
+        <li>Časová osa v bílé kartě se světlejší stopou, takže barevné bloky vyniknou.</li>
+        <li>Tlustší pruhy (8 px), podtyp odsazený a menší.</li>
+        <li>Souhrn je jedna seskupená karta s řádky, ne dvě „pole“.</li>
+        <li>Nadpisy sekcí stejným kapitálkovým stylem jako jinde v aplikaci.</li>
+      </ul>
+    </div>
+
+    <!-- Stats M -->
+    <div class="col">
+      <div class="col-h"><b>Střední změna</b><span class="pill">nové uspořádání</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-back"/></svg></div><div class="ttl" style="font-size:22px">Statistiky</div><div class="grow"></div><div class="segc"><b class="on">Den</b><b>Týden</b></div></div>
+        <div class="body" style="padding:4px 20px;display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div class="ib t" style="width:40px;height:40px"><svg class="i"><use href="#i-cl"/></svg></div>
+            <div style="text-align:center"><div style="font-size:19px;font-weight:750">Dnes</div><div style="font-size:13px;color:var(--dim)">sobota 21. listopadu</div></div>
+            <div class="ib t" style="width:40px;height:40px;opacity:.4"><svg class="i"><use href="#i-cr"/></svg></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="card" style="padding:14px 16px"><div class="cap" style="font-size:11px">Sledováno</div><div style="font-size:34px;font-weight:800;color:var(--ac);letter-spacing:-.02em">2 h</div></div>
+            <div class="card" style="padding:14px 16px"><div class="cap" style="font-size:11px">Nesledováno</div><div style="font-size:34px;font-weight:800;letter-spacing:-.02em;color:var(--dim)">14 h</div></div>
+          </div>
+          <div class="card" style="padding:16px">
+            <div style="display:flex;height:12px;border-radius:6px;overflow:hidden;gap:2px;margin-bottom:14px"><i style="flex:75;background:var(--work)"></i><i style="flex:25;background:var(--meet)"></i></div>
+            <div class="tl" style="height:28px"><span class="g" style="left:12.5%"></span><span class="g" style="left:37.5%"></span><span class="g" style="left:62.5%"></span><span class="g" style="left:87.5%"></span><i style="left:22.9%;width:6.3%;background:var(--work)"></i><i style="left:30.2%;width:2.1%;background:var(--meet)"></i></div>
+            <div class="ticks"><span>3:00</span><span>9:00</span><span>15:00</span><span>21:00</span><span>3:00</span></div>
+          </div>
+          <div class="cap">Podle typu aktivity</div>
+          <div class="grp">
+            <div style="padding:14px 16px;display:grid;gap:8px">
+              <div class="kv"><span class="dot" style="background:var(--work)"></span><b style="font-weight:650">Práce</b><span class="v"><b style="color:var(--tx)">1h 30m</b> · 75 %</span></div>
+              <div class="bar8"><i style="width:75%;background:var(--work)"></i></div>
+              <div class="kv" style="font-size:14px;color:var(--dim);padding-left:19px">Placená<span class="v" style="font-size:13.5px">1h 30m</span></div>
+            </div>
+            <div style="padding:14px 16px;display:grid;gap:8px">
+              <div class="kv"><span class="dot" style="background:var(--meet)"></span><b style="font-weight:650">Meeting</b><span class="v"><b style="color:var(--tx)">30m</b> · 25 %</span></div>
+              <div class="bar8"><i style="width:25%;background:var(--meet)"></i></div>
+            </div>
+          </div>
+        </div>
+        <nav class="nav pill" data-active="0"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Hlavní čísla jsou nahoře ve dvou dlaždicích. Na první pohled vidíš, kolik jsi sledoval.</li>
+        <li>Přepínač Den/Týden je v hlavičce, takže ušetří celý řádek.</li>
+        <li>Pod navigací datum celým jménem dne, ať je jasné, na který den se díváš.</li>
+        <li>Pruh podílů nad časovou osou dává rychlou odpověď „na co“, osa pak „kdy“. Osa má mřížku a méně popisků.</li>
+        <li>V týdnu by byly hodiny jen jednou dole, ne u každého dne.</li>
+      </ul>
+    </div>
+
+    <!-- Stats L -->
+    <div class="col">
+      <div class="col-h"><b>Velká změna</b><span class="pill">nová identita</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-back"/></svg></div><div class="ttl" style="font-size:22px">Statistiky</div><div class="grow"></div><div class="segc"><b class="on">Den</b><b>Týden</b></div></div>
+        <div class="body" style="padding:2px 20px;display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;align-items:center;justify-content:center;gap:16px;color:var(--dim)"><svg class="i"><use href="#i-cl"/></svg><div style="text-align:center"><div style="font-size:18px;font-weight:750;color:var(--tx)">Dnes</div><div style="font-size:12.5px">sobota 21. listopadu</div></div><svg class="i" style="opacity:.35"><use href="#i-cr"/></svg></div>
+          <div class="card" style="padding:18px;display:flex;align-items:center;gap:18px">
+            <div style="position:relative;width:150px;height:150px;flex:none">
+              <svg viewBox="0 0 160 160" style="width:100%;height:100%"><circle cx="80" cy="80" r="66" fill="none" stroke="var(--tone)" stroke-width="18"/><circle cx="80" cy="80" r="66" fill="none" stroke="var(--work)" stroke-width="18" stroke-dasharray="306 414.7" transform="rotate(-90 80 80)"/><circle cx="80" cy="80" r="66" fill="none" stroke="var(--meet)" stroke-width="18" stroke-dasharray="98.7 414.7" stroke-dashoffset="-310" transform="rotate(-90 80 80)"/></svg>
+              <div style="position:absolute;inset:0;display:grid;place-content:center;text-align:center"><div style="font-size:30px;font-weight:800;letter-spacing:-.02em">2 h</div><div style="font-size:12px;color:var(--dim)">sledováno</div></div>
+            </div>
+            <div style="display:grid;gap:12px;min-width:0;flex:1">
+              <div><div class="kv" style="font-size:14px"><span class="dot" style="background:var(--work)"></span>Práce</div><div style="font-weight:750;font-size:17px;padding-left:19px">1h 30m <span style="font-weight:500;color:var(--dim);font-size:13px">75 %</span></div></div>
+              <div><div class="kv" style="font-size:14px"><span class="dot" style="background:var(--meet)"></span>Meeting</div><div style="font-weight:750;font-size:17px;padding-left:19px">30m <span style="font-weight:500;color:var(--dim);font-size:13px">25 %</span></div></div>
+              <div style="font-size:13px;color:var(--dim);border-top:1px solid var(--line);padding-top:10px">Nesledováno <b style="color:var(--tx)">14 h</b></div>
+            </div>
+          </div>
+          <div class="card" style="padding:16px 16px 12px">
+            <div class="cap" style="margin-bottom:10px">Průběh dne</div>
+            <div class="tl" style="height:40px;border-radius:12px"><span class="g" style="left:25%"></span><span class="g" style="left:50%"></span><span class="g" style="left:75%"></span><i style="left:22.9%;width:6.3%;background:var(--work);border-radius:6px"></i><i style="left:30.2%;width:2.1%;background:var(--meet);border-radius:6px"></i></div>
+            <div class="ticks"><span>3</span><span>9</span><span>15</span><span>21</span><span>3</span></div>
+          </div>
+          <div class="card" style="padding:14px 16px;display:grid;gap:10px">
+            <div class="cap">Podle projektu</div>
+            <div class="kv"><span class="dot" style="background:var(--work)"></span><b style="font-weight:650">DayLog</b><span class="v"><b style="color:var(--tx)">1h 30m</b></span></div>
+          </div>
+        </div>
+        <nav class="nav pill" data-active="0"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Donut s celkovým časem uprostřed. Podíl aktivit je vidět okamžitě, bez čtení čísel.</li>
+        <li>Legenda vedle donutu nahrazuje pruhy. Podtypy by se rozbalily klepnutím na řádek, což už dnes dělá rozpad pod pruhem.</li>
+        <li>Časová osa „Průběh dne“ je vyšší a se zaoblenými bloky, aby působila jako graf, ne jako ukazatel načítání.</li>
+        <li>Každý blok informací má vlastní kartu: souhrn, průběh, projekty.</li>
+        <li>Pozor: u týdne s 8+ aktivitami se donut hůř čte, tam bych nechal pruhy ze střední varianty.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== QUESTS ===================== -->
+<section class="screen" id="questy">
+  <div class="screen-head">
+    <div style="display:grid;gap:10px">
+      <div class="eyebrow">Obrazovka 3</div>
+      <h2>Questy (Nástěnka)</h2>
+      <p class="lead" style="font-size:15.5px">Seznam toho, co je dnes a co čeká. Musí se dobře skenovat a odměna má motivovat, ne překážet.</p>
+    </div>
+    <div class="now">
+      <h3>Co mi vadí teď</h3>
+      <ul class="l bad">
+        <li>Hlavička je přeplněná: titulek, podtitulek, kroužek úrovně, jméno, XP a pruh, všechno v pěti řádcích bez oddělení.</li>
+        <li>Karty mají stín i rámeček a jsou vyšší, než musí být, takže se vejde málo questů.</li>
+        <li>Obtížnost (kosočtverce) má nízký kontrast a vedle velkého „+25“ se ztrácí.</li>
+        <li>Ikona kalendáře u questu je malá a není jasné, co znamená.</li>
+        <li>Nápověda „Tažením doleva…“ je trvale vidět i po stém použití.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="col-h"><b>Teď</b><span class="pill now">screenshot</span></div>
+      <div class="pf"><img class="lt" src="shots/light-quests.png" alt="Současná nástěnka, světlé téma"><img class="dk" src="shots/dark-quests.png" alt="Současná nástěnka, tmavé téma"></div>
+    </div>
+
+    <!-- Quests S -->
+    <div class="col">
+      <div class="col-h"><b>Malá změna</b><span class="pill">doladění</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb" style="height:auto;padding-top:10px;align-items:flex-start"><div class="ib"><svg class="i"><use href="#i-menu"/></svg></div><div style="padding-top:2px"><div class="ttl" style="font-size:34px;line-height:1.05">Nástěnka</div><div style="font-size:14px;color:var(--dim);margin-top:4px">5 otevřených · sobota 21. listopadu</div></div></div>
+        <div class="body" style="padding:14px 20px 0">
+          <div class="card" style="padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:22px">
+            <div style="width:52px;height:52px;border-radius:50%;border:3px solid var(--ac);display:grid;place-items:center;font-weight:800;font-size:22px;color:var(--ac);flex:none">4</div>
+            <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:16.5px">Martin · Úroveň 4</div>
+              <div class="bar8" style="margin:8px 0 6px;height:6px"><i style="width:12%;background:var(--ac)"></i></div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--dim)"><span class="tab-num">30 / 250 XP</span><span>220 XP do úrovně 5</span></div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="cap">Dnes</span><span class="cap" style="color:var(--ac)">+60 XP</span></div>
+          <div style="display:grid;gap:10px;margin-bottom:22px" data-quests="s" data-set="today"></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="cap">Todo</span><span class="cap" style="color:var(--ac)">+60 XP</span></div>
+          <div style="display:grid;gap:10px" data-quests="s" data-set="todo"></div>
+          <p style="font-size:12.5px;color:var(--faint);text-align:center;margin-top:14px">Tažením doleva upravíš nebo smažeš · klepnutím na kroužek splníš</p>
+          <div class="fab"><svg class="i"><use href="#i-plus"/></svg></div>
+        </div>
+        <nav class="nav flat" data-active="1"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Menší titulek (34 místo 48 px), úroveň a XP v jedné kartě. Hlavička má jasné dvě části.</li>
+        <li>Karty bez stínu, jen jemný rámeček, a nižší, takže se vejde víc questů.</li>
+        <li>Kosočtverce obtížnosti v kontrastnější barvě, aby šly přečíst.</li>
+        <li>Datum questu z kalendáře se ukazuje jako text („18:00–19:30“) místo samotné ikonky.</li>
+        <li>Nápověda menší a tišší. FAB se zaobleným čtvercem místo kruhu, ať ladí s kartami.</li>
+      </ul>
+    </div>
+
+    <!-- Quests M -->
+    <div class="col">
+      <div class="col-h"><b>Střední změna</b><span class="pill">nové uspořádání</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-menu"/></svg></div><div><div class="ttl" style="font-size:22px">Nástěnka</div><div style="font-size:12.5px;color:var(--dim)">sobota 21. listopadu</div></div></div>
+        <div class="body" style="padding:6px 20px 0">
+          <div style="background:var(--acs);border-radius:22px;padding:16px;display:flex;align-items:center;gap:16px;margin-bottom:22px">
+            <div class="ring" style="width:64px;height:64px;flex:none">
+              <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="none" stroke="var(--line2)" stroke-width="6"/><circle cx="32" cy="32" r="28" fill="none" stroke="var(--ac)" stroke-width="6" stroke-linecap="round" stroke-dasharray="21.1 175.9" transform="rotate(-90 32 32)"/></svg>
+              <div class="c" style="font-weight:800;font-size:24px;color:var(--ac)">4</div>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;color:var(--dim)">Martin</div>
+              <div style="font-size:19px;font-weight:800">Úroveň 4</div>
+              <div style="font-size:13px;color:var(--dim);margin-top:2px"><b class="tab-num" style="color:var(--tx)">30</b> / 250 XP · ještě 220</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><b style="font-size:17px">Dnes</b><span style="color:var(--faint);font-weight:600">3</span><span class="grow"></span><span class="xpp" style="font-size:12.5px;padding:3px 9px">+60 XP</span></div>
+          <div class="grp" style="margin-bottom:22px" data-quests="m" data-set="today"></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><b style="font-size:17px">Todo</b><span style="color:var(--faint);font-weight:600">2</span><span class="grow"></span><span class="xpp" style="font-size:12.5px;padding:3px 9px">+60 XP</span></div>
+          <div class="grp" data-quests="m" data-set="todo"></div>
+          <div class="fab ext"><svg class="i"><use href="#i-plus"/></svg>Quest</div>
+        </div>
+        <nav class="nav pill" data-active="1"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Jednotná kompaktní hlavička a úroveň jako tónovaná karta s kruhovým postupem kolem čísla.</li>
+        <li>Questy v sekci jsou jedna seskupená karta s oddělovači (jako v Nastavení iOS/Android). Je to klidnější a hustší.</li>
+        <li>Sekce mají počet a XP jako štítek, takže na první pohled vidíš, kolik toho je.</li>
+        <li>Obtížnost jako čtyři malé dílky (lépe čitelné než kosočtverce), XP jako tabletka vpravo.</li>
+        <li>Rozšířené tlačítko „+ Quest“ říká, co přidává. Nápověda by se ukazovala jen u prvních pár questů.</li>
+      </ul>
+    </div>
+
+    <!-- Quests L -->
+    <div class="col">
+      <div class="col-h"><b>Velká změna</b><span class="pill">nová identita</span></div>
+      <div class="pf"><div class="scr">
+        <div style="background:var(--hero);color:var(--onhero);border-radius:0 0 30px 30px;padding:0 20px 20px;flex:none">
+          <div class="tb" style="padding:0;margin-left:-8px"><div class="ib" style="color:inherit"><svg class="i"><use href="#i-menu"/></svg></div><div class="ttl" style="font-size:21px">Nástěnka</div><div class="grow"></div><span style="font-size:13px;opacity:.8">so 21. 11.</span></div>
+          <div style="display:flex;align-items:center;gap:16px;margin-top:4px">
+            <div class="ring" style="width:78px;height:78px;flex:none">
+              <svg viewBox="0 0 78 78"><circle cx="39" cy="39" r="34" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="7"/><circle cx="39" cy="39" r="34" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-dasharray="25.6 213.6" transform="rotate(-90 39 39)"/></svg>
+              <div class="c" style="font-weight:800;font-size:30px">4</div>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:24px;font-weight:800;letter-spacing:-.01em">Martin</div>
+              <div style="font-size:14px;opacity:.85">Úroveň 4 · 30 / 250 XP</div>
+              <div style="height:6px;border-radius:3px;background:rgba(255,255,255,.2);margin-top:9px;overflow:hidden"><i style="display:block;width:12%;height:100%;background:#fff;border-radius:3px"></i></div>
+              <div style="font-size:12.5px;opacity:.8;margin-top:5px">220 XP do úrovně 5 · 5 otevřených</div>
+            </div>
+          </div>
+        </div>
+        <div class="body" style="padding:18px 20px 0">
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="cap">Dnes</span><span class="cap" style="color:var(--ac)">+60 XP</span></div>
+          <div style="display:grid;gap:10px;margin-bottom:20px" data-quests="l" data-set="today"></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="cap">Todo</span><span class="cap" style="color:var(--ac)">+60 XP</span></div>
+          <div style="display:grid;gap:10px" data-quests="l" data-set="todo"></div>
+          <div class="fab ext"><svg class="i"><use href="#i-plus"/></svg>Quest</div>
+        </div>
+        <nav class="nav pill" data-active="1"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Modrá hero plocha s profilem, stejná řeč jako u časovače. Úroveň je odměna, tak ať je vidět.</li>
+        <li>Každý quest má vpravo „minci“ s XP. Gamifikace je hmatatelnější, ale stále střídmá.</li>
+        <li>Quest z kalendáře má barevný štítek s typem a časem, takže je jasné, odkud pochází.</li>
+        <li>Obtížnost jako dílky v meta řádku, jméno questu větší a tučnější.</li>
+        <li>Animace splnění (dnešní pečeť a XP) by na tento styl dobře navazovala.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CALENDAR ===================== -->
+<section class="screen" id="kalendar">
+  <div class="screen-head">
+    <div style="display:grid;gap:10px">
+      <div class="eyebrow">Obrazovka 4</div>
+      <h2>Kalendář</h2>
+      <p class="lead" style="font-size:15.5px">Měsíční přehled: kdy co je a co mě čeká dnes. Na telefonu je v buňce místo jen na pár znaků, a s tím musí návrh počítat.</p>
+    </div>
+    <div class="now">
+      <h3>Co mi vadí teď</h3>
+      <ul class="l bad">
+        <li>Názvy událostí jsou useknuté po 4–6 znacích („Den vzni…“, „Lekce a…“), takže hlavní obsah je nečitelný.</li>
+        <li>Barvy štítků jsou syté a mimo paletu aplikace. Svátek je jednou plný červený, jindy světlý s proužkem.</li>
+        <li>Dnešek má tlustý rámeček i výplň celé buňky, což je moc těžké.</li>
+        <li>Dny z jiného měsíce se liší jen šedým číslem.</li>
+        <li>Plovoucí + zakrývá události z 5. 12. a velké buňky jsou z většiny prázdné.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="col-h"><b>Teď</b><span class="pill now">screenshot</span></div>
+      <div class="pf"><img class="lt" src="shots/light-calendar.png" alt="Současný kalendář, světlé téma"><img class="dk" src="shots/dark-calendar.png" alt="Současný kalendář, tmavé téma"></div>
+    </div>
+
+    <!-- Calendar S -->
+    <div class="col">
+      <div class="col-h"><b>Malá změna</b><span class="pill">doladění</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-menu"/></svg></div><div class="ttl" style="font-size:30px">Listopad 2026</div></div>
+        <div style="display:flex;align-items:center;gap:4px;padding:0 12px 6px;flex:none">
+          <div class="ib"><svg class="i"><use href="#i-cl"/></svg></div><div class="ib"><svg class="i"><use href="#i-cr"/></svg></div>
+          <div style="padding:7px 14px;border-radius:999px;background:var(--acs);color:var(--ac);font-weight:700;font-size:15px">Dnes</div>
+          <div class="grow"></div><div class="ib"><svg class="i"><use href="#i-search"/></svg></div><div class="ib"><svg class="i"><use href="#i-filter"/></svg></div>
+        </div>
+        <div class="body" style="padding:0 6px">
+          <div class="cg" data-cal="chips" data-h="88" data-max="3"></div>
+          <div class="fab"><svg class="i"><use href="#i-plus"/></svg></div>
+        </div>
+        <nav class="nav flat" data-active="2"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Dnešek jako vyplněný kroužek kolem čísla (jako v systémových kalendářích), ne těžký rámeček.</li>
+        <li>Štítky událostí v tlumených odstínech stejné barvy a s tmavým textem, vše jedním stylem. Čitelnější a v paletě.</li>
+        <li>Dny z jiného měsíce mají šedé pozadí, takže hranice měsíce je hned vidět.</li>
+        <li>Buňky o kousek nižší, aby plovoucí + nezakrývalo poslední řádek.</li>
+        <li>Mřížka jen vodorovné linky, méně „tabulkové“.</li>
+      </ul>
+    </div>
+
+    <!-- Calendar M -->
+    <div class="col">
+      <div class="col-h"><b>Střední změna</b><span class="pill">nové uspořádání</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-menu"/></svg></div><div class="ttl" style="font-size:22px">Listopad <span style="font-weight:500;color:var(--dim)">2026</span></div><div class="grow"></div><div class="ib"><svg class="i"><use href="#i-search"/></svg></div><div class="ib"><svg class="i"><use href="#i-filter"/></svg></div></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:0 16px 8px;flex:none">
+          <div class="ib t" style="width:38px;height:38px"><svg class="i"><use href="#i-cl"/></svg></div><div class="ib t" style="width:38px;height:38px"><svg class="i"><use href="#i-cr"/></svg></div>
+          <div class="grow"></div>
+          <div style="padding:7px 14px;border-radius:12px;background:var(--acs);color:var(--ac);font-weight:700;font-size:14px">Dnes</div>
+        </div>
+        <div class="body" style="padding:0 6px">
+          <div class="cg" data-cal="chips" data-h="62" data-max="2"></div>
+          <div style="margin:10px 10px 0;padding:14px 16px" class="card">
+            <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px"><b style="font-size:17px">Sobota 21. listopadu</b><span style="color:var(--dim);font-size:13px">1 událost</span></div>
+            <div style="display:flex;gap:12px;align-items:center">
+              <div style="font-size:13px;color:var(--dim);text-align:right;line-height:1.35" class="tab-num">18:00<br>19:30</div>
+              <div style="width:4px;align-self:stretch;border-radius:2px;background:var(--dance)"></div>
+              <div><div style="font-weight:650">Taneční lekce</div><div style="font-size:13px;color:var(--dim)">Tanec</div></div>
+            </div>
+          </div>
+          <div class="fab" style="bottom:14px"><svg class="i"><use href="#i-plus"/></svg></div>
+        </div>
+        <nav class="nav pill" data-active="2"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Kompaktní mřížka (nejvýš 2 štítky, pak „+1“). Pod ní karta s událostmi vybraného dne. Po otevření vidíš dnešek bez dalšího klepnutí.</li>
+        <li>Klepnutí na den jen přepne kartu dole místo otevírání sheetu přes celý kalendář. Detail události a přidání zůstávají stejné.</li>
+        <li>Měsíc a rok v hlavičce menším písmem, ovládání rozdělené: hledání a filtr nahoře, listování měsíci pod tím.</li>
+        <li>Pozor, toto je jediná změna chování v celém návrhu (sheet → karta). Když ji nebudeš chtít, zbytek varianty platí i se sheetem.</li>
+      </ul>
+    </div>
+
+    <!-- Calendar L -->
+    <div class="col">
+      <div class="col-h"><b>Velká změna</b><span class="pill">nová identita</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-menu"/></svg></div><div class="grow"></div><div class="ib t"><svg class="i"><use href="#i-search"/></svg></div><div class="ib t"><svg class="i"><use href="#i-filter"/></svg></div></div>
+        <div style="padding:0 20px 10px;display:flex;align-items:flex-end;flex:none">
+          <div><div style="font-size:15px;color:var(--dim);font-weight:600">2026</div><div class="ttl" style="font-size:38px;line-height:1">Listopad</div></div>
+          <div class="grow"></div>
+          <div style="display:flex;background:var(--tone);border-radius:14px;padding:3px;gap:2px;align-items:center">
+            <div class="ib" style="width:36px;height:36px"><svg class="i"><use href="#i-cl"/></svg></div>
+            <b style="font-size:14px;color:var(--ac);padding:0 6px">Dnes</b>
+            <div class="ib" style="width:36px;height:36px"><svg class="i"><use href="#i-cr"/></svg></div>
+          </div>
+        </div>
+        <div class="body" style="padding:0 12px">
+          <div class="card" style="padding:4px 4px 6px;border-radius:22px"><div class="cg" data-cal="dots" data-h="50"></div></div>
+          <div style="padding:16px 6px 0;display:flex;align-items:baseline;justify-content:space-between"><b style="font-size:18px">Dnes · sobota 21.</b><span style="color:var(--dim);font-size:13px">1 událost</span></div>
+          <div style="margin-top:10px;border-radius:18px;padding:14px 16px;background:color-mix(in srgb,var(--dance) 22%,var(--card));display:flex;gap:14px;align-items:center">
+            <div style="width:46px;height:46px;border-radius:14px;background:var(--dance);color:#2a0d18;display:grid;place-items:center;font-weight:800;font-size:13px;line-height:1.1;text-align:center" class="tab-num">18:00</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:16.5px">Taneční lekce</div><div style="font-size:13px;color:var(--dim)">Tanec · 18:00–19:30</div></div>
+          </div>
+          <div class="fab ext" style="bottom:14px"><svg class="i"><use href="#i-plus"/></svg>Událost</div>
+        </div>
+        <nav class="nav pill" data-active="2"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Velký název měsíce jako u kalendářních aplikací typu Fantastical: rok nad ním drobně, listování v jednom kompaktním prvku.</li>
+        <li>Mřížka v kartě s barevnými tečkami místo textu: přehled „kde je co“ bez useknutých slov.</li>
+        <li>Události dne pod mřížkou jako barevné karty v barvě typu. Kalendář dostane život a typy se dají poznat podle barvy.</li>
+        <li>Názvy událostí v mřížce zmizí. Kdo potřebuje vidět názvy v celém měsíci, zůstane u malé varianty.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SETTINGS ===================== -->
+<section class="screen" id="nastaveni">
+  <div class="screen-head">
+    <div style="display:grid;gap:10px">
+      <div class="eyebrow">Obrazovka 5</div>
+      <h2>Nastavení</h2>
+      <p class="lead" style="font-size:15.5px">Málo navštěvovaná obrazovka, ale musí být uspořádaná: najít věc za dvě vteřiny a vidět aktuální hodnotu bez rozklikávání.</p>
+    </div>
+    <div class="now">
+      <h3>Co mi vadí teď</h3>
+      <ul class="l bad">
+        <li>Duplicitní nadpisy: „PRAVIDELNÉ MISE“ a pod ním karta „Pravidelné mise“, totéž u Zkratky na ploše.</li>
+        <li>Každá položka má vlastní kartu a sekci, takže se dlouho scrolluje a nic není seskupené.</li>
+        <li>Data a O aplikaci mají jiný styl (bez karet, modrý text) než zbytek.</li>
+        <li>Při scrollu podjíždí obsah pod titulek „Nastavení“, který nemá pozadí, takže jsou vidět useknuté segmenty.</li>
+        <li>Vybraný segment (English, Světlý) má výrazný rámeček a působí těžce.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="col-h"><b>Teď</b><span class="pill now">screenshot</span></div>
+      <div class="pf"><img class="lt" src="shots/light-settings.png" alt="Současné nastavení, světlé téma"><img class="dk" src="shots/dark-settings.png" alt="Současné nastavení, tmavé téma"></div>
+    </div>
+
+    <!-- Settings S -->
+    <div class="col">
+      <div class="col-h"><b>Malá změna</b><span class="pill">doladění</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-menu"/></svg></div><div class="ttl" style="font-size:34px">Nastavení</div></div>
+        <div class="body" style="padding:6px 20px;display:flex;flex-direction:column;gap:8px">
+          <div class="cap">Profil</div>
+          <div class="card" style="padding:12px 16px"><div style="font-size:12px;color:var(--faint)">Jméno hrdiny</div><div style="font-size:17px;font-weight:600">Martin</div></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--dim);padding:0 4px 8px"><span>Celkem 480 XP</span><span>6 / 40</span></div>
+          <div class="cap">Jazyk</div>
+          <div class="sg" style="margin-bottom:8px"><b>Čeština</b><b class="on">English</b></div>
+          <div class="cap">Vzhled</div>
+          <div class="sg" style="margin-bottom:8px"><b class="on"><svg class="i"><use href="#i-sun"/></svg>Světlý</b><b><svg class="i"><use href="#i-moon"/></svg>Tmavý</b><b><svg class="i"><use href="#i-mon"/></svg>Systém</b></div>
+          <div class="cap">Plánování a připomínky</div>
+          <div class="grp" style="margin-bottom:8px">
+            <div class="row-s"><div><div class="tt">Pravidelné mise</div></div><div class="vv">1 aktivní<svg class="i chev"><use href="#i-cr"/></svg></div></div>
+            <div class="row-s"><div class="tt">Opakované připomínky</div><div class="vv"><svg class="i chev"><use href="#i-cr"/></svg></div></div>
+            <div class="row-s"><div class="tt">Testování</div><div class="vv"><svg class="i chev"><use href="#i-cr"/></svg></div></div>
+          </div>
+          <div class="cap">Data</div>
+          <div class="grp">
+            <div class="row-s"><div class="tt">Exportovat data</div><div class="vv"><svg class="i chev"><use href="#i-cr"/></svg></div></div>
+            <div class="row-s"><div class="tt">Importovat data</div><div class="vv"><svg class="i chev"><use href="#i-cr"/></svg></div></div>
+          </div>
+        </div>
+        <nav class="nav flat" data-active="4"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Žádné duplicitní nadpisy: související položky jsou v jedné seskupené kartě s oddělovači.</li>
+        <li>Data a O aplikaci mají stejný styl řádků jako zbytek.</li>
+        <li>Hodnota je vpravo v řádku („1 aktivní“), popisy se zkracují nebo přesouvají do podstránky.</li>
+        <li>Vybraný segment je bílá „vystouplá“ plocha bez rámečku, lehčí a moderní.</li>
+        <li>Titulek při scrollu dostane plné pozadí a zmenší se (oprava překryvu).</li>
+      </ul>
+    </div>
+
+    <!-- Settings M -->
+    <div class="col">
+      <div class="col-h"><b>Střední změna</b><span class="pill">nové uspořádání</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-menu"/></svg></div><div class="ttl" style="font-size:22px">Nastavení</div></div>
+        <div class="body" style="padding:6px 20px;display:flex;flex-direction:column;gap:10px">
+          <div class="card" style="padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:6px">
+            <div style="width:54px;height:54px;border-radius:50%;background:var(--acs);color:var(--ac);display:grid;place-items:center;font-weight:800;font-size:22px">M</div>
+            <div style="flex:1"><div style="font-size:18px;font-weight:750">Martin</div><div style="font-size:13.5px;color:var(--dim)">Celkem 480 XP</div></div>
+            <div class="ib t" style="width:38px;height:38px"><svg class="i" style="width:19px;height:19px"><use href="#i-pen"/></svg></div>
+          </div>
+          <div class="cap" style="padding-left:4px">Vzhled a jazyk</div>
+          <div class="grp" style="margin-bottom:6px">
+            <div class="row-s" style="flex-wrap:wrap;gap:10px 14px"><div class="ic"><svg class="i"><use href="#i-globe"/></svg></div><div class="tt">Jazyk</div><div class="sg" style="margin-left:auto;width:170px"><b style="padding:6px">CZ</b><b class="on" style="padding:6px">EN</b></div></div>
+            <div class="row-s" style="flex-wrap:wrap"><div class="ic"><svg class="i"><use href="#i-half"/></svg></div><div class="tt">Vzhled</div><div class="sg" style="margin-left:auto;width:170px"><b class="on" style="padding:6px"><svg class="i"><use href="#i-sun"/></svg></b><b style="padding:6px"><svg class="i"><use href="#i-moon"/></svg></b><b style="padding:6px"><svg class="i"><use href="#i-mon"/></svg></b></div></div>
+          </div>
+          <div class="cap" style="padding-left:4px">Plánování</div>
+          <div class="grp" style="margin-bottom:6px">
+            <div class="row-s"><div class="ic"><svg class="i"><use href="#i-repeat"/></svg></div><div class="tt">Pravidelné mise</div><div class="vv">1 aktivní<svg class="i chev"><use href="#i-cr"/></svg></div></div>
+            <div class="row-s"><div class="ic"><svg class="i"><use href="#i-bell"/></svg></div><div class="tt">Opakované připomínky</div><div class="vv"><svg class="i chev"><use href="#i-cr"/></svg></div></div>
+            <div class="row-s"><div class="ic"><svg class="i"><use href="#i-flask"/></svg></div><div class="tt">Testování</div><div class="vv"><svg class="i chev"><use href="#i-cr"/></svg></div></div>
+          </div>
+          <div class="cap" style="padding-left:4px">Zařízení a data</div>
+          <div class="grp">
+            <div class="row-s"><div class="ic"><svg class="i"><use href="#i-phone"/></svg></div><div class="tt">Zkratka na ploše</div><div class="vv"><svg class="i chev"><use href="#i-cr"/></svg></div></div>
+            <div class="row-s"><div class="ic"><svg class="i"><use href="#i-up"/></svg></div><div class="tt">Exportovat data</div><div class="vv"><svg class="i chev"><use href="#i-cr"/></svg></div></div>
+            <div class="row-s"><div class="ic"><svg class="i"><use href="#i-down"/></svg></div><div class="tt">Importovat data</div><div class="vv"><svg class="i chev"><use href="#i-cr"/></svg></div></div>
+          </div>
+        </div>
+        <nav class="nav pill" data-active="4"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Profil nahoře jako karta s iniciálou. Jméno se upravuje tužkou a pole zabírá místo jen při úpravě.</li>
+        <li>Jazyk a vzhled jsou řádky s kompaktním přepínačem vpravo. Ušetří dvě celé sekce.</li>
+        <li>Každý řádek má ikonu v tónovaném čtverci, takže se dá skenovat očima bez čtení.</li>
+        <li>Šest skupin se zredukuje na čtyři logické: Vzhled a jazyk, Plánování, Zařízení a data, O aplikaci.</li>
+        <li>Celé nastavení se vejde na zhruba 1,3 obrazovky místo 2.</li>
+      </ul>
+    </div>
+
+    <!-- Settings L -->
+    <div class="col">
+      <div class="col-h"><b>Velká změna</b><span class="pill">nová identita</span></div>
+      <div class="pf"><div class="scr">
+        <div class="tb"><div class="ib"><svg class="i"><use href="#i-menu"/></svg></div><div class="ttl" style="font-size:22px">Nastavení</div></div>
+        <div class="body" style="padding:4px 20px;display:flex;flex-direction:column;gap:12px">
+          <div style="background:var(--hero);color:var(--onhero);border-radius:24px;padding:18px;display:flex;align-items:center;gap:14px">
+            <div style="width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-weight:800;font-size:24px">M</div>
+            <div style="flex:1"><div style="font-size:12px;opacity:.75">Jméno hrdiny</div><div style="font-size:21px;font-weight:800">Martin</div><div style="font-size:13px;opacity:.85">Celkem 480 XP</div></div>
+            <div style="width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.16);display:grid;place-items:center"><svg class="i" style="width:19px;height:19px"><use href="#i-pen"/></svg></div>
+          </div>
+          <div class="cap" style="padding-left:4px;margin-top:4px">Vzhled</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+            <div style="display:grid;gap:6px;justify-items:center"><div style="width:100%;height:84px;border-radius:14px;background:#EDF1F6;border:2.5px solid var(--ac);padding:8px;display:grid;gap:5px;align-content:start"><i style="height:8px;width:60%;background:#15202B;border-radius:3px;opacity:.8"></i><i style="height:16px;background:#fff;border-radius:5px"></i><i style="height:16px;background:#fff;border-radius:5px"></i></div><b style="font-size:13.5px;color:var(--ac)">Světlý</b></div>
+            <div style="display:grid;gap:6px;justify-items:center"><div style="width:100%;height:84px;border-radius:14px;background:#0F1319;border:1px solid var(--line2);padding:8px;display:grid;gap:5px;align-content:start"><i style="height:8px;width:60%;background:#E6EAF2;border-radius:3px;opacity:.8"></i><i style="height:16px;background:#18202B;border-radius:5px"></i><i style="height:16px;background:#18202B;border-radius:5px"></i></div><span style="font-size:13.5px;color:var(--dim)">Tmavý</span></div>
+            <div style="display:grid;gap:6px;justify-items:center"><div style="width:100%;height:84px;border-radius:14px;background:linear-gradient(90deg,#EDF1F6 50%,#0F1319 50%);border:1px solid var(--line2)"></div><span style="font-size:13.5px;color:var(--dim)">Systém</span></div>
+          </div>
+          <div class="grp" style="margin-top:4px">
+            <div class="row-s"><div class="ic"><svg class="i"><use href="#i-globe"/></svg></div><div class="tt">Jazyk</div><div class="sg" style="margin-left:auto;width:150px"><b style="padding:6px">Čeština</b><b class="on" style="padding:6px">EN</b></div></div>
+          </div>
+          <div class="cap" style="padding-left:4px;margin-top:4px">Plánování</div>
+          <div class="grp">
+            <div class="row-s"><div class="ic"><svg class="i"><use href="#i-repeat"/></svg></div><div class="tt">Pravidelné mise</div><div class="vv"><span class="xpp" style="font-size:12.5px;padding:3px 9px">1 aktivní</span><svg class="i chev"><use href="#i-cr"/></svg></div></div>
+            <div class="row-s"><div class="ic"><svg class="i"><use href="#i-bell"/></svg></div><div class="tt">Opakované připomínky</div><div class="vv"><svg class="i chev"><use href="#i-cr"/></svg></div></div>
+          </div>
+        </div>
+        <nav class="nav pill" data-active="4"></nav>
+      </div></div>
+      <ul class="l">
+        <li>Profil v modré hero kartě, stejná řeč jako u nástěnky a časovače. Jméno hrdiny je vidět jako identita, ne jako formulářové pole.</li>
+        <li>Vzhled jako tři náhledy (světlý, tmavý, systém), takže vidíš, co volíš. Do budoucna se sem dají přidat další motivy z registru.</li>
+        <li>Stav jako štítek („1 aktivní“) v accent barvě, aby bylo jasné, co je zapnuté.</li>
+        <li>Zbytek (Zařízení, Data, O aplikaci) pokračuje pod tím ve stejném stylu jako u střední varianty.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DECISION ===================== -->
+<section class="screen" id="rozhodnuti">
+  <div class="screen-head">
+    <div style="display:grid;gap:10px">
+      <div class="eyebrow">Další krok</div>
+      <h2>Moje doporučení</h2>
+      <p class="lead" style="font-size:15.5px">Jako základ bych vzal <b>střední změnu</b> u všech obrazovek, protože řeší skoro všechny problémy z hodnocení. Z velké bych přidal modré hero plochy u časovače a nástěnky. Jsou to dvě nejpoužívanější obrazovky a hero dá aplikaci tvář, aniž by se musel měnit zbytek.</p>
+    </div>
+    <div class="now">
+      <h3>Na co se tě pak zeptám</h3>
+      <ul class="l">
+        <li>Kterou úroveň u každé obrazovky (můžeš míchat, třeba časovač velká, nastavení střední).</li>
+        <li>Kalendář: chceš kartu dne pod mřížkou (střední, velká), nebo zůstat u sheetu?</li>
+        <li>Kalendář: názvy událostí v mřížce (malá, střední), nebo jen tečky (velká)?</li>
+        <li>Statistiky: donut, nebo pruhy?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>Poznámky pro implementaci <small>· pro dalšího agenta</small></h3>
+    <ul class="l">
+      <li><b>Barvy:</b> stávající tokeny v <code>lib/theme/tokens.dart</code> zůstávají (<code>brass</code> #2B7287 / #78B4C4, <code>board</code>, <code>boardRaised</code>, <code>parchment</code>). Přibydou: <code>tone</code> (neutrální tónovaná plocha 5–6 %), <code>lineStrong</code> (stopa kruhu, prázdné dílky, 13–14 %) a pro velkou variantu <code>heroGradient</code> (světlé #307E94 → #1D5466, tmavé #21505F → #14303A) s <code>onHero</code>.</li>
+      <li><b>Záře:</b> odstranit glow kolem kruhu a tlačítek ve světlém tématu, nahradit krátkým stínem pod primárním tlačítkem.</li>
+      <li><b>Spodní lišta:</b> zrušit proložení písmen v popiscích, neaktivní ikony na ~58 % textu, ve střední a velké variantě indikátor ve tvaru tabletky za aktivní ikonou.</li>
+      <li><b>Sdílené komponenty</b> (střední a velká varianta, do <code>ui_kit/</code>): jednotná hlavička (menu nebo zpět + titulek 22 px + akce), seskupený seznam s řádky (ikona, titulek, hodnota, šipka), segmentový přepínač s „vystouplou“ volbou, dlaždice s číslem.</li>
+      <li><b>Kalendář:</b> barvy typů zůstávají (<code>eventColor</code>), štítek = barva typu na 26 % přes pozadí + text smíchaný 40 % s barvou textu. Dnešek = vyplněný kroužek čísla.</li>
+      <li><b>Nové texty</b> (ARB cs/en): krátké popisky „Zapsat“ / „Dokončit“ pod tlačítky časovače, „Sledováno“ / „Nesledováno“ pro dlaždice, názvy skupin nastavení („Plánování a připomínky“, „Vzhled a jazyk“, „Zařízení a data“), „Quest“ / „Událost“ pro rozšířené FAB.</li>
+      <li><b>Funkce se nemění.</b> Jediná změna chování je volitelná karta dne v kalendáři místo sheetu (střední a velká varianta).</li>
+      <li>Goldeny v <code>test/goldens</code> se změní u všech dotčených obrazovek a pravidla „bez literálních barev a rozestupů“ platí i pro nové komponenty.</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+</main>
+
+<script>
+(function () {
+  var NAV = [['i-clock','Časovač'],['i-quests','Questy'],['i-cal','Kalendář'],['i-pen','Poznámky'],['i-gear','Nastavení']];
+  document.querySelectorAll('nav.nav').forEach(function (n) {
+    var a = +n.dataset.active, pill = n.classList.contains('pill');
+    n.innerHTML = NAV.map(function (it, i) {
+      var ic = '<svg class="i"><use href="#' + it[0] + '"/></svg>';
+      return '<a class="' + (i === a ? 'on' : '') + '">' + (pill ? '<span class="pi">' + ic + '</span>' : ic) + '<span>' + it[1] + '</span></a>';
+    }).join('');
+  });
+
+  var Q = {
+    today: [
+      { n: 'Taneční lekce', p: 2, xp: 25, ev: { t: 'Tanec', time: '18:00–19:30' } },
+      { n: 'Napsat e-mail klientovi', p: 1, xp: 10 },
+      { n: 'Zaplatit fakturu', p: 2, xp: 25 }
+    ],
+    todo: [
+      { n: 'Zavolat do banky', p: 1, xp: 10 },
+      { n: 'Připravit prezentaci', p: 3, xp: 50 }
+    ]
+  };
+  function pips(p, bars) { var s = '<span class="pips' + (bars ? ' bars' : '') + '">'; for (var i = 0; i < 4; i++) s += '<i class="' + (i < p ? 'on' : '') + '"></i>'; return s + '</span>'; }
+  function evMeta(q, style) {
+    if (!q.ev) return '';
+    if (style === 'l') return '<span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:650;padding:3px 8px;border-radius:999px;background:color-mix(in srgb,var(--dance) 24%,var(--card));color:color-mix(in srgb,var(--dance) 40%,var(--tx))"><span class="dot" style="background:var(--dance);width:7px;height:7px"></span>' + q.ev.t + ' · ' + q.ev.time + '</span>';
+    return '<span class="dot" style="background:var(--dance)"></span><span>' + q.ev.t + '</span><span class="tab-num">' + q.ev.time + '</span>';
+  }
+  document.querySelectorAll('[data-quests]').forEach(function (el) {
+    var v = el.dataset.quests, list = Q[el.dataset.set];
+    el.innerHTML = list.map(function (q) {
+      if (v === 's') return '<div class="card qc" style="padding:13px 16px"><div class="chk"></div><div style="flex:1;min-width:0"><div class="qn">' + q.n + '</div><div class="meta">' + evMeta(q) + pips(q.p) + '</div></div><div class="xp" style="font-size:20px">+' + q.xp + '</div></div>';
+      if (v === 'm') return '<div class="qc" style="padding:12px 16px"><div class="chk" style="width:24px;height:24px"></div><div style="flex:1;min-width:0"><div class="qn" style="font-size:16px">' + q.n + '</div><div class="meta" style="margin-top:4px">' + evMeta(q) + pips(q.p, true) + '</div></div><span class="xpp">+' + q.xp + '</span></div>';
+      return '<div class="card qc" style="padding:14px 14px 14px 16px;border-radius:20px;box-shadow:var(--sh)"><div class="chk" style="width:28px;height:28px;border-color:var(--ac);opacity:.55"></div><div style="flex:1;min-width:0;display:grid;gap:6px"><div class="qn" style="font-weight:700">' + q.n + '</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + evMeta(q, 'l') + pips(q.p, true) + '</div></div><div style="width:48px;height:48px;border-radius:50%;background:var(--acs);color:var(--ac);display:grid;place-items:center;font-weight:800;font-size:15px;flex:none" class="tab-num">+' + q.xp + '</div></div>';
+    }).join('');
+  });
+
+  var C = { hol: '#E5594F', not: '#C98A7D', bir: '#F2A05E', nam: '#E8D36A', dan: '#EE7AA8', dat: '#B983E0', mee: '#6FA3E6', sem: '#6FD0D8', les: '#62CF9F' };
+  var DAYS = [[26,27,28,29,30,31,1],[2,3,4,5,6,7,8],[9,10,11,12,13,14,15],[16,17,18,19,20,21,22],[23,24,25,26,27,28,29],[30,1,2,3,4,5,6]];
+  var EV = {
+    '0-28': [['Den vzniku státu', 'hol']], '0-31': [['Halloween', 'not']], '1-2': [['Dušičky', 'not']], '1-11': [['Svatý Martin', 'not']],
+    '1-17': [['Den boje za svobodu', 'hol']], '1-21': [['Taneční lekce', 'dan']], '1-23': [['Schůzka s klientem', 'mee']],
+    '1-24': [['Lekce angličtiny', 'les']], '1-25': [['Narozeniny', 'bir']], '1-26': [['Seminář Flutter', 'sem', 2]], '1-27': [['', 'sem', -1]],
+    '1-28': [['Taneční lekce', 'dan'], ['Rande', 'dat']], '2-1': [['Lekce angličtiny', 'les']], '2-5': [['Jitka', 'nam'], ['Mikuláš', 'not'], ['Taneční lekce', 'dan']]
+  };
+  document.querySelectorAll('[data-cal]').forEach(function (el) {
+    var mode = el.dataset.cal, h = +el.dataset.h, max = +(el.dataset.max || 3);
+    var html = ['Po','Út','St','Čt','Pá','So','Ne'].map(function (d) { return '<div class="wd">' + d.toUpperCase() + '</div>'; }).join('');
+    DAYS.forEach(function (row, r) {
+      row.forEach(function (d) {
+        var m = (r === 0 && d > 20) ? 0 : (r === 5 && d < 10) ? 2 : 1;
+        var evs = EV[m + '-' + d] || [], today = (m === 1 && d === 21);
+        var cls = 'cell' + (m !== 1 ? ' out' : '') + (today ? ' today' : '');
+        var inner = '<div class="dn">' + d + '</div>';
+        if (mode === 'chips') {
+          var shown = evs.slice(0, max), extra = evs.length - shown.length;
+          shown.forEach(function (e) {
+            if (e[2] === -1) { inner += '<div class="ev" style="visibility:hidden">.</div>'; return; }
+            inner += '<div class="ev' + (e[2] === 2 ? ' span2' : '') + '" style="--c:' + C[e[1]] + '">' + e[0] + '</div>';
+          });
+          if (extra > 0) inner += '<div style="font-size:10.5px;color:var(--dim);font-weight:700;padding:2px 4px">+' + extra + '</div>';
+        } else {
+          if (evs.length) inner += '<div class="evd">' + evs.slice(0, 3).map(function (e) { return '<i style="--c:' + C[e[1]] + '"></i>'; }).join('') + '</div>';
+        }
+        html += '<div class="' + cls + '" style="height:' + h + 'px' + (mode === 'dots' ? ';border-top:0' : '') + '">' + inner + '</div>';
+      });
+    });
+    el.innerHTML = html;
+  });
+
+  var root = document.getElementById('mocks'), bL = document.getElementById('t-light'), bD = document.getElementById('t-dark');
+  function set(t) { root.dataset.app = t; bL.setAttribute('aria-pressed', t === 'light'); bD.setAttribute('aria-pressed', t === 'dark'); try { localStorage.setItem('daylog-preview-theme', t); } catch (e) {} }
+  var saved = null; try { saved = localStorage.getItem('daylog-preview-theme'); } catch (e) {}
+  var pageDark = document.documentElement.dataset.theme === 'dark' || (document.documentElement.dataset.theme !== 'light' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  set(saved || (pageDark ? 'dark' : 'light'));
+  bL.addEventListener('click', function () { set('light'); });
+  bD.addEventListener('click', function () { set('dark'); });
+})();
+</script>
+</body>
+</html>

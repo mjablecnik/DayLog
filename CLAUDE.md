@@ -9,7 +9,9 @@ Riverpod 3 — no server, no account, no network at runtime. Code and docs are E
 ## Status
 
 Specs `001-app-foundation`, `002-time-tracking-port` and `003-legacy-import` in `.kiro/specs/` are implemented;
-`scripts/check.sh` is green. The first release is `1.0.0-dev.0`. Not checked here (Martin does it on the iPhone):
+`scripts/check.sh` is green. The first release is `1.0.0-dev.0`. Specs `004-design-system`, `005-module-navigation` and `006-screen-redesign` (the redesign agreed on
+2026-11-21) are written but not implemented; implement them in that order. Their visual reference is
+`.design/redesign-preview/` (start with its `README.md`). Not checked here (Martin does it on the iPhone):
 the iOS build, the Live Activity, the alarm sound, notifications and taps on them, the share sheet and file picker.
 The old apps stay installed beside it until the import is compared (QuestLog tag `v1.5.0`, TimeLog tag `v1.2.0`, in
 `/workspace/QuestLog` and `/workspace/TimeLog`; they are read-only archives).
@@ -50,8 +52,8 @@ lib/
   quests/ calendar/ notes/   the QuestLog modules (data/, domain/, services/, ui/)
   time_tracking/        the TimeLog feature; public surface is time_tracking.dart
 test/                   mirrors lib/ + goldens/, helpers/, architecture/, scripts/
-.kiro/specs/            001 foundation, 002 time tracking port, 003 legacy import
-.design/                visual design inherited from QuestLog
+.kiro/specs/            001 foundation, 002 time tracking port, 003 legacy import, 004-006 redesign (not implemented)
+.design/                visual design inherited from QuestLog; redesign-preview/ is the reference of specs 004-006
 .agents/REFACTOR.md     the cleanup list; read it before refactoring
 ```
 

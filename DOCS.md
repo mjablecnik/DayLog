@@ -178,12 +178,16 @@ The Live Activity and the end-of-countdown notification are native (`ios/Runner/
 `LiveActivityManager.swift`, the `DayLogWidgetExtension` target). The Dart side talks to them over two method
 channels (`lib/time_tracking/services/native/platform_channel.dart`).
 
+The native code holds no user-facing text: the strings of the Live Activity (`completedText`, `doneText`,
+`pausedText`) and of the notification (`title`, `body`) come from the ARB files in the language of the app and are
+passed in the arguments below. A new native string is a new ARB key (prefix `time_`) and a new argument.
+
 | Channel | Method | Arguments | Purpose |
 |---|---|---|---|
 | `com.jablecnik.daylog/notifications` | `requestPermission` | none | ask for the notification permission (returns bool) |
-| | `scheduleNotification` | `{ endAtMs }` | schedule the end-of-countdown notification |
+| | `scheduleNotification` | `{ endAtMs, title, body }` | schedule the end-of-countdown notification |
 | | `cancelNotification` | none | cancel it (pause, stop) |
-| `com.jablecnik.daylog/live_activity` | `startLiveActivity` | `{ endAt, totalSeconds }` | start the countdown activity (returns bool) |
+| `com.jablecnik.daylog/live_activity` | `startLiveActivity` | `{ endAt, totalSeconds, completedText, doneText, pausedText }` | start the countdown activity (returns bool) |
 | | `updateLiveActivity` | `{ action: pause\|resume\|complete, endAt? }` | update it |
 | | `endLiveActivity` | none | end it |
 | | `areActivitiesEnabled` | none | whether the user allows Live Activities |

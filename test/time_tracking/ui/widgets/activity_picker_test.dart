@@ -12,7 +12,7 @@ import 'package:zafling/time_tracking/services/native/platform_channel.dart';
 import 'package:zafling/database/app_database.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/time_tracking/providers/database_provider.dart';
-import 'package:zafling/time_tracking/providers/task_providers.dart';
+import 'package:zafling/time_tracking/providers/suggestions_provider.dart';
 import 'package:zafling/time_tracking/services/project_service.dart';
 import 'package:zafling/time_tracking/ui/widgets/activity_picker/activity_picker.dart';
 import 'package:zafling/time_tracking/ui/widgets/sheets/description_sheet.dart';

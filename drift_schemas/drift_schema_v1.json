@@ -1026,8 +1026,8 @@
             "default_client_dart": null,
             "dsl_features": [],
             "type_converter": {
-              "dart_expr": "const EnumNameConverter<AppTheme>(AppTheme.values)",
-              "dart_type_name": "AppTheme"
+              "dart_expr": "const EnumNameConverter<ThemeModeSetting>(ThemeModeSetting.values)",
+              "dart_type_name": "ThemeModeSetting"
             }
           }
         ],
@@ -1424,6 +1424,339 @@
     },
     {
       "id": 10,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "time_entries",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "start_time",
+            "getter_name": "startTime",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "end_time",
+            "getter_name": "endTime",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "description",
+            "getter_name": "description",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "allowed-lengths": {
+                  "min": 0,
+                  "max": 500
+                }
+              }
+            ]
+          },
+          {
+            "name": "activity_type",
+            "getter_name": "activityType",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'Práce\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "project",
+            "getter_name": "project",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "allowed-lengths": {
+                  "min": 0,
+                  "max": 200
+                }
+              }
+            ]
+          },
+          {
+            "name": "subtype",
+            "getter_name": "subtype",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "custom_name",
+            "getter_name": "customName",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "allowed-lengths": {
+                  "min": 0,
+                  "max": 200
+                }
+              }
+            ]
+          },
+          {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('CAST(strftime(\\'%s\\', CURRENT_TIMESTAMP) AS INTEGER)')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 11,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "recurring_reminders",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "allowed-lengths": {
+                  "min": 1,
+                  "max": 100
+                }
+              }
+            ]
+          },
+          {
+            "name": "description",
+            "getter_name": "description",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "allowed-lengths": {
+                  "min": 0,
+                  "max": 300
+                }
+              }
+            ]
+          },
+          {
+            "name": "start_time",
+            "getter_name": "startTime",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "end_time",
+            "getter_name": "endTime",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "repeat_interval",
+            "getter_name": "repeatInterval",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "active_days",
+            "getter_name": "activeDays",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "is_active",
+            "getter_name": "isActive",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"is_active\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"is_active\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 12,
+      "references": [
+        11
+      ],
+      "type": "table",
+      "data": {
+        "name": "completion_records",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "reminder_id",
+            "getter_name": "reminderId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES recurring_reminders (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES recurring_reminders (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "recurring_reminders",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "completion_date",
+            "getter_name": "completionDate",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "completion_timestamp",
+            "getter_name": "completionTimestamp",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "unique_keys": [
+          [
+            "reminder_id",
+            "completion_date"
+          ]
+        ]
+      }
+    },
+    {
+      "id": 13,
       "references": [
         3
       ],
@@ -1442,7 +1775,7 @@
       }
     },
     {
-      "id": 11,
+      "id": 14,
       "references": [
         3
       ],
@@ -1461,7 +1794,7 @@
       }
     },
     {
-      "id": 12,
+      "id": 15,
       "references": [
         2
       ],
@@ -1480,7 +1813,7 @@
       }
     },
     {
-      "id": 13,
+      "id": 16,
       "references": [
         9
       ],
@@ -1499,7 +1832,7 @@
       }
     },
     {
-      "id": 14,
+      "id": 17,
       "references": [
         9
       ],
@@ -1606,6 +1939,33 @@
         {
           "dialect": "sqlite",
           "sql": "CREATE TABLE IF NOT EXISTS \"note_nodes\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"parent_id\" INTEGER NULL REFERENCES note_nodes (id) ON DELETE CASCADE, \"is_folder\" INTEGER NOT NULL CHECK (\"is_folder\" IN (0, 1)), \"name\" TEXT NOT NULL CHECK(LENGTH(TRIM(\"name\")) BETWEEN 1 AND 80), \"body\" TEXT NOT NULL DEFAULT '' CHECK(LENGTH(\"body\") <= 100000), \"auto_name\" INTEGER NOT NULL DEFAULT 0 CHECK (\"auto_name\" IN (0, 1)), \"created_at\" INTEGER NOT NULL, \"updated_at\" INTEGER NOT NULL, \"deleted_at\" INTEGER NULL);"
+        }
+      ]
+    },
+    {
+      "name": "time_entries",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"time_entries\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"start_time\" TEXT NOT NULL, \"end_time\" TEXT NOT NULL, \"description\" TEXT NOT NULL, \"activity_type\" TEXT NOT NULL DEFAULT 'Práce', \"project\" TEXT NULL, \"subtype\" TEXT NULL, \"custom_name\" TEXT NULL, \"created_at\" INTEGER NOT NULL DEFAULT (CAST(strftime('%s', CURRENT_TIMESTAMP) AS INTEGER)));"
+        }
+      ]
+    },
+    {
+      "name": "recurring_reminders",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"recurring_reminders\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" TEXT NOT NULL, \"description\" TEXT NULL, \"start_time\" INTEGER NOT NULL, \"end_time\" INTEGER NOT NULL, \"repeat_interval\" INTEGER NOT NULL, \"active_days\" INTEGER NOT NULL, \"is_active\" INTEGER NOT NULL DEFAULT 1 CHECK (\"is_active\" IN (0, 1)));"
+        }
+      ]
+    },
+    {
+      "name": "completion_records",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"completion_records\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"reminder_id\" INTEGER NOT NULL REFERENCES recurring_reminders (id) ON DELETE CASCADE, \"completion_date\" TEXT NOT NULL, \"completion_timestamp\" TEXT NOT NULL, UNIQUE (\"reminder_id\", \"completion_date\"));"
         }
       ]
     },

@@ -78,5 +78,4 @@ loading the data of the two old apps.
 ## Not in the app
 
 Streaks, a Today page, XP for tracked time, a mini timer bar, an assistant or a journal. The Tasks tab of TimeLog was
-already unreachable in TimeLog 1.2.0 and has no screen here; its data is kept (the project names feed the
-suggestions).
+already unreachable in TimeLog 1.2.0; neither its screen nor its data is carried over (an import skips them).

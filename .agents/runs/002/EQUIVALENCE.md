@@ -103,7 +103,8 @@ Every difference beyond imports falls into one of these groups.
 - **Alarm.** `AlarmService` creates the audio player on the first alarm.
 - **Dead code removed.** The Tasks screen, `ProjectSelector`, `ReminderActionSheet`, `extensions.dart`,
   `statsTabIndex`, `ThemeDots` and their tests, and the TimeLog export (replaced by the app export). The Tasks
-  service, providers and tables stay because the project names feed the suggestions.
+  service, providers, tables and their data are removed as well (Martin does not use Tasks); an import skips
+  `tasks` and `task_projects`.
 
 ## Native iOS
 

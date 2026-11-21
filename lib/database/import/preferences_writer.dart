@@ -8,6 +8,7 @@ const Set<String> ignoredPreferenceKeys = <String>{
   'selected_theme',
   'pending_reminder_action_id',
   'handled_launch_reminder_id',
+  'last_task_project_id',
 };
 
 /// Key prefix of the persisted timer state, which is never imported.

@@ -33,8 +33,10 @@ flutter test --update-goldens test/goldens                 # regenerate goldens,
 scripts/release.sh 1.0.0                  # bump pubspec, write CHANGELOG.md, commit, tag (clean tree only)
 ```
 
-The Linux build needs GStreamer dev packages (not installed in the sandbox) and a D-Bus session at run time; see
-DOCS.md Troubleshooting. To look at the screens without a device, pump the app in a widget test and write the
+The Linux build needs GStreamer dev packages and a D-Bus session at run time. The sandbox has no root: download
+the `.deb` files with `apt-get download`, unpack them with `dpkg -x` into a scratch prefix, point the `.pc` files at
+it and build with `PKG_CONFIG_PATH`, `LIBRARY_PATH`, `CPATH`, `LDFLAGS=-Wl,-rpath-link,...` and `LD_LIBRARY_PATH`
+set to it (see DOCS.md Troubleshooting). The window cannot be screenshotted under Xvfb (it stays black). To look at the screens without a device, pump the app in a widget test and write the
 `RepaintBoundary` image to a file.
 
 ## Layout
@@ -67,8 +69,8 @@ Humans read `README.md`, `FEATURES.md`, `DOCS.md` and `CHANGELOG.md`; do not dup
   the cleanup in `.agents/REFACTOR.md` is done; do not add new violations there either.
 - Every user-facing string goes through the ARB files in both languages, with a prefix of its feature
   (`time_`, `settings_`, `shell_`, ...) and a description in `app_cs.arb`.
-- A schema change needs a migration step and a new dump in `drift_schemas/`; the importer's `retiredColumns`
-  lists the columns old exports hold that no longer exist.
+- A schema change needs a migration step and a new dump in `drift_schemas/`; the importer's `retiredColumns` and
+  `retiredTables` list the columns and tables old exports hold that no longer exist.
 - Riverpod 3: never change a provider while a widget builds; the TimeLog code uses `flutter_riverpod/legacy.dart`
   (`StateNotifier`, `StateProvider`) and is not converted yet.
 - Where `.design/` artboards and spec requirements differ, the requirements win.

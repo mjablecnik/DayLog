@@ -102,8 +102,6 @@ void main() {
         'time_entries',
         'recurring_reminders',
         'completion_records',
-        'task_projects',
-        'tasks',
         'quests',
         'missions',
         'calendar_events',

@@ -33,6 +33,10 @@ class ImportPlan {
     'time_entries': <String>{'entertainment_type'},
   };
 
+  /// Tables an old export holds and the Database no longer has (the Tasks of
+  /// TimeLog). Their rows are skipped, not refused.
+  static const Set<String> retiredTables = <String>{'tasks', 'task_projects'};
+
   /// Matches the names in [file] against the schema of [db]; throws an
   /// [ImportFailure] for a table or column the Database does not have. The
   /// names come from the file, so only names found in the schema are ever
@@ -43,6 +47,7 @@ class ImportPlan {
     };
     final List<PlannedTable> planned = <PlannedTable>[];
     for (final MapEntry<String, List<Map<String, Object?>>> entry in file.tables.entries) {
+      if (retiredTables.contains(entry.key)) continue;
       final TableInfo<Table, dynamic>? table = known[entry.key];
       if (table == null) throw ImportFailure(ImportFailureKind.unknownTable, entry.key);
       final Set<String> columns = <String>{for (final GeneratedColumn<Object> c in table.$columns) c.$name};

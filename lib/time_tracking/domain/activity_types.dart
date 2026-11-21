@@ -305,15 +305,6 @@ SuggestionScope? suggestionScopeOf(String typeKey, String? subtypeKey) {
   }
 }
 
-/// The scope with [name] (as stored in `task_projects.scope`); an unknown or
-/// missing value counts as unpaid work.
-SuggestionScope suggestionScopeFromName(String? name) {
-  for (final scope in SuggestionScope.values) {
-    if (scope.name == name) return scope;
-  }
-  return SuggestionScope.workUnpaid;
-}
-
 /// Colour of a suggestion category (used for the dot on project chips).
 Color suggestionScopeColor(SuggestionScope scope, {required bool isDark}) {
   switch (scope) {

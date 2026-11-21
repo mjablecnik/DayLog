@@ -14,9 +14,7 @@ translation keys, QuestLog's migration code and unused column, the old test layo
   delete it.
 - Riverpod: `StateNotifier`, `StateProvider` and `StateNotifierProvider` come from `flutter_riverpod/legacy.dart`;
   convert them to `Notifier`/`AsyncNotifier`.
-- `data/time_tracking_queries.dart` is one long extension: split reminders, completions, tasks and entries.
-- The Tasks layer (service methods, state providers, 16 property tests) has no screen since TimeLog 1.1. Only
-  `TaskService.getProjectNames` feeds the suggestions. Delete the rest and keep the two tables for the import.
+- `data/time_tracking_queries.dart` is one long extension: split reminders, completions and entries.
 - The widgets use literal `Colors.red[400]` in a few dialogs: use the palette's destructive colour.
 
 ## QuestLog modules

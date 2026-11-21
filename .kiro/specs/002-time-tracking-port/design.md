@@ -10,7 +10,7 @@ The Time_Module is TimeLog's `lib/` regrouped into `lib/time_tracking/` and adap
 - **`TimeTrackingBootstrap`**: the code in TimeLog's `main()` (permission request, reminder initialisation, pending reminder, launch payload, rescheduling) moves into one class called from `main`, so `main.dart` stays small and the Time_Module owns its startup.
 - **Navigator key moves to `shell/`**: `navigatorKey` is needed by notification handlers; the Shell owns it and passes a `GlobalKey<NavigatorState>` into the bootstrap, so the Time_Module does not import the Shell.
 - **Native code is moved verbatim**: only identifiers change (bundle id, App Group, URL scheme, channel names stay).
-- **Tasks screen not ported**: it is unreachable in TimeLog; `TaskService`, tables and providers stay because Project_Suggestions merge Tasks projects.
+- **Tasks not ported**: the screen is unreachable in TimeLog and Martin does not use Tasks, so the screen, `TaskService`, providers, tables and data are all dropped; Project_Suggestions read only the saved names.
 
 ```mermaid
 graph TD
@@ -119,7 +119,7 @@ The `ios/` folder comes from TimeLog `v1.2.0` in spec `001-app-foundation` (it h
 
 ## Data Models
 
-Tables as in TimeLog schema 8 (`TimeEntries`, `RecurringReminders`, `CompletionRecords`, `TaskProjects`, `Tasks`), added to `AppDatabase` at schema version 1 with `createAll`. The TimeLog migration steps 2–8 are not carried over, because the Database is new; the importer in spec `003` fills the tables from the export.
+Tables as in TimeLog schema 8 without the Tasks tables (`TimeEntries`, `RecurringReminders`, `CompletionRecords`), added to `AppDatabase` at schema version 1 with `createAll`. The TimeLog migration steps 2–8 are not carried over, because the Database is new; the importer in spec `003` fills the tables from the export.
 
 Time_Preferences keys kept: `reminder_*`, project suggestion lists, timer state keys, `pending_reminder_action_id`, `handled_launch_reminder_id`. Dropped: `app_language`, `selected_theme`.
 

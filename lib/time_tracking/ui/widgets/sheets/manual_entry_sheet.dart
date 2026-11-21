@@ -7,7 +7,7 @@ import '../../../theme/time_theme.dart';
 import '../../../../database/app_database.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../providers/database_provider.dart';
-import '../../../providers/task_providers.dart';
+import '../../../providers/suggestions_provider.dart';
 import '../../../providers/history_provider.dart' show logicalDay;
 import '../activity_picker/activity_picker.dart';
 

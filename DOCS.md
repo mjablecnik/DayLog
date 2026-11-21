@@ -76,7 +76,7 @@ One SQLite file, `zafling.sqlite`, in the platform's application documents direc
 (`getApplicationDocumentsDirectory()`), opened lazily in a background isolate. The schema is at version 1, created
 by `onCreate` (which also inserts the singleton `app_state` row and the 35 built-in calendar events); a change to
 the schema needs a migration step in `lib/database/app_database.dart` and a new dump in `drift_schemas/`
-(`dart run drift_dev schema dump lib/database/app_database.dart drift_schemas/`). Fifteen tables:
+(`dart run drift_dev schema dump lib/database/app_database.dart drift_schemas/`). Thirteen tables:
 
 | Table | Holds |
 |---|---|
@@ -93,8 +93,6 @@ the schema needs a migration step in `lib/database/app_database.dart` and a new 
 | `time_entries` | a logged time span: start and end (ISO 8601 text), description, activity type, subtype, project, custom name |
 | `recurring_reminders` | a recurring reminder: name, description, time window (minutes from midnight), repeat interval, active days (7-bit mask), active flag |
 | `completion_records` | the days on which a recurring reminder was marked done |
-| `task_projects` | the projects of the old Tasks tab, with a category (`scope`); their names feed the name suggestions |
-| `tasks` | the tasks of the old Tasks tab; no screen shows them |
 
 Besides the database the time tracking feature keeps small state in SharedPreferences: the running timer
 (`timer_*` keys), the reminder settings (`reminder_*`), the last choices in the entry sheets and the name
@@ -161,7 +159,7 @@ from the stored end time on start; a timer that ran out while the app was closed
   computed (`activityEntryColor(type, subtype, isDark:)`), never stored. To add a type or subtype, add it to the
   registry and its labels to both ARB files.
 - **Name suggestions** are kept per category (paid work, unpaid work, housework, other) and read through
-  `suggestionsProvider`, which merges the old Tasks projects of the category with the names used in entries. Any
+  `suggestionsProvider`, which fills the lists from the existing entries on first use. Any
   code that saves a name must call `ref.invalidate(suggestionsProvider)`.
 - **Theme.** The widgets read `AppThemeData` (`lib/time_tracking/theme/time_theme.dart`), an adapter that maps
   each colour the widgets use to a role of the app palette, so the pages follow the active theme.
@@ -322,7 +320,7 @@ covered; they are checked on the device.
 | Symptom | Cause and fix |
 |---|---|
 | `fatal: detected dubious ownership in repository at '/opt/flutter'` | Git distrusts the SDK directory. Run `git config --global --add safe.directory /opt/flutter` once. |
-| The Linux build fails on `gstreamer-1.0` | `audioplayers` needs the GStreamer development packages (`libgstreamer1.0-dev`, `libgstreamer-plugins-base1.0-dev`) and, to play the alarm, the runtime plugins (`gstreamer1.0-plugins-base`, `-good`). |
+| The Linux build fails on `gstreamer-1.0` | `audioplayers` needs the GStreamer development packages (`libgstreamer1.0-dev`, `libgstreamer-plugins-base1.0-dev`) and, to play the alarm, the runtime plugins (`gstreamer1.0-plugins-base`, `-good`). Without root, unpack the `.deb` files (`apt-get download`, `dpkg -x`; also `libdw-dev` and `libdw1t64`) into a prefix, rewrite `prefix=` in its `.pc` files and set `PKG_CONFIG_PATH`, `LIBRARY_PATH`, `CPATH`, `LDFLAGS="-L<lib> -Wl,-rpath-link,<lib>"` and, at run time, `LD_LIBRARY_PATH` and `GST_PLUGIN_SYSTEM_PATH`. |
 | The Linux app shows a black window and never starts | The notification plugin needs a D-Bus session bus; start one (`dbus-daemon --session --fork --print-address`) and export `DBUS_SESSION_BUS_ADDRESS`, or run the app inside `dbus-run-session`. |
 | `flutter run -d linux` fails with no display | Prefix it with `xvfb-run -a`; only running the app needs a display, the tests do not. |
 | Analyzer errors about a missing `app_database.g.dart` or `timer_service.freezed.dart` | Run `dart run build_runner build`; it takes a few minutes, so give it a longer timeout than a shell's default. |

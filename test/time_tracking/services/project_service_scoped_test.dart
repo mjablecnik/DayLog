@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zafling/time_tracking/domain/activity_types.dart';
 import 'package:zafling/database/app_database.dart';
 import 'package:zafling/time_tracking/providers/database_provider.dart';
-import 'package:zafling/time_tracking/providers/task_providers.dart';
+import 'package:zafling/time_tracking/providers/suggestions_provider.dart';
 import 'package:zafling/time_tracking/services/project_service.dart';
 import 'package:zafling/database/providers.dart';
 import '../../helpers/test_database.dart';
@@ -159,18 +159,15 @@ void main() {
       await db.close();
     });
 
-    test('merges Task_Project names of the same scope in front, de-duplicated', () async {
-      final tasks = container.read(taskServiceProvider);
-      await tasks.createProject('Zulu', scope: SuggestionScope.workPaid);
-      await tasks.createProject('alpha', scope: SuggestionScope.workPaid);
-      await tasks.createProject('Elsewhere', scope: SuggestionScope.housework);
+    test('lists the saved names of one scope, most recent first, without duplicates', () async {
       final store = container.read(projectServiceProvider);
+      await store.saveName(SuggestionScope.workPaid, 'Zulu');
+      await store.saveName(SuggestionScope.workPaid, 'alpha');
       await store.saveName(SuggestionScope.workPaid, 'ALPHA');
-      await store.saveName(SuggestionScope.workPaid, 'Timer only');
-      await store.saveName(SuggestionScope.workUnpaid, 'Unpaid only');
+      await store.saveName(SuggestionScope.housework, 'Elsewhere');
 
       final paid = await container.read(suggestionsProvider(SuggestionScope.workPaid).future);
-      expect(paid, ['alpha', 'Zulu', 'Timer only']);
+      expect(paid, ['ALPHA', 'Zulu']);
 
       final housework =
           await container.read(suggestionsProvider(SuggestionScope.housework).future);
@@ -178,38 +175,6 @@ void main() {
 
       final other = await container.read(suggestionsProvider(SuggestionScope.other).future);
       expect(other, isEmpty);
-    });
-
-    test('a deleted Task_Project no longer suggests its name', () async {
-      final tasks = container.read(taskServiceProvider);
-      final id = await tasks.createProject('Gone', scope: SuggestionScope.other);
-      expect(
-        await container.read(suggestionsProvider(SuggestionScope.other).future),
-        ['Gone'],
-      );
-      await tasks.deleteProject(id);
-      container.invalidate(suggestionsProvider(SuggestionScope.other));
-      expect(
-        await container.read(suggestionsProvider(SuggestionScope.other).future),
-        isEmpty,
-      );
-    });
-
-    test('changing the category moves the name between the lists', () async {
-      final tasks = container.read(taskServiceProvider);
-      final id = await tasks.createProject('Mover', scope: SuggestionScope.workUnpaid);
-      await tasks.updateProjectScope(id, SuggestionScope.workPaid);
-      container.invalidate(suggestionsProvider(SuggestionScope.workPaid));
-      container.invalidate(suggestionsProvider(SuggestionScope.workUnpaid));
-
-      expect(
-        await container.read(suggestionsProvider(SuggestionScope.workPaid).future),
-        ['Mover'],
-      );
-      expect(
-        await container.read(suggestionsProvider(SuggestionScope.workUnpaid).future),
-        isEmpty,
-      );
     });
 
     test('seeds from the entries of the database on first use', () async {
@@ -231,7 +196,7 @@ void main() {
   });
 
   // Property 5: suggestion isolation
-  test('Property 5: a scope lists a name only if it was saved there or belongs to its Task_Project',
+  test('Property 5: a scope lists a name only if it was saved there',
       () async {
     final random = Random(20261122);
     const pool = ['Alpha', 'alpha', 'Beta', 'Gamma', 'delta', 'Delta', 'Eta', 'Kappa'];
@@ -243,18 +208,11 @@ void main() {
         overrides: [databaseProvider.overrideWithValue(db)],
       );
       try {
-        final tasks = container.read(taskServiceProvider);
         final store = container.read(projectServiceProvider);
         final expected = {
           for (final scope in SuggestionScope.values) scope: <String>{},
         };
 
-        for (var i = 0; i < random.nextInt(6); i++) {
-          final scope = SuggestionScope.values[random.nextInt(4)];
-          final name = pool[random.nextInt(pool.length)];
-          await tasks.createProject(name, scope: scope);
-          expected[scope]!.add(name.toLowerCase());
-        }
         for (var i = 0; i < random.nextInt(8); i++) {
           final scope = SuggestionScope.values[random.nextInt(4)];
           final name = pool[random.nextInt(pool.length)];

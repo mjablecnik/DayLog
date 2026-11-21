@@ -3,13 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/activity_types.dart';
 import '../../../theme/time_theme.dart';
-import '../../../providers/task_providers.dart';
+import '../../../providers/suggestions_provider.dart';
 
 /// Autocomplete text field that suggests names of one [SuggestionScope].
 ///
 /// Used for the project field and the custom name field of the entry sheets
-/// and for the project name of the Tasks tab, so every place that suggests
-/// names behaves the same. When [scope] changes the typed text is kept and the
+/// so every place that suggests names behaves the same. When [scope] changes the typed text is kept and the
 /// suggestions of the new scope are offered.
 class SuggestionField extends ConsumerWidget {
   final AppThemeData theme;

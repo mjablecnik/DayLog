@@ -49,7 +49,7 @@ This is a pure move: behaviour, texts and look stay as in TimeLog 1.2.0. TimeLog
 2. THE Time_Module SHALL persist the type and subtype keys as the Czech/ASCII identifiers of Legacy_Timelog and SHALL NOT translate them.
 3. THE Time_Module SHALL provide the description sheet, the edit sheet and the manual entry sheet, all using the shared activity picker.
 4. WHEN a Time_Entry is saved with a project name, THE Project_Suggestions SHALL offer the name in its category on the next save.
-5. WHEN a Tasks project is created or changed, THE Time_Module SHALL invalidate the suggestions provider so the name is offered at once.
+5. THE Time_Module SHALL NOT contain the Tasks of Legacy_Timelog: no screen, service, table or data.
 6. THE Time_Module SHALL validate manual and edited times as Legacy_Timelog does.
 
 ### Requirement 3: History
@@ -107,7 +107,7 @@ This is a pure move: behaviour, texts and look stay as in TimeLog 1.2.0. TimeLog
 
 #### Acceptance Criteria
 
-1. THE Database SHALL contain `time_entries`, `recurring_reminders`, `completion_records`, `task_projects` and `tasks` with the columns of Legacy_Timelog schema 8.
+1. THE Database SHALL contain `time_entries`, `recurring_reminders`, and `completion_records` with the columns of Legacy_Timelog schema 8.
 2. THE Time_Module SHALL read and write them through the Database of the App and SHALL NOT open another database.
 3. THE Time_Module SHALL keep Time_Preferences in SharedPreferences under the keys of Legacy_Timelog, except language and theme.
 

@@ -30,7 +30,8 @@ Future<Map<String, Object?>> _tables(AppDatabase db) async {
 /// Database no longer has.
 Map<String, Object?> _expected(ExportFile file) => <String, Object?>{
   for (final MapEntry<String, List<Map<String, Object?>>> t in file.tables.entries)
-    t.key: <Map<String, Object?>>[
+    if (!ImportPlan.retiredTables.contains(t.key))
+      t.key: <Map<String, Object?>>[
       for (final Map<String, Object?> row in t.value)
         <String, Object?>{
           for (final MapEntry<String, Object?> c in row.entries)
@@ -73,7 +74,7 @@ void main() {
       await importer.import(file);
       final Map<String, Object?> after = await _tables(db);
       final Map<String, Object?> expected = _expected(file);
-      for (final String table in file.tables.keys) {
+      for (final String table in expected.keys) {
         expect(after[table], expected[table], reason: table);
       }
     });
@@ -138,9 +139,12 @@ void main() {
       await importer.import(file);
       final Map<String, Object?> after = await _tables(db);
       final Map<String, Object?> expected = _expected(file);
-      for (final String table in file.tables.keys) {
+      for (final String table in expected.keys) {
         expect(after[table], expected[table], reason: table);
       }
+      expect(file.tables.keys, containsAll(ImportPlan.retiredTables), reason: 'the fixture holds Tasks');
+      expect(after.keys, isNot(contains('tasks')));
+      expect(after.keys, isNot(contains('task_projects')));
       final Map<String, Object?> firstEntry = (after['time_entries']! as List).first as Map<String, Object?>;
       expect(firstEntry.containsKey('entertainment_type'), isFalse);
     });

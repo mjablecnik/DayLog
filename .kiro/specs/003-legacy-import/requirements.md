@@ -89,7 +89,7 @@ The import is a one-off migration tool. It is part of Settings → Data so that 
 
 #### Acceptance Criteria
 
-1. WHEN a `timelog-export` file is imported, THE Importer SHALL replace `time_entries`, `recurring_reminders`, `completion_records`, `task_projects` and `tasks`.
+1. WHEN a `timelog-export` file is imported, THE Importer SHALL replace `time_entries`, `recurring_reminders` and `completion_records` and SHALL skip the rows of `task_projects` and `tasks`, which the Database does not have.
 2. WHEN a `timelog-export` file is imported, THE Importer SHALL write the Time_Preferences into SharedPreferences with their types (string, int, double, bool, string list) after the transaction has committed.
 3. THE Importer SHALL NOT write the Time_Preferences keys `app_language` and `selected_theme`.
 4. WHEN the Time_Preferences hold reminder settings, THE Time_Module SHALL reschedule the notifications after the import.

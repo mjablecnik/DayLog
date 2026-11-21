@@ -234,11 +234,4 @@ void main() {
     }
     expect(suggestionScopeOf('unknown', null), isNull);
   });
-
-  test('suggestionScopeFromName falls back to unpaid work', () {
-    expect(suggestionScopeFromName('housework'), SuggestionScope.housework);
-    expect(suggestionScopeFromName('workPaid'), SuggestionScope.workPaid);
-    expect(suggestionScopeFromName('bogus'), SuggestionScope.workUnpaid);
-    expect(suggestionScopeFromName(null), SuggestionScope.workUnpaid);
-  });
 }

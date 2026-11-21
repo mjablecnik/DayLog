@@ -139,35 +139,32 @@ class _TitleRow extends StatelessWidget {
     final p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final String date = boardDateLabel(today, l.localeName);
-    return ScreenHeader(
-      child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: <Widget>[
-                Semantics(
-                  header: true,
-                  child: Text(
-                    l.board_title,
-                    style: context.displayText.headlineLarge,
-                  ),
-                ),
-                const SizedBox(width: Space.s12),
-                if (openCount != null)
-                  Expanded(
-                    child: Text(
-                      l.board_subtitle(openCount!, date),
-                      textAlign: TextAlign.end,
-                      // Two lines: with a two-digit count the Czech line is wider
-                      // than the space beside the title and must not lose the date.
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.bodyText.bodySmall!.copyWith(
-                        color: p.textDim,
-                      ),
-                    ),
-                  ),
-              ],
+    // The subtitle sits under the title, on one line, so it never wraps and never
+    // moves the title away from the menu button.
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        ScreenHeader(
+          child: Semantics(
+            header: true,
+            child: Text(l.board_title, style: context.displayText.headlineLarge),
+          ),
+        ),
+        if (openCount != null)
+          Padding(
+            // Under the title, past the menu button.
+            padding: const EdgeInsets.only(
+              left: Space.s20 + Metrics.touchTarget,
+              right: Space.s20,
             ),
+            child: Text(
+              l.board_subtitle(openCount!, date),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.bodyText.bodySmall!.copyWith(color: p.textDim),
+            ),
+          ),
+      ],
     );
   }
 }

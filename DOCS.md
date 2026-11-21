@@ -38,7 +38,7 @@ daylog/
 ├── drift_schemas/           drift_schema_v1.json, the schema dump
 ├── test/                    mirrors lib/; goldens/, helpers/, architecture/, scripts/, fixtures of the import
 ├── scripts/                 check.sh, check-structure.sh, release.sh
-├── screenshots/             the README screenshots (English, dark theme, 780x1688)
+├── screenshots/             the README screenshots (English, dark theme, 390x844)
 ├── ios/, linux/             platform projects; the iOS project holds the Live Activity extension
 ├── .kiro/specs/             001-app-foundation, 002-time-tracking-port, 003-legacy-import (requirements, design, tasks)
 ├── .design/                 the visual design inherited from QuestLog: DESIGN.md, artboards/, screens/, icon/

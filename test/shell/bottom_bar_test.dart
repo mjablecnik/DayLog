@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/shell/bottom_bar.dart';
 import 'package:zafling/shell/destination.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 import '../ui/widgets/common/_harness.dart';
@@ -22,7 +22,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             theme: buildTheme(
-              palette: QuestPalette.guildBoard,
+              palette: AppPalette.guildBoard,
             ),
             locale: entry.$2,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -70,9 +70,9 @@ void main() {
     }
   }
 
-  for (final (String, QuestPalette) entry in <(String, QuestPalette)>[
-    ('dark', QuestPalette.guildBoard),
-    ('light', QuestPalette.daylight),
+  for (final (String, AppPalette) entry in <(String, AppPalette)>[
+    ('dark', AppPalette.guildBoard),
+    ('light', AppPalette.daylight),
   ]) {
     testWidgets('tabs paint no touch, hover or focus highlight (${entry.$1})', (
       tester,

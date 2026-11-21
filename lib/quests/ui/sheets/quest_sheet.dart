@@ -11,7 +11,7 @@ import '../../services/quest_service.dart';
 import '../../../ui_kit/forms/error_text.dart';
 import '../../../ui_kit/forms/validators.dart';
 import '../../../settings/ui_providers.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../widgets/effort_picker.dart';
 import '../../../ui_kit/common/app_icon.dart';
@@ -254,7 +254,7 @@ class _QuestSheetState extends ConsumerState<QuestSheet> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final List<MissionSummary> openMissions =
         ref.watch(openMissionsProvider).value ?? const <MissionSummary>[];
 
@@ -418,7 +418,7 @@ class _FieldGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -498,7 +498,7 @@ class _TextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final BorderRadius radius = BorderRadius.circular(Radii.control);
     OutlineInputBorder border(Color color) => OutlineInputBorder(
       borderRadius: radius,
@@ -709,7 +709,7 @@ class _PickChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final BorderRadius radius = BorderRadius.circular(Radii.pill);
     final Color foreground = selected ? palette.brassText : palette.textDim;
     return ConstrainedBox(

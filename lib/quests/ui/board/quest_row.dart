@@ -3,7 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../cards/quest_card.dart';
 import '../../../ui_kit/common/app_icon.dart';

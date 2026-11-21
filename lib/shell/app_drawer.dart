@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
-import '../theme/quest_theme.dart';
+import '../theme/app_theme.dart';
 import '../theme/tokens.dart';
 import '../ui_kit/common/app_icon.dart';
 import 'destination.dart';
@@ -18,7 +18,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l = AppLocalizations.of(context);
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final List<Destination> items = Destination.drawerItems;
     return Drawer(
       backgroundColor: p.boardRaised,
@@ -94,7 +94,7 @@ class _DrawerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final String label = destination.label(AppLocalizations.of(context));
     final Color color = selected ? p.brassText : p.text;
     return Semantics(

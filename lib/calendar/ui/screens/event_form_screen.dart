@@ -12,7 +12,7 @@ import '../../data/calendar_models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../services/calendar_providers.dart';
 import '../sheets/delete_event_sheet.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../widgets/address_suggestions.dart';
 import '../widgets/calendar_fields.dart';
@@ -376,7 +376,7 @@ class _EventFormScreenState extends ConsumerState<EventFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final String locale = l.localeName;
     final bool nameError = _submitted && _name.text.trim().isEmpty;
@@ -632,7 +632,7 @@ class _FormTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(Space.s8, Space.s4, Space.s12, Space.s8),
@@ -705,7 +705,7 @@ class _MomentRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     Widget chip(String text, VoidCallback onTap, {bool expand = false}) => Semantics(
       button: true,
       label: '$label, $text',
@@ -768,7 +768,7 @@ class _RepeatPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     String name(RepeatChoice c) => switch (c) {
       RepeatChoice.never => l.calendar_repeatNever,

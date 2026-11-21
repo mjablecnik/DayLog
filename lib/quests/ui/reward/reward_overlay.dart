@@ -9,7 +9,7 @@ import '../../domain/xp_rules.dart';
 import '../../data/models.dart';
 import '../../services/providers.dart';
 import '../state/reward_queue.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/announce.dart';
 import '../../../ui_kit/common/haptics.dart';

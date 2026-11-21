@@ -6,8 +6,8 @@ import 'l10n/app_localizations.dart';
 import 'shell/app_shell.dart';
 import 'quests/ui/state/quest_actions.dart';
 import 'settings/ui_providers.dart';
-import 'theme/quest_theme.dart';
-import 'theme/tokens.dart';
+import 'theme/app_theme.dart';
+import 'theme/theme_registry.dart';
 import 'time_tracking/time_tracking.dart' show ReminderActionHost;
 import 'quests/ui/reward/reward_overlay.dart';
 
@@ -25,6 +25,7 @@ class ZaflingApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(effectiveLocaleProvider);
+    final theme = ref.watch(activeThemeProvider);
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).app_name,
       debugShowCheckedModeBanner: false,
@@ -36,8 +37,8 @@ class ZaflingApp extends ConsumerWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       locale: locale,
-      theme: buildTheme(palette: QuestPalette.daylight),
-      darkTheme: buildTheme(palette: QuestPalette.guildBoard),
+      theme: buildTheme(palette: theme.light),
+      darkTheme: buildTheme(palette: theme.dark),
       themeMode: ref.watch(themeModeProvider),
       // The application-level Localizations does not tag its subtree, so screen
       // readers would keep the device voice without this.

@@ -41,7 +41,7 @@ final _currentSettingsProvider = Provider<AppSettings>((ref) {
       const AppSettings(
         heroName: '',
         language: AppLanguage.system,
-        theme: AppTheme.system,
+        theme: ThemeModeSetting.system,
       );
 });
 
@@ -62,11 +62,11 @@ final effectiveLocaleProvider = Provider<Locale>((ref) {
 final themeModeProvider = Provider<ThemeMode>((ref) {
   final theme = ref.watch(_currentSettingsProvider.select((s) => s.theme));
   switch (theme) {
-    case AppTheme.light:
+    case ThemeModeSetting.light:
       return ThemeMode.light;
-    case AppTheme.dark:
+    case ThemeModeSetting.dark:
       return ThemeMode.dark;
-    case AppTheme.system:
+    case ThemeModeSetting.system:
       return ThemeMode.system;
   }
 });

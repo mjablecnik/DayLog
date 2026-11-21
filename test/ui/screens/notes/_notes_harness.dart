@@ -6,7 +6,7 @@ import 'package:zafling/database/app_database.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/notes/services/notes_providers.dart';
 import 'package:zafling/notes/services/notes_service.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 import '../../../helpers/fixed_clock.dart';
@@ -51,7 +51,7 @@ class NotesUiHarness {
         ],
         child: MaterialApp(
           theme: buildTheme(
-            palette: brightness == Brightness.dark ? QuestPalette.guildBoard : QuestPalette.daylight,
+            palette: brightness == Brightness.dark ? AppPalette.guildBoard : AppPalette.daylight,
           ),
           locale: locale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,

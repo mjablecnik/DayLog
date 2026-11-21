@@ -34,10 +34,10 @@ double _distance(Color a, Color b) {
 }
 
 void main() {
-  final QuestPalette dark = QuestPalette.guildBoard;
-  final List<QuestPalette> all = <QuestPalette>[
-    QuestPalette.guildBoard,
-    QuestPalette.daylight,
+  final AppPalette dark = AppPalette.guildBoard;
+  final List<AppPalette> all = <AppPalette>[
+    AppPalette.guildBoard,
+    AppPalette.daylight,
   ];
 
   test('there is one distinct colour per type', () {
@@ -65,14 +65,14 @@ void main() {
   });
 
   test('the body text has at least 4.5:1 on the Soft_Chip fill in every palette', () {
-    for (final QuestPalette p in all) {
+    for (final AppPalette p in all) {
       final Color fill = Color.alphaBlend(p.eventSoftFill(EventType.notableDay), p.board);
       expect(_contrast(p.text, fill), greaterThanOrEqualTo(4.5), reason: '${p.brightness}');
     }
   });
 
   test('the colours are the same in every palette', () {
-    for (final QuestPalette p in all) {
+    for (final AppPalette p in all) {
       for (final EventType t in EventType.values) {
         expect(p.eventColor(t), dark.eventColor(t));
       }

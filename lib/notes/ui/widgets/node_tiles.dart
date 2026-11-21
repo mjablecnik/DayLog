@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/app_icon.dart';
 
@@ -15,7 +15,7 @@ class NodeIconTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     return DecoratedBox(
       decoration: BoxDecoration(
         color: tinted ? p.brassSoft : p.field,
@@ -46,7 +46,7 @@ class NodeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final BorderRadius radius = BorderRadius.circular(Radii.card);
     return Material(
       color: p.boardRaised,

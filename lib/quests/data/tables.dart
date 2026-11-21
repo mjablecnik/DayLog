@@ -95,7 +95,7 @@ class AppState extends Table {
       integer().withDefault(const Constant(0)).check(totalXp.isBiggerOrEqualValue(0))();
   TextColumn get heroName => text().withDefault(const Constant(''))();
   TextColumn get language => textEnum<AppLanguage>().withDefault(const Constant('system'))();
-  TextColumn get theme => textEnum<AppTheme>().withDefault(const Constant('system'))();
+  TextColumn get theme => textEnum<ThemeModeSetting>().withDefault(const Constant('system'))();
 
   @override
   Set<Column> get primaryKey => {id};

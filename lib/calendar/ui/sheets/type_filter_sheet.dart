@@ -5,7 +5,7 @@ import '../../../core/event_type.dart';
 import '../../../l10n/app_localizations.dart';
 import '../screens/calendar_labels.dart';
 import '../state/calendar_state.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/sheet/app_sheet.dart';
 
@@ -18,7 +18,7 @@ class _TypeFilterSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final Set<EventType> shown = ref.watch(typeFilterProvider);
     final TypeFilterNotifier notifier = ref.read(typeFilterProvider.notifier);

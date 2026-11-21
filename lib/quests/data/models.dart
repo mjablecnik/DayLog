@@ -53,7 +53,7 @@ class AppSettings {
   /// The trimmed hero name; empty when no name is set.
   final String heroName;
   final AppLanguage language;
-  final AppTheme theme;
+  final ThemeModeSetting theme;
 
   /// The hero name, or null when none is set (the UI then shows only the Level).
   String? get displayName => heroName.isEmpty ? null : heroName;

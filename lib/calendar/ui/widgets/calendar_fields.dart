@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show MaxLengthEnforcement;
 
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 
 /// A rounded raised card that groups the rows of a calendar form or detail.
@@ -13,7 +13,7 @@ class CalendarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     return DecoratedBox(
       decoration: BoxDecoration(
         color: p.boardRaised,
@@ -88,7 +88,7 @@ class _CalendarTextFieldState extends State<CalendarTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final BorderRadius radius = BorderRadius.circular(Radii.control);
     final bool hasError = widget.errorText != null;
     OutlineInputBorder border(Color color) => OutlineInputBorder(
@@ -170,7 +170,7 @@ class CalendarSwitchRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     return MergeSemantics(
       child: InkWell(
         onTap: () => onChanged(!value),
@@ -216,7 +216,7 @@ class CalendarValueRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     return Semantics(
       button: true,
       label: '$label, $value',

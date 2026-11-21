@@ -43,8 +43,8 @@ double contrastRatio(Color foreground, Color ground) {
 ///
 typedef _Pair = (
   String,
-  Color Function(QuestPalette),
-  Color Function(QuestPalette),
+  Color Function(AppPalette),
+  Color Function(AppPalette),
 );
 
 final List<_Pair> _bodyPairs = <_Pair>[
@@ -74,7 +74,7 @@ final List<_Pair> _brassPairs = <_Pair>[
 ];
 
 /// Accent text roles of the higher-contrast, blue and green palettes: text and icon
-/// strokes use [QuestPalette.brassText] / [QuestPalette.brassOnParchment].
+/// strokes use [AppPalette.brassText] / [AppPalette.brassOnParchment].
 final List<_Pair> _highContrastBrassPairs = <_Pair>[
   ('brassText/board', (p) => p.brassText, (p) => p.board),
   ('brassText/boardRaised', (p) => p.brassText, (p) => p.boardRaised),
@@ -97,11 +97,11 @@ final List<_Pair> _darkSlipGraphicPairs = <_Pair>[
 ];
 
 void _checkPairs(
-  Map<String, QuestPalette> palettes,
+  Map<String, AppPalette> palettes,
   List<_Pair> pairs,
   double threshold,
 ) {
-  for (final MapEntry<String, QuestPalette> e in palettes.entries) {
+  for (final MapEntry<String, AppPalette> e in palettes.entries) {
     for (final _Pair pair in pairs) {
       final String key = '${e.key}/${pair.$1}';
       test(key, () {
@@ -117,9 +117,9 @@ void _checkPairs(
 }
 
 void main() {
-  final Map<String, QuestPalette> palettes = <String, QuestPalette>{
-    'guildBoard': QuestPalette.guildBoard,
-    'daylight': QuestPalette.daylight,
+  final Map<String, AppPalette> palettes = <String, AppPalette>{
+    'guildBoard': AppPalette.guildBoard,
+    'daylight': AppPalette.daylight,
   };
 
   // The blue palette has no gaps: every pair meets its threshold.
@@ -135,8 +135,8 @@ void main() {
     _checkPairs(palettes, _brassPairs.take(3).toList(), 3.0);
   });
 
-  final Map<String, QuestPalette> darkPalettes = <String, QuestPalette>{
-    'guildBoard': QuestPalette.guildBoard,
+  final Map<String, AppPalette> darkPalettes = <String, AppPalette>{
+    'guildBoard': AppPalette.guildBoard,
   };
 
   group('dark Quest cards: text pairs reach 4.5:1', () {
@@ -152,7 +152,7 @@ void main() {
   });
 
   test('the dark palette draws Quest cards as the raised board, not parchment', () {
-    final QuestPalette p = QuestPalette.guildBoard;
+    final AppPalette p = AppPalette.guildBoard;
     expect(p.slip, p.boardRaised);
     expect(p.slipEdge, p.boardLine);
     expect(p.slipText, p.text);
@@ -162,7 +162,7 @@ void main() {
   });
 
   test('the light palette keeps the parchment slip, role for role', () {
-    final QuestPalette p = QuestPalette.daylight;
+    final AppPalette p = AppPalette.daylight;
     expect(p.slip, p.parchment);
     expect(p.slipEdge, p.parchmentEdge);
     expect(p.slipText, p.ink);

@@ -10,7 +10,7 @@ import '../../../domain/note_tree.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../services/notes_providers.dart';
 import '../../state/notes_state.dart';
-import '../../../../theme/quest_theme.dart';
+import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/app_icon.dart';
 import '../notes/node_menu.dart';
@@ -209,7 +209,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen>
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     if (!_ready) return const Scaffold(body: SizedBox.shrink());
     final NoteSaveController save = _save!;
@@ -312,7 +312,7 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(Space.s8, Space.s4, Space.s8, 0),
@@ -398,7 +398,7 @@ class _Banner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     return Semantics(
       liveRegion: true,

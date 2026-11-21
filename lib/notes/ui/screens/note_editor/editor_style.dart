@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:super_editor/super_editor.dart';
 
-import '../../../../theme/quest_theme.dart';
+import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 
 /// Families tried, in order, for code; the first one the device has is used.
@@ -17,7 +17,7 @@ const double _codeScale = 0.9;
 /// body face, headings in the display face, links in the accent colour and
 /// code in a monospace face on a tinted ground.
 Stylesheet buildEditorStylesheet(BuildContext context) {
-  final QuestPalette p = context.palette;
+  final AppPalette p = context.palette;
   final TextStyle body = context.bodyText.bodyLarge!.copyWith(color: p.text, height: _lineHeight);
   final TextTheme display = context.displayText;
 
@@ -102,14 +102,14 @@ Stylesheet buildEditorStylesheet(BuildContext context) {
   );
 }
 
-SelectionStyles buildSelectionStyles(QuestPalette p) =>
+SelectionStyles buildSelectionStyles(AppPalette p) =>
     SelectionStyles(selectionColor: p.brassSoft);
 
 /// The overlays of the editor: the package's own list with the accent colour
 /// set. On iOS they draw the caret, the selection handles and the anchor of the
 /// Cut, Copy and Paste toolbar; on Android the same; on desktop the caret. A
 /// list with the desktop caret alone leaves iOS with no caret and no handles.
-List<SuperEditorLayerBuilder> buildEditorOverlays(QuestPalette p) => <SuperEditorLayerBuilder>[
+List<SuperEditorLayerBuilder> buildEditorOverlays(AppPalette p) => <SuperEditorLayerBuilder>[
   const SuperEditorIosToolbarFocalPointDocumentLayerBuilder(),
   SuperEditorIosHandlesDocumentLayerBuilder(handleColor: p.brass, caretWidth: Space.s2),
   const SuperEditorAndroidToolbarFocalPointDocumentLayerBuilder(),

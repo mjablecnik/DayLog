@@ -9,7 +9,7 @@ import '../../l10n/app_localizations.dart';
 import '../../quests/services/providers.dart';
 import '../../ui_kit/forms/error_text.dart';
 import '../../quests/ui/sheets/rule_sheet.dart';
-import '../../theme/quest_theme.dart';
+import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
 import '../../ui_kit/common/haptics.dart';
 import '../../ui_kit/common/snackbar_host.dart';

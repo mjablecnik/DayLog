@@ -10,7 +10,7 @@ import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/database/export/export_service.dart';
 import 'package:zafling/settings/ui/settings_screen.dart';
 import 'package:zafling/settings/ui_providers.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 import '../../helpers/fixed_clock.dart';
@@ -34,8 +34,8 @@ class _TestApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      theme: buildTheme(palette: QuestPalette.daylight),
-      darkTheme: buildTheme(palette: QuestPalette.guildBoard),
+      theme: buildTheme(palette: AppPalette.daylight),
+      darkTheme: buildTheme(palette: AppPalette.guildBoard),
       themeMode: ref.watch(themeModeProvider),
       locale: ref.watch(effectiveLocaleProvider),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -261,13 +261,13 @@ void main() {
     // MaterialApp animates the theme change.
     await tester.pump(const Duration(milliseconds: 400));
 
-    expect((await stored(tester)).theme, AppTheme.dark);
+    expect((await stored(tester)).theme, ThemeModeSetting.dark);
     expect(brightness(), Brightness.dark);
 
     await tester.tap(find.text('Light'));
     await settle(tester);
     await tester.pump(const Duration(milliseconds: 400));
-    expect((await stored(tester)).theme, AppTheme.light);
+    expect((await stored(tester)).theme, ThemeModeSetting.light);
     expect(brightness(), Brightness.light);
   });
 

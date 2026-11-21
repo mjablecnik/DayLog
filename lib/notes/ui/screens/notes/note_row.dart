@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
-import '../../../../theme/quest_theme.dart';
+import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../widgets/node_tiles.dart';
 
@@ -26,7 +26,7 @@ class NoteRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     return Semantics(
       button: true,

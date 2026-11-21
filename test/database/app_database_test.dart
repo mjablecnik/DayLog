@@ -62,7 +62,7 @@ void main() {
       expect(state.totalXp, 0);
       expect(state.heroName, '');
       expect(state.language, AppLanguage.system);
-      expect(state.theme, AppTheme.system);
+      expect(state.theme, ThemeModeSetting.system);
     });
 
     test('foreign keys are enabled', () async {

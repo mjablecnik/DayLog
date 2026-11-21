@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/calendar_models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../services/calendar_providers.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../widgets/calendar_fields.dart';
 import '../../../ui_kit/common/app_icon.dart';
@@ -47,7 +47,7 @@ class _EventSearchScreenState extends ConsumerState<EventSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final String locale = l.localeName;
     final bool empty = _query.trim().isEmpty;

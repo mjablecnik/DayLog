@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../../domain/note_title.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../theme/quest_theme.dart';
+import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 
 /// The single-line field in which the name of a Note is typed, above the text.
@@ -27,7 +27,7 @@ class NoteTitleField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final TextStyle style = context.displayText.headlineMedium!;
     return Padding(
       padding: const EdgeInsets.fromLTRB(Space.s20, Space.s8, Space.s20, Space.s4),

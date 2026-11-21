@@ -9,7 +9,7 @@ import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/quests/services/quest_service.dart';
 import 'package:zafling/quests/services/xp_engine.dart';
 import 'package:zafling/quests/ui/board/board_screen.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 import '../../../helpers/fixed_clock.dart';
@@ -76,7 +76,7 @@ class BoardHarness {
         ],
         child: MaterialApp(
           theme: buildTheme(
-            palette: QuestPalette.guildBoard,
+            palette: AppPalette.guildBoard,
           ),
           locale: const Locale('en'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,

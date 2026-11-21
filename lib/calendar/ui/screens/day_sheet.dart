@@ -5,7 +5,7 @@ import '../../../core/event_type.dart';
 import '../../data/calendar_models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../state/calendar_state.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/sheet/app_sheet.dart';
@@ -25,7 +25,7 @@ class DaySheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final MediaQueryData media = MediaQuery.of(context);
     final List<EventOccurrence> events = MonthPage.forDate(
@@ -153,7 +153,7 @@ class _RoundButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     return Semantics(
       button: true,
       label: label,
@@ -194,7 +194,7 @@ class _EventRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final CalendarEvent event = occurrence.event;
     final EventType type = event.type;

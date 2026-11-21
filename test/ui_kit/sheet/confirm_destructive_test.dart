@@ -15,7 +15,7 @@ class _Answer {
 Future<_Answer> _pumpAsk(
   WidgetTester tester, {
   String? cancelLabel,
-  QuestPalette palette = QuestPalette.guildBoard,
+  AppPalette palette = AppPalette.guildBoard,
 }) async {
   final _Answer answer = _Answer();
   await pumpCommon(
@@ -107,9 +107,9 @@ void main() {
     expect(answer.value, isFalse);
   });
 
-  for (final QuestPalette palette in <QuestPalette>[
-    QuestPalette.guildBoard,
-    QuestPalette.daylight,
+  for (final AppPalette palette in <AppPalette>[
+    AppPalette.guildBoard,
+    AppPalette.daylight,
   ]) {
     testWidgets('the confirm button is destructive-coloured '
         '(${palette.brightness.name})', (WidgetTester tester) async {

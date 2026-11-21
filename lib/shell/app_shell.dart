@@ -10,7 +10,7 @@ import '../notes/services/notes_providers.dart';
 import '../quests/services/providers.dart';
 import '../quests/ui/state/board_day.dart';
 import '../settings/ui_providers.dart';
-import '../theme/quest_theme.dart';
+import '../theme/app_theme.dart';
 import '../ui_kit/common/menu_button.dart';
 import '../ui_kit/common/snackbar_host.dart';
 import '../quests/ui/board/board_screen.dart';

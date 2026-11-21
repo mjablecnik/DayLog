@@ -8,7 +8,7 @@ import '../../domain/calendar_dates.dart';
 import '../../data/calendar_models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../state/calendar_state.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../widgets/event_chip.dart';
 import 'day_sheet.dart';
@@ -92,7 +92,7 @@ class MonthPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final List<EventOccurrence> all = ref.watch(monthOccurrencesProvider(month)).value ?? const <EventOccurrence>[];
     final DateTime today = ref.watch(calendarTodayProvider);
     final List<DateTime> dates = monthGridDates(month);
@@ -239,7 +239,7 @@ class DayCell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final TextScaler scaler = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: EventChip.maxTextScale);
     final double chipHeight = EventChip.heightOf(context) + Space.s2;

@@ -40,7 +40,7 @@ TextStyle _display(
 );
 
 /// Titles and XP figures, set in Figtree like the rest of the text, only heavier and tighter.
-TextTheme buildDisplayTextTheme(QuestPalette p) {
+TextTheme buildDisplayTextTheme(AppPalette p) {
   const String family = bodyFamilyName;
   return TextTheme(
     // Reward figure.
@@ -72,7 +72,7 @@ TextStyle _body(
 );
 
 /// Running text, card titles, buttons and caps labels; always Figtree.
-TextTheme buildBodyTextTheme(QuestPalette p) {
+TextTheme buildBodyTextTheme(AppPalette p) {
   return TextTheme(
     bodyLarge: _body(p.text, 15, FontWeight.w400),
     bodyMedium: _body(p.text, 15, FontWeight.w500),

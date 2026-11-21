@@ -3197,7 +3197,7 @@ class $AppStateTable extends AppState
         defaultValue: const Constant('system'),
       ).withConverter<AppLanguage>($AppStateTable.$converterlanguage);
   @override
-  late final GeneratedColumnWithTypeConverter<AppTheme, String> theme =
+  late final GeneratedColumnWithTypeConverter<ThemeModeSetting, String> theme =
       GeneratedColumn<String>(
         'theme',
         aliasedName,
@@ -3205,7 +3205,7 @@ class $AppStateTable extends AppState
         type: DriftSqlType.string,
         requiredDuringInsert: false,
         defaultValue: const Constant('system'),
-      ).withConverter<AppTheme>($AppStateTable.$convertertheme);
+      ).withConverter<ThemeModeSetting>($AppStateTable.$convertertheme);
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3284,8 +3284,8 @@ class $AppStateTable extends AppState
 
   static JsonTypeConverter2<AppLanguage, String, String> $converterlanguage =
       const EnumNameConverter<AppLanguage>(AppLanguage.values);
-  static JsonTypeConverter2<AppTheme, String, String> $convertertheme =
-      const EnumNameConverter<AppTheme>(AppTheme.values);
+  static JsonTypeConverter2<ThemeModeSetting, String, String> $convertertheme =
+      const EnumNameConverter<ThemeModeSetting>(ThemeModeSetting.values);
 }
 
 class AppStateRow extends DataClass implements Insertable<AppStateRow> {
@@ -3293,7 +3293,7 @@ class AppStateRow extends DataClass implements Insertable<AppStateRow> {
   final int totalXp;
   final String heroName;
   final AppLanguage language;
-  final AppTheme theme;
+  final ThemeModeSetting theme;
   const AppStateRow({
     required this.id,
     required this.totalXp,
@@ -3368,7 +3368,7 @@ class AppStateRow extends DataClass implements Insertable<AppStateRow> {
     int? totalXp,
     String? heroName,
     AppLanguage? language,
-    AppTheme? theme,
+    ThemeModeSetting? theme,
   }) => AppStateRow(
     id: id ?? this.id,
     totalXp: totalXp ?? this.totalXp,
@@ -3416,7 +3416,7 @@ class AppStateCompanion extends UpdateCompanion<AppStateRow> {
   final Value<int> totalXp;
   final Value<String> heroName;
   final Value<AppLanguage> language;
-  final Value<AppTheme> theme;
+  final Value<ThemeModeSetting> theme;
   const AppStateCompanion({
     this.id = const Value.absent(),
     this.totalXp = const Value.absent(),
@@ -3452,7 +3452,7 @@ class AppStateCompanion extends UpdateCompanion<AppStateRow> {
     Value<int>? totalXp,
     Value<String>? heroName,
     Value<AppLanguage>? language,
-    Value<AppTheme>? theme,
+    Value<ThemeModeSetting>? theme,
   }) {
     return AppStateCompanion(
       id: id ?? this.id,
@@ -9930,14 +9930,14 @@ typedef $$AppStateTableCreateCompanionBuilder = AppStateCompanion Function({
   Value<int> totalXp,
   Value<String> heroName,
   Value<AppLanguage> language,
-  Value<AppTheme> theme,
+  Value<ThemeModeSetting> theme,
 });
 typedef $$AppStateTableUpdateCompanionBuilder = AppStateCompanion Function({
   Value<int> id,
   Value<int> totalXp,
   Value<String> heroName,
   Value<AppLanguage> language,
-  Value<AppTheme> theme,
+  Value<ThemeModeSetting> theme,
 });
 
 class $$AppStateTableFilterComposer
@@ -9970,7 +9970,7 @@ class $$AppStateTableFilterComposer
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<AppTheme, AppTheme, String> get theme =>
+  ColumnWithTypeConverterFilters<ThemeModeSetting, ThemeModeSetting, String> get theme =>
       $composableBuilder(
         column: $table.theme,
         builder: (column) => ColumnWithTypeConverterFilters(column),
@@ -10033,7 +10033,7 @@ class $$AppStateTableAnnotationComposer
   GeneratedColumnWithTypeConverter<AppLanguage, String> get language =>
       $composableBuilder(column: $table.language, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<AppTheme, String> get theme =>
+  GeneratedColumnWithTypeConverter<ThemeModeSetting, String> get theme =>
       $composableBuilder(column: $table.theme, builder: (column) => column);
 }
 
@@ -10072,7 +10072,7 @@ class $$AppStateTableTableManager
                 Value<int> totalXp = const Value.absent(),
                 Value<String> heroName = const Value.absent(),
                 Value<AppLanguage> language = const Value.absent(),
-                Value<AppTheme> theme = const Value.absent(),
+                Value<ThemeModeSetting> theme = const Value.absent(),
               }) => AppStateCompanion(
                 id: id,
                 totalXp: totalXp,
@@ -10086,7 +10086,7 @@ class $$AppStateTableTableManager
                 Value<int> totalXp = const Value.absent(),
                 Value<String> heroName = const Value.absent(),
                 Value<AppLanguage> language = const Value.absent(),
-                Value<AppTheme> theme = const Value.absent(),
+                Value<ThemeModeSetting> theme = const Value.absent(),
               }) => AppStateCompanion.insert(
                 id: id,
                 totalXp: totalXp,

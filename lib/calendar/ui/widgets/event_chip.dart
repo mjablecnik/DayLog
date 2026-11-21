@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/event_type.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 
 /// The small coloured label of one event inside a day cell.
@@ -39,7 +39,7 @@ class EventChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final Color color = p.eventColor(type);
     final bool soft = type.isSoft;
     final TextScaler scaler = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: maxTextScale);
@@ -83,7 +83,7 @@ class EventTypeBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final Color color = p.eventColor(type);
     final bool soft = type.isSoft;
     return Container(

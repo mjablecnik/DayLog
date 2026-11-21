@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../state/calendar_state.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/sheet/app_sheet.dart';
@@ -25,7 +25,7 @@ class _MonthPickerSheetState extends ConsumerState<_MonthPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final DateTime visible = ref.watch(visibleMonthProvider);
     return AppSheet(
@@ -100,7 +100,7 @@ class _YearButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     return Semantics(
       button: true,
       enabled: onTap != null,
@@ -131,7 +131,7 @@ class _MonthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final BorderRadius radius = BorderRadius.circular(Radii.control);
     return Semantics(
       button: true,

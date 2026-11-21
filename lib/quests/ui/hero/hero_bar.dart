@@ -5,7 +5,7 @@ import '../../domain/xp_rules.dart';
 import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../services/providers.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import 'level_badge.dart';
 
@@ -22,7 +22,7 @@ class HeroBar extends ConsumerWidget {
     final LevelProgress? progress = ref.watch(levelProgressProvider).value;
     final AppSettings? settings = ref.watch(settingsProvider).value;
     final AppLocalizations l10n = AppLocalizations.of(context);
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
 
     final TextStyle nameStyle = context.bodyText.titleMedium!.copyWith(
       fontSize: 17,
@@ -188,7 +188,7 @@ class _XpBarState extends State<_XpBar> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     const double radius = Metrics.heroBar / 2;
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),

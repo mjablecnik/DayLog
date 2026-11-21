@@ -3,7 +3,7 @@ import 'package:super_editor/super_editor.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../sheets/link_sheet.dart';
-import '../../../../theme/quest_theme.dart';
+import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/app_icon.dart';
 
@@ -215,7 +215,7 @@ class FormatToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     return ListenableBuilder(
       listenable: Listenable.merge(<Listenable>[composer.selectionNotifier, composer.preferences]),
@@ -323,7 +323,7 @@ class _Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Space.s2),
       child: Semantics(

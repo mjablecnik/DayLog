@@ -261,7 +261,7 @@ void main() {
       await pumpCards(
         tester,
         QuestCard(quest: boardQuest(), onToggle: () {}),
-        palette: QuestPalette.daylight,
+        palette: AppPalette.daylight,
       );
       final DecoratedBox box = tester.widget(
         find
@@ -275,15 +275,15 @@ void main() {
       expect(d.border, isNotNull);
       expect(
         (d.border! as Border).top.color,
-        QuestPalette.daylight.parchmentEdge,
+        AppPalette.daylight.parchmentEdge,
       );
     });
 
-    final List<QuestPalette> darkPalettes = <QuestPalette>[
-      QuestPalette.guildBoard,
+    final List<AppPalette> darkPalettes = <AppPalette>[
+      AppPalette.guildBoard,
     ];
     for (int i = 0; i < darkPalettes.length; i++) {
-      final QuestPalette p = darkPalettes[i];
+      final AppPalette p = darkPalettes[i];
       testWidgets('dark theme: an open card is a raised dark card '
           '(palette #$i)', (tester) async {
         await pumpCards(
@@ -324,7 +324,7 @@ void main() {
     testWidgets('light theme: an open card keeps the parchment slip', (
       tester,
     ) async {
-      final QuestPalette p = QuestPalette.daylight;
+      final AppPalette p = AppPalette.daylight;
       await pumpCards(
         tester,
         QuestCard(quest: boardQuest(), onToggle: () {}),
@@ -511,7 +511,7 @@ void main() {
         final Text text = tester.widget<Text>(
           find.byKey(const ValueKey<String>('quest-deadline')),
         );
-        expect(text.style!.color, QuestPalette.guildBoard.destructiveText);
+        expect(text.style!.color, AppPalette.guildBoard.destructiveText);
         await pumpCards(
           tester,
           QuestCard(

@@ -38,7 +38,7 @@ class SettingsService {
   Future<void> setLanguage(AppLanguage language) =>
       _write(AppStateCompanion(language: Value(language)));
 
-  Future<void> setTheme(AppTheme theme) => _write(AppStateCompanion(theme: Value(theme)));
+  Future<void> setTheme(ThemeModeSetting theme) => _write(AppStateCompanion(theme: Value(theme)));
 
   /// The language the app is shown in: an explicit choice wins, `system`
   /// resolves to Czech or English by the device language and to English for any

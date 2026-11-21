@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 
 /// Small upper-case label row above a list section, with a figure on the

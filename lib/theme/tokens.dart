@@ -4,9 +4,9 @@ import '../core/event_type.dart';
 /// Palette roles from `.design/DESIGN.md`; one instance per theme.
 ///
 /// These are the only colour literals in the app. Widgets read them through
-/// `AppTokens.of(context)` (see `quest_theme.dart`).
-class QuestPalette {
-  const QuestPalette({
+/// `AppTokens.of(context)` (see `app_theme.dart`).
+class AppPalette {
+  const AppPalette({
     required this.brightness,
     required this.board,
     required this.boardRaised,
@@ -88,7 +88,7 @@ class QuestPalette {
   /// Dark theme: the blue palette after TimeLog's "Midnight" theme (board, text
   /// and accent are its `background`, `text` and `accent`), with cool paper slips.
   /// Chosen by Martin on 2026-11-19; the other temporary palettes were removed.
-  static const QuestPalette guildBoard = QuestPalette(
+  static const AppPalette guildBoard = AppPalette(
     brightness: Brightness.dark,
     board: Color(0xFF0F1319),
     boardRaised: Color(0xFF18202B),
@@ -115,7 +115,7 @@ class QuestPalette {
   );
 
   /// Light theme: cool off-white ground, darkened teal accent.
-  static const QuestPalette daylight = QuestPalette(
+  static const AppPalette daylight = AppPalette(
     brightness: Brightness.light,
     board: Color(0xFFEDF1F6),
     boardRaised: Color(0xFFF8FAFD),
@@ -271,7 +271,7 @@ abstract final class Motion {
 /// The fixed colour of each calendar Event_Type, the same in every palette and
 /// both themes. Solid chips carry [eventChipInk]; the Soft_Chip of a notable
 /// day tints the colour over the ground and keeps the body text colour.
-extension EventTypeColors on QuestPalette {
+extension EventTypeColors on AppPalette {
   Color eventColor(EventType type) => switch (type) {
     EventType.publicHoliday => const Color(0xFFE5594F),
     EventType.notableDay => const Color(0xFFC98A7D),

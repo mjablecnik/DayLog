@@ -7,7 +7,7 @@ import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/shell/app_shell.dart';
 import 'package:zafling/settings/ui_providers.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 import 'helpers/test_database.dart';
@@ -89,7 +89,7 @@ void main() {
 
     // German device, no choice yet: English, device brightness (light in tests).
     expect(find.text('Quests'), findsOneWidget);
-    expect(context().palette, QuestPalette.daylight);
+    expect(context().palette, AppPalette.daylight);
     expect(Localizations.localeOf(context()), const Locale('en'));
 
     await settings.setLanguage(AppLanguage.cs);
@@ -110,14 +110,14 @@ void main() {
     );
     expect(semantics.localeForSubtree, const Locale('cs'));
 
-    await settings.setTheme(AppTheme.dark);
+    await settings.setTheme(ThemeModeSetting.dark);
     await tester.pumpAndSettle();
-    expect(context().palette, QuestPalette.guildBoard);
+    expect(context().palette, AppPalette.guildBoard);
     expect(Theme.of(context()).brightness, Brightness.dark);
 
-    await settings.setTheme(AppTheme.light);
+    await settings.setTheme(ThemeModeSetting.light);
     await tester.pumpAndSettle();
-    expect(context().palette, QuestPalette.daylight);
+    expect(context().palette, AppPalette.daylight);
 
     expect(context().displayText.headlineLarge!.fontFamily, 'Figtree');
 
@@ -166,13 +166,13 @@ void main() {
     await tester.pumpAndSettle();
 
     await settings.setLanguage(AppLanguage.cs);
-    await settings.setTheme(AppTheme.dark);
+    await settings.setTheme(ThemeModeSetting.dark);
     await tester.pumpAndSettle();
     navigator.pop();
     await tester.pumpAndSettle();
 
     final BuildContext context = tester.element(find.byType(_Pushed));
-    expect(context.palette, QuestPalette.guildBoard);
+    expect(context.palette, AppPalette.guildBoard);
     expect(find.text('Questy'), findsWidgets);
     expect(
       created,
@@ -207,11 +207,11 @@ void main() {
 
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
     await tester.pumpAndSettle();
-    expect(context().palette, QuestPalette.guildBoard);
+    expect(context().palette, AppPalette.guildBoard);
 
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
     await tester.pumpAndSettle();
-    expect(context().palette, QuestPalette.daylight);
+    expect(context().palette, AppPalette.daylight);
   });
 
   testWidgets('default home is the shell, localized by the device locale', (

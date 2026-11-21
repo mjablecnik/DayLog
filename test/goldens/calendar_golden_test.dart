@@ -11,16 +11,16 @@ import '../ui/a11y/_a11y_harness.dart';
 /// Regenerate after an intended visual change with
 /// `flutter test --update-goldens test/goldens/calendar_golden_test.dart`.
 void main() {
-  const Map<String, QuestPalette> themes = <String, QuestPalette>{
-    'dark': QuestPalette.guildBoard,
-    'light': QuestPalette.daylight,
+  const Map<String, AppPalette> themes = <String, AppPalette>{
+    'dark': AppPalette.guildBoard,
+    'light': AppPalette.daylight,
   };
 
   Future<A11yEnv> open(
     WidgetTester tester,
     void Function(A11yEnv) track,
     Subject subject,
-    QuestPalette palette,
+    AppPalette palette,
   ) async {
     final A11yEnv env = await A11yEnv.pump(
       tester,
@@ -38,7 +38,7 @@ void main() {
     await env.settle();
   }
 
-  for (final MapEntry<String, QuestPalette> theme in themes.entries) {
+  for (final MapEntry<String, AppPalette> theme in themes.entries) {
     a11yTest('the month in the ${theme.key} theme', (tester, track) async {
       await open(tester, track, Subject.calendar, theme.value);
       await expectLater(

@@ -5,7 +5,7 @@ import '../../../quests/domain/xp_rules.dart';
 import '../../data/calendar_models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../screens/calendar_labels.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../quests/ui/cards/check_circle.dart';
 import '../../../quests/ui/cards/difficulty_pips.dart';
@@ -42,7 +42,7 @@ class EventTaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final CalendarEvent event = occurrence.event;
     final bool done = occurrence.isCompleted;

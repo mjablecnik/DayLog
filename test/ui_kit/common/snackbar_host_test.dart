@@ -31,7 +31,7 @@ void main() {
     expect(find.text('25 XP withdrawn'), findsOneWidget);
     final SnackBar bar = tester.widget(find.byType(SnackBar));
     expect(bar.behavior, SnackBarBehavior.floating);
-    expect(bar.backgroundColor, QuestPalette.guildBoard.boardRaised);
+    expect(bar.backgroundColor, AppPalette.guildBoard.boardRaised);
     expect(
       bar.margin!.resolve(TextDirection.ltr).bottom,
       Metrics.snackClearance,

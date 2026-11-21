@@ -10,7 +10,7 @@ import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/quests/ui/mission_detail/mission_detail_screen.dart';
 import 'package:zafling/quests/ui/missions/missions_screen.dart';
 import 'package:zafling/quests/ui/sheets/mission_sheet.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/quests/ui/cards/mission_card.dart';
 import 'package:zafling/quests/ui/cards/progress_ring.dart';
@@ -120,7 +120,7 @@ Future<_Env> _pump(
       container: container,
       child: MaterialApp(
         theme: buildTheme(
-          palette: QuestPalette.guildBoard,
+          palette: AppPalette.guildBoard,
         ),
         locale: const Locale('en'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,

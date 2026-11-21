@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zafling/quests/domain/xp_rules.dart';
 import 'package:zafling/quests/data/models.dart';
 import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 /// Pumps [child] in a themed, localized app; width is generous unless set.
@@ -12,7 +12,7 @@ Future<void> pumpCards(
   Widget child, {
   Locale locale = const Locale('en'),
   bool disableAnimations = false,
-  QuestPalette palette = QuestPalette.guildBoard,
+  AppPalette palette = AppPalette.guildBoard,
 }) {
   return tester.pumpWidget(
     MaterialApp(

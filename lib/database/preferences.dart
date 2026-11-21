@@ -5,4 +5,4 @@ enum AppLanguage { system, cs, en }
 enum AppLocaleCode { cs, en }
 
 /// Theme mode setting.
-enum AppTheme { light, dark, system }
+enum ThemeModeSetting { light, dark, system }

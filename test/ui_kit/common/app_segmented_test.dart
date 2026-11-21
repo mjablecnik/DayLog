@@ -114,14 +114,14 @@ void main() {
       return c.decoration! as BoxDecoration;
     }
 
-    expect(decorationOf('Čeština').color, QuestPalette.guildBoard.brassSoft);
+    expect(decorationOf('Čeština').color, AppPalette.guildBoard.brassSoft);
     expect(decorationOf('English').color, isNull);
 
     final TestGesture g = await tester.startGesture(
       tester.getCenter(find.text('English')),
     );
     await tester.pump(Motion.hover);
-    expect(decorationOf('English').color, QuestPalette.guildBoard.brassSoft);
+    expect(decorationOf('English').color, AppPalette.guildBoard.brassSoft);
     await g.up();
     await tester.pump(Motion.hover);
   });

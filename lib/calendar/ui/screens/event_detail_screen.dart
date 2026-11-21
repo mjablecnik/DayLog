@@ -9,7 +9,7 @@ import '../../data/calendar_models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../sheets/delete_event_sheet.dart';
 import '../state/calendar_state.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../widgets/calendar_fields.dart';
 import '../widgets/event_chip.dart';
@@ -86,7 +86,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final AsyncValue<EventOccurrence?> async = ref.watch(occurrenceProvider(_key));
     final EventOccurrence? occurrence = async.value;
@@ -141,7 +141,7 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     PopupMenuItem<_Menu> item(_Menu action, String label, String icon, {Color? color}) {
       final Color tint = color ?? p.text;
@@ -232,7 +232,7 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final String locale = l.localeName;
     final CalendarEvent event = occurrence.event;

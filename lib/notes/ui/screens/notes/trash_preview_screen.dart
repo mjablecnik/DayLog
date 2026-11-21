@@ -8,7 +8,7 @@ import '../../../domain/note_tree.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../services/notes_providers.dart';
 import '../../../../quests/ui/state/quest_actions.dart' show showDomainError;
-import '../../../../theme/quest_theme.dart';
+import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/app_icon.dart';
 import '../note_editor/editor_style.dart';
@@ -73,7 +73,7 @@ class _TrashPreviewScreenState extends ConsumerState<TrashPreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final NoteTree? tree = ref.watch(noteTreeProvider).value;
     final NoteNode? node = tree?.byId(widget.noteId);

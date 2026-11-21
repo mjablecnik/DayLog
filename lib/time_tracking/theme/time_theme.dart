@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/quest_theme.dart';
+import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
 
 /// The colours the time tracking widgets read, derived from the app palette so
@@ -25,7 +25,7 @@ class AppThemeData {
   });
 
   /// The colours of [palette].
-  factory AppThemeData.fromPalette(QuestPalette palette) {
+  factory AppThemeData.fromPalette(AppPalette palette) {
     return AppThemeData(
       isDark: !palette.isLight,
       background: palette.board,

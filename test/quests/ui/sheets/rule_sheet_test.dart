@@ -11,7 +11,7 @@ import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/l10n/app_localizations_en.dart';
 import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/quests/ui/sheets/rule_sheet.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 import '../../../helpers/fixed_clock.dart';
@@ -68,7 +68,7 @@ Future<_Fixture> _pump(
       container: container,
       child: MaterialApp(
         theme: buildTheme(
-          palette: QuestPalette.guildBoard,
+          palette: AppPalette.guildBoard,
         ),
         locale: const Locale('en'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,

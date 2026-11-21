@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../../theme/quest_theme.dart';
+import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
 import 'app_icon.dart';
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../common/app_icon.dart';
-import '../../theme/quest_theme.dart';
+import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
 import 'confirm_destructive.dart';
 
@@ -202,7 +202,7 @@ class _AppSheetState extends State<AppSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final AppLocalizations l10n = AppLocalizations.of(context);
     final MediaQueryData media = MediaQuery.of(context);
     final bool reduced = media.disableAnimations;
@@ -326,7 +326,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Space.s12),
       child: ConstrainedBox(
@@ -390,7 +390,7 @@ class _PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     return FilledButton(
       onPressed: onPressed,
       style: ButtonStyle(

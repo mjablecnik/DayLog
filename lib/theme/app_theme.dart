@@ -13,7 +13,7 @@ class AppStyle extends ThemeExtension<AppStyle> {
     required this.body,
   });
 
-  final QuestPalette palette;
+  final AppPalette palette;
 
   /// Titles and XP figures (switchable face).
   final TextTheme display;
@@ -23,7 +23,7 @@ class AppStyle extends ThemeExtension<AppStyle> {
 
   @override
   AppStyle copyWith({
-    QuestPalette? palette,
+    AppPalette? palette,
     TextTheme? display,
     TextTheme? body,
   }) => AppStyle(
@@ -44,7 +44,7 @@ class AppStyle extends ThemeExtension<AppStyle> {
 extension AppContext on BuildContext {
   AppStyle get _style => Theme.of(this).extension<AppStyle>()!;
 
-  QuestPalette get palette => _style.palette;
+  AppPalette get palette => _style.palette;
 
   TextTheme get displayText => _style.display;
 
@@ -53,9 +53,9 @@ extension AppContext on BuildContext {
 
 /// Material 3 theme for one palette; every text is Figtree.
 ThemeData buildTheme({
-  required QuestPalette palette,
+  required AppPalette palette,
 }) {
-  final QuestPalette p = palette;
+  final AppPalette p = palette;
   final TextTheme display = buildDisplayTextTheme(p);
   final TextTheme body = buildBodyTextTheme(p);
 

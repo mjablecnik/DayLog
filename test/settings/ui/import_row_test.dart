@@ -8,7 +8,7 @@ import 'package:zafling/database/import/import_providers.dart';
 import 'package:zafling/database/providers.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/settings/ui/import_row.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 import '../../helpers/test_database.dart';
@@ -33,7 +33,7 @@ void main() {
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
-          theme: buildTheme(palette: QuestPalette.guildBoard),
+          theme: buildTheme(palette: AppPalette.guildBoard),
           locale: const Locale('en'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

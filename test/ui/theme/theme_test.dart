@@ -1,18 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/theme/typography.dart';
 
 void main() {
-  final List<QuestPalette> palettes = <QuestPalette>[
-    QuestPalette.guildBoard,
-    QuestPalette.daylight,
+  final List<AppPalette> palettes = <AppPalette>[
+    AppPalette.guildBoard,
+    AppPalette.daylight,
   ];
 
   test('buildTheme succeeds for every palette', () {
-    for (final QuestPalette p in palettes) {
+    for (final AppPalette p in palettes) {
       final ThemeData t = buildTheme(palette: p);
       expect(t.useMaterial3, isTrue);
       expect(t.brightness, p.brightness);
@@ -50,7 +50,7 @@ void main() {
   });
 
   test('display and body sizes follow the design', () {
-    final QuestPalette p = palettes.first;
+    final AppPalette p = palettes.first;
     final TextTheme d = buildDisplayTextTheme(p);
     final TextTheme b = buildBodyTextTheme(p);
     expect(d.displayLarge!.fontSize, 48);
@@ -68,7 +68,7 @@ void main() {
   });
 
   test('line heights follow the artboards: 1.35 body, 1.1 display', () {
-    final QuestPalette p = palettes.first;
+    final AppPalette p = palettes.first;
     final TextTheme d = buildDisplayTextTheme(p);
     final TextTheme b = buildBodyTextTheme(p);
     for (final TextStyle? style in <TextStyle?>[
@@ -93,7 +93,7 @@ void main() {
   });
 
   test('selection, cursor and handles are brass; sheets have no handle', () {
-    for (final QuestPalette p in palettes) {
+    for (final AppPalette p in palettes) {
       final ThemeData t = buildTheme(palette: p);
       final TextSelectionThemeData sel = t.textSelectionTheme;
       expect(sel.cursorColor, p.brass);
@@ -122,7 +122,7 @@ void main() {
     late BuildContext captured;
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildTheme(palette: QuestPalette.daylight),
+        theme: buildTheme(palette: AppPalette.daylight),
         home: Builder(
           builder: (BuildContext context) {
             captured = context;
@@ -131,7 +131,7 @@ void main() {
         ),
       ),
     );
-    expect(captured.palette, same(QuestPalette.daylight));
+    expect(captured.palette, same(AppPalette.daylight));
     expect(captured.displayText.headlineLarge!.fontFamily, 'Figtree');
     expect(captured.bodyText.bodyLarge!.fontFamily, 'Figtree');
   });

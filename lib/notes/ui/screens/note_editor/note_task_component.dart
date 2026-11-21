@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:super_editor/super_editor.dart';
 
-import '../../../../theme/quest_theme.dart';
+import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/app_icon.dart';
 
@@ -71,7 +71,7 @@ class _NoteTaskComponentState extends State<NoteTaskComponent>
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final TaskComponentViewModel model = widget.viewModel;
     final void Function(bool)? setComplete = model.setComplete;
     // Centres the first line of text against the 44 point check.

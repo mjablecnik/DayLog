@@ -11,7 +11,7 @@ import '../../services/providers.dart';
 import '../../../calendar/ui/state/event_task_actions.dart';
 import '../state/quest_actions.dart';
 import '../sheets/quest_sheet.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../calendar/ui/screens/event_detail_screen.dart';
 import '../../../calendar/ui/widgets/event_task_card.dart';

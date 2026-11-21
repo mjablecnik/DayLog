@@ -10,7 +10,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../services/providers.dart';
 import '../../../ui_kit/forms/error_text.dart';
 import '../../../ui_kit/forms/validators.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../cards/difficulty_pips.dart';
 import '../../../ui_kit/common/app_icon.dart';
@@ -216,7 +216,7 @@ class _MissionSheetState extends ConsumerState<MissionSheet> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final TextTheme body = context.bodyText;
     final MissionSummary? editing = widget.editing;
     final bool completed = editing?.status == MissionStatus.completed;
@@ -384,7 +384,7 @@ class _TextBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final TextTheme body = context.bodyText;
     final BorderRadius radius = BorderRadius.circular(Radii.control);
     final bool hasError = error != null;
@@ -473,7 +473,7 @@ class _QuestRowTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final FieldError? error = row.error;
 
     return Padding(
@@ -558,7 +558,7 @@ class _AddRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     return Semantics(
       button: true,
       label: label,

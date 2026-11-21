@@ -14,7 +14,7 @@ import '../../services/providers.dart';
 import '../../../ui_kit/forms/error_text.dart';
 import '../forms/posting_day.dart';
 import '../../../ui_kit/forms/validators.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../cards/difficulty_pips.dart';
 import '../../../ui_kit/common/app_icon.dart';
@@ -388,7 +388,7 @@ class _RuleSheetState extends ConsumerState<RuleSheet> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final TextTheme body = context.bodyText;
     final int filledCount = _rows.where((_TemplateRow r) => !r.isEmpty).length;
 
@@ -522,7 +522,7 @@ Future<T?> _showChoiceDialog<T>(
     barrierColor: context.palette.scrim,
     barrierLabel: AppLocalizations.of(context).common_close,
     builder: (BuildContext dialogContext) {
-      final QuestPalette palette = dialogContext.palette;
+      final AppPalette palette = dialogContext.palette;
       return Dialog(
         backgroundColor: palette.sheet,
         shape: RoundedRectangleBorder(
@@ -569,7 +569,7 @@ class _ChoiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final Widget tile = Semantics(
       button: true,
       selected: selected,
@@ -645,7 +645,7 @@ class _CadenceChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     return Semantics(
       button: true,
       selected: selected,
@@ -702,7 +702,7 @@ class _PostingDayRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final TextTheme body = context.bodyText;
     return Semantics(
       button: true,
@@ -778,7 +778,7 @@ class _TextBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final TextTheme body = context.bodyText;
     final BorderRadius radius = BorderRadius.circular(Radii.control);
     final bool hasError = error != null;
@@ -868,7 +868,7 @@ class _TemplateTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     final FieldError? error = row.error;
 
     return Padding(
@@ -953,7 +953,7 @@ class _AddRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     return Semantics(
       button: true,
       label: label,
@@ -1045,7 +1045,7 @@ class _DeleteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette palette = context.palette;
+    final AppPalette palette = context.palette;
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(

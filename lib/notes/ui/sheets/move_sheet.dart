@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../domain/note_node.dart';
 import '../../domain/note_tree.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/sheet/app_sheet.dart';
@@ -62,7 +62,7 @@ class _MoveSheetState extends State<_MoveSheet> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l = AppLocalizations.of(context);
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final NoteNode node = widget.node;
     return AppSheet(
       title: l.notes_moveTitle,
@@ -119,7 +119,7 @@ class _TreeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final Color tint = selected ? p.brassText : p.text;
     return Padding(
       padding: EdgeInsets.only(left: depth * Metrics.treeIndent, bottom: Space.s4),

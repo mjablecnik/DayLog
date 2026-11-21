@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/app_icon.dart';
 
@@ -20,7 +20,7 @@ class AddressSuggestions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (addresses.isEmpty) return const SizedBox.shrink();
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     // A tap here counts as inside the text field, so the desktop "tap outside"
     // unfocus does not remove the rows before the tap lands.

@@ -12,7 +12,7 @@ import '../../sheets/add_sheet.dart';
 import '../../sheets/name_sheet.dart';
 import '../../state/notes_state.dart';
 import '../../../../quests/ui/state/quest_actions.dart' show showDomainError;
-import '../../../../theme/quest_theme.dart';
+import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/add_fab.dart';
 import '../../../../ui_kit/common/app_icon.dart';
@@ -136,7 +136,7 @@ class _FolderBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final NoteNode? parent = folder.parentId == null ? null : tree.byId(folder.parentId!);
     final String parentName = parent?.name ?? l.notes_title;
@@ -222,7 +222,7 @@ class _TitleRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l = AppLocalizations.of(context);
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final String title = folder?.name ?? l.notes_title;
     final String counts = tree == null
         ? ''

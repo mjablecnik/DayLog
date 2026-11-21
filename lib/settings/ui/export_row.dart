@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../ui_providers.dart';
-import '../../theme/quest_theme.dart';
+import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
 import '../../ui_kit/common/app_icon.dart';
 import '../../ui_kit/common/snackbar_host.dart';

@@ -32,7 +32,7 @@ import 'package:zafling/quests/ui/missions/missions_screen.dart';
 import 'package:zafling/settings/ui/settings_screen.dart';
 import 'package:zafling/shell/app_shell.dart';
 import 'package:zafling/settings/ui_providers.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 import '../../helpers/fixed_clock.dart';
@@ -117,7 +117,7 @@ class A11yEnv {
     double textScale = 1,
     Locale locale = const Locale('en'),
     bool reduceMotion = false,
-    QuestPalette palette = QuestPalette.guildBoard,
+    AppPalette palette = AppPalette.guildBoard,
     int startXp = 0,
     bool calendarEvents = false,
   }) async {

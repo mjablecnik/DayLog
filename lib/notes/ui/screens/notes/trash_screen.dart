@@ -8,7 +8,7 @@ import '../../../domain/trash_policy.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../services/notes_providers.dart';
 import '../../../../quests/ui/state/quest_actions.dart' show showDomainError;
-import '../../../../theme/quest_theme.dart';
+import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/app_icon.dart';
 import '../../../../ui_kit/common/empty_state.dart';
@@ -99,7 +99,7 @@ class _TrashScreenState extends ConsumerState<TrashScreen> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l = AppLocalizations.of(context);
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final NoteTree? tree = ref.watch(noteTreeProvider).value;
     final DateTime now = ref.watch(clockProvider).now();
     final List<NoteNode> entries = tree?.trashEntries() ?? const <NoteNode>[];
@@ -261,7 +261,7 @@ class _Info extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     return DecoratedBox(
       decoration: BoxDecoration(color: p.field, borderRadius: BorderRadius.circular(Radii.control)),
       child: Padding(

@@ -10,7 +10,7 @@ import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/l10n/app_localizations_en.dart';
 import 'package:zafling/calendar/services/calendar_providers.dart';
 import 'package:zafling/calendar/services/calendar_service.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
 import 'package:zafling/quests/services/xp_engine.dart' as xp_engine;
@@ -64,7 +64,7 @@ class CalendarUiHarness {
         ],
         child: MaterialApp(
           theme: buildTheme(
-            palette: brightness == Brightness.dark ? QuestPalette.guildBoard : QuestPalette.daylight,
+            palette: brightness == Brightness.dark ? AppPalette.guildBoard : AppPalette.daylight,
           ),
           locale: const Locale('en'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,

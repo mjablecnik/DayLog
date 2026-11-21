@@ -10,7 +10,7 @@ import '../../services/providers.dart';
 import '../sheets/quest_sheet.dart';
 import '../state/board_day.dart';
 import '../../../calendar/ui/state/calendar_state.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/add_fab.dart';
 import '../../../ui_kit/common/empty_state.dart';

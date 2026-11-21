@@ -25,7 +25,7 @@ void main() {
   test('defaults: language system, theme system, font Figtree, name empty', () async {
     final settings = await current();
     expect(settings.language, AppLanguage.system);
-    expect(settings.theme, AppTheme.system);
+    expect(settings.theme, ThemeModeSetting.system);
     expect(settings.heroName, '');
     expect(settings.displayName, isNull);
   });
@@ -99,9 +99,9 @@ void main() {
       await pumpEventQueue();
       expect(emitted.last.language, AppLanguage.cs);
 
-      await service.setTheme(AppTheme.dark);
+      await service.setTheme(ThemeModeSetting.dark);
       await pumpEventQueue();
-      expect(emitted.last.theme, AppTheme.dark);
+      expect(emitted.last.theme, ThemeModeSetting.dark);
 
       await service.setHeroName('Martin');
       await pumpEventQueue();
@@ -110,7 +110,7 @@ void main() {
         const AppSettings(
           heroName: 'Martin',
           language: AppLanguage.cs,
-          theme: AppTheme.dark,
+          theme: ThemeModeSetting.dark,
         ),
       );
       expect(emitted, hasLength(4));
@@ -130,7 +130,7 @@ void main() {
     );
     try {
       await expectLater(
-        SettingsService(readOnly).setTheme(AppTheme.dark),
+        SettingsService(readOnly).setTheme(ThemeModeSetting.dark),
         throwsA(isA<StorageError>()),
       );
     } finally {

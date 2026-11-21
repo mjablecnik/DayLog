@@ -7,7 +7,7 @@ import '../../../l10n/app_localizations.dart';
 import '../sheets/month_picker_sheet.dart';
 import '../sheets/type_filter_sheet.dart';
 import '../state/calendar_state.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/add_fab.dart';
 import '../../../ui_kit/common/app_icon.dart';
@@ -23,7 +23,7 @@ class CalendarScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final bool filterHidesAll = ref.watch(typeFilterProvider).isEmpty;
     return Scaffold(
@@ -70,7 +70,7 @@ class _Header extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final DateTime month = ref.watch(visibleMonthProvider);
     final bool filterActive = ref.watch(typeFilterActiveProvider);
@@ -187,7 +187,7 @@ class _IconTap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final Color tint = onTap == null ? p.textFaint : (color ?? p.text);
     return Semantics(
       button: true,
@@ -213,7 +213,7 @@ class _WeekdayRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final String locale = AppLocalizations.of(context).localeName;
     // 2 November 2026 is a Monday.
     final List<String> names = <String>[
@@ -254,7 +254,7 @@ class _FilterHidesAll extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(

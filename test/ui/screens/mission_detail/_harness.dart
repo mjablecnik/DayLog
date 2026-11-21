@@ -9,7 +9,7 @@ import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/quests/ui/mission_detail/detail_quest_row.dart';
 import 'package:zafling/quests/ui/mission_detail/mission_detail_screen.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/quests/ui/cards/check_circle.dart';
 
@@ -109,7 +109,7 @@ Future<(DetailFixture, int)> pumpDetail(
   required Future<int> Function(DetailFixture f) seed,
   Locale locale = const Locale('en'),
   List<Override> overrides = const <Override>[],
-  QuestPalette palette = QuestPalette.guildBoard,
+  AppPalette palette = AppPalette.guildBoard,
 }) async {
   tester.view.physicalSize = const Size(800, 1800);
   tester.view.devicePixelRatio = 1;

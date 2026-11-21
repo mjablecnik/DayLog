@@ -80,9 +80,9 @@ void main() {
 
   group('themeModeProvider', () {
     const mapping = {
-      AppTheme.system: ThemeMode.system,
-      AppTheme.dark: ThemeMode.dark,
-      AppTheme.light: ThemeMode.light,
+      ThemeModeSetting.system: ThemeMode.system,
+      ThemeModeSetting.dark: ThemeMode.dark,
+      ThemeModeSetting.light: ThemeMode.light,
     };
     for (final entry in mapping.entries) {
       test('${entry.key.name} maps to ${entry.value.name}', () async {

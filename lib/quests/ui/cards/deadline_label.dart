@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/validation.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 
 /// The Deadline of an open Quest: "Due 25. 11. 2026", or, once [today] is past
 /// it, "Overdue: 25. 11. 2026" in the destructive colour. The words carry the

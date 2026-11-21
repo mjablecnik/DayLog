@@ -12,7 +12,7 @@ import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/quests/services/quest_service.dart';
 import 'package:zafling/quests/ui/sheets/quest_sheet.dart';
 import 'package:zafling/settings/ui_providers.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/quests/ui/cards/difficulty_pips.dart';
 import 'package:zafling/quests/ui/widgets/effort_picker.dart';
@@ -121,7 +121,7 @@ Future<_Fixture> _pumpHost(
       container: container,
       child: MaterialApp(
         theme: buildTheme(
-          palette: QuestPalette.guildBoard,
+          palette: AppPalette.guildBoard,
         ),
         locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,

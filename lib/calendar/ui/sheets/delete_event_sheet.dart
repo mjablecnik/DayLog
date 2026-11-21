@@ -6,7 +6,7 @@ import '../../data/calendar_models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../services/calendar_providers.dart';
 import '../../services/calendar_service.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/snackbar_host.dart';
 import '../../../ui_kit/sheet/confirm_destructive.dart';
@@ -66,7 +66,7 @@ class _DeleteScopeSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final MediaQueryData media = MediaQuery.of(context);
     final RoundedRectangleBorder shape = RoundedRectangleBorder(

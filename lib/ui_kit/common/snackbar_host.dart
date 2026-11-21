@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/quest_theme.dart';
+import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
 
 /// Shows a transient message in a floating snackbar styled from the palette.

@@ -9,7 +9,7 @@ import '../../quests/services/providers.dart';
 import '../../ui_kit/forms/error_text.dart';
 import '../../ui_kit/forms/validators.dart';
 import '../ui_providers.dart';
-import '../../theme/quest_theme.dart';
+import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
 import '../../ui_kit/common/app_icon.dart';
 import '../../ui_kit/common/menu_button.dart';
@@ -178,28 +178,28 @@ class _ThemeControl extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final stored = ref.watch(
-      settingsProvider.select((s) => s.value?.theme ?? AppTheme.system),
+      settingsProvider.select((s) => s.value?.theme ?? ThemeModeSetting.system),
     );
-    return AppSegmented<AppTheme>(
-      options: <SegmentedOption<AppTheme>>[
-        SegmentedOption<AppTheme>(
-          value: AppTheme.light,
+    return AppSegmented<ThemeModeSetting>(
+      options: <SegmentedOption<ThemeModeSetting>>[
+        SegmentedOption<ThemeModeSetting>(
+          value: ThemeModeSetting.light,
           label: l.settings_themeLight,
           icon: IconAsset.sun,
         ),
-        SegmentedOption<AppTheme>(
-          value: AppTheme.dark,
+        SegmentedOption<ThemeModeSetting>(
+          value: ThemeModeSetting.dark,
           label: l.settings_themeDark,
           icon: IconAsset.moon,
         ),
-        SegmentedOption<AppTheme>(
-          value: AppTheme.system,
+        SegmentedOption<ThemeModeSetting>(
+          value: ThemeModeSetting.system,
           label: l.settings_themeSystem,
           icon: IconAsset.auto,
         ),
       ],
       selected: stored,
-      onChanged: (AppTheme theme) async {
+      onChanged: (ThemeModeSetting theme) async {
         try {
           await ref.read(settingsServiceProvider).setTheme(theme);
         } catch (e) {

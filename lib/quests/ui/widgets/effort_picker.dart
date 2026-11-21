@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/xp_rules.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../cards/difficulty_pips.dart';
 

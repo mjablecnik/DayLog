@@ -11,7 +11,7 @@ import '../state/board_day.dart';
 import '../state/quest_actions.dart';
 import '../../../settings/ui_providers.dart';
 import '../state/reorder.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../cards/quest_card.dart';
 import '../../../ui_kit/common/announce.dart';

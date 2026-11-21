@@ -14,7 +14,7 @@ import 'package:zafling/shell/app_shell.dart';
 import 'package:zafling/shell/destination.dart';
 import 'package:zafling/quests/ui/state/reward_queue.dart';
 import 'package:zafling/settings/ui_providers.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/quests/ui/cards/check_circle.dart';
 import 'package:zafling/quests/ui/reward/reward_card.dart';
@@ -58,7 +58,7 @@ Finder _completeCheck(String name) => find.byWidgetPredicate(
       w is CheckCircle && w.semanticLabel == en.a11y_completeQuest(name),
 );
 
-QuestPalette _palette(WidgetTester tester) =>
+AppPalette _palette(WidgetTester tester) =>
     tester.element(find.byType(SettingsScreen)).palette;
 
 void main() {
@@ -244,7 +244,7 @@ void main() {
 
       await _tap(tester, find.text(cs.settings_themeLight));
       expect(_palette(tester).isLight, isTrue);
-      expect(_palette(tester).board, QuestPalette.daylight.board);
+      expect(_palette(tester).board, AppPalette.daylight.board);
       expect(find.text(cs.settings_version('1.0.0')), findsOneWidget);
 
       // ---- 6. Post a rule by hand (12.3) ------------------------------------

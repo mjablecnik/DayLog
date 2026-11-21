@@ -6,7 +6,7 @@ import 'package:zafling/quests/data/models.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/quests/services/providers.dart';
 import 'package:zafling/quests/ui/state/reward_queue.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/quests/ui/reward/reward_card.dart';
 import 'package:zafling/quests/ui/reward/reward_overlay.dart';
@@ -68,7 +68,7 @@ Future<ProviderContainer> _pump(
       ],
       child: MaterialApp(
         theme: buildTheme(
-          palette: QuestPalette.guildBoard,
+          palette: AppPalette.guildBoard,
         ),
         locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,

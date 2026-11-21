@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/event_type.dart';
 import '../../../l10n/app_localizations.dart';
 import '../screens/calendar_labels.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 
 /// The ten event types as a grid, each with its colour and name, exactly one
@@ -56,7 +56,7 @@ class _TypeOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final BorderRadius radius = BorderRadius.circular(Radii.control);
     return Semantics(
       button: true,

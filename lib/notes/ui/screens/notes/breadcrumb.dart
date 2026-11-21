@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/note_node.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../theme/quest_theme.dart';
+import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/app_icon.dart';
 
@@ -21,7 +21,7 @@ class Breadcrumb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l = AppLocalizations.of(context);
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     // Poznámky, then the Folders; a long path keeps only the last two of them.
     final bool shorten = path.length > 3;
     final List<NoteNode> shown = shorten ? path.sublist(path.length - 2) : path;
@@ -47,13 +47,13 @@ class Breadcrumb extends StatelessWidget {
     );
   }
 
-  Widget _chevron(QuestPalette p) => Padding(
+  Widget _chevron(AppPalette p) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: Space.s4),
     child: AppIcon(IconAsset.chevronRight, size: Metrics.iconSmall - Space.s6, color: p.textFaint),
   );
 
   Widget _segment(BuildContext context, String text, VoidCallback? onTap, {required bool current}) {
-    final QuestPalette p = context.palette;
+    final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final TextStyle style = context.bodyText.bodySmall!.copyWith(
       color: current ? p.text : p.textDim,

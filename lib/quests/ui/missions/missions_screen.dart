@@ -12,7 +12,7 @@ import '../../services/providers.dart';
 import '../sheets/mission_sheet.dart';
 import '../state/board_day.dart';
 import '../state/quest_actions.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../cards/mission_card.dart';
 import '../../../ui_kit/common/add_fab.dart';

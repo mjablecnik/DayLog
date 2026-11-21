@@ -5,7 +5,7 @@ import '../../../core/board_day.dart';
 import '../../domain/xp_rules.dart';
 import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../theme/quest_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import 'check_circle.dart';
 import 'deadline_label.dart';

@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../../quests/data/models.dart';
 import '../../l10n/app_localizations.dart';
 import '../../quests/ui/sheets/rule_sheet.dart';
-import '../../theme/quest_theme.dart';
+import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
 import '../../ui_kit/common/app_icon.dart';
 

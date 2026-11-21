@@ -8,7 +8,7 @@ import 'package:zafling/quests/data/models.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/l10n/app_localizations_en.dart';
 import 'package:zafling/quests/ui/sheets/mission_sheet.dart';
-import 'package:zafling/theme/quest_theme.dart';
+import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/ui_kit/sheet/app_sheet.dart';
 
@@ -62,7 +62,7 @@ Future<_Fixture> _pump(WidgetTester tester, {MissionSummary? editing}) async {
       container: container,
       child: MaterialApp(
         theme: buildTheme(
-          palette: QuestPalette.guildBoard,
+          palette: AppPalette.guildBoard,
         ),
         locale: const Locale('en'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,

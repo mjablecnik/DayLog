@@ -1880,9 +1880,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_statsByCustomName => 'Other by name';
 
   @override
-  String get time_timerPrefillTooltip => 'Pre-fill description';
-
-  @override
   String get time_timerPhaseReady => 'READY';
 
   @override
@@ -2001,17 +1998,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_statsUntrackedTime => 'Untracked time';
 
   @override
-  String get time_settingsDailyReminderSection => 'Daily reminder';
-
-  @override
-  String get time_settingsReminderToggleLabel => 'Remind me to start the timer';
-
-  @override
-  String get time_settingsReminderToggleHint =>
-      'Every day at the chosen time a notification reminds you to start the timer.';
-
-  @override
-  String get time_settingsReminderTimeLabel => 'Reminder time';
+  String get time_settingsRemindersSection => 'Reminders';
 
   @override
   String get time_settingsRecurringRemindersLabel => 'Recurring reminders';
@@ -2025,10 +2012,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time_settingsShowModalDebugButton => 'Show modal directly (debug)';
-
-  @override
-  String get time_settingsNotificationsDisabled =>
-      'Notifications are disabled. Enable them in your phone\'s settings.';
 
   @override
   String get time_settingsNoRemindersYet =>
@@ -2124,9 +2107,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time_reminderEditBarrierLabel => 'Reminder edit dialog';
-
-  @override
-  String get time_reminderDailyNotificationBody => 'Time to start your timer!';
 
   @override
   String get time_recurringReminderDefaultNotificationBody => 'Tap to open';

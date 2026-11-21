@@ -2540,10 +2540,6 @@
   "@time_statsByCustomName": {
     "description": "Time tracking text: \"Other by name\""
   },
-  "time_timerPrefillTooltip": "Předvyplnit popis",
-  "@time_timerPrefillTooltip": {
-    "description": "Time tracking text: \"Pre-fill description\""
-  },
   "time_timerPhaseReady": "PŘIPRAVENO",
   "@time_timerPhaseReady": {
     "description": "Time tracking text: \"READY\""
@@ -2698,21 +2694,9 @@
   "@time_statsUntrackedTime": {
     "description": "Time tracking text: \"Untracked time\""
   },
-  "time_settingsDailyReminderSection": "Denní připomínka",
-  "@time_settingsDailyReminderSection": {
-    "description": "Time tracking text: \"Daily reminder\""
-  },
-  "time_settingsReminderToggleLabel": "Připomínat spuštění časovače",
-  "@time_settingsReminderToggleLabel": {
-    "description": "Time tracking text: \"Remind me to start the timer\""
-  },
-  "time_settingsReminderToggleHint": "Každý den ve zvolený čas ti přijde upozornění, abys nezapomněl spustit časovač.",
-  "@time_settingsReminderToggleHint": {
-    "description": "Time tracking text: the explanation under the daily reminder switch"
-  },
-  "time_settingsReminderTimeLabel": "Čas připomínky",
-  "@time_settingsReminderTimeLabel": {
-    "description": "Time tracking text: \"Reminder time\""
+  "time_settingsRemindersSection": "Připomínky",
+  "@time_settingsRemindersSection": {
+    "description": "Time tracking text: group label of the reminders on the Settings page"
   },
   "time_settingsRecurringRemindersLabel": "Opakované připomínky",
   "@time_settingsRecurringRemindersLabel": {
@@ -2729,10 +2713,6 @@
   "time_settingsShowModalDebugButton": "Zobrazit modal přímo (debug)",
   "@time_settingsShowModalDebugButton": {
     "description": "Time tracking text: \"Show modal directly (debug)\""
-  },
-  "time_settingsNotificationsDisabled": "Oznámení jsou zakázána. Povolte je v nastavení telefonu.",
-  "@time_settingsNotificationsDisabled": {
-    "description": "Time tracking text: \"Notifications are disabled. Enable them in your phone's settings.\""
   },
   "time_settingsNoRemindersYet": "Nejdříve vytvořte alespoň jednu opakovanou připomínku.",
   "@time_settingsNoRemindersYet": {
@@ -2863,10 +2843,6 @@
   "time_reminderEditBarrierLabel": "Dialog pro úpravu připomínky",
   "@time_reminderEditBarrierLabel": {
     "description": "Time tracking text: \"Reminder edit dialog\""
-  },
-  "time_reminderDailyNotificationBody": "Čas spustit časovač!",
-  "@time_reminderDailyNotificationBody": {
-    "description": "Time tracking text: \"Time to start your timer!\""
   },
   "time_recurringReminderDefaultNotificationBody": "Klepni pro otevření",
   "@time_recurringReminderDefaultNotificationBody": {

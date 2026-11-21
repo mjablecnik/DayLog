@@ -28,8 +28,9 @@ loading the data of the two old apps.
 - History: day navigation, a daily summary, edit and delete, and manually adding a past entry. The day starts at 03:00.
 - Statistics: a daily or weekly view with a timeline, the time by activity type (with subtypes), by project and by
   name, and the untracked time (16 waking hours a day minus the tracked time).
-- A daily reminder that nudges you to start a timer, and recurring reminders for habits with a time window, an
-  interval and active days, which repeat until marked done and can be snoozed.
+- Recurring reminders for habits with a time window, an interval and active days, which repeat until marked done
+  and can be snoozed. (The daily "start the timer" reminder of TimeLog was removed; the app cancels one an older
+  version left scheduled.)
 
 ## Quests, Missions and the Board
 
@@ -65,8 +66,8 @@ loading the data of the two old apps.
 ## Settings and data
 
 - Profile name, language (Czech, English or the device's), light, dark or system appearance, recurring mission
-  rules, the Home Screen shortcut guide, the daily reminder with the recurring reminders and the testing tools,
-  data export and import, and the licences of the bundled font.
+  rules and the Home Screen shortcut guide (each on a page of its own), the recurring reminders and the testing
+  tools, data export and import, and the licences of the bundled font with the version below them.
 - One theme, the blue one, in a dark and a light variant; further themes are one more entry in a registry.
 - **Export**: Settings → Data → Export data saves every table and the stored preferences into one JSON file and
   opens the share sheet.

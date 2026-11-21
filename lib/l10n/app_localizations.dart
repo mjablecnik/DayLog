@@ -2960,12 +2960,6 @@ abstract class AppLocalizations {
   /// **'Ostatní podle názvu'**
   String get time_statsByCustomName;
 
-  /// Time tracking text: "Pre-fill description"
-  ///
-  /// In cs, this message translates to:
-  /// **'Předvyplnit popis'**
-  String get time_timerPrefillTooltip;
-
   /// Time tracking text: "READY"
   ///
   /// In cs, this message translates to:
@@ -3182,29 +3176,11 @@ abstract class AppLocalizations {
   /// **'Nesledovaný čas'**
   String get time_statsUntrackedTime;
 
-  /// Time tracking text: "Daily reminder"
+  /// Time tracking text: group label of the reminders on the Settings page
   ///
   /// In cs, this message translates to:
-  /// **'Denní připomínka'**
-  String get time_settingsDailyReminderSection;
-
-  /// Time tracking text: "Remind me to start the timer"
-  ///
-  /// In cs, this message translates to:
-  /// **'Připomínat spuštění časovače'**
-  String get time_settingsReminderToggleLabel;
-
-  /// Time tracking text: the explanation under the daily reminder switch
-  ///
-  /// In cs, this message translates to:
-  /// **'Každý den ve zvolený čas ti přijde upozornění, abys nezapomněl spustit časovač.'**
-  String get time_settingsReminderToggleHint;
-
-  /// Time tracking text: "Reminder time"
-  ///
-  /// In cs, this message translates to:
-  /// **'Čas připomínky'**
-  String get time_settingsReminderTimeLabel;
+  /// **'Připomínky'**
+  String get time_settingsRemindersSection;
 
   /// Time tracking text: "Recurring reminders"
   ///
@@ -3229,12 +3205,6 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Zobrazit modal přímo (debug)'**
   String get time_settingsShowModalDebugButton;
-
-  /// Time tracking text: "Notifications are disabled. Enable them in your phone's settings."
-  ///
-  /// In cs, this message translates to:
-  /// **'Oznámení jsou zakázána. Povolte je v nastavení telefonu.'**
-  String get time_settingsNotificationsDisabled;
 
   /// Time tracking text: "First create at least one recurring reminder."
   ///
@@ -3403,12 +3373,6 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Dialog pro úpravu připomínky'**
   String get time_reminderEditBarrierLabel;
-
-  /// Time tracking text: "Time to start your timer!"
-  ///
-  /// In cs, this message translates to:
-  /// **'Čas spustit časovač!'**
-  String get time_reminderDailyNotificationBody;
 
   /// Time tracking text: "Tap to open"
   ///

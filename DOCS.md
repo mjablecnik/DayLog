@@ -96,7 +96,7 @@ the schema needs a migration step in `lib/database/app_database.dart` and a new 
 | `completion_records` | the days on which a recurring reminder was marked done |
 
 Besides the database the time tracking feature keeps small state in SharedPreferences: the running timer
-(`timer_*` keys), the reminder settings (`reminder_*`), the last choices in the entry sheets and the name
+(`timer_*` keys), the last choices in the entry sheets and the name
 suggestion lists. The language and the theme mode are not among them: they live in `app_state` for the whole app.
 
 Quests and the calendar share one link (`quests.event_id`), and the importer deletes and refills whole tables, so
@@ -167,7 +167,8 @@ from the stored end time on start; a timer that ran out while the app was closed
 - **Language.** Texts without a BuildContext (notifications) come from `localizationsLoaderProvider`, which reads
   the app language through `timeLocaleProvider`; the app root overrides that provider with the app setting.
 - **Startup.** `TimeTrackingBootstrap` (called from `main`) asks for the notification permission, initialises the
-  reminder plugin, handles a notification tap that launched the app (once), and reschedules the reminders.
+  reminder plugin, handles a notification tap that launched the app (once), reschedules the recurring reminders and removes what
+  the old daily reminder left (its notification and `reminder_*` keys).
   `ReminderActionHost` opens the reminder screen when a tap arrives, also after a return from the background.
   A failure in this startup is reported and does not stop the rest of the app.
 - **Alarm.** `AlarmService` creates its audio player on the first alarm, so the plugin is not touched before.

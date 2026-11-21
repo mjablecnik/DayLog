@@ -1923,9 +1923,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_statsByCustomName => 'Ostatní podle názvu';
 
   @override
-  String get time_timerPrefillTooltip => 'Předvyplnit popis';
-
-  @override
   String get time_timerPhaseReady => 'PŘIPRAVENO';
 
   @override
@@ -2046,17 +2043,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_statsUntrackedTime => 'Nesledovaný čas';
 
   @override
-  String get time_settingsDailyReminderSection => 'Denní připomínka';
-
-  @override
-  String get time_settingsReminderToggleLabel => 'Připomínat spuštění časovače';
-
-  @override
-  String get time_settingsReminderToggleHint =>
-      'Každý den ve zvolený čas ti přijde upozornění, abys nezapomněl spustit časovač.';
-
-  @override
-  String get time_settingsReminderTimeLabel => 'Čas připomínky';
+  String get time_settingsRemindersSection => 'Připomínky';
 
   @override
   String get time_settingsRecurringRemindersLabel => 'Opakované připomínky';
@@ -2071,10 +2058,6 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get time_settingsShowModalDebugButton =>
       'Zobrazit modal přímo (debug)';
-
-  @override
-  String get time_settingsNotificationsDisabled =>
-      'Oznámení jsou zakázána. Povolte je v nastavení telefonu.';
 
   @override
   String get time_settingsNoRemindersYet =>
@@ -2171,9 +2154,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get time_reminderEditBarrierLabel => 'Dialog pro úpravu připomínky';
-
-  @override
-  String get time_reminderDailyNotificationBody => 'Čas spustit časovač!';
 
   @override
   String get time_recurringReminderDefaultNotificationBody =>

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../domain/activity_types.dart';
 import '../domain/config.dart';
 import 'alarm_service.dart';
 import 'native/live_activity_channel.dart';
@@ -25,11 +24,6 @@ abstract class TimerState with _$TimerState {
     required int secondsLeft,
     DateTime? sessionStart,
     DateTime? endAt,
-    String? prefillDescription,
-    String? prefillActivityType,
-    String? prefillProject,
-    String? prefillSubtype,
-    String? prefillCustomName,
     LogTrigger? logTrigger,
   }) = _TimerState;
 }
@@ -39,13 +33,16 @@ const _kTimerEndAt = 'timer_endAt';
 const _kTimerSessionStart = 'timer_sessionStart';
 const _kTimerTotalSeconds = 'timer_totalSeconds';
 const _kTimerSecondsLeft = 'timer_secondsLeft';
-const _kPrefillDescription = 'timer_prefillDescription';
-const _kPrefillActivityType = 'timer_prefillActivityType';
-const _kPrefillProject = 'timer_prefillProject';
-const _kPrefillSubtype = 'timer_prefillSubtype';
-const _kPrefillCustomName = 'timer_prefillCustomName';
-// Legacy key of versions before subtypes; read once and removed.
-const _kLegacyPrefillEntertainmentType = 'timer_prefillEntertainmentType';
+// Keys of the description draft that the removed pre-fill feature stored; they
+// are deleted on the next launch.
+const _kRemovedPrefillKeys = <String>[
+  'timer_prefillDescription',
+  'timer_prefillActivityType',
+  'timer_prefillProject',
+  'timer_prefillSubtype',
+  'timer_prefillCustomName',
+  'timer_prefillEntertainmentType',
+];
 
 class TimerNotifier extends StateNotifier<TimerState> with WidgetsBindingObserver {
   Timer? _ticker;
@@ -91,31 +88,11 @@ class TimerNotifier extends StateNotifier<TimerState> with WidgetsBindingObserve
 
   Future<void> _restoreState() async {
     final prefs = await SharedPreferences.getInstance();
+    for (final key in _kRemovedPrefillKeys) {
+      await prefs.remove(key);
+    }
     final statusStr = prefs.getString(_kTimerStatus);
     if (statusStr == null) return;
-
-    final prefillDescription = prefs.getString(_kPrefillDescription);
-    final prefillActivityType = prefs.getString(_kPrefillActivityType);
-    final prefillProject = prefs.getString(_kPrefillProject);
-    var prefillSubtype = prefs.getString(_kPrefillSubtype);
-    final prefillCustomName = prefs.getString(_kPrefillCustomName);
-
-    // A draft saved by a version before subtypes: map the old entertainment
-    // value to the new subtype key and drop the old key.
-    final legacyEntertainment = prefs.getString(_kLegacyPrefillEntertainmentType);
-    if (legacyEntertainment != null) {
-      if (prefillSubtype == null && prefillActivityType == 'Zábava') {
-        if (legacyEntertainment == 'Aktivní zábava') prefillSubtype = 'active';
-        if (legacyEntertainment == 'Pasivní zábava') prefillSubtype = 'passive';
-      }
-      await prefs.remove(_kLegacyPrefillEntertainmentType);
-    }
-    // Ignore a subtype that the type does not define.
-    if (prefillSubtype != null &&
-        (prefillActivityType == null ||
-            subtypeOf(prefillActivityType, prefillSubtype) == null)) {
-      prefillSubtype = null;
-    }
 
     final totalSeconds =
         prefs.getInt(_kTimerTotalSeconds) ?? (TimerConfig.defaultDurationMinutes * 60);
@@ -167,20 +144,6 @@ class TimerNotifier extends StateNotifier<TimerState> with WidgetsBindingObserve
         sessionStart: sessionStart,
         endAt: null,
         logTrigger: LogTrigger.finish,
-      );
-    }
-
-    if (prefillDescription != null ||
-        prefillActivityType != null ||
-        prefillProject != null ||
-        prefillSubtype != null ||
-        prefillCustomName != null) {
-      state = state.copyWith(
-        prefillDescription: prefillDescription,
-        prefillActivityType: prefillActivityType,
-        prefillProject: prefillProject,
-        prefillSubtype: prefillSubtype,
-        prefillCustomName: prefillCustomName,
       );
     }
   }
@@ -305,7 +268,6 @@ class TimerNotifier extends StateNotifier<TimerState> with WidgetsBindingObserve
       logTrigger: LogTrigger.stop,
     );
     _saveState();
-    clearPrefill();
   }
 
   void dismissRinging() {
@@ -332,59 +294,6 @@ class TimerNotifier extends StateNotifier<TimerState> with WidgetsBindingObserve
     _saveState();
     _liveActivity.startActivity(endAt: endAt, totalSeconds: totalSeconds);
     _notifications.scheduleTimerNotification(endAt: endAt);
-  }
-
-  void savePrefill(
-    String description,
-    String activityType, {
-    String? project,
-    String? subtype,
-    String? customName,
-  }) {
-    state = state.copyWith(
-      prefillDescription: description,
-      prefillActivityType: activityType,
-      prefillProject: project,
-      prefillSubtype: subtype,
-      prefillCustomName: customName,
-    );
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString(_kPrefillDescription, description);
-      prefs.setString(_kPrefillActivityType, activityType);
-      if (project != null && project.isNotEmpty) {
-        prefs.setString(_kPrefillProject, project);
-      } else {
-        prefs.remove(_kPrefillProject);
-      }
-      if (subtype != null && subtype.isNotEmpty) {
-        prefs.setString(_kPrefillSubtype, subtype);
-      } else {
-        prefs.remove(_kPrefillSubtype);
-      }
-      if (customName != null && customName.isNotEmpty) {
-        prefs.setString(_kPrefillCustomName, customName);
-      } else {
-        prefs.remove(_kPrefillCustomName);
-      }
-    });
-  }
-
-  void clearPrefill() {
-    state = state.copyWith(
-      prefillDescription: null,
-      prefillActivityType: null,
-      prefillProject: null,
-      prefillSubtype: null,
-      prefillCustomName: null,
-    );
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.remove(_kPrefillDescription);
-      prefs.remove(_kPrefillActivityType);
-      prefs.remove(_kPrefillProject);
-      prefs.remove(_kPrefillSubtype);
-      prefs.remove(_kPrefillCustomName);
-      prefs.remove(_kLegacyPrefillEntertainmentType);
-    });
   }
 
   void _handleLockScreenAction(String action, {int? endAtMs}) {

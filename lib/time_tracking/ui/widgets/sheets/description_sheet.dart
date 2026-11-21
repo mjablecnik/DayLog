@@ -22,26 +22,14 @@ class DescriptionSheet extends ConsumerStatefulWidget {
   final AppThemeData theme;
   final DateTime sessionStart;
   final DateTime endedAt;
-  final String? initialDescription;
-  final String? initialActivityType;
-  final String? initialProject;
-  final String? initialSubtype;
-  final String? initialCustomName;
   final bool triggeredByStop;
-  final bool isPrefillMode;
 
   const DescriptionSheet({
     super.key,
     required this.theme,
     required this.sessionStart,
     required this.endedAt,
-    this.initialDescription,
-    this.initialActivityType,
-    this.initialProject,
-    this.initialSubtype,
-    this.initialCustomName,
     this.triggeredByStop = false,
-    this.isPrefillMode = false,
   });
 
   @override
@@ -65,20 +53,8 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
   @override
   void initState() {
     super.initState();
-    _controller.text = widget.initialDescription ?? '';
-    final initialType = widget.initialActivityType;
-    if (initialType != null) {
-      _initialSelection = ActivitySelection(
-        typeKey: initialType,
-        subtypeKey: widget.initialSubtype,
-        project: widget.initialProject ?? '',
-        customName: widget.initialCustomName ?? '',
-      );
-    }
-    _selection = _initialSelection ?? ActivitySelection(typeKey: activityTypes.first);
-    if (!widget.isPrefillMode && widget.initialDescription == null) {
-      _loadLastSubmitted();
-    }
+    _selection = ActivitySelection(typeKey: activityTypes.first);
+    _loadLastSubmitted();
   }
 
   Future<void> _loadLastSubmitted() async {
@@ -141,11 +117,7 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
 
   Future<void> _submit() async {
     if (!_canSubmit) return;
-    if (widget.isPrefillMode) {
-      await _savePrefillAndResume();
-    } else {
-      await _saveEntry(_controller.text.trim());
-    }
+    await _saveEntry(_controller.text.trim());
   }
 
   Future<void> _skip() async {
@@ -164,21 +136,6 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
     }
 
     await _saveEntry('');
-  }
-
-  Future<void> _savePrefillAndResume() async {
-    setState(() => _saving = true);
-    final notifier = ref.read(timerProvider.notifier);
-    final values = _selection.toRowValues();
-    notifier.savePrefill(
-      _controller.text.trim(),
-      _selection.typeKey,
-      project: values.project,
-      subtype: values.subtype,
-      customName: values.customName,
-    );
-    notifier.resume();
-    if (mounted) Navigator.of(context).pop();
   }
 
   Future<void> _saveEntry(String description) async {
@@ -364,7 +321,7 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
                               ),
                             )
                           : Text(
-                              widget.isPrefillMode ? l10n.time_prefillSaveDraft : l10n.time_commonSubmit,
+                              l10n.time_commonSubmit,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16,
@@ -373,29 +330,13 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
                             ),
                     ),
                   ),
-                  if (!widget.isPrefillMode)
-                    TextButton(
+                  TextButton(
                       onPressed: _saving ? null : _skip,
                       style: TextButton.styleFrom(
                         foregroundColor: theme.dim,
                       ),
                       child: Text(
                         l10n.time_commonSkip,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: theme.dim,
-                        ),
-                      ),
-                    ),
-                  if (widget.isPrefillMode)
-                    TextButton(
-                      onPressed: _saving ? null : () => Navigator.of(context).pop(),
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.dim,
-                      ),
-                      child: Text(
-                        l10n.time_commonCancel,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,

@@ -98,11 +98,6 @@ class _TimerScreenState extends ConsumerState<TimerScreen> {
         theme: theme,
         sessionStart: timerState.sessionStart ?? DateTime.now(),
         endedAt: timerState.endAt ?? _ringStartedAt ?? DateTime.now(),
-        initialDescription: timerState.prefillDescription,
-        initialActivityType: timerState.prefillActivityType,
-        initialProject: timerState.prefillProject,
-        initialSubtype: timerState.prefillSubtype,
-        initialCustomName: timerState.prefillCustomName,
         triggeredByStop: timerState.logTrigger == LogTrigger.stop,
       ),
     ).whenComplete(() {

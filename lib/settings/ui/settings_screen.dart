@@ -17,6 +17,7 @@ import '../../ui_kit/common/settings_group.dart';
 import '../../ui_kit/common/app_segmented.dart';
 import '../../ui_kit/common/snackbar_host.dart';
 import 'export_row.dart';
+import 'import_row.dart';
 import 'rules_section.dart';
 import 'shortcut_guide.dart';
 
@@ -114,7 +115,9 @@ class SettingsScreen extends ConsumerWidget {
                   ],
                   SettingsGroup(
                     label: l.settings_groupData,
-                    child: const ExportRow(),
+                    child: const Column(
+                      children: <Widget>[ExportRow(), ImportRow()],
+                    ),
                   ),
                   const SizedBox(height: Space.s24),
                   SettingsGroup(

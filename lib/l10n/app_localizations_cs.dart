@@ -2195,4 +2195,85 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get time_timerFinishLabel => 'Dokončit hned';
+
+  @override
+  String get settings_importTitle => 'Importovat data';
+
+  @override
+  String get settings_importSubtitle =>
+      'Načte soubor exportu z QuestLogu, TimeLogu nebo ze Zaflingu.';
+
+  @override
+  String get settings_importConfirmTitle => 'Nahradit data?';
+
+  @override
+  String settings_importConfirmBody(
+    String source,
+    String version,
+    String date,
+    String summary,
+  ) {
+    return 'Soubor $source $version z $date nahradí tyto tabulky (řádků v souboru, řádků teď):\n$summary';
+  }
+
+  @override
+  String settings_importSummaryLine(String table, int rows, int current) {
+    return '$table: $rows / $current';
+  }
+
+  @override
+  String get settings_importConfirmAction => 'Nahradit';
+
+  @override
+  String get settings_importDoneTitle => 'Import hotov';
+
+  @override
+  String settings_importDoneBody(int rows, int tables) {
+    return 'Načteno $rows řádků do $tables tabulek.';
+  }
+
+  @override
+  String get settings_importPreferencesFailed =>
+      'Nastavení časovače a připomínek se nepodařilo uložit; data jsou načtená.';
+
+  @override
+  String get settings_importFailedNotJson =>
+      'Soubor není export dat (není to platný JSON).';
+
+  @override
+  String get settings_importFailedWrongFormat =>
+      'Tento soubor není export z QuestLogu, TimeLogu ani ze Zaflingu.';
+
+  @override
+  String get settings_importFailedNewerFormat =>
+      'Soubor je z novější verze, kterou tato aplikace neumí číst.';
+
+  @override
+  String settings_importFailedMissingSection(String detail) {
+    return 'V souboru chybí část „$detail“.';
+  }
+
+  @override
+  String settings_importFailedUnknownTable(String detail) {
+    return 'Soubor obsahuje tabulku „$detail“, kterou aplikace nezná. Nic se nezměnilo.';
+  }
+
+  @override
+  String settings_importFailedUnknownColumn(String detail) {
+    return 'Soubor obsahuje sloupec „$detail“, který aplikace nezná. Nic se nezměnilo.';
+  }
+
+  @override
+  String settings_importFailedForeignKey(String detail) {
+    return 'Data v souboru na sebe neodkazují správně (tabulka „$detail“). Nic se nezměnilo.';
+  }
+
+  @override
+  String settings_importFailedCountMismatch(String detail) {
+    return 'Počet řádků nesedí ($detail). Nic se nezměnilo.';
+  }
+
+  @override
+  String get settings_importFailedGeneric =>
+      'Import se nepodařil. Nic se nezměnilo.';
 }

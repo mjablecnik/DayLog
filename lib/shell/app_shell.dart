@@ -21,6 +21,7 @@ import '../settings/ui/settings_screen.dart';
 import '../settings/ui/shortcut_guide.dart' show ShortcutTarget;
 import '../time_tracking/time_tracking.dart';
 import 'deep_link.dart';
+import '../database/import/import_providers.dart';
 import 'app_drawer.dart';
 import 'bottom_bar.dart';
 import 'destination.dart';
@@ -199,6 +200,8 @@ class _AppShellState extends ConsumerState<AppShell>
       (_, next) => _showPendingSnack(next),
     );
     ref.listen<DateTime>(boardDayProvider, (_, _) => _requestReconcile());
+    // An import brings new recurring rules: check them at once.
+    ref.listen<int>(importCounterProvider, (_, _) => _requestReconcile());
 
     return ShellMenuScope(
       open: () => _scaffoldKey.currentState?.openDrawer(),

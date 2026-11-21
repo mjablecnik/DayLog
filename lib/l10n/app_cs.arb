@@ -2895,5 +2895,135 @@
   "time_timerFinishLabel": "Dokončit hned",
   "@time_timerFinishLabel": {
     "description": "Accessibility label of a timer control button: Finish now."
+  },
+  "settings_importTitle": "Importovat data",
+  "@settings_importTitle": {
+    "description": "Title of the Settings row that loads an export file."
+  },
+  "settings_importSubtitle": "Načte soubor exportu z QuestLogu, TimeLogu nebo ze Zaflingu.",
+  "@settings_importSubtitle": {
+    "description": "Subtitle of the import row."
+  },
+  "settings_importConfirmTitle": "Nahradit data?",
+  "@settings_importConfirmTitle": {
+    "description": "Title of the dialog that asks before an import replaces data."
+  },
+  "settings_importConfirmBody": "Soubor {source} {version} z {date} nahradí tyto tabulky (řádků v souboru, řádků teď):\n{summary}",
+  "@settings_importConfirmBody": {
+    "description": "Body of the import confirmation. {summary} is one line per table.",
+    "placeholders": {
+      "source": {
+        "type": "String"
+      },
+      "version": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      },
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_importSummaryLine": "{table}: {rows} / {current}",
+  "@settings_importSummaryLine": {
+    "description": "One line of the import summary: a table, the rows in the file and the rows now.",
+    "placeholders": {
+      "table": {
+        "type": "String"
+      },
+      "rows": {
+        "type": "int"
+      },
+      "current": {
+        "type": "int"
+      }
+    }
+  },
+  "settings_importConfirmAction": "Nahradit",
+  "@settings_importConfirmAction": {
+    "description": "Label of the destructive button that starts the import."
+  },
+  "settings_importDoneTitle": "Import hotov",
+  "@settings_importDoneTitle": {
+    "description": "Title of the dialog that reports a finished import."
+  },
+  "settings_importDoneBody": "Načteno {rows} řádků do {tables} tabulek.",
+  "@settings_importDoneBody": {
+    "description": "Body of the finished-import dialog.",
+    "placeholders": {
+      "rows": {
+        "type": "int"
+      },
+      "tables": {
+        "type": "int"
+      }
+    }
+  },
+  "settings_importPreferencesFailed": "Nastavení časovače a připomínek se nepodařilo uložit; data jsou načtená.",
+  "@settings_importPreferencesFailed": {
+    "description": "Warning in the finished-import dialog when the preferences could not be written."
+  },
+  "settings_importFailedNotJson": "Soubor není export dat (není to platný JSON).",
+  "@settings_importFailedNotJson": {
+    "description": "Import error: not JSON."
+  },
+  "settings_importFailedWrongFormat": "Tento soubor není export z QuestLogu, TimeLogu ani ze Zaflingu.",
+  "@settings_importFailedWrongFormat": {
+    "description": "Import error: unknown format."
+  },
+  "settings_importFailedNewerFormat": "Soubor je z novější verze, kterou tato aplikace neumí číst.",
+  "@settings_importFailedNewerFormat": {
+    "description": "Import error: newer format version."
+  },
+  "settings_importFailedMissingSection": "V souboru chybí část „{detail}“.",
+  "@settings_importFailedMissingSection": {
+    "description": "Import error: a required part of the file is missing.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_importFailedUnknownTable": "Soubor obsahuje tabulku „{detail}“, kterou aplikace nezná. Nic se nezměnilo.",
+  "@settings_importFailedUnknownTable": {
+    "description": "Import error: unknown table.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_importFailedUnknownColumn": "Soubor obsahuje sloupec „{detail}“, který aplikace nezná. Nic se nezměnilo.",
+  "@settings_importFailedUnknownColumn": {
+    "description": "Import error: unknown column.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_importFailedForeignKey": "Data v souboru na sebe neodkazují správně (tabulka „{detail}“). Nic se nezměnilo.",
+  "@settings_importFailedForeignKey": {
+    "description": "Import error: broken references.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_importFailedCountMismatch": "Počet řádků nesedí ({detail}). Nic se nezměnilo.",
+  "@settings_importFailedCountMismatch": {
+    "description": "Import error: row count mismatch.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_importFailedGeneric": "Import se nepodařil. Nic se nezměnilo.",
+  "@settings_importFailedGeneric": {
+    "description": "Import error: anything else."
   }
 }

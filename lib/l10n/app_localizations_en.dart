@@ -2147,4 +2147,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time_timerFinishLabel => 'Finish now';
+
+  @override
+  String get settings_importTitle => 'Import data';
+
+  @override
+  String get settings_importSubtitle =>
+      'Loads an export file of QuestLog, TimeLog or Zafling.';
+
+  @override
+  String get settings_importConfirmTitle => 'Replace the data?';
+
+  @override
+  String settings_importConfirmBody(
+    String source,
+    String version,
+    String date,
+    String summary,
+  ) {
+    return 'The file $source $version from $date replaces these tables (rows in the file, rows now):\n$summary';
+  }
+
+  @override
+  String settings_importSummaryLine(String table, int rows, int current) {
+    return '$table: $rows / $current';
+  }
+
+  @override
+  String get settings_importConfirmAction => 'Replace';
+
+  @override
+  String get settings_importDoneTitle => 'Import finished';
+
+  @override
+  String settings_importDoneBody(int rows, int tables) {
+    return 'Loaded $rows rows into $tables tables.';
+  }
+
+  @override
+  String get settings_importPreferencesFailed =>
+      'The timer and reminder settings could not be saved; the data is loaded.';
+
+  @override
+  String get settings_importFailedNotJson =>
+      'The file is not a data export (it is not valid JSON).';
+
+  @override
+  String get settings_importFailedWrongFormat =>
+      'This file is not an export of QuestLog, TimeLog or Zafling.';
+
+  @override
+  String get settings_importFailedNewerFormat =>
+      'The file is from a newer version that this app cannot read.';
+
+  @override
+  String settings_importFailedMissingSection(String detail) {
+    return 'The file lacks the part \"$detail\".';
+  }
+
+  @override
+  String settings_importFailedUnknownTable(String detail) {
+    return 'The file has a table \"$detail\" that the app does not know. Nothing was changed.';
+  }
+
+  @override
+  String settings_importFailedUnknownColumn(String detail) {
+    return 'The file has a column \"$detail\" that the app does not know. Nothing was changed.';
+  }
+
+  @override
+  String settings_importFailedForeignKey(String detail) {
+    return 'The data in the file does not refer to itself correctly (table \"$detail\"). Nothing was changed.';
+  }
+
+  @override
+  String settings_importFailedCountMismatch(String detail) {
+    return 'A row count does not match ($detail). Nothing was changed.';
+  }
+
+  @override
+  String get settings_importFailedGeneric =>
+      'The import failed. Nothing was changed.';
 }

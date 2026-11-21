@@ -3451,6 +3451,119 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Dokončit hned'**
   String get time_timerFinishLabel;
+
+  /// Title of the Settings row that loads an export file.
+  ///
+  /// In cs, this message translates to:
+  /// **'Importovat data'**
+  String get settings_importTitle;
+
+  /// Subtitle of the import row.
+  ///
+  /// In cs, this message translates to:
+  /// **'Načte soubor exportu z QuestLogu, TimeLogu nebo ze Zaflingu.'**
+  String get settings_importSubtitle;
+
+  /// Title of the dialog that asks before an import replaces data.
+  ///
+  /// In cs, this message translates to:
+  /// **'Nahradit data?'**
+  String get settings_importConfirmTitle;
+
+  /// Body of the import confirmation. {summary} is one line per table.
+  ///
+  /// In cs, this message translates to:
+  /// **'Soubor {source} {version} z {date} nahradí tyto tabulky (řádků v souboru, řádků teď):\n{summary}'**
+  String settings_importConfirmBody(
+    String source,
+    String version,
+    String date,
+    String summary,
+  );
+
+  /// One line of the import summary: a table, the rows in the file and the rows now.
+  ///
+  /// In cs, this message translates to:
+  /// **'{table}: {rows} / {current}'**
+  String settings_importSummaryLine(String table, int rows, int current);
+
+  /// Label of the destructive button that starts the import.
+  ///
+  /// In cs, this message translates to:
+  /// **'Nahradit'**
+  String get settings_importConfirmAction;
+
+  /// Title of the dialog that reports a finished import.
+  ///
+  /// In cs, this message translates to:
+  /// **'Import hotov'**
+  String get settings_importDoneTitle;
+
+  /// Body of the finished-import dialog.
+  ///
+  /// In cs, this message translates to:
+  /// **'Načteno {rows} řádků do {tables} tabulek.'**
+  String settings_importDoneBody(int rows, int tables);
+
+  /// Warning in the finished-import dialog when the preferences could not be written.
+  ///
+  /// In cs, this message translates to:
+  /// **'Nastavení časovače a připomínek se nepodařilo uložit; data jsou načtená.'**
+  String get settings_importPreferencesFailed;
+
+  /// Import error: not JSON.
+  ///
+  /// In cs, this message translates to:
+  /// **'Soubor není export dat (není to platný JSON).'**
+  String get settings_importFailedNotJson;
+
+  /// Import error: unknown format.
+  ///
+  /// In cs, this message translates to:
+  /// **'Tento soubor není export z QuestLogu, TimeLogu ani ze Zaflingu.'**
+  String get settings_importFailedWrongFormat;
+
+  /// Import error: newer format version.
+  ///
+  /// In cs, this message translates to:
+  /// **'Soubor je z novější verze, kterou tato aplikace neumí číst.'**
+  String get settings_importFailedNewerFormat;
+
+  /// Import error: a required part of the file is missing.
+  ///
+  /// In cs, this message translates to:
+  /// **'V souboru chybí část „{detail}“.'**
+  String settings_importFailedMissingSection(String detail);
+
+  /// Import error: unknown table.
+  ///
+  /// In cs, this message translates to:
+  /// **'Soubor obsahuje tabulku „{detail}“, kterou aplikace nezná. Nic se nezměnilo.'**
+  String settings_importFailedUnknownTable(String detail);
+
+  /// Import error: unknown column.
+  ///
+  /// In cs, this message translates to:
+  /// **'Soubor obsahuje sloupec „{detail}“, který aplikace nezná. Nic se nezměnilo.'**
+  String settings_importFailedUnknownColumn(String detail);
+
+  /// Import error: broken references.
+  ///
+  /// In cs, this message translates to:
+  /// **'Data v souboru na sebe neodkazují správně (tabulka „{detail}“). Nic se nezměnilo.'**
+  String settings_importFailedForeignKey(String detail);
+
+  /// Import error: row count mismatch.
+  ///
+  /// In cs, this message translates to:
+  /// **'Počet řádků nesedí ({detail}). Nic se nezměnilo.'**
+  String settings_importFailedCountMismatch(String detail);
+
+  /// Import error: anything else.
+  ///
+  /// In cs, this message translates to:
+  /// **'Import se nepodařil. Nic se nezměnilo.'**
+  String get settings_importFailedGeneric;
 }
 
 class _AppLocalizationsDelegate

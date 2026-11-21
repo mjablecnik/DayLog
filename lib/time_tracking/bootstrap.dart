@@ -27,6 +27,14 @@ class TimeTrackingBootstrap {
 
   final ProviderContainer _container;
 
+  /// Brings the feature in line with preferences an import has just written:
+  /// the reminder settings are read again and the notifications re-scheduled.
+  Future<void> refreshAfterImport() async {
+    _container.invalidate(reminderProvider);
+    await rescheduleReminderIfEnabled(_container.read(reminderServiceProvider));
+    await _container.read(recurringReminderServiceProvider).rescheduleAll();
+  }
+
   /// Runs the startup. [settingsReady] completes once the app settings (the
   /// language the notification texts use) are loaded.
   Future<void> start({required Future<void> Function() settingsReady}) async {

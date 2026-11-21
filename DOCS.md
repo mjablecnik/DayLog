@@ -118,8 +118,8 @@ Board uses the Board_Day (04:00). The type filter is remembered in `calendar_fil
 the database. In the month view an event of several days is one bar per week row across the days it
 covers (`layoutWeek` in `lib/calendar/ui/screens/week_lanes.dart` gives each bar a lane, the same on
 all its days; up to three lanes show, more show two and a "+N" in the days that have events in the
-lanes left out). The Address field of the event form lists the remembered addresses that match what is typed (up to 5, newest first); an address is forgotten 30 days after its last use, at start and on every lookup, and the event keeps its own (spec `008-questlog-address-history`). Notifications, an event URL, week and day views and user-defined types are not
-part of it (specs `003-questlog-calendar`, `006-questlog-calendar-spans`).
+lanes left out). The Address field of the event form lists the remembered addresses that match what is typed (up to 5, newest first); an address is forgotten 30 days after its last use, at start and on every lookup, and the event keeps its own (QuestLog spec 008). Notifications, an event URL, week and day views and user-defined types are not
+part of it (QuestLog specs 003 and 006, kept with the QuestLog repository).
 
 ### Notes
 
@@ -137,14 +137,13 @@ A Note has a title field above its text. A typed title is the Note's name; with 
 follows the first line of the text (and the title field stays empty), and renaming from the menu also sets
 a chosen name. A Note in the Trash opens in a read-only preview (`trash_preview_screen.dart`, a
 `SuperReader` with the editor's stylesheet) with an Restore button; opening it changes nothing.
-Search, tags, images, tables, opening links and a Trash undo are not part of it (specs
-`004-questlog-notes`, `005-questlog-note-title`, `007-questlog-trash-preview`). The editor keeps the package's own overlays (accent colour
+Search, tags, images, tables, opening links and a Trash undo are not part of it (QuestLog specs 004, 005 and 007). The editor keeps the package's own overlays (accent colour
 set) so that iOS shows the caret, the selection handles and the Cut, Copy and Paste toolbar; copy and paste
 carry plain text only.
 
 ### Quest Deadline
 
-A Quest may have a Deadline. Saving one creates an all-day event of the type Quest (not on the Board) named like the Quest and links it in `quests.event_id`; the Deadline is that event's end date, so changing the event in the Calendar changes the Deadline, and deleting the event (or undoing it) only clears (or restores) the link. Clearing the Deadline in the Quest sheet deletes the event, deleting the Quest deletes its event, and renaming the Quest renames the event. An open Quest whose Deadline is before the Board_Day shows "Overdue" in the destructive colour on its card (Board and Mission detail); a done Quest does not. Completing is only possible on the Quest (spec `010-questlog-quest-deadline`).
+A Quest may have a Deadline. Saving one creates an all-day event of the type Quest (not on the Board) named like the Quest and links it in `quests.event_id`; the Deadline is that event's end date, so changing the event in the Calendar changes the Deadline, and deleting the event (or undoing it) only clears (or restores) the link. Clearing the Deadline in the Quest sheet deletes the event, deleting the Quest deletes its event, and renaming the Quest renames the event. An open Quest whose Deadline is before the Board_Day shows "Overdue" in the destructive colour on its card (Board and Mission detail); a done Quest does not. Completing is only possible on the Quest (QuestLog spec 010).
 
 ### Time tracking
 

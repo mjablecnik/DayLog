@@ -319,20 +319,6 @@ Color suggestionScopeColor(SuggestionScope scope, {required bool isDark}) {
   }
 }
 
-/// Localized category name of a suggestion scope.
-String suggestionScopeLabel(AppLocalizations l10n, SuggestionScope scope) {
-  switch (scope) {
-    case SuggestionScope.workPaid:
-      return l10n.time_scopeWorkPaid;
-    case SuggestionScope.workUnpaid:
-      return l10n.time_scopeWorkUnpaid;
-    case SuggestionScope.housework:
-      return l10n.time_scopeHousework;
-    case SuggestionScope.other:
-      return l10n.time_scopeOther;
-  }
-}
-
 /// Whether [typeKey] shows the project text field.
 bool hasProjectField(String typeKey) =>
     activityTypeOf(typeKey)?.extra == TypeExtra.project;

@@ -77,10 +77,6 @@ class RecurringReminderService {
   static int getNotificationId(int reminderId, int slotIndex) =>
       (reminderId * 100) + slotIndex + notificationIdOffset;
 
-  /// Whether [weekday] (1=Monday, 7=Sunday) is active in [activeDaysBitmask].
-  static bool isActiveDay(int activeDaysBitmask, int weekday) =>
-      isDayActive(activeDaysBitmask, weekday);
-
   /// Builds the notification body: the description, or a localized
   /// placeholder text (via [l10n]) if the description is null or blank.
   static String buildNotificationBody(String? description, AppLocalizations l10n) {
@@ -185,16 +181,6 @@ class RecurringReminderService {
 
     slots.sort((a, b) => a.time.compareTo(b.time));
     return slots;
-  }
-
-  /// Number of recurring-reminder notifications currently pending across all
-  /// reminders (identified by payload prefix, distinct from other app
-  /// notifications like the daily reminder).
-  Future<int> countScheduledNotifications() async {
-    final pending = await _safeGetPendingRequests();
-    return pending
-        .where((p) => p.payload?.startsWith(recurringReminderPayloadPrefix) ?? false)
-        .length;
   }
 
   /// How many more recurring-reminder notifications can be scheduled before
@@ -340,20 +326,4 @@ class RecurringReminderService {
     return true;
   }
 
-  /// Checks current permission status without prompting.
-  Future<bool> hasPermission() async {
-    final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
-    if (androidPlugin != null) {
-      final enabled = await androidPlugin.areNotificationsEnabled();
-      return enabled ?? false;
-    }
-    final iosPlugin = _plugin.resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>();
-    if (iosPlugin != null) {
-      final settings = await iosPlugin.checkPermissions();
-      return settings?.isEnabled ?? false;
-    }
-    return true;
-  }
 }

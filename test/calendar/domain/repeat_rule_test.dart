@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
 import 'package:daylog/quests/domain/cadence.dart';
-import 'package:daylog/calendar/domain/calendar_dates.dart';
 import 'package:daylog/calendar/domain/easter.dart';
 import 'package:daylog/core/event_type.dart';
 import 'package:daylog/calendar/domain/repeat_rule.dart';
 
+import '../../helpers/covered_dates.dart';
 import '../../helpers/generators.dart';
 
 DateTime d(int y, int m, int day) => DateTime(y, m, day);

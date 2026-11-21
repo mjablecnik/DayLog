@@ -1,14 +1,5 @@
 import '../../l10n/app_localizations.dart';
 
-// The day/month/year numeric pattern below is intentionally not routed
-// through AppLocalizations: it's locale-invariant digit interpolation
-// ("15. 3. 2026"), not translated natural-language text — identical in
-// both supported locales.
-String formatDeadline(String isoDate) {
-  final date = DateTime.parse(isoDate);
-  return '${date.day}. ${date.month}. ${date.year}';
-}
-
 /// Formats [duration] as a compact "Xh Ym" / "Xh" / "Ym" label.
 String formatDuration(AppLocalizations l10n, Duration duration) {
   final totalMinutes = duration.inMinutes;

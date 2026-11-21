@@ -65,19 +65,13 @@ void main() {
         },
       ),
     );
-    await announceQuestCompleted(ctx, l10n, 'Water plants', 25);
     await announceQuestReopened(ctx, l10n, 'Water plants');
-    await announceMissionCompleted(ctx, l10n, 'Spring clean', 50);
     await announceMissionReopened(ctx, l10n, 'Spring clean');
-    await announceLevelUp(ctx, l10n, 3);
     expect(sent, <String>[
-      l10n.a11y_questCompleted('Water plants', 25),
       l10n.a11y_questReopened('Water plants'),
-      l10n.a11y_missionCompleted('Spring clean', 50),
       l10n.a11y_missionReopened('Spring clean'),
-      l10n.a11y_levelUp(3),
     ]);
-    expect(sent.first, 'Quest Water plants completed, +25 XP');
-    expect(sent[1], 'Quest Water plants reopened');
+    expect(sent.first, 'Quest Water plants reopened');
+    expect(sent[1], 'Mission Spring clean reopened');
   });
 }

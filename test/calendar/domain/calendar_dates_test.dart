@@ -3,6 +3,7 @@ import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
 import 'package:daylog/calendar/domain/calendar_dates.dart';
 import 'package:daylog/calendar/domain/repeat_rule.dart';
 
+import '../../helpers/covered_dates.dart';
 import '../../helpers/generators.dart';
 
 DateTime d(int y, int m, int day) => DateTime(y, m, day);
@@ -43,11 +44,6 @@ void main() {
     expect(isNavigableMonth(d(2100, 12, 1)), isTrue);
     expect(isNavigableMonth(d(1999, 12, 1)), isFalse);
     expect(isNavigableMonth(d(2101, 1, 1)), isFalse);
-  });
-
-  test('coveredDates', () {
-    expect(coveredDates(d(2026, 12, 30), 0), <DateTime>[d(2026, 12, 30)]);
-    expect(coveredDates(d(2026, 12, 30), 2), <DateTime>[d(2026, 12, 30), d(2026, 12, 31), d(2027, 1, 1)]);
   });
 
   group('searchKey', () {

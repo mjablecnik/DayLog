@@ -39,10 +39,6 @@ String dayHeading(DateTime date, String locale) => _capitalized(
 String shortDateLabel(DateTime date, String locale) =>
     DateFormat.yMMMEd(locale).format(date);
 
-/// "18. listopadu 2026".
-String longDateLabel(DateTime date, String locale) =>
-    DateFormat.yMMMMd(locale).format(date);
-
 /// "08:15" from minutes since midnight.
 String minuteLabel(int minute) {
   String two(int n) => n.toString().padLeft(2, '0');

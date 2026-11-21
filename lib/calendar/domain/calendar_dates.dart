@@ -7,17 +7,8 @@ List<DateTime> monthGridDates(DateTime month) {
   ];
 }
 
-/// The dates an occurrence that starts on [start] and spans [spanDays] touches.
-List<DateTime> coveredDates(DateTime start, int spanDays) => <DateTime>[
-  for (int i = 0; i <= spanDays; i++) DateTime(start.year, start.month, start.day + i),
-];
-
 /// Whether the calendar may show [month]: January 2000 to December 2100.
 bool isNavigableMonth(DateTime month) => month.year >= 2000 && month.year <= 2100;
-
-/// The first and last month the calendar can show.
-final DateTime firstNavigableMonth = DateTime(2000, 1);
-final DateTime lastNavigableMonth = DateTime(2100, 12);
 
 const Map<String, String> _plain = <String, String>{
   'á': 'a', 'à': 'a', 'â': 'a', 'ä': 'a', 'ã': 'a', 'å': 'a', 'ą': 'a',

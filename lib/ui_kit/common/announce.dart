@@ -16,14 +16,6 @@ Future<void> announce(BuildContext context, String message) async {
   await SemanticsService.sendAnnouncement(view, message, direction);
 }
 
-/// "Quest {name} completed, +{xp} XP".
-Future<void> announceQuestCompleted(
-  BuildContext context,
-  AppLocalizations l10n,
-  String questName,
-  int xp,
-) => announce(context, l10n.a11y_questCompleted(questName, xp));
-
 /// "Quest {name} reopened".
 Future<void> announceQuestReopened(
   BuildContext context,
@@ -31,24 +23,9 @@ Future<void> announceQuestReopened(
   String questName,
 ) => announce(context, l10n.a11y_questReopened(questName));
 
-/// "Mission {name} completed, bonus +{xp} XP".
-Future<void> announceMissionCompleted(
-  BuildContext context,
-  AppLocalizations l10n,
-  String missionName,
-  int bonusXp,
-) => announce(context, l10n.a11y_missionCompleted(missionName, bonusXp));
-
 /// "Mission {name} reopened".
 Future<void> announceMissionReopened(
   BuildContext context,
   AppLocalizations l10n,
   String missionName,
 ) => announce(context, l10n.a11y_missionReopened(missionName));
-
-/// "Level up, level {level}".
-Future<void> announceLevelUp(
-  BuildContext context,
-  AppLocalizations l10n,
-  int level,
-) => announce(context, l10n.a11y_levelUp(level));

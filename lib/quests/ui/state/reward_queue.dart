@@ -44,18 +44,6 @@ final class MissionReward extends RewardEvent {
   final int level;
 }
 
-QuestReward rewardForQuest(Quest quest, CompleteQuestResult r) {
-  return QuestReward(
-    questName: quest.name,
-    xp: r.awardedXp,
-    levelUp: r.levelAfter > r.levelBefore,
-    level: r.levelAfter,
-    mission: r.mission,
-    missionId: quest.missionId,
-    offerMissionComplete: r.missionReadyToComplete,
-  );
-}
-
 MissionReward rewardForMission(Mission mission, CompleteMissionResult r) {
   return MissionReward(
     missionName: mission.name,

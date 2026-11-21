@@ -49,7 +49,6 @@ Future<void> main() async {
       expect(n.body, '# Hello');
       expect(n.deletedAt, isNull);
       expect(n.autoName, isFalse);
-      expect(noteNodeToInsert(n).name.value, 'Syntaxe');
     });
 
     test('deleting a folder row deletes everything inside it, several levels deep', () async {

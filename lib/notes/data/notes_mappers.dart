@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 
 import '../domain/note_node.dart';
 import '../../database/app_database.dart';
@@ -16,15 +15,3 @@ extension NoteNodeRowMapper on NoteNodeRow {
         deletedAt: deletedAt,
       );
 }
-
-/// A companion for inserting [node] without its id (the database assigns it).
-NoteNodesCompanion noteNodeToInsert(NoteNode node) => NoteNodesCompanion.insert(
-      parentId: Value<int?>(node.parentId),
-      isFolder: node.isFolder,
-      name: node.name,
-      body: Value<String>(node.isFolder ? '' : node.body),
-      autoName: Value<bool>(node.autoName),
-      createdAt: node.createdAt,
-      updatedAt: node.updatedAt,
-      deletedAt: Value<DateTime?>(node.deletedAt),
-    );

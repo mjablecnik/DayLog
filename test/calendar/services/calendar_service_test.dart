@@ -169,19 +169,6 @@ void main() {
       await pumpEventQueue();
       expect(seen.last, isEmpty);
     });
-
-    test('watchEvent follows the row and ends with null', () async {
-      final CalendarEvent e = await h.service.create(h.draft(name: 'Sleduj'));
-      final List<String?> seen = <String?>[];
-      final sub = h.service.watchEvent(e.id).listen((CalendarEvent? v) => seen.add(v?.name));
-      addTearDown(sub.cancel);
-      await pumpEventQueue();
-      await h.service.update(e.id, h.draft(name: 'Změněno'));
-      await pumpEventQueue();
-      await h.service.deleteOccurrence(e.id, d(2026, 11, 19), DeleteScope.all);
-      await pumpEventQueue();
-      expect(seen, <String?>['Sleduj', 'Změněno', null]);
-    });
   });
 
   group('search', () {

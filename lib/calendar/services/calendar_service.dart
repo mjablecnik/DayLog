@@ -217,12 +217,6 @@ class CalendarService {
     return row?.toModel();
   }
 
-  Stream<CalendarEvent?> watchEvent(int id) {
-    return (_db.select(_db.calendarEvents)..where((t) => t.id.equals(id)))
-        .watchSingleOrNull()
-        .map((CalendarEventRow? r) => r?.toModel());
-  }
-
   /// The occurrences that touch [from]..[to] (dates), sorted by start date,
   /// all-day first, then by start minute. Re-emits when any calendar table changes.
   Stream<List<EventOccurrence>> watchRange(DateTime from, DateTime to) =>

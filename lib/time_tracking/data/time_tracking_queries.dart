@@ -60,27 +60,6 @@ extension TimeTrackingQueries on AppDatabase {
         .go();
   }
 
-  Future<List<CompletionRecord>> getCompletionsByReminder(int reminderId) {
-    return (select(completionRecords)
-          ..where((t) => t.reminderId.equals(reminderId))
-          ..orderBy([(t) => OrderingTerm.asc(t.completionDate)]))
-        .get();
-  }
-
-  Future<List<CompletionRecord>> getCompletionsByDateRange(
-    int reminderId,
-    String startDate,
-    String endDate,
-  ) {
-    return (select(completionRecords)
-          ..where((t) =>
-              t.reminderId.equals(reminderId) &
-              t.completionDate.isBiggerOrEqualValue(startDate) &
-              t.completionDate.isSmallerOrEqualValue(endDate))
-          ..orderBy([(t) => OrderingTerm.asc(t.completionDate)]))
-        .get();
-  }
-
   /// Time entries that carry a project or a custom name; used once to fill the
   /// scoped suggestion lists.
   Future<List<TimeEntry>> getEntriesWithNames() {

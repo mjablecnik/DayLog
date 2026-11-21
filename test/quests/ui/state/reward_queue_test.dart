@@ -6,18 +6,6 @@ import 'package:daylog/quests/domain/xp_rules.dart';
 import 'package:daylog/quests/data/models.dart';
 import 'package:daylog/quests/ui/state/reward_queue.dart';
 
-Quest _quest({int? missionId}) => Quest(
-  id: 1,
-  name: 'Quest',
-  note: null,
-  difficulty: Difficulty.normal,
-  missionId: missionId,
-  sortOrder: 1,
-  createdAt: DateTime(2026, 11, 1),
-  completedAt: null,
-  awardedXp: null,
-);
-
 Mission _mission() => Mission(
   id: 2,
   name: 'Mission',
@@ -31,36 +19,6 @@ Mission _mission() => Mission(
 
 void main() {
   group('Property 4: reward events reflect the service result', () {
-    Glados3(any.intInRange(1, 50), any.intInRange(0, 3), any.intInRange(0, 200))
-        .test('rewardForQuest', (levelBefore, rise, xp) {
-      final ready = xp.isEven;
-      final progressKind = xp % 4;
-      final progress = progressKind == 0
-          ? null
-          : MissionProgress(
-              done: progressKind,
-              total: progressKind + 1,
-              remainingXp: xp,
-            );
-      final result = CompleteQuestResult(
-        awardedXp: xp,
-        levelBefore: levelBefore,
-        levelAfter: levelBefore + rise,
-        mission: progress,
-        missionReadyToComplete: ready,
-      );
-      final event = rewardForQuest(
-        _quest(missionId: progress == null ? null : 2),
-        result,
-      );
-      expect(event.levelUp, rise > 0);
-      expect(event.xp, xp);
-      expect(event.level, levelBefore + rise);
-      expect(event.offerMissionComplete, ready);
-      expect(event.mission, progress);
-      expect(event.missionId, progress == null ? null : 2);
-    });
-
     Glados3(any.intInRange(1, 50), any.intInRange(0, 3), any.intInRange(0, 300))
         .test('rewardForMission', (levelBefore, rise, bonus) {
           final event = rewardForMission(
@@ -104,24 +62,20 @@ void main() {
           levelAfter: 1,
         ),
       );
-      final b = rewardForQuest(
-        _quest(),
-        const CompleteQuestResult(
-          awardedXp: 25,
+      final b = rewardForMission(
+        _mission(),
+        const CompleteMissionResult(
+          awardedBonus: 25,
           levelBefore: 1,
           levelAfter: 2,
-          mission: null,
-          missionReadyToComplete: false,
         ),
       );
-      final c = rewardForQuest(
-        _quest(),
-        const CompleteQuestResult(
-          awardedXp: 10,
+      final c = rewardForMission(
+        _mission(),
+        const CompleteMissionResult(
+          awardedBonus: 25,
           levelBefore: 2,
           levelAfter: 2,
-          mission: null,
-          missionReadyToComplete: false,
         ),
       );
       queue

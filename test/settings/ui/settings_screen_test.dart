@@ -343,10 +343,10 @@ void main() {
       ),
     );
 
-    // Collapsed: the steps are hidden until the row is opened.
+    // The steps are on a page of their own, opened from the row.
     expect(find.text('Copy the link above.'), findsNothing);
     await tester.tap(find.text('Home Screen shortcut').last);
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.text('Copy the link above.'), findsOneWidget);
     expect(find.text('daylog://calendar'), findsOneWidget);
 

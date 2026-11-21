@@ -5,7 +5,6 @@ import '../../core/app_identity.dart';
 import '../../l10n/app_localizations.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
-import '../../ui_kit/common/app_icon.dart';
 import '../../ui_kit/common/app_segmented.dart';
 import '../../ui_kit/common/snackbar_host.dart';
 
@@ -22,8 +21,7 @@ class ShortcutTarget {
 /// Settings guide for a Home Screen icon that opens DayLog on a chosen page:
 /// pick the page, copy its `daylog://` link, follow the Shortcuts steps.
 ///
-/// Collapsed to one row by default so it does not push the rest of Settings
-/// down. The pages come from the shell, which also reads the links, so the two
+/// Shown on its own page, opened from a row in Settings. The pages come from the shell, which also reads the links, so the two
 /// cannot disagree.
 class ShortcutGuide extends StatefulWidget {
   const ShortcutGuide({super.key, required this.targets});
@@ -38,7 +36,6 @@ class _ShortcutGuideState extends State<ShortcutGuide> {
   /// The most targets in one row of the picker.
   static const int _perRow = 4;
 
-  bool _open = false;
   late String _target = widget.targets.any((ShortcutTarget t) => t.linkName == 'calendar')
       ? 'calendar'
       : widget.targets.first.linkName;
@@ -78,61 +75,8 @@ class _ShortcutGuideState extends State<ShortcutGuide> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Semantics(
-            button: true,
-            expanded: _open,
-            label: l.settings_shortcutTitle,
-            excludeSemantics: true,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(Radii.card),
-              onTap: () => setState(() => _open = !_open),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: Metrics.touchTarget,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(Space.s16),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              l.settings_shortcutTitle,
-                              style: context.bodyText.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: Space.s4),
-                            Text(l.settings_shortcutSubtitle, style: small),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: Space.s12),
-                      AnimatedRotation(
-                        turns: _open ? 0.25 : 0,
-                        duration: Motion.hover,
-                        child: AppIcon(
-                          IconAsset.chevronRight,
-                          size: Metrics.iconSmall,
-                          color: p.textFaint,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          if (_open)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                Space.s16,
-                0,
-                Space.s16,
-                Space.s16,
-              ),
+          Padding(
+              padding: const EdgeInsets.all(Space.s16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[

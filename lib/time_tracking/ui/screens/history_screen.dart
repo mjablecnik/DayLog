@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../theme/time_theme.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../ui_kit/common/menu_button.dart' show ShellMenuScope;
 import '../../../ui_kit/common/screen_header.dart';
 import '../../providers/history_provider.dart';
 import '../widgets/controls/day_navigator.dart';
@@ -50,6 +51,7 @@ class HistoryScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ScreenHeader(
+              onBack: () => ShellMenuScope.maybeOf(context)?.openPage?.call('timer'),
               child: Row(
                 children: [
                   Expanded(

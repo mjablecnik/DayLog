@@ -8,6 +8,7 @@ import '../../theme/time_theme.dart';
 import '../../../database/app_database.dart' show TimeEntry;
 import '../../data/stats_data.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../ui_kit/common/menu_button.dart' show ShellMenuScope;
 import '../../../ui_kit/common/screen_header.dart';
 import '../../providers/statistics_provider.dart';
 import '../../providers/history_provider.dart' show logicalDay;
@@ -55,6 +56,7 @@ class StatisticsScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ScreenHeader(
+              onBack: () => ShellMenuScope.maybeOf(context)?.openPage?.call('timer'),
               child: Text(
                 l10n.time_statsTitle,
                 style: TextStyle(

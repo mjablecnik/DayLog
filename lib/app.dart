@@ -13,8 +13,8 @@ import 'quests/ui/reward/reward_overlay.dart';
 
 /// The application root: theme, locale and localization follow the settings
 /// live, so a change applies to every screen without rebuilding navigation.
-class ZaflingApp extends ConsumerWidget {
-  const ZaflingApp({
+class DayLogApp extends ConsumerWidget {
+  const DayLogApp({
     super.key,
     this.home = const ReminderActionHost(child: AppShell()),
   });

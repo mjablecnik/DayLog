@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/notes/domain/note_node.dart';
-import 'package:zafling/notes/domain/note_tree.dart';
-import 'package:zafling/notes/services/notes_providers.dart';
-import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/notes/ui/screens/note_editor/note_editor_screen.dart';
-import 'package:zafling/notes/ui/screens/notes/folder_row.dart';
-import 'package:zafling/notes/ui/screens/notes/note_row.dart';
-import 'package:zafling/notes/ui/screens/notes/trash_row.dart';
-import 'package:zafling/shell/bottom_bar.dart';
-import 'package:zafling/shell/destination.dart';
+import 'package:daylog/notes/domain/note_node.dart';
+import 'package:daylog/notes/domain/note_tree.dart';
+import 'package:daylog/notes/services/notes_providers.dart';
+import 'package:daylog/quests/services/providers.dart';
+import 'package:daylog/notes/ui/screens/note_editor/note_editor_screen.dart';
+import 'package:daylog/notes/ui/screens/notes/folder_row.dart';
+import 'package:daylog/notes/ui/screens/notes/note_row.dart';
+import 'package:daylog/notes/ui/screens/notes/trash_row.dart';
+import 'package:daylog/shell/bottom_bar.dart';
+import 'package:daylog/shell/destination.dart';
 import 'package:super_editor/super_editor.dart';
 
 import '../a11y/_a11y_harness.dart';

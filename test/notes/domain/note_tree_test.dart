@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
-import 'package:zafling/calendar/domain/calendar_dates.dart';
-import 'package:zafling/notes/domain/note_node.dart';
-import 'package:zafling/notes/domain/note_tree.dart';
-import 'package:zafling/notes/domain/trash_policy.dart';
+import 'package:daylog/calendar/domain/calendar_dates.dart';
+import 'package:daylog/notes/domain/note_node.dart';
+import 'package:daylog/notes/domain/note_tree.dart';
+import 'package:daylog/notes/domain/trash_policy.dart';
 
 import '_tree_gen.dart';
 

@@ -87,6 +87,6 @@ Future<Widget> buildApp({
   }
   return UncontrolledProviderScope(
     container: container,
-    child: const ZaflingApp(),
+    child: const DayLogApp(),
   );
 }

@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:zafling/time_tracking/domain/activity_types.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/time_tracking/data/stats_data.dart';
-import 'package:zafling/time_tracking/providers/statistics_provider.dart';
+import 'package:daylog/time_tracking/domain/activity_types.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/time_tracking/data/stats_data.dart';
+import 'package:daylog/time_tracking/providers/statistics_provider.dart';
 
 // Feature: activity-subtypes
 

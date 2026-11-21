@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/database/import/export_file.dart';
-import 'package:zafling/database/import/import_report.dart';
+import 'package:daylog/database/import/export_file.dart';
+import 'package:daylog/database/import/import_report.dart';
 
 String _fixture(String name) => File('test/database/import/fixtures/$name').readAsStringSync();
 
@@ -45,8 +45,8 @@ void main() {
   });
 
   test('reads a file of the app itself', () {
-    final Map<String, Object?> data = _valid()..['format'] = 'zafling-export';
-    expect(ExportFile.parse(jsonEncode(data)).header.format, 'zafling-export');
+    final Map<String, Object?> data = _valid()..['format'] = 'daylog-export';
+    expect(ExportFile.parse(jsonEncode(data)).header.format, 'daylog-export');
   });
 
   test('refuses text that is not JSON, not an object, or another format', () {

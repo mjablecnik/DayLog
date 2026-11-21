@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/theme/tokens.dart';
 
 /// Property 7: text contrast. Translucent colours are blended over the ground
 /// they sit on before the WCAG 2.x ratio is computed.

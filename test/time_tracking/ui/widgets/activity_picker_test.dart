@@ -7,19 +7,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:zafling/time_tracking/domain/activity_types.dart';
-import 'package:zafling/time_tracking/services/native/platform_channel.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/time_tracking/providers/database_provider.dart';
-import 'package:zafling/time_tracking/providers/suggestions_provider.dart';
-import 'package:zafling/time_tracking/services/project_service.dart';
-import 'package:zafling/time_tracking/ui/widgets/activity_picker/activity_picker.dart';
-import 'package:zafling/time_tracking/ui/widgets/sheets/description_sheet.dart';
-import 'package:zafling/time_tracking/ui/widgets/sheets/edit_sheet.dart';
-import 'package:zafling/time_tracking/ui/widgets/sheets/manual_entry_sheet.dart';
+import 'package:daylog/time_tracking/domain/activity_types.dart';
+import 'package:daylog/time_tracking/services/native/platform_channel.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/time_tracking/providers/database_provider.dart';
+import 'package:daylog/time_tracking/providers/suggestions_provider.dart';
+import 'package:daylog/time_tracking/services/project_service.dart';
+import 'package:daylog/time_tracking/ui/widgets/activity_picker/activity_picker.dart';
+import 'package:daylog/time_tracking/ui/widgets/sheets/description_sheet.dart';
+import 'package:daylog/time_tracking/ui/widgets/sheets/edit_sheet.dart';
+import 'package:daylog/time_tracking/ui/widgets/sheets/manual_entry_sheet.dart';
 import '../../../helpers/time_theme.dart';
-import 'package:zafling/database/providers.dart';
+import 'package:daylog/database/providers.dart';
 import '../../../helpers/test_database.dart';
 
 // Feature: activity-subtypes

@@ -3,9 +3,9 @@ import 'dart:ui' show Tristate;
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/theme/tokens.dart';
-import 'package:zafling/ui_kit/common/app_icon.dart';
-import 'package:zafling/ui_kit/common/app_segmented.dart';
+import 'package:daylog/theme/tokens.dart';
+import 'package:daylog/ui_kit/common/app_icon.dart';
+import 'package:daylog/ui_kit/common/app_segmented.dart';
 
 import '_harness.dart';
 

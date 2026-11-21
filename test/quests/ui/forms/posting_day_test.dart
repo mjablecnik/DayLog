@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, setUp, tearDown, test;
-import 'package:zafling/quests/domain/cadence.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/quests/services/recurrence_service.dart';
-import 'package:zafling/quests/ui/forms/posting_day.dart';
+import 'package:daylog/quests/domain/cadence.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/quests/services/recurrence_service.dart';
+import 'package:daylog/quests/ui/forms/posting_day.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/generators.dart';

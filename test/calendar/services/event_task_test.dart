@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/quests/domain/cadence.dart';
-import 'package:zafling/core/event_type.dart';
-import 'package:zafling/calendar/domain/repeat_rule.dart';
-import 'package:zafling/core/errors.dart';
-import 'package:zafling/calendar/data/calendar_models.dart';
-import 'package:zafling/calendar/services/calendar_service.dart';
+import 'package:daylog/quests/domain/cadence.dart';
+import 'package:daylog/core/event_type.dart';
+import 'package:daylog/calendar/domain/repeat_rule.dart';
+import 'package:daylog/core/errors.dart';
+import 'package:daylog/calendar/data/calendar_models.dart';
+import 'package:daylog/calendar/services/calendar_service.dart';
 
 import '_harness.dart';
 

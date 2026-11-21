@@ -2,7 +2,7 @@
 
 ## Overview
 
-The App is created by copying QuestLog 1.5.0 into `/workspace/Zafling`, renaming it, and regrouping its files from layer-first (`data/`, `services/`, `ui/`) to feature-first (`quests/`, `calendar/`, `notes/`). Code is moved, not rewritten: file contents stay the same except for imports, names and the Shell. TimeLog arrives in spec `002-time-tracking-port`.
+The App is created by copying QuestLog 1.5.0 into `/workspace/DayLog`, renaming it, and regrouping its files from layer-first (`data/`, `services/`, `ui/`) to feature-first (`quests/`, `calendar/`, `notes/`). Code is moved, not rewritten: file contents stay the same except for imports, names and the Shell. TimeLog arrives in spec `002-time-tracking-port`.
 
 **Key design decisions:**
 - **New project, QuestLog as the base**: QuestLog already uses Riverpod 3, one Drift database, `app_state` settings, l10n with a template ARB and the structure check. TimeLog (Riverpod 2, SharedPreferences, native iOS code) is ported into that frame.
@@ -10,10 +10,10 @@ The App is created by copying QuestLog 1.5.0 into `/workspace/Zafling`, renaming
 - **One Database, original table names**: the importer in `003-legacy-import` can copy rows table by table without renaming. Table classes stay in their feature folder; `database/app_database.dart` lists them.
 - **One theme, a registry for more**: the blue theme of QuestLog (dark `guildBoard`, light `daylight`) is the only theme, and the Time_Module is restyled to it. `ThemeDefinition` objects in a registry hold the palettes, so a second theme is one more definition. The only restyling in the move is that of the Time_Module screens.
 - **Bottom bar for the five main pages, Drawer for the rest**: Timer, Quests, Calendar, Notes and Settings are tabs; the Drawer lists the complete navigation (the five tabs, History, Statistics and Missions), and the bar marks the tab a Drawer-only page belongs to. `IndexedStack` keeps state alive.
-- **Own URL scheme**: `zafling://` so the Legacy_Apps keep their schemes while installed. The native handler of the Live Activity takes only `zafling://action/...`; every other `zafling://` link goes to `app_links` through `super`.
+- **Own URL scheme**: `daylog://` so the Legacy_Apps keep their schemes while installed. The native handler of the Live Activity takes only `daylog://action/...`; every other `daylog://` link goes to `app_links` through `super`.
 - **iOS project from TimeLog**: a widget extension target cannot be created reliably by hand-editing `project.pbxproj`, so the App starts from TimeLog's `ios/` (which has it) and receives QuestLog's URL scheme and `FlutterDeepLinkingEnabled` entries.
 - **Menu button in the existing header**: every Destination already has its own header; the Shell supplies a `MenuButton` widget that each screen places in it, so no new bar appears.
-- **One export for everything**: the new export writes every table plus the SharedPreferences (format `zafling-export`), because after the move it is the only backup.
+- **One export for everything**: the new export writes every table plus the SharedPreferences (format `daylog-export`), because after the move it is the only backup.
 
 ```mermaid
 graph TD
@@ -43,7 +43,7 @@ sequenceDiagram
     participant main
     participant Shell
     participant Quests
-    OS->>main: launch (optional zafling:// link)
+    OS->>main: launch (optional daylog:// link)
     main->>main: open Database, load stores
     main->>Shell: runApp
     Shell->>Shell: show Timer (or Deep_Link Destination)
@@ -58,7 +58,7 @@ sequenceDiagram
 ## Project Structure
 
 ```
-Zafling/
+DayLog/
 ├── lib/
 │   ├── main.dart                 # entry point: Database, stores, ProviderScope
 │   ├── app.dart                  # MaterialApp: locale, theme, overlay
@@ -66,7 +66,7 @@ Zafling/
 │   ├── database/
 │   │   ├── app_database.dart     # @DriftDatabase listing every table; schemaVersion
 │   │   ├── app_database.g.dart   # generated, committed
-│   │   ├── connection.dart       # opens zafling.sqlite
+│   │   ├── connection.dart       # opens daylog.sqlite
 │   │   └── export/               # database_export.dart, export_service.dart (moved from QuestLog)
 │   ├── ui_kit/                   # shared widgets: common/, sheet/, forms/
 │   ├── theme/                    # shell_theme.dart, quest_theme.dart, tokens, typography (time palette lives in time_tracking/theme)
@@ -107,7 +107,7 @@ enum Destination {
   IconAsset get icon;
 }
 
-/// The Destination a `zafling://<name>` link opens; null for anything else.
+/// The Destination a `daylog://<name>` link opens; null for anything else.
 Destination? destinationFromUri(Uri uri);
 ```
 
@@ -181,7 +181,7 @@ final activeThemeIdProvider = Provider<String>((ref) => blueTheme.id);
 ThemeData buildTheme({required AppPalette palette});     // as in QuestLog
 ```
 
-`ZaflingApp`'s `MaterialApp` takes `theme` from the active definition's light palette and `darkTheme` from its dark palette. Screens read `context.palette`.
+`DayLogApp`'s `MaterialApp` takes `theme` from the active definition's light palette and `darkTheme` from its dark palette. Screens read `context.palette`.
 
 ### 7. MenuButton and ShellMenuScope (`lib/ui_kit/common/menu_button.dart`)
 
@@ -220,13 +220,13 @@ No table name occurs twice. Foreign keys stay inside one feature, except those t
 
 ### Property 1: Every Destination is reachable
 
-*For any* Destination value, THE Bottom_Bar or the Drawer SHALL list it (a tab in the bar, any other Destination in the Drawer), THE deep-link parser SHALL map `zafling://<linkName>` back to it, and THE Shell SHALL build a screen for it.
+*For any* Destination value, THE Bottom_Bar or the Drawer SHALL list it (a tab in the bar, any other Destination in the Drawer), THE deep-link parser SHALL map `daylog://<linkName>` back to it, and THE Shell SHALL build a screen for it.
 
 **Validates: Requirements 4.2, 4.3, 5.1**
 
 ### Property 2: Foreign links are ignored
 
-*For any* URI whose scheme is not `zafling` or whose host is not a Destination link name, THE Shell SHALL leave the selected Destination unchanged.
+*For any* URI whose scheme is not `daylog` or whose host is not a Destination link name, THE Shell SHALL leave the selected Destination unchanged.
 
 **Validates: Requirements 5.2, 5.4**
 
@@ -246,11 +246,11 @@ No table name occurs twice. Foreign keys stay inside one feature, except those t
 
 | Category | Trigger | Behavior |
 |---|---|---|
-| Database open fails | Corrupt or unreadable `zafling.sqlite` | Show a full-screen error with a retry button; never delete the file |
+| Database open fails | Corrupt or unreadable `daylog.sqlite` | Show a full-screen error with a retry button; never delete the file |
 | Reconciliation fails | Exception in the Quest_Module start | Show the reconcile banner with retry, as QuestLog does; Time_Module keeps working |
 | Unknown deep link | Wrong scheme or host | Ignored silently |
 | Export fails | Share sheet or file error | Snackbar `settings_exportFailed` |
-| Deep link `zafling://action/...` | Live Activity control | Handled natively, never reaches the Shell |
+| Deep link `daylog://action/...` | Live Activity control | Handled natively, never reaches the Shell |
 | Missing ARB key | Key in one language only | Test fails |
 
 ## Testing Strategy

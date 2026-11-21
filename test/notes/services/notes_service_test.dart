@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/core/errors.dart';
-import 'package:zafling/notes/domain/note_node.dart';
-import 'package:zafling/notes/domain/note_tree.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/notes/services/notes_service.dart';
+import 'package:daylog/core/errors.dart';
+import 'package:daylog/notes/domain/note_node.dart';
+import 'package:daylog/notes/domain/note_tree.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/notes/services/notes_service.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/test_database.dart';

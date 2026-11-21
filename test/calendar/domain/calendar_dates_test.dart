@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
-import 'package:zafling/calendar/domain/calendar_dates.dart';
-import 'package:zafling/calendar/domain/repeat_rule.dart';
+import 'package:daylog/calendar/domain/calendar_dates.dart';
+import 'package:daylog/calendar/domain/repeat_rule.dart';
 
 import '../../helpers/generators.dart';
 

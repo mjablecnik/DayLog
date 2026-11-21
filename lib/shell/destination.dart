@@ -51,7 +51,7 @@ enum Destination {
     settings => DestinationGroup.app,
   };
 
-  /// The name in a `zafling://<name>` link.
+  /// The name in a `daylog://<name>` link.
   String get linkName => name;
 
   String get icon => switch (this) {

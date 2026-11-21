@@ -3,40 +3,40 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/app.dart';
-import 'package:zafling/quests/domain/cadence.dart';
-import 'package:zafling/core/errors.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/database/preferences.dart';
-import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/quests/services/recurrence_service.dart';
-import 'package:zafling/settings/settings_service.dart';
-import 'package:zafling/quests/ui/board/board_screen.dart';
-import 'package:zafling/calendar/ui/screens/calendar_screen.dart';
-import 'package:zafling/quests/ui/missions/missions_screen.dart';
-import 'package:zafling/notes/ui/screens/notes/notes_screen.dart';
-import 'package:zafling/settings/ui/settings_screen.dart';
-import 'package:zafling/shell/deep_link.dart';
-import 'package:zafling/shell/app_drawer.dart';
-import 'package:zafling/shell/app_shell.dart';
-import 'package:zafling/shell/bottom_bar.dart';
-import 'package:zafling/shell/destination.dart';
-import 'package:zafling/shell/reconcile_banner.dart';
-import 'package:zafling/shell/splash_screen.dart';
-import 'package:zafling/time_tracking/time_tracking.dart' show TimeSettingsGroups;
-import 'package:zafling/settings/ui_providers.dart';
-import 'package:zafling/ui_kit/common/add_fab.dart';
-import 'package:zafling/ui_kit/common/menu_button.dart';
-import 'package:zafling/quests/ui/hero/hero_bar.dart';
+import 'package:daylog/app.dart';
+import 'package:daylog/quests/domain/cadence.dart';
+import 'package:daylog/core/errors.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/database/preferences.dart';
+import 'package:daylog/quests/services/providers.dart';
+import 'package:daylog/quests/services/recurrence_service.dart';
+import 'package:daylog/settings/settings_service.dart';
+import 'package:daylog/quests/ui/board/board_screen.dart';
+import 'package:daylog/calendar/ui/screens/calendar_screen.dart';
+import 'package:daylog/quests/ui/missions/missions_screen.dart';
+import 'package:daylog/notes/ui/screens/notes/notes_screen.dart';
+import 'package:daylog/settings/ui/settings_screen.dart';
+import 'package:daylog/shell/deep_link.dart';
+import 'package:daylog/shell/app_drawer.dart';
+import 'package:daylog/shell/app_shell.dart';
+import 'package:daylog/shell/bottom_bar.dart';
+import 'package:daylog/shell/destination.dart';
+import 'package:daylog/shell/reconcile_banner.dart';
+import 'package:daylog/shell/splash_screen.dart';
+import 'package:daylog/time_tracking/time_tracking.dart' show TimeSettingsGroups;
+import 'package:daylog/settings/ui_providers.dart';
+import 'package:daylog/ui_kit/common/add_fab.dart';
+import 'package:daylog/ui_kit/common/menu_button.dart';
+import 'package:daylog/quests/ui/hero/hero_bar.dart';
 
 import '../helpers/fixed_clock.dart';
 import '../helpers/seed.dart';
 import '../helpers/shell_nav.dart';
 import '../helpers/test_database.dart';
-import 'package:zafling/database/providers.dart';
-import 'package:zafling/core/clock_provider.dart';
+import 'package:daylog/database/providers.dart';
+import 'package:daylog/core/clock_provider.dart';
 
 /// Counts Reconciliation runs and lets a test hold, fail or fill each one.
 class SpyRecurrence extends RecurrenceService {
@@ -109,7 +109,7 @@ void main() {
     await tester.pump();
   }
 
-  /// Pumps the real [ZaflingApp] (default home: the shell). [setUp] may seed the
+  /// Pumps the real [DayLogApp] (default home: the shell). [setUp] may seed the
   /// database and prime the [SpyRecurrence] before the first Reconciliation.
   Future<void> pumpApp(
     WidgetTester tester, {
@@ -136,10 +136,10 @@ void main() {
       if (links != null) deepLinksProvider.overrideWithValue(links),
     ];
     await tester.pumpWidget(
-      ProviderScope(overrides: overrides, child: ZaflingApp(home: AppShell(initial: initial))),
+      ProviderScope(overrides: overrides, child: DayLogApp(home: AppShell(initial: initial))),
     );
     container = ProviderScope.containerOf(
-      tester.element(find.byType(ZaflingApp)),
+      tester.element(find.byType(DayLogApp)),
     );
   }
 
@@ -661,31 +661,31 @@ void main() {
   });
 
   group('links', () {
-    test('destinationFromUri reads zafling://<tab> and ignores the rest', () {
-      expect(destinationFromUri(Uri.parse('zafling://calendar')), Destination.calendar);
-      expect(destinationFromUri(Uri.parse('zafling://Notes')), Destination.notes);
-      expect(destinationFromUri(Uri.parse('zafling:///missions')), Destination.missions);
-      expect(destinationFromUri(Uri.parse('zafling://nowhere')), isNull);
+    test('destinationFromUri reads daylog://<tab> and ignores the rest', () {
+      expect(destinationFromUri(Uri.parse('daylog://calendar')), Destination.calendar);
+      expect(destinationFromUri(Uri.parse('daylog://Notes')), Destination.notes);
+      expect(destinationFromUri(Uri.parse('daylog:///missions')), Destination.missions);
+      expect(destinationFromUri(Uri.parse('daylog://nowhere')), isNull);
       expect(destinationFromUri(Uri.parse('https://calendar')), isNull);
-      expect(destinationFromUri(Uri.parse('zafling://')), isNull);
+      expect(destinationFromUri(Uri.parse('daylog://')), isNull);
     });
 
-    shellTest('a zafling://calendar link opens the Calendar tab, also when it arrives later', (tester) async {
+    shellTest('a daylog://calendar link opens the Calendar tab, also when it arrives later', (tester) async {
       final StreamController<Uri> links = StreamController<Uri>();
       addTearDown(links.close);
       await pumpApp(tester, links: links.stream);
       await settle(tester);
       expect(find.byType(BoardScreen), findsOneWidget);
-      links.add(Uri.parse('zafling://calendar'));
+      links.add(Uri.parse('daylog://calendar'));
       await settle(tester);
       expect(shown(tester), Destination.calendar);
-      links.add(Uri.parse('zafling://bogus'));
+      links.add(Uri.parse('daylog://bogus'));
       await settle(tester);
       expect(shown(tester), Destination.calendar);
-      links.add(Uri.parse('zafling://missions'));
+      links.add(Uri.parse('daylog://missions'));
       await settle(tester);
       expect(shown(tester), Destination.missions);
-      links.add(Uri.parse('zafling://timer'));
+      links.add(Uri.parse('daylog://timer'));
       await settle(tester);
       expect(shown(tester), Destination.timer);
     });

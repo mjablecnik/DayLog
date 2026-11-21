@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glados/glados.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/quests/services/providers.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/quests/services/providers.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/test_database.dart';
-import 'package:zafling/database/providers.dart';
-import 'package:zafling/core/clock_provider.dart';
+import 'package:daylog/database/providers.dart';
+import 'package:daylog/core/clock_provider.dart';
 
 void main() {
   test('providers wire the services onto one database and clock', () async {

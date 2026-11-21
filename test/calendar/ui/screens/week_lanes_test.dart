@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
-import 'package:zafling/core/event_type.dart';
-import 'package:zafling/calendar/data/calendar_models.dart';
-import 'package:zafling/calendar/ui/screens/week_lanes.dart';
+import 'package:daylog/core/event_type.dart';
+import 'package:daylog/calendar/data/calendar_models.dart';
+import 'package:daylog/calendar/ui/screens/week_lanes.dart';
 
 /// Monday 16 November 2026.
 final DateTime monday = DateTime(2026, 11, 16);

@@ -1,4 +1,4 @@
-# Zafling
+# DayLog
 
 Personal app for one user (Martin), the merger of two earlier Flutter apps: **TimeLog** (a countdown timer that
 logs time, with History, Statistics and reminders) and **QuestLog** (Quests and Missions with XP, a Calendar,
@@ -14,7 +14,7 @@ the iOS build, the Live Activity, the alarm sound, notifications and taps on the
 The old apps stay installed beside it until the import is compared (QuestLog tag `v1.5.0`, TimeLog tag `v1.2.0`, in
 `/workspace/QuestLog` and `/workspace/TimeLog`; they are read-only archives).
 
-The name Zafling is under trial; it lives in `pubspec.yaml` (`name`), `ios/` (bundle id `com.jablecnik.zafling`,
+The name DayLog (before 2026-11-21 the trial name Zafling) lives in `pubspec.yaml` (`name`), `ios/` (bundle id `com.jablecnik.daylog`,
 App Group, extension target, Info.plist), `linux/`, the URL scheme (`lib/core/app_identity.dart`), the channel names
 in `lib/time_tracking/services/native/platform_channel.dart` and Swift, and the ARB key `app_name`.
 

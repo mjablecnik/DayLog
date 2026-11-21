@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:zafling/time_tracking/domain/activity_types.dart';
-import 'package:zafling/l10n/app_localizations_cs.dart';
-import 'package:zafling/l10n/app_localizations_en.dart';
+import 'package:daylog/time_tracking/domain/activity_types.dart';
+import 'package:daylog/l10n/app_localizations_cs.dart';
+import 'package:daylog/l10n/app_localizations_en.dart';
 
 // Feature: activity-subtypes
 //

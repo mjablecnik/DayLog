@@ -2,11 +2,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:zafling/time_tracking/services/native/platform_channel.dart';
-import 'package:zafling/time_tracking/services/alarm_service.dart';
-import 'package:zafling/time_tracking/services/native/live_activity_channel.dart';
-import 'package:zafling/time_tracking/services/notification_service.dart';
-import 'package:zafling/time_tracking/services/timer_service.dart';
+import 'package:daylog/time_tracking/services/native/platform_channel.dart';
+import 'package:daylog/time_tracking/services/alarm_service.dart';
+import 'package:daylog/time_tracking/services/native/live_activity_channel.dart';
+import 'package:daylog/time_tracking/services/notification_service.dart';
+import 'package:daylog/time_tracking/services/timer_service.dart';
 
 void main() {
   final binding = TestWidgetsFlutterBinding.ensureInitialized();

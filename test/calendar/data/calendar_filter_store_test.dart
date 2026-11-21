@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/core/event_type.dart';
-import 'package:zafling/calendar/data/calendar_filter_store.dart';
+import 'package:daylog/core/event_type.dart';
+import 'package:daylog/calendar/data/calendar_filter_store.dart';
 
 void main() {
   late Directory dir;

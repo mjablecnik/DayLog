@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:zafling/time_tracking/providers/reminder_provider.dart';
-import 'package:zafling/time_tracking/services/reminder_service.dart';
-import 'package:zafling/l10n/app_localizations.dart';
+import 'package:daylog/time_tracking/providers/reminder_provider.dart';
+import 'package:daylog/time_tracking/services/reminder_service.dart';
+import 'package:daylog/l10n/app_localizations.dart';
 
 class _FakeReminderService extends ReminderService {
   _FakeReminderService() : super(loadLocalizations: () async => lookupAppLocalizations(const Locale('en')));

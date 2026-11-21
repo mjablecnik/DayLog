@@ -1,5 +1,5 @@
 import 'package:glados/glados.dart';
-import 'package:zafling/core/board_day.dart';
+import 'package:daylog/core/board_day.dart';
 
 import '../helpers/generators.dart';
 

@@ -1,6 +1,6 @@
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/calendar/domain/easter.dart';
+import 'package:daylog/calendar/domain/easter.dart';
 
 DateTime d(int y, int m, int day) => DateTime(y, m, day);
 

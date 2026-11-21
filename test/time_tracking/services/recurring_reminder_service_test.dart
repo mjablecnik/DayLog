@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/time_tracking/domain/active_days_utils.dart';
-import 'package:zafling/time_tracking/services/recurring_reminder_service.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/time_tracking/domain/active_days_utils.dart';
+import 'package:daylog/time_tracking/services/recurring_reminder_service.dart';
 
 void main() {
   // computeUpcomingNotificationTimes/getNotificationId/isoDateString are

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Zafling are listed here, newest first. The format follows
+All notable changes to DayLog are listed here, newest first. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the versions follow
 [Semantic Versioning](https://semver.org). `scripts/release.sh` adds a section for
 every release from the commit messages.
@@ -16,7 +16,7 @@ every release from the commit messages.
 - import the export files of QuestLog, TimeLog and the app (database)
 - export the preferences with the tables (database)
 - move the TimeLog features into the app (time-tracking)
-- bottom bar with five tabs, side drawer and zafling:// deep links (shell)
+- bottom bar with five tabs, side drawer and daylog:// deep links (shell)
 
 ### Fixes
 
@@ -38,7 +38,7 @@ every release from the commit messages.
 - build: add the packages of the time tracking feature
 - refactor(database): start the schema at version 1 and drop the migration code
 - docs: start the refactoring notes
-- refactor: rename the package to zafling and group the code into feature folders
+- refactor: rename the package to daylog and group the code into feature folders
 - chore: copy QuestLog 1.5.0 and the TimeLog iOS project as the base
 - docs: add the initial specs for merging TimeLog and QuestLog
 

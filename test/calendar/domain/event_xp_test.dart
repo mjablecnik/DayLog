@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
-import 'package:zafling/core/event_type.dart';
-import 'package:zafling/calendar/domain/event_xp.dart';
+import 'package:daylog/core/event_type.dart';
+import 'package:daylog/calendar/domain/event_xp.dart';
 
 int timed(int minutes, [EventType type = EventType.meeting]) =>
     eventXp(type: type, allDay: false, duration: Duration(minutes: minutes));

@@ -1,9 +1,9 @@
 
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/notes/domain/note_node.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/notes/data/notes_mappers.dart';
+import 'package:daylog/notes/domain/note_node.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/notes/data/notes_mappers.dart';
 
 import '../../helpers/test_database.dart';
 

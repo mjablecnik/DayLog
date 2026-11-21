@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/theme/tokens.dart';
-import 'package:zafling/ui_kit/common/menu_button.dart';
+import 'package:daylog/theme/tokens.dart';
+import 'package:daylog/ui_kit/common/menu_button.dart';
 
 import '_harness.dart';
 

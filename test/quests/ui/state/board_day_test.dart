@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart'
     hide expect, test, group, setUp, tearDown, setUpAll, tearDownAll;
-import 'package:zafling/core/board_day.dart';
-import 'package:zafling/quests/ui/state/board_day.dart';
+import 'package:daylog/core/board_day.dart';
+import 'package:daylog/quests/ui/state/board_day.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/generators.dart';
-import 'package:zafling/core/clock_provider.dart';
+import 'package:daylog/core/clock_provider.dart';
 
 void main() {
   group('untilNextBoardDay', () {

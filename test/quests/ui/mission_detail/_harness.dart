@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/quests/ui/mission_detail/detail_quest_row.dart';
-import 'package:zafling/quests/ui/mission_detail/mission_detail_screen.dart';
-import 'package:zafling/theme/app_theme.dart';
-import 'package:zafling/theme/tokens.dart';
-import 'package:zafling/quests/ui/cards/check_circle.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/quests/services/providers.dart';
+import 'package:daylog/quests/ui/mission_detail/detail_quest_row.dart';
+import 'package:daylog/quests/ui/mission_detail/mission_detail_screen.dart';
+import 'package:daylog/theme/app_theme.dart';
+import 'package:daylog/theme/tokens.dart';
+import 'package:daylog/quests/ui/cards/check_circle.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
-import 'package:zafling/database/providers.dart';
-import 'package:zafling/core/clock_provider.dart';
+import 'package:daylog/database/providers.dart';
+import 'package:daylog/core/clock_provider.dart';
 
 /// "Now" of every test: 12:00 on the Board_Day of 15 Nov 2026.
 final DateTime testNow = DateTime(2026, 11, 15, 12);

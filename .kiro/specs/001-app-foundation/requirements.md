@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Zafling is a single personal Flutter app for iOS that replaces two existing apps by Martin: TimeLog (`/workspace/TimeLog/timelog_app`, tag `v1.2.0`) and QuestLog (`/workspace/QuestLog`, tag `v1.5.0`). The name Zafling is a working name; it lives in exactly one place per layer (see Requirement 9) so it can be renamed cheaply.
+DayLog is a single personal Flutter app for iOS that replaces two existing apps by Martin: TimeLog (`/workspace/TimeLog/timelog_app`, tag `v1.2.0`) and QuestLog (`/workspace/QuestLog`, tag `v1.5.0`). The name DayLog is a working name; it lives in exactly one place per layer (see Requirement 9) so it can be renamed cheaply.
 
 This spec creates the new project and everything that QuestLog already provides: Quests, Missions, the Calendar, Notes, Settings, the data export and the deep links. QuestLog is the base of the new project, because it already has the structure the new app needs (Riverpod 3, one Drift database, feature folders, l10n, structure check). This spec also builds the Shell: the Timer is the first screen, and the other destinations are reached from a navigation drawer and through deep links.
 
@@ -10,7 +10,7 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 
 ## Glossary
 
-- **App**: The new Flutter project at `/workspace/Zafling`, Dart package `zafling`.
+- **App**: The new Flutter project at `/workspace/DayLog`, Dart package `daylog`.
 - **Quest_Module**: The Quests, Missions, XP, recurring rules and Quest Deadline features moved from QuestLog.
 - **Calendar_Module**: The Calendar feature moved from QuestLog.
 - **Notes_Module**: The Notes feature moved from QuestLog.
@@ -19,7 +19,7 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 - **Destination**: One reachable page of the App: Timer, History, Statistics, Quests, Missions, Calendar, Notes, Settings.
 - **Bottom_Bar**: The bottom navigation bar with five tabs: Timer, Quests, Calendar, Notes, Settings.
 - **Drawer**: The side panel that lists the complete navigation: every Destination, including the tabs of the Bottom_Bar.
-- **Deep_Link**: A URL `zafling://<destination>` that opens a Destination.
+- **Deep_Link**: A URL `daylog://<destination>` that opens a Destination.
 - **Database**: The single Drift database of the App, stored in one SQLite file.
 - **Legacy_App**: TimeLog or QuestLog in the frozen versions named above.
 - **Structure_Check**: `scripts/check-structure.sh`, which fails when a directory holds more than 15 source files.
@@ -28,7 +28,7 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 - **UI_Kit**: The folder `lib/ui_kit/` with the shared widgets (icons, sheets, snackbar, segmented control, form helpers).
 - **Changelog**: The file `CHANGELOG.md`, a list of released versions with their changes.
 - **Release_Script**: `scripts/release.sh`, which bumps the version, updates the Changelog, commits and tags.
-- **Working_Name**: The string `Zafling` and its derivatives (package name, bundle identifier, URL scheme, display name).
+- **Working_Name**: The string `DayLog` and its derivatives (package name, bundle identifier, URL scheme, display name).
 
 ## Requirements
 
@@ -38,7 +38,7 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 
 #### Acceptance Criteria
 
-1. THE App SHALL be a Flutter project in `/workspace/Zafling` with its own git repository and the author identity `Martin Jablečník <martin.jablecnik@email.cz>`.
+1. THE App SHALL be a Flutter project in `/workspace/DayLog` with its own git repository and the author identity `Martin Jablečník <martin.jablecnik@email.cz>`.
 2. THE App SHALL contain the folders `lib/core`, `lib/database`, `lib/ui_kit`, `lib/shell`, `lib/theme`, `lib/l10n`, `lib/settings`, `lib/quests`, `lib/calendar`, `lib/notes` and `lib/time_tracking`, created before any code is moved into them.
 3. THE App SHALL contain `scripts/check.sh` that runs analysis, all tests and the Structure_Check, and `scripts/check-structure.sh` copied from `tool-configs/templates/scripts/`.
 4. THE folders `core`, `theme`, `ui_kit` and `l10n` SHALL NOT import a feature folder.
@@ -53,7 +53,7 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 
 #### Acceptance Criteria
 
-1. THE App SHALL open exactly one Drift Database, stored in the file `zafling.sqlite` in the application documents directory.
+1. THE App SHALL open exactly one Drift Database, stored in the file `daylog.sqlite` in the application documents directory.
 2. THE Database SHALL contain every table of the Legacy_Apps under its original table name and columns.
 3. IF a table name occurs in both Legacy_Apps, THEN THE App SHALL fail its test suite until the collision is resolved in this spec.
 4. THE Database SHALL start at schema version 1 and record every later change as a Drift migration with a schema dump in `drift_schemas/`.
@@ -97,7 +97,7 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 
 #### Acceptance Criteria
 
-1. WHEN a link `zafling://timer`, `zafling://history`, `zafling://statistics`, `zafling://quests`, `zafling://missions`, `zafling://calendar`, `zafling://notes` or `zafling://settings` opens the App, THE Shell SHALL show that Destination.
+1. WHEN a link `daylog://timer`, `daylog://history`, `daylog://statistics`, `daylog://quests`, `daylog://missions`, `daylog://calendar`, `daylog://notes` or `daylog://settings` opens the App, THE Shell SHALL show that Destination.
 2. IF a link has another scheme or an unknown host, THEN THE Shell SHALL ignore it and keep the current Destination.
 3. WHEN the App is launched by a Deep_Link, THE Shell SHALL show the Destination of the link and not the Timer.
 4. THE App SHALL NOT register the schemes `questlog` or `timelogapp`, so the Legacy_Apps keep working while installed beside it.
@@ -112,7 +112,7 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 1. THE Settings Destination SHALL contain the groups of QuestLog Settings (Profile, Language, Appearance, rules for recurring Missions, Data, About) and the settings of TimeLog (reminders, recurring reminders, notification permission), each in its own labelled group.
 2. THE App SHALL keep one language setting (Czech, English or the device language) that applies to every Destination.
 3. THE App SHALL keep one theme setting (light, dark or the device setting) that applies to every Destination.
-4. THE Settings Destination SHALL keep the Data group with one export that writes every table of the Database and the Time_Preferences as one JSON file with `format` equal to `zafling-export`.
+4. THE Settings Destination SHALL keep the Data group with one export that writes every table of the Database and the Time_Preferences as one JSON file with `format` equal to `daylog-export`.
 5. WHEN the export is built, THE App SHALL write the header and the Row_Counts in the layout of the Legacy_App exports, so one Importer reads all three formats.
 6. WHEN the language is changed, THE App SHALL update every visible screen without restarting.
 

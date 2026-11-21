@@ -1,5 +1,5 @@
 import 'package:glados/glados.dart';
-import 'package:zafling/quests/domain/cadence.dart';
+import 'package:daylog/quests/domain/cadence.dart';
 
 import '../../helpers/generators.dart';
 

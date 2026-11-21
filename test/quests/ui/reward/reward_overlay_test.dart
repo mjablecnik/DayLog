@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/quests/ui/state/reward_queue.dart';
-import 'package:zafling/theme/app_theme.dart';
-import 'package:zafling/theme/tokens.dart';
-import 'package:zafling/quests/ui/reward/reward_card.dart';
-import 'package:zafling/quests/ui/reward/reward_overlay.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/quests/services/providers.dart';
+import 'package:daylog/quests/ui/state/reward_queue.dart';
+import 'package:daylog/theme/app_theme.dart';
+import 'package:daylog/theme/tokens.dart';
+import 'package:daylog/quests/ui/reward/reward_card.dart';
+import 'package:daylog/quests/ui/reward/reward_overlay.dart';
 
 const int _missionId = 7;
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/notes/domain/note_node.dart';
-import 'package:zafling/notes/domain/note_tree.dart';
-import 'package:zafling/notes/ui/sheets/add_sheet.dart';
-import 'package:zafling/notes/ui/sheets/link_sheet.dart';
-import 'package:zafling/notes/ui/sheets/move_sheet.dart';
-import 'package:zafling/notes/ui/sheets/name_sheet.dart';
+import 'package:daylog/notes/domain/note_node.dart';
+import 'package:daylog/notes/domain/note_tree.dart';
+import 'package:daylog/notes/ui/sheets/add_sheet.dart';
+import 'package:daylog/notes/ui/sheets/link_sheet.dart';
+import 'package:daylog/notes/ui/sheets/move_sheet.dart';
+import 'package:daylog/notes/ui/sheets/name_sheet.dart';
 
 import '../screens/_notes_harness.dart';
 

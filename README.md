@@ -1,6 +1,6 @@
 <div align="center">
 
-# Zafling
+# DayLog
 
 ### One personal app for your day: time, quests, calendar and notes
 
@@ -12,7 +12,7 @@
 
 ## 📋 Description
 
-Zafling is the merger of two earlier apps, TimeLog (time tracking) and QuestLog (quests, missions,
+DayLog is the merger of two earlier apps, TimeLog (time tracking) and QuestLog (quests, missions,
 calendar, notes), in one Flutter app for iOS. It adds nothing new to either: every page works as it did,
 and the data of both apps can be loaded into it.
 
@@ -41,13 +41,13 @@ Every feature in detail: [FEATURES.md](./FEATURES.md).
 ## 🚀 Installation
 
 ```bash
-git clone <repository-url> zafling
-cd zafling
+git clone <repository-url> daylog
+cd daylog
 flutter pub get
 timeout 500 dart run build_runner build   # generates the Drift and freezed code
 ```
 
-Zafling has no environment variables. `.env.example` exists only to say so.
+DayLog has no environment variables. `.env.example` exists only to say so.
 
 > [!NOTE]
 > The code generation takes a few minutes. The generated files (`*.g.dart`, `*.freezed.dart`) and the
@@ -66,16 +66,16 @@ The bottom bar has five tabs: Timer, Quests, Calendar, Notes and Settings. The s
 menu button in the header of every page, lists all pages: the five tabs plus History, Statistics and Missions.
 
 **Moving from TimeLog and QuestLog.** In each old app (QuestLog 1.5.0, TimeLog 1.2.0), open Settings → Data →
-Export data and save the file. Then in Zafling open Settings → Data → Import data, pick the file, and confirm
+Export data and save the file. Then in DayLog open Settings → Data → Import data, pick the file, and confirm
 what it replaces. Compare the counts with the old app before you stop using it. The steps are in
 [DOCS.md](./DOCS.md#moving-from-timelog-and-questlog).
 
-**Home Screen shortcuts.** A link such as `zafling://timer` or `zafling://calendar` opens a page; Settings →
+**Home Screen shortcuts.** A link such as `daylog://timer` or `daylog://calendar` opens a page; Settings →
 Home Screen shortcut explains how to put it on the Home Screen with the Shortcuts app.
 
 ## 📦 Deployment
 
-There is no server and no hosted deployment. Zafling is installed on an iPhone from Xcode, built on a Mac from
+There is no server and no hosted deployment. DayLog is installed on an iPhone from Xcode, built on a Mac from
 this repository. The iOS build, the Live Activity, the alarm and the notifications cannot be exercised from the
 Linux development environment, so they are checked on the device by hand.
 

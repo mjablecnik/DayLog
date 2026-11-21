@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:zafling/time_tracking/services/native/platform_channel.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/time_tracking/providers/timer_provider.dart';
-import 'package:zafling/time_tracking/services/timer_service.dart';
-import 'package:zafling/time_tracking/ui/screens/timer_screen.dart';
+import 'package:daylog/time_tracking/services/native/platform_channel.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/time_tracking/providers/timer_provider.dart';
+import 'package:daylog/time_tracking/services/timer_service.dart';
+import 'package:daylog/time_tracking/ui/screens/timer_screen.dart';
 import '../../../../helpers/time_theme.dart';
 
 void main() {

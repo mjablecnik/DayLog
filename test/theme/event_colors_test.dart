@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/core/event_type.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/core/event_type.dart';
+import 'package:daylog/theme/tokens.dart';
 
 double _channel(double c) =>
     c <= 0.03928 ? c / 12.92 : math.pow((c + 0.055) / 1.055, 2.4).toDouble();

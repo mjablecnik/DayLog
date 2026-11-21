@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/theme/app_theme.dart';
-import 'package:zafling/theme/tokens.dart';
-import 'package:zafling/theme/typography.dart';
+import 'package:daylog/theme/app_theme.dart';
+import 'package:daylog/theme/tokens.dart';
+import 'package:daylog/theme/typography.dart';
 
 void main() {
   final List<AppPalette> palettes = <AppPalette>[

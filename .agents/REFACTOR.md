@@ -28,8 +28,8 @@ translation keys, QuestLog's migration code and unused column, the old test layo
 
 ## App
 
-- The app icon and the launch screen are TimeLog's. Replace them when the name is settled; the Quest launch colour
+- The app icon and the launch screen are TimeLog's. Replace them (the name is settled: DayLog); the Quest launch colour
   of spec 001 (Requirement 9.6) is not carried over.
 - Importing a file does not select its theme or language: both live in `app_state` and come only from a QuestLog or
-  Zafling file; the preferences ignore `app_language` and `selected_theme`.
+  DayLog file; the preferences ignore `app_language` and `selected_theme`.
 - Task 6.3 of spec 003: import Martin's real export files from `.import/` and compare the counts with the old apps.

@@ -32,7 +32,7 @@ import 'splash_screen.dart';
 /// Poznámky, Nastavení), the Drawer with the other Destinations (History,
 /// Statistics, Missions) and the pages themselves. The Quest, Calendar and Notes
 /// pages show the splash until the first Reconciliation has finished; the
-/// timer pages do not wait for it. The reward overlay is hosted by `ZaflingApp`,
+/// timer pages do not wait for it. The reward overlay is hosted by `DayLogApp`,
 /// above the Navigator, so it also covers pushed routes.
 ///
 /// Reconciliation runs at start, once per return from the background, when the
@@ -169,7 +169,7 @@ class _AppShellState extends ConsumerState<AppShell>
     );
   }
 
-  /// A `zafling://calendar` style link: closes what is open above the shell and
+  /// A `daylog://calendar` style link: closes what is open above the shell and
   /// shows the Destination. Anything else is ignored.
   void _openLink(Uri uri) {
     final Destination? destination = destinationFromUri(uri);

@@ -91,7 +91,7 @@ class AppDatabase extends _$AppDatabase {
 QueryExecutor _openFileDatabase() {
   return LazyDatabase(() async {
     final directory = await getApplicationDocumentsDirectory();
-    final file = File(p.join(directory.path, 'zafling.sqlite'));
+    final file = File(p.join(directory.path, 'daylog.sqlite'));
     return NativeDatabase.createInBackground(file);
   });
 }

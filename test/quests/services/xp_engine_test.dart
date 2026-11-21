@@ -1,8 +1,8 @@
 import 'package:glados/glados.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/quests/services/xp_engine.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/quests/services/xp_engine.dart';
 
 import '../../helpers/test_database.dart';
 

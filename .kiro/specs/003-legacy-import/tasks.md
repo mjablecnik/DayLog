@@ -55,7 +55,7 @@ Add a Replace_Import of the QuestLog and TimeLog Export_Files to the App: a pure
     - Replacing `calendar_events` removes the rows seeded by `onCreate`; `app_state` import carries the language, theme and profile
     - _Requirements: 5.1, 5.2, 5.3_
 
-  - [x] 4.4a Accept the `zafling-export` format
+  - [x] 4.4a Accept the `daylog-export` format
     - Parser accepts it; the rules of a `timelog-export` apply to preferences; a round-trip test: export from the App, import into an empty Database, compare
     - _Requirements: 1.3, 7.1, 7.2_
 
@@ -95,7 +95,7 @@ Add a Replace_Import of the QuestLog and TimeLog Export_Files to the App: a pure
     - _Requirements: 9.4_
 
   - [x] 6.2 Add the real-data test
-    - `@Tags(['real-data'])` test reads `/workspace/Zafling/.import/*.json`; `.import/` in `.gitignore`; skipped when the folder is empty
+    - `@Tags(['real-data'])` test reads `/workspace/DayLog/.import/*.json`; `.import/` in `.gitignore`; skipped when the folder is empty
     - _Requirements: 9.3_
 
   - [ ] 6.3 Run the import on Martin's files

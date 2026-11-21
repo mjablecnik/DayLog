@@ -2,7 +2,7 @@
 
 ## Overview
 
-Move the TimeLog 1.2.0 features into `lib/time_tracking/` of Zafling, add the Time_Module tables to the Database, port the native iOS code with new identifiers, and replace the Timer placeholder of the Shell. Behaviour stays identical; tests are ported alongside the code they cover, and a checkpoint report lists every non-trivial difference from the TimeLog original.
+Move the TimeLog 1.2.0 features into `lib/time_tracking/` of DayLog, add the Time_Module tables to the Database, port the native iOS code with new identifiers, and replace the Timer placeholder of the Shell. Behaviour stays identical; tests are ported alongside the code they cover, and a checkpoint report lists every non-trivial difference from the TimeLog original.
 
 ## Tasks
 
@@ -114,7 +114,7 @@ Move the TimeLog 1.2.0 features into `lib/time_tracking/` of Zafling, add the Ti
 - [x] 8. iOS native code
   - [x] 8.1 Rename the native identifiers and split the URL handling
     - The `ios/` folder already comes from TimeLog (spec `001`); rename the method channels, the Darwin notification name, the App Group and the `Link` URLs consistently in Swift and Dart
-    - `application(_:open:)` handles only `zafling://action/...` and calls `super` for every other link; check `Info.plist` keeps `NSSupportsLiveActivities`, frequent updates, `FlutterDeepLinkingEnabled` and the URL scheme
+    - `application(_:open:)` handles only `daylog://action/...` and calls `super` for every other link; check `Info.plist` keeps `NSSupportsLiveActivities`, frequent updates, `FlutterDeepLinkingEnabled` and the URL scheme
     - Grep `ios/` and `lib/` for `timelog` and list every remaining hit in the report
     - _Requirements: 6.1, 6.2, 6.3, 6.6_
 

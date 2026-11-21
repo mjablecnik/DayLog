@@ -31,8 +31,8 @@ Iterable<(String, String)> _imports() sync* {
     for (final RegExpMatch m in directive.allMatches(e.readAsStringSync())) {
       final String path = m.group(1)!;
       String? target;
-      if (path.startsWith('package:zafling/')) {
-        target = path.substring('package:zafling/'.length);
+      if (path.startsWith('package:daylog/')) {
+        target = path.substring('package:daylog/'.length);
       } else if (!path.startsWith('package:') && !path.startsWith('dart:')) {
         target = p.normalize(p.join(p.dirname(from), path));
       }

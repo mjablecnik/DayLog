@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 
-/// Identifies the file as a Zafling export, so an importer can refuse anything else.
-const exportFormat = 'zafling-export';
+/// Identifies the file as a DayLog export, so an importer can refuse anything else.
+const exportFormat = 'daylog-export';
 
 /// Version of the JSON layout below. Raise it when the layout changes.
 const exportFormatVersion = 1;

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart'
     hide expect, test, group, setUp, tearDown, setUpAll, tearDownAll;
-import 'package:zafling/quests/ui/cards/progress_ring.dart';
+import 'package:daylog/quests/ui/cards/progress_ring.dart';
 
 import '_cards_harness.dart';
 

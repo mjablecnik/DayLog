@@ -53,8 +53,8 @@ class ReminderService {
       defaultActionName: 'Open',
     );
     const windowsSettings = WindowsInitializationSettings(
-      appName: 'Zafling',
-      appUserModelId: 'com.jablecnik.zafling',
+      appName: 'DayLog',
+      appUserModelId: 'com.jablecnik.daylog',
       guid: '74e61031-08fe-4096-b98c-24679542e64a',
     );
     const settings = InitializationSettings(

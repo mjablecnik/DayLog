@@ -40,7 +40,7 @@ class SceneDelegate: FlutterSceneDelegate {}
 
     private func setupNotificationChannel(messenger: FlutterBinaryMessenger) {
         let channel = FlutterMethodChannel(
-            name: "com.jablecnik.zafling/notifications",
+            name: "com.jablecnik.daylog/notifications",
             binaryMessenger: messenger
         )
 
@@ -65,10 +65,10 @@ class SceneDelegate: FlutterSceneDelegate {}
 
             case "cancelNotification":
                 UNUserNotificationCenter.current().removePendingNotificationRequests(
-                    withIdentifiers: ["zafling_timer_alarm"]
+                    withIdentifiers: ["daylog_timer_alarm"]
                 )
                 UNUserNotificationCenter.current().removeDeliveredNotifications(
-                    withIdentifiers: ["zafling_timer_alarm"]
+                    withIdentifiers: ["daylog_timer_alarm"]
                 )
                 result(nil)
 
@@ -82,10 +82,10 @@ class SceneDelegate: FlutterSceneDelegate {}
         let center = UNUserNotificationCenter.current()
 
         // Remove any existing scheduled notification
-        center.removePendingNotificationRequests(withIdentifiers: ["zafling_timer_alarm"])
+        center.removePendingNotificationRequests(withIdentifiers: ["daylog_timer_alarm"])
 
         let content = UNMutableNotificationContent()
-        content.title = "Zafling"
+        content.title = "DayLog"
         content.body = "Timer complete!"
         content.sound = UNNotificationSound(named: UNNotificationSoundName("alarm.caf"))
         content.interruptionLevel = .timeSensitive
@@ -99,7 +99,7 @@ class SceneDelegate: FlutterSceneDelegate {}
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
         let request = UNNotificationRequest(
-            identifier: "zafling_timer_alarm",
+            identifier: "daylog_timer_alarm",
             content: content,
             trigger: trigger
         )
@@ -113,7 +113,7 @@ class SceneDelegate: FlutterSceneDelegate {}
 
     private func setupLiveActivityChannel(messenger: FlutterBinaryMessenger) {
         let channel = FlutterMethodChannel(
-            name: "com.jablecnik.zafling/live_activity",
+            name: "com.jablecnik.daylog/live_activity",
             binaryMessenger: messenger
         )
         self.methodChannel = channel
@@ -172,13 +172,13 @@ class SceneDelegate: FlutterSceneDelegate {}
         }
     }
 
-    // Receive URLs from Widget Extension lock-screen controls (e.g. zafling://action/pause)
+    // Receive URLs from Widget Extension lock-screen controls (e.g. daylog://action/pause)
     override func application(
         _ app: UIApplication,
         open url: URL,
         options: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
-        guard url.scheme == "zafling", url.host == "action" else {
+        guard url.scheme == "daylog", url.host == "action" else {
             return super.application(app, open: url, options: options)
         }
         let action = String(url.path.dropFirst()) // strip leading "/"
@@ -202,7 +202,7 @@ class SceneDelegate: FlutterSceneDelegate {}
                     appDelegate.handlePendingWidgetAction()
                 }
             },
-            "com.jablecnik.zafling.action" as CFString,
+            "com.jablecnik.daylog.action" as CFString,
             nil,
             .deliverImmediately
         )
@@ -211,7 +211,7 @@ class SceneDelegate: FlutterSceneDelegate {}
     }
 
     func handlePendingWidgetAction() {
-        guard let defaults = UserDefaults(suiteName: "group.com.jablecnik.zafling"),
+        guard let defaults = UserDefaults(suiteName: "group.com.jablecnik.daylog"),
               let action = defaults.string(forKey: "pendingAction"),
               !action.isEmpty else { return }
         // Clear the pending action

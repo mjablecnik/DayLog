@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/theme/tokens.dart';
 
 void main() {
   test('corner radii follow the design: card 14, field 12, sheet 24, reward 22', () {

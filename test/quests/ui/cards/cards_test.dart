@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/theme/tokens.dart';
-import 'package:zafling/quests/ui/cards/check_circle.dart';
-import 'package:zafling/quests/ui/cards/difficulty_pips.dart';
-import 'package:zafling/quests/ui/cards/mission_card.dart';
-import 'package:zafling/quests/ui/cards/quest_card.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/theme/tokens.dart';
+import 'package:daylog/quests/ui/cards/check_circle.dart';
+import 'package:daylog/quests/ui/cards/difficulty_pips.dart';
+import 'package:daylog/quests/ui/cards/mission_card.dart';
+import 'package:daylog/quests/ui/cards/quest_card.dart';
 
 import '_cards_harness.dart';
 

@@ -1,10 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/core/errors.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/ui_kit/forms/error_text.dart';
-import 'package:zafling/ui_kit/forms/validators.dart';
+import 'package:daylog/core/errors.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/ui_kit/forms/error_text.dart';
+import 'package:daylog/ui_kit/forms/validators.dart';
 
 void main() {
   final locales = {

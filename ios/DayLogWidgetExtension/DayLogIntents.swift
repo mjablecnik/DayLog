@@ -4,12 +4,12 @@ import Foundation
 
 // MARK: - Shared helpers
 
-private func currentActivity() -> Activity<ZaflingAttributes>? {
-    Activity<ZaflingAttributes>.activities.first
+private func currentActivity() -> Activity<DayLogAttributes>? {
+    Activity<DayLogAttributes>.activities.first
 }
 
 private func sharedDefaults() -> UserDefaults? {
-    UserDefaults(suiteName: "group.com.jablecnik.zafling")
+    UserDefaults(suiteName: "group.com.jablecnik.daylog")
 }
 
 // MARK: - Intents
@@ -22,7 +22,7 @@ struct PauseTimerIntent: LiveActivityIntent {
         if let activity = currentActivity() {
             let current = activity.content.state
             let remaining = max(0, Int(current.endAt.timeIntervalSinceNow))
-            let newState = ZaflingAttributes.ContentState(
+            let newState = DayLogAttributes.ContentState(
                 endAt: current.endAt,
                 isPaused: true,
                 pausedSecondsLeft: remaining,
@@ -49,7 +49,7 @@ struct ResumeTimerIntent: LiveActivityIntent {
 
         if let activity = currentActivity(), remaining > 0 {
             let newEndAt = Date().addingTimeInterval(TimeInterval(remaining))
-            let newState = ZaflingAttributes.ContentState(
+            let newState = DayLogAttributes.ContentState(
                 endAt: newEndAt,
                 isPaused: false,
                 pausedSecondsLeft: nil,

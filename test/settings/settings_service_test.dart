@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:drift/native.dart';
 import 'package:glados/glados.dart';
-import 'package:zafling/core/errors.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/database/preferences.dart';
-import 'package:zafling/settings/settings_service.dart';
+import 'package:daylog/core/errors.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/database/preferences.dart';
+import 'package:daylog/settings/settings_service.dart';
 
 import '../helpers/test_database.dart';
 
@@ -119,8 +119,8 @@ void main() {
   });
 
   test('a settings write the database rejects is a StorageError', () async {
-    final Directory dir = await Directory.systemTemp.createTemp('zafling_ro');
-    final File file = File('${dir.path}/zafling.sqlite');
+    final Directory dir = await Directory.systemTemp.createTemp('daylog_ro');
+    final File file = File('${dir.path}/daylog.sqlite');
     final AppDatabase seeded = AppDatabase.forTesting(NativeDatabase(file));
     await seeded.customSelect('SELECT 1').get();
     await seeded.close();

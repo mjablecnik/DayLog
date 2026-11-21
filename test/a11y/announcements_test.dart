@@ -3,21 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../helpers/shell_nav.dart';
-import 'package:zafling/app.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/shell/app_shell.dart';
-import 'package:zafling/shell/destination.dart';
-import 'package:zafling/settings/ui_providers.dart';
-import 'package:zafling/quests/ui/cards/check_circle.dart';
-import 'package:zafling/quests/ui/cards/mission_card.dart';
+import 'package:daylog/app.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/shell/app_shell.dart';
+import 'package:daylog/shell/destination.dart';
+import 'package:daylog/settings/ui_providers.dart';
+import 'package:daylog/quests/ui/cards/check_circle.dart';
+import 'package:daylog/quests/ui/cards/mission_card.dart';
 
 import '../helpers/fixed_clock.dart';
 import '../helpers/seed.dart';
 import '../helpers/test_database.dart';
-import 'package:zafling/database/providers.dart';
-import 'package:zafling/core/clock_provider.dart';
+import 'package:daylog/database/providers.dart';
+import 'package:daylog/core/clock_provider.dart';
 
 /// Requirement 16.4: completing and reopening a Quest, completing and reopening
 /// a Mission are spoken to screen-reader users, in the language of the app.
@@ -73,7 +73,7 @@ void main() {
             deviceLocaleProvider.overrideWithValue(Locale(code)),
             appVersionProvider.overrideWith((ref) async => '1.0.0'),
           ],
-          child: ZaflingApp(home: AppShell(initial: Destination.quests)),
+          child: DayLogApp(home: AppShell(initial: Destination.quests)),
         ),
       );
 

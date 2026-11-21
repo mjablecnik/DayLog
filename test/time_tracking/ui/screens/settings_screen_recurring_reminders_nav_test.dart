@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/time_tracking/ui/screens/reminder_settings_screen.dart';
-import 'package:zafling/time_tracking/ui/screens/time_settings_groups.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/time_tracking/ui/screens/reminder_settings_screen.dart';
+import 'package:daylog/time_tracking/ui/screens/time_settings_groups.dart';
 import '../../../helpers/time_theme.dart';
-import 'package:zafling/database/providers.dart';
+import 'package:daylog/database/providers.dart';
 import '../../../helpers/test_database.dart';
 
 void main() {

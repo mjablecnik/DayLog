@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/notes/domain/note_node.dart';
-import 'package:zafling/notes/domain/note_tree.dart';
-import 'package:zafling/notes/services/notes_service.dart';
-import 'package:zafling/notes/ui/screens/note_editor/note_editor_screen.dart';
-import 'package:zafling/notes/ui/screens/notes/trash_preview_screen.dart';
-import 'package:zafling/notes/ui/screens/notes/trash_row.dart';
-import 'package:zafling/notes/ui/screens/notes/trash_screen.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/notes/domain/note_node.dart';
+import 'package:daylog/notes/domain/note_tree.dart';
+import 'package:daylog/notes/services/notes_service.dart';
+import 'package:daylog/notes/ui/screens/note_editor/note_editor_screen.dart';
+import 'package:daylog/notes/ui/screens/notes/trash_preview_screen.dart';
+import 'package:daylog/notes/ui/screens/notes/trash_row.dart';
+import 'package:daylog/notes/ui/screens/notes/trash_screen.dart';
+import 'package:daylog/theme/tokens.dart';
 import 'package:super_editor/super_editor.dart';
 
 import '../../../../helpers/fixed_clock.dart';

@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/database/export/database_export.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/database/export/database_export.dart';
 
 import '../../helpers/test_database.dart';
 
@@ -18,7 +18,7 @@ void main() {
 
   Future<Map<String, Object?>> export() => exportDatabase(
         db,
-        appName: 'zafling',
+        appName: 'daylog',
         appVersion: '1.4.0',
         exportedAt: exportedAt,
       );
@@ -28,7 +28,7 @@ void main() {
 
     expect(data['format'], exportFormat);
     expect(data['formatVersion'], exportFormatVersion);
-    expect(data['app'], 'zafling');
+    expect(data['app'], 'daylog');
     expect(data['appVersion'], '1.4.0');
     expect(data['schemaVersion'], db.schemaVersion);
     expect(data['exportedAt'], exportedAt.toIso8601String());
@@ -74,7 +74,7 @@ void main() {
   test('the JSON text decodes back to the same data', () async {
     final text = await exportDatabaseAsJson(
       db,
-      appName: 'zafling',
+      appName: 'daylog',
       appVersion: '1.4.0',
       exportedAt: exportedAt,
     );
@@ -86,7 +86,7 @@ void main() {
     expect((await export())['preferences'], isEmpty);
     final data = await exportDatabase(
       db,
-      appName: 'zafling',
+      appName: 'daylog',
       appVersion: '1.4.0',
       exportedAt: exportedAt,
       preferences: <String, Object?>{'reminder_enabled': true, 'known': <String>['a', 'b']},

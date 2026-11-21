@@ -23,12 +23,12 @@ class ExportService {
     final now = _clock.now();
     final json = await exportDatabaseAsJson(
       _db,
-      appName: 'zafling',
+      appName: 'daylog',
       appVersion: await _appVersion(),
       exportedAt: now,
       preferences: await _readPreferences(),
     );
-    return (fileName: 'zafling-export-${_date(now)}.json', json: json);
+    return (fileName: 'daylog-export-${_date(now)}.json', json: json);
   }
 
   /// Every SharedPreferences entry, sorted by key so the file is stable.

@@ -5,10 +5,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/database/import/database_importer.dart';
-import 'package:zafling/database/import/export_file.dart';
-import 'package:zafling/database/import/import_report.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/database/import/database_importer.dart';
+import 'package:daylog/database/import/export_file.dart';
+import 'package:daylog/database/import/import_report.dart';
 
 import '../../helpers/test_database.dart';
 

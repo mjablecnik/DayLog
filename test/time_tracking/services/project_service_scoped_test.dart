@@ -6,12 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:zafling/time_tracking/domain/activity_types.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/time_tracking/providers/database_provider.dart';
-import 'package:zafling/time_tracking/providers/suggestions_provider.dart';
-import 'package:zafling/time_tracking/services/project_service.dart';
-import 'package:zafling/database/providers.dart';
+import 'package:daylog/time_tracking/domain/activity_types.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/time_tracking/providers/database_provider.dart';
+import 'package:daylog/time_tracking/providers/suggestions_provider.dart';
+import 'package:daylog/time_tracking/services/project_service.dart';
+import 'package:daylog/database/providers.dart';
 import '../../helpers/test_database.dart';
 
 // Feature: activity-subtypes

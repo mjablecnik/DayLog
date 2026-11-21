@@ -4,7 +4,7 @@ import 'import_report.dart';
 
 /// The `format` values of the export files the importer reads: the two old apps
 /// and the app itself.
-const Set<String> knownExportFormats = <String>{'questlog-export', 'timelog-export', 'zafling-export'};
+const Set<String> knownExportFormats = <String>{'questlog-export', 'timelog-export', 'daylog-export'};
 
 /// The highest `formatVersion` the importer understands.
 const int highestExportFormatVersion = 1;

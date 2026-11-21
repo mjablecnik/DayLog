@@ -2,9 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart'
     hide expect, test, group, setUp, tearDown, setUpAll, tearDownAll;
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/quests/ui/state/reward_queue.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/quests/ui/state/reward_queue.dart';
 
 Quest _quest({int? missionId}) => Quest(
   id: 1,

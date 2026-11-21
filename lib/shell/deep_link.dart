@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/app_identity.dart';
 import 'destination.dart';
 
-/// The Destination a `zafling://<destination>` link opens. Null for any other
+/// The Destination a `daylog://<destination>` link opens. Null for any other
 /// link, so a stray URL is ignored.
 Destination? destinationFromUri(Uri uri) {
   if (uri.scheme != appLinkScheme) return null;

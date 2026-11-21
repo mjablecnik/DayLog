@@ -1,10 +1,10 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/core/event_type.dart';
-import 'package:zafling/calendar/domain/repeat_rule.dart';
-import 'package:zafling/calendar/data/calendar_mappers.dart';
-import 'package:zafling/calendar/data/calendar_models.dart';
-import 'package:zafling/database/app_database.dart';
+import 'package:daylog/core/event_type.dart';
+import 'package:daylog/calendar/domain/repeat_rule.dart';
+import 'package:daylog/calendar/data/calendar_mappers.dart';
+import 'package:daylog/calendar/data/calendar_models.dart';
+import 'package:daylog/database/app_database.dart';
 
 import '../../helpers/test_database.dart';
 

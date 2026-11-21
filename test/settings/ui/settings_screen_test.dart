@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/core/clock.dart';
-import 'package:zafling/core/font_licenses.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/database/preferences.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/database/export/export_service.dart';
-import 'package:zafling/settings/ui/settings_screen.dart';
-import 'package:zafling/settings/ui_providers.dart';
-import 'package:zafling/theme/app_theme.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/core/clock.dart';
+import 'package:daylog/core/font_licenses.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/database/preferences.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/database/export/export_service.dart';
+import 'package:daylog/settings/ui/settings_screen.dart';
+import 'package:daylog/settings/ui_providers.dart';
+import 'package:daylog/theme/app_theme.dart';
+import 'package:daylog/theme/tokens.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/test_database.dart';
-import 'package:zafling/settings/ui/shortcut_guide.dart';
-import 'package:zafling/database/providers.dart';
-import 'package:zafling/core/clock_provider.dart';
+import 'package:daylog/settings/ui/shortcut_guide.dart';
+import 'package:daylog/database/providers.dart';
+import 'package:daylog/core/clock_provider.dart';
 
 /// The pages the shortcut guide offers in tests.
 const List<ShortcutTarget> testShortcutTargets = <ShortcutTarget>[
@@ -276,7 +276,7 @@ void main() {
   ) async {
     await open(tester, size: const Size(390, 1200), version: '4.5.6');
     expect(find.text('version 4.5.6'), findsOneWidget);
-    expect(find.text('Zafling'), findsOneWidget);
+    expect(find.text('DayLog'), findsOneWidget);
   });
   settingsTest('the Licenses row opens the licence page with the fonts', (
     tester,
@@ -348,15 +348,15 @@ void main() {
     await tester.tap(find.text('Home Screen shortcut').last);
     await tester.pump();
     expect(find.text('Copy the link above.'), findsOneWidget);
-    expect(find.text('zafling://calendar'), findsOneWidget);
+    expect(find.text('daylog://calendar'), findsOneWidget);
 
     await tester.tap(find.text('Notes'));
     await tester.pump();
-    expect(find.text('zafling://notes'), findsOneWidget);
+    expect(find.text('daylog://notes'), findsOneWidget);
 
     await tester.tap(find.text('Copy link'));
     await tester.pump();
-    expect(copied, 'zafling://notes');
+    expect(copied, 'daylog://notes');
     expect(find.text('Link copied'), findsOneWidget);
   });
 }

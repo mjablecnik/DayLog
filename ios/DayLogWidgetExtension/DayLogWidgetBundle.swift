@@ -2,8 +2,8 @@ import SwiftUI
 import WidgetKit
 
 @main
-struct ZaflingWidgetBundle: WidgetBundle {
+struct DayLogWidgetBundle: WidgetBundle {
     var body: some Widget {
-        ZaflingLiveActivity()
+        DayLogLiveActivity()
     }
 }

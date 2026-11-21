@@ -1,4 +1,4 @@
 class PlatformChannels {
-  static const String liveActivity = 'com.jablecnik.zafling/live_activity';
-  static const String notifications = 'com.jablecnik.zafling/notifications';
+  static const String liveActivity = 'com.jablecnik.daylog/live_activity';
+  static const String notifications = 'com.jablecnik.daylog/notifications';
 }

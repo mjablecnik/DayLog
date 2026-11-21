@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/shell/app_drawer.dart';
-import 'package:zafling/shell/destination.dart';
-import 'package:zafling/ui_kit/common/menu_button.dart';
+import 'package:daylog/shell/app_drawer.dart';
+import 'package:daylog/shell/destination.dart';
+import 'package:daylog/ui_kit/common/menu_button.dart';
 
 /// Shows [destination]: a tab by a tap on the Bottom_Bar, any other page
 /// through the menu button and the Drawer, or every page through the Drawer

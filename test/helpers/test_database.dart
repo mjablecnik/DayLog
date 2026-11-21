@@ -1,5 +1,5 @@
 import 'package:drift/native.dart';
-import 'package:zafling/database/app_database.dart';
+import 'package:daylog/database/app_database.dart';
 
 /// A fresh [AppDatabase] over an in-memory SQLite database.
 ///

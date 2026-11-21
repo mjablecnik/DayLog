@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/shell/deep_link.dart';
-import 'package:zafling/shell/destination.dart';
+import 'package:daylog/shell/deep_link.dart';
+import 'package:daylog/shell/destination.dart';
 
 void main() {
   // Feature: app-foundation, Property 1: Every Destination is reachable
@@ -38,11 +38,11 @@ void main() {
     }
   });
 
-  test('zafling://<name> opens each Destination, in any letter case and with a path form', () {
+  test('daylog://<name> opens each Destination, in any letter case and with a path form', () {
     for (final Destination d in Destination.values) {
-      expect(destinationFromUri(Uri.parse('zafling://${d.linkName}')), d);
-      expect(destinationFromUri(Uri.parse('zafling://${d.linkName.toUpperCase()}')), d);
-      expect(destinationFromUri(Uri.parse('zafling:///${d.linkName}')), d);
+      expect(destinationFromUri(Uri.parse('daylog://${d.linkName}')), d);
+      expect(destinationFromUri(Uri.parse('daylog://${d.linkName.toUpperCase()}')), d);
+      expect(destinationFromUri(Uri.parse('daylog:///${d.linkName}')), d);
     }
   });
 
@@ -52,9 +52,9 @@ void main() {
       'questlog://calendar',
       'timelogapp://timer',
       'https://calendar',
-      'zafling://nowhere',
-      'zafling://action/stop',
-      'zafling://',
+      'daylog://nowhere',
+      'daylog://action/stop',
+      'daylog://',
     ]) {
       expect(destinationFromUri(Uri.parse(link)), isNull, reason: link);
     }

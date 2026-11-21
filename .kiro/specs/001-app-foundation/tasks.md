@@ -2,22 +2,22 @@
 
 ## Overview
 
-Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its files into feature folders, add the Shell with the Drawer and the `zafling://` deep links, and make `scripts/check.sh` green. The TimeLog features arrive in spec `002-time-tracking-port`; this spec leaves a Timer placeholder Destination that `002` replaces. Testing is the ported QuestLog suite plus new tests for the Shell, the Database and the import rule.
+Create the DayLog project by copying QuestLog 1.5.0, rename it, regroup its files into feature folders, add the Shell with the Drawer and the `daylog://` deep links, and make `scripts/check.sh` green. The TimeLog features arrive in spec `002-time-tracking-port`; this spec leaves a Timer placeholder Destination that `002` replaces. Testing is the ported QuestLog suite plus new tests for the Shell, the Database and the import rule.
 
 ## Tasks
 
 - [x] 1. Scaffold the project
-  - [x] 1.1 Copy QuestLog into `/workspace/Zafling`
+  - [x] 1.1 Copy QuestLog into `/workspace/DayLog`
     - Copy `/workspace/QuestLog` without `.git`, `build/`, `.agents/`, `screenshots/` and `ios/`; keep `.design/`, `assets/`, `test/`, `drift_schemas/`
     - Copy `ios/` from `/workspace/TimeLog/timelog_app` at tag `v1.2.0` (Runner, `TimeLogWidgetExtension`, entitlements, notification sounds), then merge QuestLog's `CFBundleURLTypes` and `FlutterDeepLinkingEnabled` into `Info.plist`
     - The git repository and the author identity already exist
     - _Requirements: 1.1_
 
   - [x] 1.2 Rename the package and the Working_Name
-    - `pubspec.yaml`: `name: zafling`, version `0.0.1+1` until the first release, SDK constraint unchanged
-    - Replace `package:questlog/` imports; rename `QuestlogApp`, `QuestlogDatabase`, `QuestlogPalette` to `ZaflingApp`, `AppDatabase`, `QuestPalette`
-    - Display name, bundle identifier `com.jablecnik.zafling`, App Group `group.com.jablecnik.zafling` and URL scheme `zafling` in `ios/Runner/Info.plist`, `ios/Runner.xcodeproj`, both entitlements files and `app_name` in both ARB files
-    - Rename the extension target and folder to `ZaflingWidgetExtension` and fix the Xcode project references
+    - `pubspec.yaml`: `name: daylog`, version `0.0.1+1` until the first release, SDK constraint unchanged
+    - Replace `package:questlog/` imports; rename `QuestlogApp`, `QuestlogDatabase`, `QuestlogPalette` to `DayLogApp`, `AppDatabase`, `QuestPalette`
+    - Display name, bundle identifier `com.jablecnik.daylog`, App Group `group.com.jablecnik.daylog` and URL scheme `daylog` in `ios/Runner/Info.plist`, `ios/Runner.xcodeproj`, both entitlements files and `app_name` in both ARB files
+    - Rename the extension target and folder to `DayLogWidgetExtension` and fix the Xcode project references
     - Placeholder app icon from QuestLog's `.design/icon`; keep the launch screen colour of QuestLog
     - iOS deployment target 18.0
     - _Requirements: 1.1, 9.1, 9.2, 9.3, 9.4_
@@ -67,7 +67,7 @@ Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its fil
 - [x] 4. Shell, Drawer and deep links
   - [x] 4.1 Add `Destination` and the deep-link parser
     - `lib/shell/destination.dart` with the enum from the design; `destinationFromUri`
-    - `lib/shell/deep_link.dart` moved from QuestLog, scheme `zafling`, host or first path segment as the name
+    - `lib/shell/deep_link.dart` moved from QuestLog, scheme `daylog`, host or first path segment as the name
     - _Requirements: 5.1, 5.2, 5.4_
 
   - [x]* 4.2 Write property tests for Destination and links
@@ -84,7 +84,7 @@ Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its fil
     - Move the Reconciliation state machine, lifecycle observer, splash and reconcile banner unchanged
     - Initial Destination is `timer`, or the one of the launching link
     - The Timer Destination is a placeholder screen until spec `002` replaces it, and does not wait for the Reconciliation; the Quest Destinations show the splash until it is done
-    - Host the reward overlay in `ZaflingApp.builder`
+    - Host the reward overlay in `DayLogApp.builder`
     - _Requirements: 4.1, 4.5, 4.7, 4.8, 4.9, 4.10, 5.3_
 
   - [x]* 4.5 Write Shell widget tests
@@ -96,19 +96,19 @@ Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its fil
     - _Requirements: 4.11, 4.12_
 
   - [x] 4.6 Update the shortcut guide in Settings
-    - List all eight links with the `zafling://` scheme; keep the guide's steps (Open URL, Add to Home Screen)
+    - List all eight links with the `daylog://` scheme; keep the guide's steps (Open URL, Add to Home Screen)
     - _Requirements: 5.5_
 
 - [x] 5. Theme, settings and localisation
   - [x] 5.1 Add the theme registry
     - `lib/theme/theme_registry.dart` with `ThemeDefinition`, `blueTheme` (`guildBoard`, `daylight`), `themeRegistry`, `activeThemeIdProvider`; rename `QuestPalette` to `AppPalette`
-    - `ZaflingApp` builds `theme` and `darkTheme` from the active definition; the Drawer and the status bar follow it
+    - `DayLogApp` builds `theme` and `darkTheme` from the active definition; the Drawer and the status bar follow it
     - Test: the registry holds the blue theme, every palette defines every role, and the provider returns the blue id
     - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
   - [x] 5.2 Settings groups and shared language and theme
     - Keep the QuestLog groups; add empty-group slots for the Time_Module settings that spec `002` fills
-    - `language` and `themeMode` live in `app_state`; `ZaflingApp` reads both
+    - `language` and `themeMode` live in `app_state`; `DayLogApp` reads both
     - _Requirements: 6.1, 6.2, 6.3, 6.6_
 
   - [x]* 5.3 Write the ARB parity test
@@ -118,7 +118,7 @@ Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its fil
 - [x] 6. Database, export, docs and gate
   - [x] 6.1 Reset the schema to version 1
     - New `schemaVersion = 1` with `onCreate: createAll`; no upgrade steps; delete the QuestLog schema dumps and write the new `drift_schemas/drift_schema_v1.json`
-    - File name `zafling.sqlite`; calendar seed runs once on create
+    - File name `daylog.sqlite`; calendar seed runs once on create
     - _Requirements: 2.1, 2.4, 2.5, 2.6_
 
   - [x]* 6.2 Write the Database tests
@@ -127,7 +127,7 @@ Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its fil
     - **Validates: Requirements 2.2, 2.3, 2.5, 10.2**
 
   - [x] 6.2a Extend the export
-    - `lib/database/export/` writes all tables and the SharedPreferences (as in TimeLog's `ExportService`), format `zafling-export`, file `zafling-export-YYYY-MM-DD.json`
+    - `lib/database/export/` writes all tables and the SharedPreferences (as in TimeLog's `ExportService`), format `daylog-export`, file `daylog-export-YYYY-MM-DD.json`
     - Port the QuestLog and TimeLog export tests; add one for the preferences
     - _Requirements: 6.4, 6.5_
 

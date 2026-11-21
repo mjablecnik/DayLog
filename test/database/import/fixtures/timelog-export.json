@@ -20,7 +20,7 @@
         "end_time": "2026-11-19T09:30:00.000",
         "description": "Spec 001",
         "activity_type": "Práce",
-        "project": "Zafling",
+        "project": "DayLog",
         "entertainment_type": null,
         "subtype": "paid",
         "custom_name": null,
@@ -109,7 +109,7 @@
   "preferences": {
     "app_language": "cs",
     "known_projects_workPaid": [
-      "Zafling",
+      "DayLog",
       "WorkLog"
     ],
     "last_activity_type": "Práce",

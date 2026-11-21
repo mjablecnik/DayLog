@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This spec brings the data of the two old apps into Zafling. Each Legacy_App has a Settings action "Export data" (QuestLog 1.5.0, TimeLog 1.2.0) that writes one JSON file with every table as stored plus a header with row counts; TimeLog also exports its SharedPreferences. The App reads those files and loads them into its Database.
+This spec brings the data of the two old apps into DayLog. Each Legacy_App has a Settings action "Export data" (QuestLog 1.5.0, TimeLog 1.2.0) that writes one JSON file with every table as stored plus a header with row counts; TimeLog also exports its SharedPreferences. The App reads those files and loads them into its Database.
 
 The import is a one-off migration tool. It is part of Settings → Data so that it can run on the iPhone, where the exports are, and it can be removed in a later spec once both Legacy_Apps are retired. It adds no other function. It depends on specs `001-app-foundation` and `002-time-tracking-port`, because the target tables must exist.
 
@@ -10,7 +10,7 @@ The import is a one-off migration tool. It is part of Settings → Data so that 
 
 - **Retired_Column**: A column that a Legacy_App wrote and the Database no longer has, listed in `retiredColumns` of the Importer.
 - **Importer**: The code in `lib/database/import/` that reads an Export_File and writes the Database.
-- **Export_File**: A JSON file with `format` equal to `questlog-export`, `timelog-export` or `zafling-export`, produced by a Legacy_App or by the App itself.
+- **Export_File**: A JSON file with `format` equal to `questlog-export`, `timelog-export` or `daylog-export`, produced by a Legacy_App or by the App itself.
 - **Export_Header**: The keys `format`, `formatVersion`, `app`, `appVersion`, `schemaVersion`, `exportedAt`, `rowCounts` of an Export_File.
 - **Row_Counts**: The map from table name to the number of rows in the Export_File.
 - **Import_Report**: The result of an import: per table the rows read, rows written and rows expected.
@@ -31,7 +31,7 @@ The import is a one-off migration tool. It is part of Settings → Data so that 
 
 1. THE Settings_Data_Group SHALL provide an action "Import data" that opens the system file picker for a `.json` file.
 2. WHEN the user picks a file, THE Importer SHALL read it and validate the Export_Header before changing anything.
-3. IF `format` is not `questlog-export`, `timelog-export` or `zafling-export`, THEN THE Importer SHALL refuse the file and leave the Database unchanged.
+3. IF `format` is not `questlog-export`, `timelog-export` or `daylog-export`, THEN THE Importer SHALL refuse the file and leave the Database unchanged.
 4. IF `formatVersion` is greater than the highest version the Importer knows, THEN THE Importer SHALL refuse the file and leave the Database unchanged.
 5. IF the file is not valid JSON or lacks `tables` or `rowCounts`, THEN THE Importer SHALL refuse the file and leave the Database unchanged.
 6. IF the file names a table the Database does not have, or a column a table does not have, THEN THE Importer SHALL refuse the file, name the table or column, and leave the Database unchanged, except for a retired column.
@@ -96,14 +96,14 @@ The import is a one-off migration tool. It is part of Settings → Data so that 
 5. THE Importer SHALL NOT write the Time_Preferences keys of a pending reminder tap (`pending_reminder_action_id`, `handled_launch_reminder_id`) or of the persisted timer (every key that starts with `timer_`), because a running timer of another install means nothing here.
 6. IF writing the SharedPreferences fails, THEN THE Importer SHALL report it and leave the Database rows imported.
 
-### Requirement 7: Zafling export
+### Requirement 7: DayLog export
 
 **User Story:** As the user, I want to restore a backup made by the App itself, so that a new phone does not lose data.
 
 #### Acceptance Criteria
 
-1. WHEN a `zafling-export` file is imported, THE Importer SHALL replace every table named in the file and write the Time_Preferences with the same rules as for a `timelog-export` file.
-2. WHEN a `zafling-export` file contains `app_language` or `selected_theme`, THE Importer SHALL ignore them, because the language and theme live in `app_state`.
+1. WHEN a `daylog-export` file is imported, THE Importer SHALL replace every table named in the file and write the Time_Preferences with the same rules as for a `timelog-export` file.
+2. WHEN a `daylog-export` file contains `app_language` or `selected_theme`, THE Importer SHALL ignore them, because the language and theme live in `app_state`.
 
 ### Requirement 8: Isolation
 

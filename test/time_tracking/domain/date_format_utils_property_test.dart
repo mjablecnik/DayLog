@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:zafling/time_tracking/domain/date_format_utils.dart';
+import 'package:daylog/time_tracking/domain/date_format_utils.dart';
 
 // Feature: task-management, Property 8: Date formatting
 //

@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/database/import/import_providers.dart';
-import 'package:zafling/database/providers.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/settings/ui/import_row.dart';
-import 'package:zafling/theme/app_theme.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/database/import/import_providers.dart';
+import 'package:daylog/database/providers.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/settings/ui/import_row.dart';
+import 'package:daylog/theme/app_theme.dart';
+import 'package:daylog/theme/tokens.dart';
 
 import '../../helpers/test_database.dart';
 

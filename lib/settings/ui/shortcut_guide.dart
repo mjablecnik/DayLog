@@ -10,7 +10,7 @@ import '../../ui_kit/common/app_segmented.dart';
 import '../../ui_kit/common/snackbar_host.dart';
 
 /// A page the guide can make a Home Screen icon for: the name in its
-/// `zafling://<name>` link and its localized label.
+/// `daylog://<name>` link and its localized label.
 @immutable
 class ShortcutTarget {
   const ShortcutTarget({required this.linkName, required this.label});
@@ -19,8 +19,8 @@ class ShortcutTarget {
   final String label;
 }
 
-/// Settings guide for a Home Screen icon that opens Zafling on a chosen page:
-/// pick the page, copy its `zafling://` link, follow the Shortcuts steps.
+/// Settings guide for a Home Screen icon that opens DayLog on a chosen page:
+/// pick the page, copy its `daylog://` link, follow the Shortcuts steps.
 ///
 /// Collapsed to one row by default so it does not push the rest of Settings
 /// down. The pages come from the shell, which also reads the links, so the two

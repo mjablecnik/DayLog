@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/l10n/app_localizations_en.dart';
-import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/shell/bottom_bar.dart';
-import 'package:zafling/shell/destination.dart';
-import 'package:zafling/calendar/ui/widgets/event_task_card.dart';
+import 'package:daylog/l10n/app_localizations_en.dart';
+import 'package:daylog/quests/services/providers.dart';
+import 'package:daylog/shell/bottom_bar.dart';
+import 'package:daylog/shell/destination.dart';
+import 'package:daylog/calendar/ui/widgets/event_task_card.dart';
 
 import '../a11y/_a11y_harness.dart';
 

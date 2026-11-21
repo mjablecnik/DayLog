@@ -2,16 +2,16 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/database/providers.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/time_tracking/data/time_tracking_queries.dart';
-import 'package:zafling/time_tracking/domain/config.dart';
-import 'package:zafling/time_tracking/ui/screens/history_screen.dart';
-import 'package:zafling/time_tracking/ui/screens/reminder_action_screen.dart';
-import 'package:zafling/time_tracking/ui/screens/reminder_settings_screen.dart';
-import 'package:zafling/time_tracking/ui/screens/statistics_screen.dart';
-import 'package:zafling/time_tracking/ui/screens/timer_screen.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/database/providers.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/time_tracking/data/time_tracking_queries.dart';
+import 'package:daylog/time_tracking/domain/config.dart';
+import 'package:daylog/time_tracking/ui/screens/history_screen.dart';
+import 'package:daylog/time_tracking/ui/screens/reminder_action_screen.dart';
+import 'package:daylog/time_tracking/ui/screens/reminder_settings_screen.dart';
+import 'package:daylog/time_tracking/ui/screens/statistics_screen.dart';
+import 'package:daylog/time_tracking/ui/screens/timer_screen.dart';
 
 import '../../../helpers/test_database.dart';
 import '../../../helpers/time_theme.dart';
@@ -71,7 +71,7 @@ void main() {
             description: 'Write the spec',
             activityType: const Value('Práce'),
             subtype: const Value('paid'),
-            project: const Value('Zafling'),
+            project: const Value('DayLog'),
           ),
         );
   }

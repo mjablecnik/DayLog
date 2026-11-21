@@ -2,8 +2,8 @@ import ActivityKit
 import Flutter
 import Foundation
 
-// Shared attributes struct - must match the identical struct in ZaflingWidgetExtension
-struct ZaflingAttributes: ActivityAttributes {
+// Shared attributes struct - must match the identical struct in DayLogWidgetExtension
+struct DayLogAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         var endAt: Date
         var isPaused: Bool
@@ -15,7 +15,7 @@ struct ZaflingAttributes: ActivityAttributes {
 
 @available(iOS 16.2, *)
 class LiveActivityManager {
-    private var currentActivity: Activity<ZaflingAttributes>?
+    private var currentActivity: Activity<DayLogAttributes>?
     private weak var channel: FlutterMethodChannel?
 
     init(channel: FlutterMethodChannel) {
@@ -25,8 +25,8 @@ class LiveActivityManager {
     func startLiveActivity(endAt: Date, totalSeconds: Int) -> Bool {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return false }
 
-        let attributes = ZaflingAttributes(totalSeconds: totalSeconds)
-        let state = ZaflingAttributes.ContentState(
+        let attributes = DayLogAttributes(totalSeconds: totalSeconds)
+        let state = DayLogAttributes.ContentState(
             endAt: endAt,
             isPaused: false,
             pausedSecondsLeft: nil,
@@ -34,7 +34,7 @@ class LiveActivityManager {
         )
         do {
             let staleDate = endAt.addingTimeInterval(60)
-            currentActivity = try Activity<ZaflingAttributes>.request(
+            currentActivity = try Activity<DayLogAttributes>.request(
                 attributes: attributes,
                 content: .init(state: state, staleDate: staleDate),
                 pushType: nil
@@ -50,11 +50,11 @@ class LiveActivityManager {
         guard let activity = currentActivity else { return }
         Task {
             let current = activity.content.state
-            let newState: ZaflingAttributes.ContentState
+            let newState: DayLogAttributes.ContentState
             switch action {
             case "pause":
                 let remaining = max(0, Int(current.endAt.timeIntervalSinceNow))
-                newState = ZaflingAttributes.ContentState(
+                newState = DayLogAttributes.ContentState(
                     endAt: current.endAt,
                     isPaused: true,
                     pausedSecondsLeft: remaining,
@@ -64,7 +64,7 @@ class LiveActivityManager {
                 // endAt is passed separately via updateLiveActivityWithEndAt
                 return
             case "complete":
-                newState = ZaflingAttributes.ContentState(
+                newState = DayLogAttributes.ContentState(
                     endAt: current.endAt,
                     isPaused: false,
                     pausedSecondsLeft: nil,
@@ -80,7 +80,7 @@ class LiveActivityManager {
     func updateLiveActivityResume(newEndAt: Date) {
         guard let activity = currentActivity else { return }
         Task {
-            let newState = ZaflingAttributes.ContentState(
+            let newState = DayLogAttributes.ContentState(
                 endAt: newEndAt,
                 isPaused: false,
                 pausedSecondsLeft: nil,

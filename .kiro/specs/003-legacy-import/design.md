@@ -146,7 +146,7 @@ The Export_File layout (from the export code):
 }
 ```
 
-`preferences` exists in `timelog-export` and `zafling-export`. Values keep SQLite types: dates are integers or text exactly as stored.
+`preferences` exists in `timelog-export` and `daylog-export`. Values keep SQLite types: dates are integers or text exactly as stored.
 
 ## Correctness Properties
 
@@ -205,5 +205,5 @@ All messages are Czech and English through `AppLocalizations` keys prefixed `imp
 - **Unit tests** (`flutter_test`): `ExportFile.parse` per refusal, `ImportPlan` per unknown name, `writePreferences` per type and ignored key.
 - **Property tests**: Properties 1–6 with generated rows (`dart:math` seeded generator, 100 cases) against `AppDatabase.forTesting(NativeDatabase.memory())`.
 - **Fixtures**: `test/database/import/fixtures/` hold export files produced by running the Legacy_Apps' own export functions on a populated test database (QuestLog and TimeLog repositories at the frozen tags); generated once and committed.
-- **Real data**: a test marked `@Tags(['real-data'])` reads `/workspace/Zafling/.import/*.json` (gitignored) when present and is skipped otherwise.
+- **Real data**: a test marked `@Tags(['real-data'])` reads `/workspace/DayLog/.import/*.json` (gitignored) when present and is skipped otherwise.
 - **Not testable here**: the iOS file picker and share-sheet transfer; Martin checks them on the iPhone.

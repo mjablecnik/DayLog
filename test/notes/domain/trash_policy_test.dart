@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
-import 'package:zafling/notes/domain/note_dates.dart';
-import 'package:zafling/notes/domain/trash_policy.dart';
+import 'package:daylog/notes/domain/note_dates.dart';
+import 'package:daylog/notes/domain/trash_policy.dart';
 
 void main() {
   final DateTime t = DateTime(2026, 11, 1, 10, 30);

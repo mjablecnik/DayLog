@@ -1,5 +1,5 @@
 import 'package:glados/glados.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
 
 void main() {
   group('XP values', () {

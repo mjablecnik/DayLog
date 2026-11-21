@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get app_name => 'Zafling';
+  String get app_name => 'DayLog';
 
   @override
   String get app_splashLoading => 'Preparing your board…';
@@ -1594,7 +1594,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_shortcutSubtitle =>
-      'Open Zafling on the screen you choose with a single tap.';
+      'Open DayLog on the screen you choose with a single tap.';
 
   @override
   String get settings_shortcutPickLabel => 'Which screen should the icon open?';
@@ -2153,7 +2153,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_importSubtitle =>
-      'Loads an export file of QuestLog, TimeLog or Zafling.';
+      'Loads an export file of QuestLog, TimeLog or DayLog.';
 
   @override
   String get settings_importConfirmTitle => 'Replace the data?';
@@ -2194,7 +2194,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_importFailedWrongFormat =>
-      'This file is not an export of QuestLog, TimeLog or Zafling.';
+      'This file is not an export of QuestLog, TimeLog or DayLog.';
 
   @override
   String get settings_importFailedNewerFormat =>

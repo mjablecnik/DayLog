@@ -31,7 +31,7 @@ graph TD
 
 Timer lifecycle is unchanged: `idle → running ⇄ paused → ringing → idle`. On start the Timer_Service starts the Live_Activity and schedules the native notification; on pause it updates the activity; on stop or ring it ends them and the description sheet saves the Time_Entry through `DatabaseService`.
 
-Reminder taps arrive through `flutter_local_notifications`. The handler stores the reminder id in SharedPreferences and in `pendingReminderActionProvider`; the Shell's `ReminderActionHost` opens the `ReminderActionScreen` on the next frame or on resume. The Live Activity controls call `zafling://action/...`; `AppDelegate.swift` receives them and forwards to the timer through the existing method channel.
+Reminder taps arrive through `flutter_local_notifications`. The handler stores the reminder id in SharedPreferences and in `pendingReminderActionProvider`; the Shell's `ReminderActionHost` opens the `ReminderActionScreen` on the next frame or on resume. The Live Activity controls call `daylog://action/...`; `AppDelegate.swift` receives them and forwards to the timer through the existing method channel.
 
 ## Project Structure
 
@@ -51,7 +51,7 @@ lib/time_tracking/
     ├── activity_picker/
     └── painters/                    # bar, ring, timeline
 ios/Runner/                          # AppDelegate.swift, LiveActivityManager.swift (from spec 001; identifiers renamed here)
-ios/ZaflingWidgetExtension/          # Live Activity extension (was TimeLogWidgetExtension)
+ios/DayLogWidgetExtension/          # Live Activity extension (was TimeLogWidgetExtension)
 assets/audio/alarm.mp3
 assets/fonts/{Sora,JetBrainsMono}/
 ```
@@ -111,10 +111,10 @@ TimeLog widgets keep reading `AppThemeData` fields, so they are not rewritten; t
 
 The `ios/` folder comes from TimeLog `v1.2.0` in spec `001-app-foundation` (it holds the extension target). This spec renames the remaining identifiers and checks the behaviour:
 
-- Method channels `com.jablecnik.timelog/…` become `com.jablecnik.zafling/…` in `AppDelegate.swift`, `platform_channel.dart`; the Darwin notification `com.jablecnik.timelog.action` becomes `com.jablecnik.zafling.action` in the Runner and in `ZaflingIntents.swift`.
-- `application(_:open:options:)` handles only `scheme == "zafling"` and `host == "action"`; everything else calls `super`, so `app_links` receives `zafling://timer`, `zafling://quests` and the other Destination links. `FlutterDeepLinkingEnabled` stays on.
-- App Group constant `group.com.jablecnik.zafling` in Runner, extension, both entitlements.
-- `ZaflingWidgetExtension` keeps its four Swift files; `Link` URLs use `zafling://action/<stop|pause|resume>`.
+- Method channels `com.jablecnik.timelog/…` become `com.jablecnik.daylog/…` in `AppDelegate.swift`, `platform_channel.dart`; the Darwin notification `com.jablecnik.timelog.action` becomes `com.jablecnik.daylog.action` in the Runner and in `DayLogIntents.swift`.
+- `application(_:open:options:)` handles only `scheme == "daylog"` and `host == "action"`; everything else calls `super`, so `app_links` receives `daylog://timer`, `daylog://quests` and the other Destination links. `FlutterDeepLinkingEnabled` stays on.
+- App Group constant `group.com.jablecnik.daylog` in Runner, extension, both entitlements.
+- `DayLogWidgetExtension` keeps its four Swift files; `Link` URLs use `daylog://action/<stop|pause|resume>`.
 - `alarm.caf`, `alarm.mp3` and `reminder_sound.wav` stay in `ios/Runner/`.
 
 ## Data Models

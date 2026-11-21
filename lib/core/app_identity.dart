@@ -1,2 +1,2 @@
-/// The URL scheme of the app: `zafling://<destination>` opens a page.
-const String appLinkScheme = 'zafling';
+/// The URL scheme of the app: `daylog://<destination>` opens a page.
+const String appLinkScheme = 'daylog';

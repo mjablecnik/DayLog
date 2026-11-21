@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/database/preferences.dart';
-import 'package:zafling/database/providers.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/quests/services/providers.dart' show settingsProvider;
-import 'package:zafling/settings/settings_loader.dart';
+import 'package:daylog/database/preferences.dart';
+import 'package:daylog/database/providers.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/quests/services/providers.dart' show settingsProvider;
+import 'package:daylog/settings/settings_loader.dart';
 
 import '../helpers/test_database.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
-import 'package:zafling/notes/ui/screens/note_editor/note_markdown.dart';
+import 'package:daylog/notes/ui/screens/note_editor/note_markdown.dart';
 import 'package:super_editor/super_editor.dart';
 
 /// What the editor shows: the kind of every block and its text.

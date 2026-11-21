@@ -6,14 +6,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart' show FontLoader;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/notes/domain/note_node.dart';
-import 'package:zafling/notes/domain/note_tree.dart';
-import 'package:zafling/notes/services/notes_providers.dart';
-import 'package:zafling/notes/ui/screens/notes/breadcrumb.dart';
-import 'package:zafling/notes/ui/screens/notes/folder_row.dart';
-import 'package:zafling/notes/ui/screens/notes/note_row.dart';
-import 'package:zafling/notes/ui/screens/notes/notes_screen.dart';
-import 'package:zafling/notes/ui/state/notes_state.dart';
+import 'package:daylog/notes/domain/note_node.dart';
+import 'package:daylog/notes/domain/note_tree.dart';
+import 'package:daylog/notes/services/notes_providers.dart';
+import 'package:daylog/notes/ui/screens/notes/breadcrumb.dart';
+import 'package:daylog/notes/ui/screens/notes/folder_row.dart';
+import 'package:daylog/notes/ui/screens/notes/note_row.dart';
+import 'package:daylog/notes/ui/screens/notes/notes_screen.dart';
+import 'package:daylog/notes/ui/state/notes_state.dart';
 
 import '../_notes_harness.dart';
 

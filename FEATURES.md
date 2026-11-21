@@ -1,9 +1,9 @@
-# Zafling — Features
+# DayLog — Features
 
 The full list of what the app does. For a short overview see [README.md](./README.md); for
 internals see [DOCS.md](./DOCS.md).
 
-Zafling is one personal app for one user, built with Flutter for iOS first (the Linux desktop build is used
+DayLog is one personal app for one user, built with Flutter for iOS first (the Linux desktop build is used
 for development and tests). It is the merger of TimeLog and QuestLog and adds no feature of its own except
 loading the data of the two old apps.
 
@@ -13,7 +13,7 @@ loading the data of the two old apps.
 - A side drawer with the complete navigation: **Timer**, **History**, **Statistics** (group Time), **Quests**,
   **Missions**, **Calendar**, **Notes** (group Planning) and **Settings**, opened with the menu button in the
   header of every page. While History or Statistics is shown, the bar marks Timer; for Missions it marks Quests.
-- A link such as `zafling://timer` opens a page: `timer`, `history`, `statistics`, `quests`, `missions`,
+- A link such as `daylog://timer` opens a page: `timer`, `history`, `statistics`, `quests`, `missions`,
   `calendar`, `notes` or `settings`. A Home Screen icon from the Shortcuts app can open any of them.
 
 ## Timer, History and Statistics
@@ -70,7 +70,7 @@ loading the data of the two old apps.
 - One theme, the blue one, in a dark and a light variant; further themes are one more entry in a registry.
 - **Export**: Settings → Data → Export data saves every table and the stored preferences into one JSON file and
   opens the share sheet.
-- **Import**: Settings → Data → Import data loads an export file of QuestLog, TimeLog or Zafling, shows what it
+- **Import**: Settings → Data → Import data loads an export file of QuestLog, TimeLog or DayLog, shows what it
   replaces and asks first. It runs in one transaction and compares the row counts before it commits.
 - **Local only**: the data lives in one SQLite file on the device through Drift. There is no server, no account and
   no network access.

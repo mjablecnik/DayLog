@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/theme/app_theme.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/theme/app_theme.dart';
+import 'package:daylog/theme/tokens.dart';
 
 /// Pumps [child] inside a themed, localized app with a Scaffold.
 Future<void> pumpCommon(

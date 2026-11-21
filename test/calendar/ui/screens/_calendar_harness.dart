@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/core/event_type.dart';
-import 'package:zafling/calendar/domain/repeat_rule.dart';
-import 'package:zafling/calendar/data/calendar_filter_store.dart';
-import 'package:zafling/calendar/data/calendar_models.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/l10n/app_localizations_en.dart';
-import 'package:zafling/calendar/services/calendar_providers.dart';
-import 'package:zafling/calendar/services/calendar_service.dart';
-import 'package:zafling/theme/app_theme.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/core/event_type.dart';
+import 'package:daylog/calendar/domain/repeat_rule.dart';
+import 'package:daylog/calendar/data/calendar_filter_store.dart';
+import 'package:daylog/calendar/data/calendar_models.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/l10n/app_localizations_en.dart';
+import 'package:daylog/calendar/services/calendar_providers.dart';
+import 'package:daylog/calendar/services/calendar_service.dart';
+import 'package:daylog/theme/app_theme.dart';
+import 'package:daylog/theme/tokens.dart';
 
-import 'package:zafling/quests/services/xp_engine.dart' as xp_engine;
+import 'package:daylog/quests/services/xp_engine.dart' as xp_engine;
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
-import 'package:zafling/database/providers.dart';
-import 'package:zafling/core/clock_provider.dart';
+import 'package:daylog/database/providers.dart';
+import 'package:daylog/core/clock_provider.dart';
 
 DateTime d(int y, int m, int day) => DateTime(y, m, day);
 

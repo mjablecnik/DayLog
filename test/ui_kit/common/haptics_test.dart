@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/ui_kit/common/haptics.dart';
+import 'package:daylog/ui_kit/common/haptics.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

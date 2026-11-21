@@ -5,8 +5,8 @@ import 'package:flutter/gestures.dart' show kPressTimeout;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/theme/app_theme.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/theme/app_theme.dart';
+import 'package:daylog/theme/tokens.dart';
 
 /// Changed 2026-11-18 at Martin's request: a touch leaves no splash, highlight
 /// or hover tint on any control. State is shown by selection or an in-place

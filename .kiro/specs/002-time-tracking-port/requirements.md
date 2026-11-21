@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This spec moves the features of TimeLog (`/workspace/TimeLog/timelog_app`, tag `v1.2.0`, Drift schema 8) into the Zafling project created by spec `001-app-foundation`. TimeLog is a countdown timer with time tracking: a Timer screen with an alarm, a Live Activity and a completion notification, entries with activity types, subtypes and project names, a History screen, a Statistics screen, a daily reminder and recurring reminders with a reminder action screen.
+This spec moves the features of TimeLog (`/workspace/TimeLog/timelog_app`, tag `v1.2.0`, Drift schema 8) into the DayLog project created by spec `001-app-foundation`. TimeLog is a countdown timer with time tracking: a Timer screen with an alarm, a Live Activity and a completion notification, entries with activity types, subtypes and project names, a History screen, a Statistics screen, a daily reminder and recurring reminders with a reminder action screen.
 
 This is a pure move: behaviour, texts and look stay as in TimeLog 1.2.0. TimeLog is on Riverpod 2 and the App on Riverpod 3, so providers keep their shape and import the legacy API where needed; they are not redesigned. The old Tasks screen is not reachable in TimeLog and is not ported, but its tables and services stay because project name suggestions depend on them. The native iOS code (Live Activity, widget extension, notification channel) moves with its behaviour unchanged.
 
@@ -94,11 +94,11 @@ This is a pure move: behaviour, texts and look stay as in TimeLog 1.2.0. TimeLog
 #### Acceptance Criteria
 
 1. WHILE the timer runs, THE Live_Activity SHALL show the remaining time with stop, pause and resume controls, on iOS 16.2 and later.
-2. WHEN a Live_Activity control is tapped, THE App SHALL receive `zafling://action/<pause|resume|stop>` in the native URL handler, forward it to the Timer_Service through the platform channel, and SHALL pass every other `zafling://` link to the deep-link handler of the Shell.
+2. WHEN a Live_Activity control is tapped, THE App SHALL receive `daylog://action/<pause|resume|stop>` in the native URL handler, forward it to the Timer_Service through the platform channel, and SHALL pass every other `daylog://` link to the deep-link handler of the Shell.
 3. WHEN a Live_Activity intent writes a pending action to the App Group, THE App SHALL apply it on the next Darwin notification and on every return to the foreground.
 4. IF Live Activities are disabled or unsupported, THEN THE Time_Module SHALL continue without error and without a message.
 5. THE Time_Module SHALL schedule a native notification for the end of the countdown and cancel it when the countdown ends early.
-6. THE Live_Activity extension, the platform channel names and the Darwin notification name SHALL use identifiers derived from `zafling` and none of Legacy_Timelog, so a Legacy_App installed beside the App does not react to them.
+6. THE Live_Activity extension, the platform channel names and the Darwin notification name SHALL use identifiers derived from `daylog` and none of Legacy_Timelog, so a Legacy_App installed beside the App does not react to them.
 7. THE Time_Module SHALL guard every platform channel call so that a platform without the channel (Linux, tests) does not fail.
 
 ### Requirement 7: Data in the Database

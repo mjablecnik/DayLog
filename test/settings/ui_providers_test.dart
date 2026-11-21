@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/database/preferences.dart';
-import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/settings/ui_providers.dart';
+import 'package:daylog/database/preferences.dart';
+import 'package:daylog/quests/services/providers.dart';
+import 'package:daylog/settings/ui_providers.dart';
 
 import '../helpers/test_database.dart';
-import 'package:zafling/database/providers.dart';
+import 'package:daylog/database/providers.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -4,13 +4,13 @@ import WidgetKit
 
 // MARK: - Lock screen view
 
-struct ZaflingLockScreenView: View {
-    let context: ActivityViewContext<ZaflingAttributes>
+struct DayLogLockScreenView: View {
+    let context: ActivityViewContext<DayLogAttributes>
 
     var body: some View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Zafling")
+                Text("DayLog")
                     .font(.caption2)
                     .foregroundColor(Color(hex: "#EEE6DC").opacity(0.5))
                 timerLabel
@@ -46,7 +46,7 @@ struct ZaflingLockScreenView: View {
     @ViewBuilder
     private var controlButtons: some View {
         if context.state.isCompleted {
-            Link(destination: URL(string: "zafling://action/stop")!) {
+            Link(destination: URL(string: "daylog://action/stop")!) {
                 Image(systemName: "xmark.circle.fill")
                     .font(.system(size: 38))
                     .foregroundColor(Color(hex: "#E88A66"))
@@ -54,13 +54,13 @@ struct ZaflingLockScreenView: View {
             .frame(minWidth: 60, minHeight: 60)
         } else if context.state.isPaused {
             HStack(spacing: 4) {
-                Link(destination: URL(string: "zafling://action/resume")!) {
+                Link(destination: URL(string: "daylog://action/resume")!) {
                     Image(systemName: "play.circle.fill")
                         .font(.system(size: 38))
                         .foregroundColor(Color(hex: "#E88A66"))
                 }
                 .frame(minWidth: 60, minHeight: 60)
-                Link(destination: URL(string: "zafling://action/stop")!) {
+                Link(destination: URL(string: "daylog://action/stop")!) {
                     Image(systemName: "stop.circle.fill")
                         .font(.system(size: 38))
                         .foregroundColor(Color(hex: "#EEE6DC").opacity(0.4))
@@ -69,13 +69,13 @@ struct ZaflingLockScreenView: View {
             }
         } else {
             HStack(spacing: 4) {
-                Link(destination: URL(string: "zafling://action/pause")!) {
+                Link(destination: URL(string: "daylog://action/pause")!) {
                     Image(systemName: "pause.circle.fill")
                         .font(.system(size: 38))
                         .foregroundColor(Color(hex: "#E88A66"))
                 }
                 .frame(minWidth: 60, minHeight: 60)
-                Link(destination: URL(string: "zafling://action/stop")!) {
+                Link(destination: URL(string: "daylog://action/stop")!) {
                     Image(systemName: "stop.circle.fill")
                         .font(.system(size: 38))
                         .foregroundColor(Color(hex: "#EEE6DC").opacity(0.4))
@@ -88,17 +88,17 @@ struct ZaflingLockScreenView: View {
 
 // MARK: - Widget
 
-struct ZaflingLiveActivity: Widget {
+struct DayLogLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: ZaflingAttributes.self) { context in
-            ZaflingLockScreenView(context: context)
+        ActivityConfiguration(for: DayLogAttributes.self) { context in
+            DayLogLockScreenView(context: context)
                 .activityBackgroundTint(Color(hex: "#1A1310"))
                 .activitySystemActionForegroundColor(Color(hex: "#E88A66"))
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     Label {
-                        Text("Zafling")
+                        Text("DayLog")
                             .font(.caption2)
                     } icon: {
                         Image(systemName: "timer")
@@ -134,7 +134,7 @@ struct ZaflingLiveActivity: Widget {
     }
 
     @ViewBuilder
-    private func expandedCountdown(context: ActivityViewContext<ZaflingAttributes>) -> some View {
+    private func expandedCountdown(context: ActivityViewContext<DayLogAttributes>) -> some View {
         if context.state.isCompleted {
             Text("Done!")
                 .font(.system(.headline, design: .rounded))
@@ -154,32 +154,32 @@ struct ZaflingLiveActivity: Widget {
     }
 
     @ViewBuilder
-    private func expandedControls(context: ActivityViewContext<ZaflingAttributes>) -> some View {
+    private func expandedControls(context: ActivityViewContext<DayLogAttributes>) -> some View {
         HStack(spacing: 24) {
             if context.state.isCompleted {
-                Link(destination: URL(string: "zafling://action/stop")!) {
+                Link(destination: URL(string: "daylog://action/stop")!) {
                     Label("Dismiss", systemImage: "xmark.circle")
                         .font(.caption)
                         .foregroundColor(Color(hex: "#E88A66"))
                 }
             } else if context.state.isPaused {
-                Link(destination: URL(string: "zafling://action/resume")!) {
+                Link(destination: URL(string: "daylog://action/resume")!) {
                     Label("Resume", systemImage: "play.circle")
                         .font(.caption)
                         .foregroundColor(Color(hex: "#E88A66"))
                 }
-                Link(destination: URL(string: "zafling://action/stop")!) {
+                Link(destination: URL(string: "daylog://action/stop")!) {
                     Label("Stop", systemImage: "stop.circle")
                         .font(.caption)
                         .foregroundColor(Color(hex: "#EEE6DC").opacity(0.5))
                 }
             } else {
-                Link(destination: URL(string: "zafling://action/pause")!) {
+                Link(destination: URL(string: "daylog://action/pause")!) {
                     Label("Pause", systemImage: "pause.circle")
                         .font(.caption)
                         .foregroundColor(Color(hex: "#E88A66"))
                 }
-                Link(destination: URL(string: "zafling://action/stop")!) {
+                Link(destination: URL(string: "daylog://action/stop")!) {
                     Label("Stop", systemImage: "stop.circle")
                         .font(.caption)
                         .foregroundColor(Color(hex: "#EEE6DC").opacity(0.5))
@@ -190,7 +190,7 @@ struct ZaflingLiveActivity: Widget {
     }
 
     @ViewBuilder
-    private func compactTrailing(context: ActivityViewContext<ZaflingAttributes>) -> some View {
+    private func compactTrailing(context: ActivityViewContext<DayLogAttributes>) -> some View {
         if context.state.isCompleted {
             Image(systemName: "checkmark.circle.fill")
                 .foregroundColor(.green)

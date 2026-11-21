@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// Application name shown on the splash and in the About group.
   ///
   /// In cs, this message translates to:
-  /// **'Zafling'**
+  /// **'DayLog'**
   String get app_name;
 
   /// Text under the logo on the splash screen while the database opens and Reconciliation runs.
@@ -2429,7 +2429,7 @@ abstract class AppLocalizations {
   /// Hint under the guide title.
   ///
   /// In cs, this message translates to:
-  /// **'Otevři Zafling jedním klepnutím rovnou na vybrané obrazovce.'**
+  /// **'Otevři DayLog jedním klepnutím rovnou na vybrané obrazovce.'**
   String get settings_shortcutSubtitle;
 
   /// Label above the choice of the screen the shortcut opens.
@@ -3461,7 +3461,7 @@ abstract class AppLocalizations {
   /// Subtitle of the import row.
   ///
   /// In cs, this message translates to:
-  /// **'Načte soubor exportu z QuestLogu, TimeLogu nebo ze Zaflingu.'**
+  /// **'Načte soubor exportu z QuestLogu, TimeLogu nebo ze DayLogu.'**
   String get settings_importSubtitle;
 
   /// Title of the dialog that asks before an import replaces data.
@@ -3520,7 +3520,7 @@ abstract class AppLocalizations {
   /// Import error: unknown format.
   ///
   /// In cs, this message translates to:
-  /// **'Tento soubor není export z QuestLogu, TimeLogu ani ze Zaflingu.'**
+  /// **'Tento soubor není export z QuestLogu, TimeLogu ani ze DayLogu.'**
   String get settings_importFailedWrongFormat;
 
   /// Import error: newer format version.

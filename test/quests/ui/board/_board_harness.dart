@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/core/errors.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/quests/services/quest_service.dart';
-import 'package:zafling/quests/services/xp_engine.dart';
-import 'package:zafling/quests/ui/board/board_screen.dart';
-import 'package:zafling/theme/app_theme.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/core/errors.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/quests/services/providers.dart';
+import 'package:daylog/quests/services/quest_service.dart';
+import 'package:daylog/quests/services/xp_engine.dart';
+import 'package:daylog/quests/ui/board/board_screen.dart';
+import 'package:daylog/theme/app_theme.dart';
+import 'package:daylog/theme/tokens.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
-import 'package:zafling/database/providers.dart';
-import 'package:zafling/core/clock_provider.dart';
+import 'package:daylog/database/providers.dart';
+import 'package:daylog/core/clock_provider.dart';
 
 /// A [QuestService] that records reorder calls and can be told to fail.
 class SpyQuestService extends QuestService {

@@ -11,7 +11,7 @@ enum EventType {
   seminar('seminar'),
   lesson('lesson'),
 
-  /// The event of a Quest's Deadline; made by the Zafling_App, not offered as a default.
+  /// The event of a Quest's Deadline; made by the DayLog_App, not offered as a default.
   quest('quest');
 
   const EventType(this.key);

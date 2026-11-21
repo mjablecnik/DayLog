@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
-import 'package:zafling/quests/domain/cadence.dart';
-import 'package:zafling/calendar/domain/calendar_dates.dart';
-import 'package:zafling/calendar/domain/easter.dart';
-import 'package:zafling/core/event_type.dart';
-import 'package:zafling/calendar/domain/repeat_rule.dart';
+import 'package:daylog/quests/domain/cadence.dart';
+import 'package:daylog/calendar/domain/calendar_dates.dart';
+import 'package:daylog/calendar/domain/easter.dart';
+import 'package:daylog/core/event_type.dart';
+import 'package:daylog/calendar/domain/repeat_rule.dart';
 
 import '../../helpers/generators.dart';
 

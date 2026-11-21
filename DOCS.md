@@ -1,18 +1,18 @@
-# Zafling — Documentation
+# DayLog — Documentation
 
-Reference material for working on Zafling. For what the app is and how to start it, see
+Reference material for working on DayLog. For what the app is and how to start it, see
 [README.md](./README.md); for the full feature list, [FEATURES.md](./FEATURES.md); for the history of the
 releases, [CHANGELOG.md](./CHANGELOG.md).
 
 ## Environment Variables
 
-None. Zafling is a local-only app with no server, no account and no network access at runtime, so it reads no
+None. DayLog is a local-only app with no server, no account and no network access at runtime, so it reads no
 environment variables. `.env.example` exists only to state that, as the project standard requires it.
 
 ## Project Structure
 
 ```
-zafling/
+daylog/
 ├── lib/
 │   ├── main.dart            entry point: the real database, folder and links, then runApp
 │   ├── startup.dart         buildApp: container, overrides, time tracking startup, the root widget (tested with fakes)
@@ -73,7 +73,7 @@ missions, calendar, notes; then settings), and the deep-link parser reads the sa
 
 ### Data
 
-One SQLite file, `zafling.sqlite`, in the platform's application documents directory
+One SQLite file, `daylog.sqlite`, in the platform's application documents directory
 (`getApplicationDocumentsDirectory()`), opened lazily in a background isolate. The schema is at version 1, created
 by `onCreate` (which also inserts the singleton `app_state` row and the 35 built-in calendar events); a change to
 the schema needs a migration step in `lib/database/app_database.dart` and a new dump in `drift_schemas/`
@@ -175,24 +175,24 @@ from the stored end time on start; a timer that ran out while the app was closed
 ### iOS native code
 
 The Live Activity and the end-of-countdown notification are native (`ios/Runner/AppDelegate.swift`,
-`LiveActivityManager.swift`, the `ZaflingWidgetExtension` target). The Dart side talks to them over two method
+`LiveActivityManager.swift`, the `DayLogWidgetExtension` target). The Dart side talks to them over two method
 channels (`lib/time_tracking/services/native/platform_channel.dart`).
 
 | Channel | Method | Arguments | Purpose |
 |---|---|---|---|
-| `com.jablecnik.zafling/notifications` | `requestPermission` | none | ask for the notification permission (returns bool) |
+| `com.jablecnik.daylog/notifications` | `requestPermission` | none | ask for the notification permission (returns bool) |
 | | `scheduleNotification` | `{ endAtMs }` | schedule the end-of-countdown notification |
 | | `cancelNotification` | none | cancel it (pause, stop) |
-| `com.jablecnik.zafling/live_activity` | `startLiveActivity` | `{ endAt, totalSeconds }` | start the countdown activity (returns bool) |
+| `com.jablecnik.daylog/live_activity` | `startLiveActivity` | `{ endAt, totalSeconds }` | start the countdown activity (returns bool) |
 | | `updateLiveActivity` | `{ action: pause\|resume\|complete, endAt? }` | update it |
 | | `endLiveActivity` | none | end it |
 | | `areActivitiesEnabled` | none | whether the user allows Live Activities |
 
 The native side calls `onLockScreenAction` (`{ action, endAtMs? }`) on the Dart side when a lock-screen button is
-used. The extension and the app share the App Group `group.com.jablecnik.zafling`; the buttons also write a pending
-action there and post the Darwin notification `com.jablecnik.zafling.action`. A Live Activity link
-`zafling://action/<pause|resume|stop>` is taken by `AppDelegate.application(_:open:options:)`; every other
-`zafling://` link goes on to the deep-link handler. Live Activities need iOS 16.2 or newer and return `false`
+used. The extension and the app share the App Group `group.com.jablecnik.daylog`; the buttons also write a pending
+action there and post the Darwin notification `com.jablecnik.daylog.action`. A Live Activity link
+`daylog://action/<pause|resume|stop>` is taken by `AppDelegate.application(_:open:options:)`; every other
+`daylog://` link goes on to the deep-link handler. Live Activities need iOS 16.2 or newer and return `false`
 silently when disabled or unsupported (the iOS target is 18.0).
 
 ### Theme
@@ -200,7 +200,7 @@ silently when disabled or unsupported (the iOS target is 18.0).
 The app has one theme, the blue one, in a dark and a light variant. A palette is an `AppPalette`
 (`lib/theme/tokens.dart`): `guildBoard` (dark) and `daylight` (light); `brass` is the accent colour in the code.
 A `ThemeDefinition` (`lib/theme/theme_registry.dart`) pairs a light and a dark palette under an id, and
-`themeRegistry` lists them. `activeThemeProvider` returns the active one and `ZaflingApp` builds the light and dark
+`themeRegistry` lists them. `activeThemeProvider` returns the active one and `DayLogApp` builds the light and dark
 `ThemeData` from it. To add a theme: add a palette pair, add a `ThemeDefinition` to the registry, and make
 `activeThemeIdProvider` read a stored choice. No screen changes, because screens read `context.palette`.
 
@@ -214,19 +214,19 @@ The reward card and the empty-state slip stay parchment. Every body-text pair re
 
 ### Deep links
 
-The URL scheme `zafling` (registered in `ios/Runner/Info.plist`) opens a page: `zafling://timer`, `history`,
+The URL scheme `daylog` (registered in `ios/Runner/Info.plist`) opens a page: `daylog://timer`, `history`,
 `statistics`, `quests`, `missions`, `calendar`, `notes` or `settings`; anything else is ignored. To get a Home
 Screen icon that opens the Calendar: in the iOS Shortcuts app make a shortcut with the action "Open URLs" and the
-URL `zafling://calendar`, then Share → Add to Home Screen and pick a name and an icon. The same steps are in the
+URL `daylog://calendar`, then Share → Add to Home Screen and pick a name and an icon. The same steps are in the
 app under Settings → Home Screen shortcut (`lib/settings/ui/shortcut_guide.dart`). The old schemes `questlog` and
 `timelogapp` are not registered, so the old apps keep working beside this one. See `lib/shell/deep_link.dart`.
 
 ### Data export
 
 Settings → Data → Export data writes every table of the database and every SharedPreferences entry into one JSON
-file (`zafling-export-<date>.json`, in the temporary directory) and opens the system share sheet. The export walks
+file (`daylog-export-<date>.json`, in the temporary directory) and opens the system share sheet. The export walks
 `db.allTables` and copies rows as stored, so a table or column added later is exported without changes
-(`lib/database/export/`). The file has `format` (`zafling-export`), `formatVersion`, `app`, `appVersion`,
+(`lib/database/export/`). The file has `format` (`daylog-export`), `formatVersion`, `app`, `appVersion`,
 `schemaVersion`, `exportedAt`, `rowCounts` (rows per table, for checking an import), `tables` (table name to a list
 of rows keyed by column name) and `preferences`. Integers stay integers, so dates and booleans keep the database
 representation; a BLOB would be `{"$blob": "<base64>"}`.
@@ -234,7 +234,7 @@ representation; a BLOB would be `{"$blob": "<base64>"}`.
 ### Data import
 
 Settings → Data → Import data (`lib/settings/ui/import_row.dart`, `lib/database/import/`) reads an export file of
-QuestLog (`questlog-export`), TimeLog (`timelog-export`) or Zafling (`zafling-export`), format version 1.
+QuestLog (`questlog-export`), TimeLog (`timelog-export`) or DayLog (`daylog-export`), format version 1.
 
 1. `ExportFile.parse` validates the header and the sections and refuses anything else.
 2. `ImportPlan.build` matches every table and column of the file against the schema; an unknown one refuses the file
@@ -258,7 +258,7 @@ doubled); a TimeLog file replaces the five time tables. Fixtures written by the 
 
 1. In QuestLog 1.5.0 and in TimeLog 1.2.0, Settings → Data → Export data; save each file to Files.
 2. Open each file and check that it is not empty; the `rowCounts` in it are the numbers to expect.
-3. In Zafling, Settings → Data → Import data, pick the QuestLog file and confirm; then the TimeLog file.
+3. In DayLog, Settings → Data → Import data, pick the QuestLog file and confirm; then the TimeLog file.
 4. Compare the counts in the report and the pages (quests, history) with the old apps. Keep the old apps
    installed until you have compared.
 
@@ -281,7 +281,7 @@ travel with the fonts. The unmodified text is bundled as `assets/fonts/licenses/
 with Flutter's `LicenseRegistry` at app start (`registerFontLicenses` in `lib/core/font_licenses.dart`). Settings
 → About → "Licenses" opens Flutter's licence page, which lists it as "<Family> (font)". A test fails when a font
 file has no licence file. TimeLog's own fonts (Sora, JetBrains Mono) are zero-byte files in its repository, which Flutter cannot load, so
-TimeLog's text fell back to the system font; Zafling draws everything in Figtree, with tabular figures where
+TimeLog's text fell back to the system font; DayLog draws everything in Figtree, with tabular figures where
 TimeLog named a monospace face.
 
 ## Releases

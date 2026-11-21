@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/theme/tokens.dart';
 
 import '../a11y/_a11y_harness.dart';
 

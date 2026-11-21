@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/notes/domain/note_node.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/l10n/app_localizations.dart';
-import 'package:zafling/notes/services/notes_providers.dart';
-import 'package:zafling/notes/services/notes_service.dart';
-import 'package:zafling/theme/app_theme.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/notes/domain/note_node.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/l10n/app_localizations.dart';
+import 'package:daylog/notes/services/notes_providers.dart';
+import 'package:daylog/notes/services/notes_service.dart';
+import 'package:daylog/theme/app_theme.dart';
+import 'package:daylog/theme/tokens.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
-import 'package:zafling/database/providers.dart';
-import 'package:zafling/core/clock_provider.dart';
+import 'package:daylog/database/providers.dart';
+import 'package:daylog/core/clock_provider.dart';
 
 /// An English themed app around a notes screen on a 390 by 844 phone, over an
 /// in-memory database with a controllable clock.

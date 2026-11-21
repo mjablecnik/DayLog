@@ -1,6 +1,6 @@
 {
   "@@locale": "cs",
-  "app_name": "Zafling",
+  "app_name": "DayLog",
   "@app_name": {
     "description": "Application name shown on the splash and in the About group."
   },
@@ -2156,7 +2156,7 @@
   "@settings_shortcutTitle": {
     "description": "Title of the Home Screen shortcut guide in Settings."
   },
-  "settings_shortcutSubtitle": "Otevři Zafling jedním klepnutím rovnou na vybrané obrazovce.",
+  "settings_shortcutSubtitle": "Otevři DayLog jedním klepnutím rovnou na vybrané obrazovce.",
   "@settings_shortcutSubtitle": {
     "description": "Hint under the guide title."
   },
@@ -2900,7 +2900,7 @@
   "@settings_importTitle": {
     "description": "Title of the Settings row that loads an export file."
   },
-  "settings_importSubtitle": "Načte soubor exportu z QuestLogu, TimeLogu nebo ze Zaflingu.",
+  "settings_importSubtitle": "Načte soubor exportu z QuestLogu, TimeLogu nebo ze DayLogu.",
   "@settings_importSubtitle": {
     "description": "Subtitle of the import row."
   },
@@ -2969,7 +2969,7 @@
   "@settings_importFailedNotJson": {
     "description": "Import error: not JSON."
   },
-  "settings_importFailedWrongFormat": "Tento soubor není export z QuestLogu, TimeLogu ani ze Zaflingu.",
+  "settings_importFailedWrongFormat": "Tento soubor není export z QuestLogu, TimeLogu ani ze DayLogu.",
   "@settings_importFailedWrongFormat": {
     "description": "Import error: unknown format."
   },

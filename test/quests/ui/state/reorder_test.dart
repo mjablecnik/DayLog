@@ -1,5 +1,5 @@
 import 'package:glados/glados.dart';
-import 'package:zafling/quests/ui/state/reorder.dart';
+import 'package:daylog/quests/ui/state/reorder.dart';
 
 void main() {
   group('moveWithinSubset examples', () {

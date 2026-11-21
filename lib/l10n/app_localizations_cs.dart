@@ -10,7 +10,7 @@ class AppLocalizationsCs extends AppLocalizations {
   AppLocalizationsCs([String locale = 'cs']) : super(locale);
 
   @override
-  String get app_name => 'Zafling';
+  String get app_name => 'DayLog';
 
   @override
   String get app_splashLoading => 'Nástěnka se připravuje…';
@@ -1635,7 +1635,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settings_shortcutSubtitle =>
-      'Otevři Zafling jedním klepnutím rovnou na vybrané obrazovce.';
+      'Otevři DayLog jedním klepnutím rovnou na vybrané obrazovce.';
 
   @override
   String get settings_shortcutPickLabel => 'Kam má ikona otevřít aplikaci?';
@@ -2201,7 +2201,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settings_importSubtitle =>
-      'Načte soubor exportu z QuestLogu, TimeLogu nebo ze Zaflingu.';
+      'Načte soubor exportu z QuestLogu, TimeLogu nebo ze DayLogu.';
 
   @override
   String get settings_importConfirmTitle => 'Nahradit data?';
@@ -2242,7 +2242,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settings_importFailedWrongFormat =>
-      'Tento soubor není export z QuestLogu, TimeLogu ani ze Zaflingu.';
+      'Tento soubor není export z QuestLogu, TimeLogu ani ze DayLogu.';
 
   @override
   String get settings_importFailedNewerFormat =>

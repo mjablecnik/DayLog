@@ -108,6 +108,6 @@ Every difference beyond imports falls into one of these groups.
 
 ## Native iOS
 
-The `ios` folder is TimeLog's, renamed: the target `ZaflingWidgetExtension`, the Swift types `Zafling*`, the bundle
+The `ios` folder is TimeLog's, renamed: the target `DayLogWidgetExtension`, the Swift types `DayLog*`, the bundle
 id, App Group, URL scheme, channel names, Darwin notification and notification identifier. `Info.plist` has
 `FlutterDeepLinkingEnabled` false as in QuestLog. Nothing here is built or run in the sandbox.

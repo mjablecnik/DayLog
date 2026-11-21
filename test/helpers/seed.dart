@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/quests/data/models.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/quests/data/models.dart';
 
 /// Inserts a Mission row directly, bypassing the services, for tests that need a
 /// Mission in a particular state.

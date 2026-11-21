@@ -1,9 +1,9 @@
-import 'package:zafling/core/event_type.dart';
-import 'package:zafling/calendar/domain/repeat_rule.dart';
-import 'package:zafling/calendar/data/calendar_models.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/calendar/services/calendar_service.dart';
-import 'package:zafling/quests/services/xp_engine.dart';
+import 'package:daylog/core/event_type.dart';
+import 'package:daylog/calendar/domain/repeat_rule.dart';
+import 'package:daylog/calendar/data/calendar_models.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/calendar/services/calendar_service.dart';
+import 'package:daylog/quests/services/xp_engine.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/test_database.dart';

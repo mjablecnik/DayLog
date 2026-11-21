@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/startup.dart';
+import 'package:daylog/startup.dart';
 
 import 'helpers/test_database.dart';
 
@@ -13,7 +13,7 @@ void main() {
   // gets a time limit. Rendering the app is covered by the shell tests.
   test('the startup waits for the settings, finishes and returns the app', () async {
     final db = createTestDatabase();
-    final dir = Directory.systemTemp.createTempSync('zafling_startup');
+    final dir = Directory.systemTemp.createTempSync('daylog_startup');
     var settingsWereReady = false;
 
     final app = await buildApp(

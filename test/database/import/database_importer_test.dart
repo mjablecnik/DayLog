@@ -4,12 +4,12 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/database/app_database.dart';
-import 'package:zafling/database/export/database_export.dart';
-import 'package:zafling/database/import/database_importer.dart';
-import 'package:zafling/database/import/export_file.dart';
-import 'package:zafling/database/import/import_plan.dart';
-import 'package:zafling/database/import/import_report.dart';
+import 'package:daylog/database/app_database.dart';
+import 'package:daylog/database/export/database_export.dart';
+import 'package:daylog/database/import/database_importer.dart';
+import 'package:daylog/database/import/export_file.dart';
+import 'package:daylog/database/import/import_plan.dart';
+import 'package:daylog/database/import/import_report.dart';
 
 import '../../helpers/test_database.dart';
 
@@ -279,7 +279,7 @@ void main() {
       }
       final String text = await exportDatabaseAsJson(
         source,
-        appName: 'zafling',
+        appName: 'daylog',
         appVersion: '1',
         exportedAt: DateTime(2026),
         preferences: <String, Object?>{'k': random.nextInt(9)},

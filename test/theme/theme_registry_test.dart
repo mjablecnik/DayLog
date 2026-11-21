@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/theme/theme_registry.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/theme/theme_registry.dart';
+import 'package:daylog/theme/tokens.dart';
 
 void main() {
   test('the registry holds the blue theme with its dark and light palettes', () {

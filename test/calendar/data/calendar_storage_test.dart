@@ -4,10 +4,10 @@ import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glados/glados.dart' hide expect, group, test, setUp, tearDown;
-import 'package:zafling/core/event_type.dart';
-import 'package:zafling/calendar/data/calendar_mappers.dart';
-import 'package:zafling/calendar/data/calendar_models.dart';
-import 'package:zafling/database/app_database.dart';
+import 'package:daylog/core/event_type.dart';
+import 'package:daylog/calendar/data/calendar_mappers.dart';
+import 'package:daylog/calendar/data/calendar_models.dart';
+import 'package:daylog/database/app_database.dart';
 
 import '../../helpers/generators.dart';
 import '../../helpers/test_database.dart';
@@ -18,7 +18,7 @@ Future<void> main() async {
 
   setUp(() {
     dir = Directory.systemTemp.createTempSync('calendar_storage_');
-    file = File('${dir.path}/zafling.sqlite');
+    file = File('${dir.path}/daylog.sqlite');
   });
   tearDown(() => dir.deleteSync(recursive: true));
 

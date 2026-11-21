@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/quests/ui/cards/difficulty_pips.dart';
+import 'package:daylog/quests/ui/cards/difficulty_pips.dart';
 import 'package:intl/intl.dart';
-import 'package:zafling/quests/domain/cadence.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/quests/data/models.dart';
-import 'package:zafling/l10n/app_localizations_cs.dart';
-import 'package:zafling/l10n/app_localizations_en.dart';
-import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/settings/ui_providers.dart';
-import 'package:zafling/quests/ui/sheets/quest_sheet.dart';
-import 'package:zafling/quests/ui/state/reward_queue.dart';
-import 'package:zafling/theme/tokens.dart';
+import 'package:daylog/quests/domain/cadence.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/quests/data/models.dart';
+import 'package:daylog/l10n/app_localizations_cs.dart';
+import 'package:daylog/l10n/app_localizations_en.dart';
+import 'package:daylog/quests/services/providers.dart';
+import 'package:daylog/settings/ui_providers.dart';
+import 'package:daylog/quests/ui/sheets/quest_sheet.dart';
+import 'package:daylog/quests/ui/state/reward_queue.dart';
+import 'package:daylog/theme/tokens.dart';
 
 import '_harness.dart';
 

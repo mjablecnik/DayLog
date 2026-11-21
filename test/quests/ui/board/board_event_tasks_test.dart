@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zafling/core/event_type.dart';
-import 'package:zafling/quests/domain/xp_rules.dart';
-import 'package:zafling/calendar/data/calendar_models.dart';
-import 'package:zafling/l10n/app_localizations_en.dart';
-import 'package:zafling/calendar/services/calendar_providers.dart';
-import 'package:zafling/quests/services/providers.dart';
-import 'package:zafling/quests/ui/board/board_screen.dart';
-import 'package:zafling/calendar/ui/screens/event_detail_screen.dart';
-import 'package:zafling/quests/ui/state/board_day.dart';
-import 'package:zafling/calendar/ui/widgets/event_task_card.dart';
+import 'package:daylog/core/event_type.dart';
+import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/calendar/data/calendar_models.dart';
+import 'package:daylog/l10n/app_localizations_en.dart';
+import 'package:daylog/calendar/services/calendar_providers.dart';
+import 'package:daylog/quests/services/providers.dart';
+import 'package:daylog/quests/ui/board/board_screen.dart';
+import 'package:daylog/calendar/ui/screens/event_detail_screen.dart';
+import 'package:daylog/quests/ui/state/board_day.dart';
+import 'package:daylog/calendar/ui/widgets/event_task_card.dart';
 
 import '../../../helpers/seed.dart';
 import '_board_harness.dart';

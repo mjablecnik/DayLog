@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:daylog/app.dart';
 import 'package:daylog/quests/domain/xp_rules.dart';
+import 'package:daylog/settings/ui/rules_screen.dart';
 import 'package:daylog/database/app_database.dart';
 import 'package:daylog/quests/data/models.dart';
 import 'package:daylog/l10n/app_localizations_cs.dart';
@@ -248,6 +249,14 @@ void main() {
       expect(find.text(cs.settings_version('1.0.0')), findsOneWidget);
 
       // ---- 6. Post a rule by hand (12.3) ------------------------------------
+      // The rules have a page of their own, opened from Settings.
+      await tester.dragUntilVisible(
+        find.text(cs.settings_rulesActive(0)),
+        find.byType(Scrollable).first,
+        const Offset(0, -200),
+      );
+      await _tap(tester, find.text(cs.settings_rulesActive(0)));
+      expect(find.byType(RulesScreen), findsOneWidget);
       await _tap(tester, find.text(cs.rule_addRow));
       expect(find.text(cs.rule_sheetTitle), findsOneWidget);
       await tester.enterText(
@@ -261,12 +270,6 @@ void main() {
       await tester.pump();
       await _tap(tester, find.text(cs.rule_saveAction));
       expect(find.text(cs.rule_sheetTitle), findsNothing);
-      // The rules sit below the language, theme, font and palette groups.
-      await tester.dragUntilVisible(
-        find.text('Water plants'),
-        find.byType(Scrollable).first,
-        const Offset(0, -200),
-      );
       await tester.pump();
       expect(find.text('Water plants'), findsOneWidget);
       expect(find.text(cs.settings_rulesActive(1).toUpperCase()), findsOneWidget);
@@ -280,7 +283,9 @@ void main() {
       expect(find.text(cs.rule_posted), findsOneWidget);
       expect(find.text(cs.rule_postNow), findsNothing);
 
-      // Leaving the Settings tab takes its message with it, then Missions.
+      // Back to Settings, then leaving the Settings tab takes its message with it, then Missions.
+      Navigator.of(tester.element(find.byType(RulesScreen))).pop();
+      await tester.pumpAndSettle();
       await _show(tester, Destination.missions);
       expect(find.byType(SettingsScreen), findsNothing);
       expect(find.byType(SnackBar), findsNothing);

@@ -2706,6 +2706,10 @@
   "@time_settingsReminderToggleLabel": {
     "description": "Time tracking text: \"Remind me to start the timer\""
   },
+  "time_settingsReminderToggleHint": "Každý den ve zvolený čas ti přijde upozornění, abys nezapomněl spustit časovač.",
+  "@time_settingsReminderToggleHint": {
+    "description": "Time tracking text: the explanation under the daily reminder switch"
+  },
   "time_settingsReminderTimeLabel": "Čas připomínky",
   "@time_settingsReminderTimeLabel": {
     "description": "Time tracking text: \"Reminder time\""

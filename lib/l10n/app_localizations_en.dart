@@ -2007,6 +2007,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_settingsReminderToggleLabel => 'Remind me to start the timer';
 
   @override
+  String get time_settingsReminderToggleHint =>
+      'Every day at the chosen time a notification reminds you to start the timer.';
+
+  @override
   String get time_settingsReminderTimeLabel => 'Reminder time';
 
   @override

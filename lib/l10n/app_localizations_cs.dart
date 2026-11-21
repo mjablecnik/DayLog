@@ -2052,6 +2052,10 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_settingsReminderToggleLabel => 'Připomínat spuštění časovače';
 
   @override
+  String get time_settingsReminderToggleHint =>
+      'Každý den ve zvolený čas ti přijde upozornění, abys nezapomněl spustit časovač.';
+
+  @override
   String get time_settingsReminderTimeLabel => 'Čas připomínky';
 
   @override

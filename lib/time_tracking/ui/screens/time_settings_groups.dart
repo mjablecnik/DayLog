@@ -5,6 +5,8 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../../../l10n/app_localizations.dart';
 import '../../../ui_kit/common/settings_group.dart';
+import '../../../ui_kit/common/settings_nav_row.dart';
+import '../../../ui_kit/common/sub_page_header.dart';
 import '../../providers/reminder_action_provider.dart';
 import '../../providers/reminder_provider.dart';
 import '../../services/recurring_reminder_service.dart';
@@ -57,6 +59,183 @@ class TimeSettingsGroups extends ConsumerWidget {
       await ref.read(reminderProvider.notifier).setTime(picked);
     }
   }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = AppThemeData.of(context);
+    final l10n = AppLocalizations.of(context);
+    final settings = ref.watch(reminderProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SettingsGroup(
+          label: l10n.time_settingsDailyReminderSection,
+          child: Column(
+            children: [
+              _Panel(
+                theme: theme,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.time_settingsReminderToggleLabel,
+                                  style: TextStyle(color: theme.text, fontSize: 14),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  l10n.time_settingsReminderToggleHint,
+                                  style: TextStyle(color: theme.dim, fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Switch(
+                            value: settings.enabled,
+                            activeThumbColor: theme.accent,
+                            onChanged: (value) => _onToggle(context, ref, value),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(height: 1, color: theme.border),
+                    InkWell(
+                      onTap: () => _onPickTime(context, ref),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              l10n.time_settingsReminderTimeLabel,
+                              style: TextStyle(color: theme.text, fontSize: 14),
+                            ),
+                            Text(
+                              _formatTime(settings.timeOfDay),
+                              style: TextStyle(
+                                color: theme.dim,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              SettingsNavRow(
+                title: l10n.time_settingsRecurringRemindersLabel,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const ReminderSettingsScreen(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// A rounded panel in the colours of the time tracking theme.
+class _Panel extends StatelessWidget {
+  const _Panel({required this.theme, required this.child});
+
+  final AppThemeData theme;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.panel,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.border),
+      ),
+      child: child,
+    );
+  }
+}
+
+class _ToolRow extends StatelessWidget {
+  const _ToolRow({
+    required this.theme,
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final AppThemeData theme;
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return _Panel(
+      theme: theme,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              Icon(icon, color: theme.dim, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(color: theme.text, fontSize: 14),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/// The row at the end of Settings that opens the testing tools.
+class TimeToolsGroup extends StatelessWidget {
+  const TimeToolsGroup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SettingsNavRow(
+      title: l10n.time_settingsTestingSection,
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const TimeTestingScreen()),
+      ),
+    );
+  }
+}
+
+/// The testing tools for notifications and the reminder dialog.
+class TimeTestingScreen extends ConsumerWidget {
+  const TimeTestingScreen({super.key});
 
   Future<void> _scheduleTestNotification(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
@@ -127,180 +306,34 @@ class TimeSettingsGroups extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = AppThemeData.of(context);
     final l10n = AppLocalizations.of(context);
-    final settings = ref.watch(reminderProvider);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SettingsGroup(
-          label: l10n.time_settingsDailyReminderSection,
-          child: Column(
-            children: [
-              _Panel(
-                theme: theme,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            l10n.time_settingsReminderToggleLabel,
-                            style: TextStyle(color: theme.text, fontSize: 14),
-                          ),
-                          Switch(
-                            value: settings.enabled,
-                            activeThumbColor: theme.accent,
-                            onChanged: (value) => _onToggle(context, ref, value),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(height: 1, color: theme.border),
-                    InkWell(
-                      onTap: () => _onPickTime(context, ref),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              l10n.time_settingsReminderTimeLabel,
-                              style: TextStyle(color: theme.text, fontSize: 14),
-                            ),
-                            Text(
-                              _formatTime(settings.timeOfDay),
-                              style: TextStyle(
-                                color: theme.dim,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              _Panel(
-                theme: theme,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const ReminderSettingsScreen(),
-                    ),
+    return Scaffold(
+      backgroundColor: theme.background,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SubPageHeader(title: l10n.time_settingsTestingSection),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+                children: [
+                  _ToolRow(
+                    theme: theme,
+                    icon: Icons.bug_report,
+                    label: l10n.time_settingsTestNotificationButton,
+                    onTap: () => _scheduleTestNotification(context, ref),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          l10n.time_settingsRecurringRemindersLabel,
-                          style: TextStyle(color: theme.text, fontSize: 14),
-                        ),
-                        Icon(Icons.chevron_right, color: theme.dim),
-                      ],
-                    ),
+                  const SizedBox(height: 8),
+                  _ToolRow(
+                    theme: theme,
+                    icon: Icons.open_in_new,
+                    label: l10n.time_settingsShowModalDebugButton,
+                    onTap: () => _showReminderActionForFirst(context, ref),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 24),
-        SettingsGroup(
-          label: l10n.time_settingsTestingSection,
-          child: Column(
-            children: [
-              _ToolRow(
-                theme: theme,
-                icon: Icons.bug_report,
-                label: l10n.time_settingsTestNotificationButton,
-                onTap: () => _scheduleTestNotification(context, ref),
-              ),
-              const SizedBox(height: 8),
-              _ToolRow(
-                theme: theme,
-                icon: Icons.open_in_new,
-                label: l10n.time_settingsShowModalDebugButton,
-                onTap: () => _showReminderActionForFirst(context, ref),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// A rounded panel in the colours of the time tracking theme.
-class _Panel extends StatelessWidget {
-  const _Panel({required this.theme, required this.child});
-
-  final AppThemeData theme;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.panel,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.border),
-      ),
-      child: child,
-    );
-  }
-}
-
-class _ToolRow extends StatelessWidget {
-  const _ToolRow({
-    required this.theme,
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final AppThemeData theme;
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return _Panel(
-      theme: theme,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              Icon(icon, color: theme.dim, size: 20),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(color: theme.text, fontSize: 14),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

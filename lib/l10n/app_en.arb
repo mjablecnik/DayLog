@@ -516,6 +516,7 @@
   "time_statsUntrackedTime": "Untracked time",
   "time_settingsDailyReminderSection": "Daily reminder",
   "time_settingsReminderToggleLabel": "Remind me to start the timer",
+  "time_settingsReminderToggleHint": "Every day at the chosen time a notification reminds you to start the timer.",
   "time_settingsReminderTimeLabel": "Reminder time",
   "time_settingsRecurringRemindersLabel": "Recurring reminders",
   "time_settingsTestingSection": "Testing",

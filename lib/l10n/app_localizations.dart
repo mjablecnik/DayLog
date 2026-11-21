@@ -3194,6 +3194,12 @@ abstract class AppLocalizations {
   /// **'Připomínat spuštění časovače'**
   String get time_settingsReminderToggleLabel;
 
+  /// Time tracking text: the explanation under the daily reminder switch
+  ///
+  /// In cs, this message translates to:
+  /// **'Každý den ve zvolený čas ti přijde upozornění, abys nezapomněl spustit časovač.'**
+  String get time_settingsReminderToggleHint;
+
   /// Time tracking text: "Reminder time"
   ///
   /// In cs, this message translates to:

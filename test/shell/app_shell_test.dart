@@ -357,7 +357,8 @@ void main() {
 
       expect(find.byType(TimeSettingsGroups), findsOneWidget);
       expect(find.text('DAILY REMINDER'), findsOneWidget);
-      expect(find.text('TESTING'), findsOneWidget);
+      // The testing tools are a quiet row after About, not a group of their own.
+      expect(find.text('TESTING'), findsNothing);
       final double shortcut = tester.getTopLeft(find.text('HOME SCREEN SHORTCUT')).dy;
       final double reminder = tester.getTopLeft(find.text('DAILY REMINDER')).dy;
       expect(reminder, greaterThan(shortcut));

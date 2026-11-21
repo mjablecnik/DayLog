@@ -12,13 +12,14 @@ import '../ui_providers.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
 import '../../ui_kit/common/app_icon.dart';
-import '../../ui_kit/common/menu_button.dart';
+import '../../ui_kit/common/screen_header.dart';
 import '../../ui_kit/common/settings_group.dart';
 import '../../ui_kit/common/app_segmented.dart';
 import '../../ui_kit/common/snackbar_host.dart';
 import 'export_row.dart';
 import 'import_row.dart';
-import 'rules_section.dart';
+import '../../ui_kit/common/settings_nav_row.dart';
+import 'rules_screen.dart';
 import 'shortcut_guide.dart';
 
 /// The "Nastavení" tab: profile, language, appearance, recurring rules,
@@ -32,6 +33,7 @@ class SettingsScreen extends ConsumerWidget {
     super.key,
     required this.shortcutTargets,
     this.moduleGroups = const <Widget>[],
+    this.toolGroups = const <Widget>[],
   });
 
   /// The pages the Home Screen shortcut guide offers.
@@ -41,6 +43,10 @@ class SettingsScreen extends ConsumerWidget {
   /// the shortcut guide and the data group. The shell supplies them, so this
   /// screen does not know the features.
   final List<Widget> moduleGroups;
+
+  /// Groups of the other features that are tools rather than settings, shown
+  /// after About so they stay out of the way.
+  final List<Widget> toolGroups;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,26 +59,13 @@ class SettingsScreen extends ConsumerWidget {
           children: <Widget>[
             // Outside the list, so the menu button stays reachable when the
             // list is scrolled.
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                Space.s20,
-                Space.s16,
-                Space.s20,
-                0,
-              ),
-              child: Row(
-                children: <Widget>[
-                  const MenuButton(),
-                  Expanded(
-                    child: Semantics(
-                      header: true,
-                      child: Text(
-                        l.settings_title,
-                        style: context.displayText.headlineLarge,
-                      ),
-                    ),
-                  ),
-                ],
+            ScreenHeader(
+              child: Semantics(
+                header: true,
+                child: Text(
+                  l.settings_title,
+                  style: context.displayText.headlineLarge,
+                ),
               ),
             ),
             Expanded(
@@ -101,8 +94,10 @@ class SettingsScreen extends ConsumerWidget {
                     child: const _ThemeControl(),
                   ),
                   const SizedBox(height: Space.s24),
-                  // This one draws its own group header.
-                  const RulesSection(),
+                  SettingsGroup(
+                    label: l.settings_groupRules,
+                    child: const _RulesLink(),
+                  ),
                   const SizedBox(height: Space.s24),
                   SettingsGroup(
                     label: l.settings_shortcutTitle,
@@ -124,6 +119,10 @@ class SettingsScreen extends ConsumerWidget {
                     label: l.settings_groupAbout,
                     child: const _AboutRow(),
                   ),
+                  for (final Widget group in toolGroups) ...<Widget>[
+                    const SizedBox(height: Space.s24),
+                    group,
+                  ],
                 ],
               ),
             ),
@@ -211,7 +210,7 @@ class _ThemeControl extends ConsumerWidget {
   }
 }
 
-/// Application name and the version from the platform build information.
+/// The licences row, and under it the application name and its version.
 class _AboutRow extends ConsumerWidget {
   const _AboutRow();
 
@@ -226,6 +225,8 @@ class _AboutRow extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
+        _LicensesRow(version: version),
+        const SizedBox(height: Space.s8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: Space.s2),
           child: Row(
@@ -237,9 +238,25 @@ class _AboutRow extends ConsumerWidget {
             ],
           ),
         ),
-        const SizedBox(height: Space.s8),
-        _LicensesRow(version: version),
       ],
+    );
+  }
+}
+
+/// The row that opens the recurring Missions page, with the active count.
+class _RulesLink extends ConsumerWidget {
+  const _RulesLink();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final int count = ref.watch(rulesProvider).value?.length ?? 0;
+    return SettingsNavRow(
+      title: l.settings_groupRules,
+      subtitle: l.settings_rulesActive(count),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const RulesScreen()),
+      ),
     );
   }
 }

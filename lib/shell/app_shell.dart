@@ -205,6 +205,11 @@ class _AppShellState extends ConsumerState<AppShell>
 
     return ShellMenuScope(
       open: () => _scaffoldKey.currentState?.openDrawer(),
+      openPage: (String linkName) {
+        for (final Destination d in Destination.values) {
+          if (d.linkName == linkName) _select(d);
+        }
+      },
       child: Scaffold(
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
@@ -240,6 +245,7 @@ class _AppShellState extends ConsumerState<AppShell>
                   Destination.settings => SettingsScreen(
                     shortcutTargets: _shortcutTargets(context),
                     moduleGroups: const <Widget>[TimeSettingsGroups()],
+                    toolGroups: const <Widget>[TimeToolsGroup()],
                   ),
                 },
             ],

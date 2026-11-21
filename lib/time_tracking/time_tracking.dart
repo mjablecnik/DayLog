@@ -12,7 +12,7 @@ export 'providers/app_settings_bridge.dart' show timeLocaleProvider;
 export 'ui/screens/history_screen.dart' show HistoryScreen;
 export 'ui/screens/reminder_action_host.dart' show ReminderActionHost;
 export 'ui/screens/statistics_screen.dart' show StatisticsScreen;
-export 'ui/screens/time_settings_groups.dart' show TimeSettingsGroups;
+export 'ui/screens/time_settings_groups.dart' show TimeSettingsGroups, TimeToolsGroup;
 export 'ui/screens/timer_screen.dart' show TimerScreen;
 
 /// Recomputes the statistics; the shell calls it when the Statistics page is

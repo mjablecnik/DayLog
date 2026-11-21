@@ -11,7 +11,7 @@ import 'package:zafling/calendar/ui/screens/week_lanes.dart';
 import 'package:zafling/calendar/ui/state/calendar_state.dart';
 import 'package:zafling/calendar/ui/widgets/event_chip.dart';
 
-import '../../../ui/screens/calendar/_calendar_harness.dart';
+import '_calendar_harness.dart';
 
 void main() {
   final CalendarUiHarness h = CalendarUiHarness();

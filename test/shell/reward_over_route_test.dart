@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../../../helpers/shell_nav.dart';
+import '../helpers/shell_nav.dart';
 import 'package:zafling/app.dart';
 import 'package:zafling/database/app_database.dart';
 import 'package:zafling/quests/ui/mission_detail/mission_detail_screen.dart';
@@ -12,9 +12,9 @@ import 'package:zafling/settings/ui_providers.dart';
 import 'package:zafling/quests/ui/cards/mission_card.dart';
 import 'package:zafling/quests/ui/reward/reward_card.dart';
 
-import '../../../helpers/fixed_clock.dart';
-import '../../../helpers/seed.dart';
-import '../../../helpers/test_database.dart';
+import '../helpers/fixed_clock.dart';
+import '../helpers/seed.dart';
+import '../helpers/test_database.dart';
 import 'package:zafling/database/providers.dart';
 import 'package:zafling/core/clock_provider.dart';
 

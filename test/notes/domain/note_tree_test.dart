@@ -5,7 +5,7 @@ import 'package:zafling/notes/domain/note_node.dart';
 import 'package:zafling/notes/domain/note_tree.dart';
 import 'package:zafling/notes/domain/trash_policy.dart';
 
-import '../../core/notes/_tree_gen.dart';
+import '_tree_gen.dart';
 
 NoteNode node(
   int id, {

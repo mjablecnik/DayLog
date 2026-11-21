@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/ui_kit/common/skeleton_list.dart';
 
-import '../../ui/widgets/common/_harness.dart';
+import '_harness.dart';
 
 Finder get _rows => find.byType(SkeletonRow);
 

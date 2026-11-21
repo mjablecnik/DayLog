@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zafling/l10n/app_localizations.dart';
 import 'package:zafling/ui_kit/common/announce.dart';
 
-import '../../ui/widgets/common/_harness.dart';
+import '_harness.dart';
 
 /// Announcements captured from the `flutter/accessibility` channel.
 List<String> _captureAnnouncements(WidgetTester tester) {

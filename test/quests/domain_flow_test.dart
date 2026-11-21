@@ -9,8 +9,8 @@ import 'package:zafling/quests/services/quest_service.dart';
 import 'package:zafling/quests/services/recurrence_service.dart';
 import 'package:zafling/quests/services/xp_engine.dart';
 
-import 'helpers/fixed_clock.dart';
-import 'helpers/test_database.dart';
+import '../helpers/fixed_clock.dart';
+import '../helpers/test_database.dart';
 
 /// One scenario through the whole domain layer on an in-memory database:
 /// a weekly rule posts a Mission, the user completes it across a Level boundary,

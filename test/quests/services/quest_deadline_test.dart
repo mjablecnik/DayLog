@@ -10,8 +10,8 @@ import 'package:zafling/calendar/services/calendar_service.dart';
 import 'package:zafling/quests/services/quest_service.dart';
 import 'package:zafling/quests/services/xp_engine.dart';
 
-import '../helpers/fixed_clock.dart';
-import '../helpers/test_database.dart';
+import '../../helpers/fixed_clock.dart';
+import '../../helpers/test_database.dart';
 
 DateTime d(int y, int m, int day) => DateTime(y, m, day);
 

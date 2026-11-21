@@ -6,7 +6,7 @@ import 'package:zafling/l10n/app_localizations_en.dart';
 import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/ui_kit/sheet/app_sheet.dart';
 
-import '../../ui/widgets/common/_harness.dart';
+import '../common/_harness.dart';
 
 final AppLocalizationsEn l10n = AppLocalizationsEn();
 

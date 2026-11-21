@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/ui_kit/common/empty_state.dart';
 
-import '../../ui/widgets/common/_harness.dart';
+import '_harness.dart';
 
 void main() {
   testWidgets('shows title and body, no button without an action', (

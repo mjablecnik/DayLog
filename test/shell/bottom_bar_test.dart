@@ -6,7 +6,7 @@ import 'package:zafling/shell/destination.dart';
 import 'package:zafling/theme/app_theme.dart';
 import 'package:zafling/theme/tokens.dart';
 
-import '../ui/widgets/common/_harness.dart';
+import '../ui_kit/common/_harness.dart';
 
 void main() {
   for (final (String, Locale) entry in <(String, Locale)>[

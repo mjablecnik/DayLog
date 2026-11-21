@@ -6,7 +6,7 @@ import 'package:glados/glados.dart'
     hide expect, test, group, setUp, tearDown, setUpAll, tearDownAll;
 import 'package:zafling/quests/ui/cards/progress_ring.dart';
 
-import '../../../ui/widgets/cards/_cards_harness.dart';
+import '_cards_harness.dart';
 
 /// Counts the arcs and circles a painter draws, ignoring everything else.
 class _CountingCanvas implements Canvas {

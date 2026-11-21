@@ -16,7 +16,7 @@ import 'package:zafling/quests/ui/state/reward_queue.dart';
 import 'package:zafling/ui_kit/common/skeleton_list.dart';
 
 import '../../../helpers/seed.dart';
-import '../../../ui/screens/board/_board_harness.dart';
+import '_board_harness.dart';
 
 void main() {
   final BoardHarness h = BoardHarness();

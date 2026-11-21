@@ -15,7 +15,7 @@ import 'package:zafling/notes/ui/screens/notes/note_row.dart';
 import 'package:zafling/notes/ui/screens/notes/notes_screen.dart';
 import 'package:zafling/notes/ui/state/notes_state.dart';
 
-import '../../../../ui/screens/notes/_notes_harness.dart';
+import '../_notes_harness.dart';
 
 void main() {
   final NotesUiHarness h = NotesUiHarness();

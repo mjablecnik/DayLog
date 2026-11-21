@@ -11,7 +11,7 @@ import 'package:zafling/notes/ui/screens/note_editor/note_editor_screen.dart';
 import 'package:super_editor/super_editor.dart';
 
 import '../../../../helpers/fixed_clock.dart';
-import '../../../../ui/screens/notes/_notes_harness.dart';
+import '../_notes_harness.dart';
 
 /// A service whose first [failures] saves fail.
 class FlakyNotesService extends NotesService {

@@ -11,9 +11,9 @@ import 'package:zafling/settings/ui_providers.dart';
 import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/quests/ui/reward/reward_card.dart';
 
-import '../../helpers/fixed_clock.dart';
-import '../../helpers/seed.dart';
-import '../../helpers/test_database.dart';
+import '../helpers/fixed_clock.dart';
+import '../helpers/seed.dart';
+import '../helpers/test_database.dart';
 import 'package:zafling/database/providers.dart';
 import 'package:zafling/core/clock_provider.dart';
 

@@ -7,7 +7,7 @@ import 'package:zafling/shell/bottom_bar.dart';
 import 'package:zafling/shell/destination.dart';
 import 'package:zafling/calendar/ui/widgets/event_task_card.dart';
 
-import 'a11y/_a11y_harness.dart';
+import '../a11y/_a11y_harness.dart';
 
 /// A calendar day with Questlog: a new birthday goes onto the Board, is
 /// completed for XP, and is deleted and brought back.

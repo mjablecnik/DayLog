@@ -11,7 +11,7 @@ import 'package:zafling/theme/tokens.dart';
 import 'package:super_editor/super_editor.dart';
 
 import '../../../../helpers/fixed_clock.dart';
-import '../../../../ui/screens/notes/_notes_harness.dart';
+import '../_notes_harness.dart';
 
 void main() {
   final NotesUiHarness h = NotesUiHarness();

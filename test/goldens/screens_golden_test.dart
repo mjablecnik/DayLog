@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zafling/theme/tokens.dart';
 
-import '../ui/a11y/_a11y_harness.dart';
+import '../a11y/_a11y_harness.dart';
 
 /// Requirement 19.4: a golden comparison of the Board, Missions and Settings
 /// screens in both themes. They render with the bundled Figtree on a 390x844

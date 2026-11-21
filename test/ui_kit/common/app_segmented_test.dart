@@ -7,7 +7,7 @@ import 'package:zafling/theme/tokens.dart';
 import 'package:zafling/ui_kit/common/app_icon.dart';
 import 'package:zafling/ui_kit/common/app_segmented.dart';
 
-import '../../ui/widgets/common/_harness.dart';
+import '_harness.dart';
 
 const List<SegmentedOption<String>> _options = <SegmentedOption<String>>[
   SegmentedOption<String>(value: 'cs', label: 'Čeština'),

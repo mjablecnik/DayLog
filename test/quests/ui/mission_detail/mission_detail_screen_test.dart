@@ -13,7 +13,7 @@ import 'package:zafling/quests/ui/sheets/quest_sheet.dart';
 import 'package:zafling/quests/ui/state/reward_queue.dart';
 import 'package:zafling/theme/tokens.dart';
 
-import '../../../ui/screens/mission_detail/_harness.dart';
+import '_harness.dart';
 
 final AppLocalizationsEn en = AppLocalizationsEn();
 final AppLocalizationsCs cs = AppLocalizationsCs();

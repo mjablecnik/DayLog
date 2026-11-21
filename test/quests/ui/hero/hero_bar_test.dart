@@ -11,7 +11,7 @@ import 'package:zafling/quests/ui/hero/level_badge.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
-import '../../../ui/widgets/common/_harness.dart';
+import '../../../ui_kit/common/_harness.dart';
 import 'package:zafling/database/providers.dart';
 import 'package:zafling/core/clock_provider.dart';
 

@@ -13,7 +13,7 @@ import 'package:zafling/shell/bottom_bar.dart';
 import 'package:zafling/shell/destination.dart';
 import 'package:super_editor/super_editor.dart';
 
-import 'a11y/_a11y_harness.dart';
+import '../a11y/_a11y_harness.dart';
 
 /// A day with the notes: a folder and a sub-folder, a formatted note, moving it,
 /// deleting a folder with its content, restoring it from the Trash and deleting

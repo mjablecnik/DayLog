@@ -7,9 +7,9 @@ import 'package:zafling/quests/data/models.dart';
 import 'package:zafling/quests/services/quest_service.dart';
 import 'package:zafling/quests/services/xp_engine.dart';
 
-import '../helpers/fixed_clock.dart';
-import '../helpers/seed.dart';
-import '../helpers/test_database.dart';
+import '../../helpers/fixed_clock.dart';
+import '../../helpers/seed.dart';
+import '../../helpers/test_database.dart';
 
 Future<List<QuestRow>> inOrder(AppDatabase db) {
   return (db.select(db.quests)..orderBy([(q) => OrderingTerm.asc(q.sortOrder)])).get();

@@ -7,7 +7,7 @@ import 'package:zafling/notes/ui/sheets/link_sheet.dart';
 import 'package:zafling/notes/ui/sheets/move_sheet.dart';
 import 'package:zafling/notes/ui/sheets/name_sheet.dart';
 
-import '../screens/notes/_notes_harness.dart';
+import '../screens/_notes_harness.dart';
 
 /// Widget tests of AddSheet, NameSheet, MoveSheet and LinkSheet over the
 /// in-memory database of the notes harness.

@@ -7,9 +7,9 @@ import 'package:zafling/quests/services/mission_service.dart';
 import 'package:zafling/quests/services/quest_service.dart';
 import 'package:zafling/quests/services/xp_engine.dart';
 
-import '../helpers/fixed_clock.dart';
-import '../helpers/seed.dart';
-import '../helpers/test_database.dart';
+import '../../helpers/fixed_clock.dart';
+import '../../helpers/seed.dart';
+import '../../helpers/test_database.dart';
 
 /// Opens a fresh database with all three services and closes it afterwards, so
 /// that each property-test iteration starts from an empty state.

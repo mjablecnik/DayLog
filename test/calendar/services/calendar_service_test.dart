@@ -6,7 +6,7 @@ import 'package:zafling/core/errors.dart';
 import 'package:zafling/calendar/data/calendar_models.dart';
 import 'package:zafling/calendar/services/calendar_service.dart';
 
-import '../../services/calendar/_harness.dart';
+import '_harness.dart';
 
 void main() {
   addressHistoryTests();

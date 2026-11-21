@@ -1,6 +1,7 @@
 import 'dart:ui' show Locale, PlatformDispatcher;
 
 import 'package:flutter/material.dart' show ThemeMode;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart'
     show VoidCallback, WidgetsBinding, WidgetsBindingObserver;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,9 +72,21 @@ final themeModeProvider = Provider<ThemeMode>((ref) {
   }
 });
 
-/// The version from the platform build information (`pubspec.yaml` is the only
-/// copy). Tests override it.
+/// The version from `pubspec.yaml`, which is bundled as an asset so that it is
+/// the only copy. The platform build information cannot be used for this: iOS
+/// turns `1.0.0-dev.0` into `1.0.0.0`. Falls back to it when the asset cannot
+/// be read. Tests override it.
 final appVersionProvider = FutureProvider<String>((ref) async {
+  try {
+    final String pubspec = await rootBundle.loadString('pubspec.yaml');
+    final Match? match = RegExp(
+      r'^version:\s*([^\s+]+)',
+      multiLine: true,
+    ).firstMatch(pubspec);
+    if (match != null) return match.group(1)!;
+  } catch (_) {
+    // Fall through to the platform value.
+  }
   final info = await PackageInfo.fromPlatform();
   return info.version;
 });

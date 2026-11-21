@@ -82,6 +82,8 @@ flutter:
     - assets/icons/
     - assets/audio/alarm.mp3
     - assets/fonts/licenses/
+    # The version shown in Settings is read from here, so it has one source.
+    - pubspec.yaml
 
   # Static instances of the SIL OFL family Figtree, the one face of the app, for body
   # text and titles alike (licence in assets/fonts/licenses/Figtree-OFL.txt).

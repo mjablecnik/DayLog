@@ -88,13 +88,6 @@ class DaySheet extends ConsumerWidget {
                           ),
                         ),
                         _RoundButton(
-                          key: const ValueKey<String>('day-add'),
-                          icon: IconAsset.plus,
-                          label: l.calendar_add,
-                          filled: true,
-                          onTap: () => showEventForm(context, presetDate: date),
-                        ),
-                        _RoundButton(
                           key: const ValueKey<String>('day-close'),
                           icon: IconAsset.close,
                           label: l.common_close,
@@ -120,7 +113,7 @@ class DaySheet extends ConsumerWidget {
                     )
                   : ListView.builder(
                       shrinkWrap: true,
-                      padding: EdgeInsets.fromLTRB(Space.s20, 0, Space.s20, Space.s16 + media.padding.bottom),
+                      padding: const EdgeInsets.fromLTRB(Space.s20, 0, Space.s20, Space.s8),
                       itemCount: events.length,
                       itemBuilder: (BuildContext context, int i) => _EventRow(
                         occurrence: events[i],
@@ -129,9 +122,52 @@ class DaySheet extends ConsumerWidget {
                       ),
                     ),
             ),
-            if (events.isEmpty) SizedBox(height: media.padding.bottom),
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                Space.s20,
+                Space.s8,
+                Space.s20,
+                Space.s16 + media.padding.bottom,
+              ),
+              child: _AddEventButton(
+                key: const ValueKey<String>('day-add'),
+                label: l.calendar_add,
+                onPressed: () => showEventForm(context, presetDate: date),
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// The wide button under the day's events that adds an event on that day.
+class _AddEventButton extends StatelessWidget {
+  const _AddEventButton({super.key, required this.label, required this.onPressed});
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppPalette p = context.palette;
+    return FilledButton(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        backgroundColor: p.brass,
+        foregroundColor: p.inkOnBrass,
+        minimumSize: const Size(double.infinity, Metrics.touchTarget + Space.s8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Radii.control)),
+        textStyle: context.bodyText.titleMedium,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          AppIcon(IconAsset.plus, size: Metrics.iconSmall, color: p.inkOnBrass),
+          const SizedBox(width: Space.s8),
+          Flexible(child: Text(label, textAlign: TextAlign.center)),
+        ],
       ),
     );
   }
@@ -143,13 +179,11 @@ class _RoundButton extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onTap,
-    this.filled = false,
   });
 
   final String icon;
   final String label;
   final VoidCallback onTap;
-  final bool filled;
 
   @override
   Widget build(BuildContext context) {
@@ -169,12 +203,12 @@ class _RoundButton extends StatelessWidget {
             child: Container(
               width: Metrics.iconButton + Space.s4,
               height: Metrics.iconButton + Space.s4,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: filled ? p.brass : null),
+              decoration: const BoxDecoration(shape: BoxShape.circle),
               child: Center(
                 child: AppIcon(
                   icon,
                   size: Metrics.iconSmall,
-                  color: filled ? p.inkOnBrass : p.text,
+                  color: p.text,
                 ),
               ),
             ),

@@ -1851,18 +1851,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_subtypeShopping => 'Shopping';
 
   @override
-  String get time_scopeWorkPaid => 'Paid work';
-
-  @override
-  String get time_scopeWorkUnpaid => 'Unpaid work';
-
-  @override
-  String get time_scopeHousework => 'Housework';
-
-  @override
-  String get time_scopeOther => 'Other';
-
-  @override
   String get time_pickerTypeCaption => 'Type';
 
   @override
@@ -1911,9 +1899,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time_descriptionTitle => 'What did you accomplish?';
-
-  @override
-  String get time_prefillSaveDraft => 'Save Draft';
 
   @override
   String get time_editSheetTitle => 'Edit description';

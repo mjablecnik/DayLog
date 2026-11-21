@@ -2499,22 +2499,6 @@
   "@time_subtypeShopping": {
     "description": "Time tracking text: \"Shopping\""
   },
-  "time_scopeWorkPaid": "Placená práce",
-  "@time_scopeWorkPaid": {
-    "description": "Time tracking text: \"Paid work\""
-  },
-  "time_scopeWorkUnpaid": "Neplacená práce",
-  "@time_scopeWorkUnpaid": {
-    "description": "Time tracking text: \"Unpaid work\""
-  },
-  "time_scopeHousework": "Domácí práce",
-  "@time_scopeHousework": {
-    "description": "Time tracking text: \"Housework\""
-  },
-  "time_scopeOther": "Ostatní",
-  "@time_scopeOther": {
-    "description": "Time tracking text: \"Other\""
-  },
   "time_pickerTypeCaption": "Typ",
   "@time_pickerTypeCaption": {
     "description": "Time tracking text: \"Type\""
@@ -2583,10 +2567,6 @@
   "time_descriptionTitle": "Co se ti podařilo?",
   "@time_descriptionTitle": {
     "description": "Time tracking text: \"What did you accomplish?\""
-  },
-  "time_prefillSaveDraft": "Uložit koncept",
-  "@time_prefillSaveDraft": {
-    "description": "Time tracking text: \"Save Draft\""
   },
   "time_editSheetTitle": "Upravit popis",
   "@time_editSheetTitle": {

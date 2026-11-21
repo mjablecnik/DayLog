@@ -2906,30 +2906,6 @@ abstract class AppLocalizations {
   /// **'Nákup'**
   String get time_subtypeShopping;
 
-  /// Time tracking text: "Paid work"
-  ///
-  /// In cs, this message translates to:
-  /// **'Placená práce'**
-  String get time_scopeWorkPaid;
-
-  /// Time tracking text: "Unpaid work"
-  ///
-  /// In cs, this message translates to:
-  /// **'Neplacená práce'**
-  String get time_scopeWorkUnpaid;
-
-  /// Time tracking text: "Housework"
-  ///
-  /// In cs, this message translates to:
-  /// **'Domácí práce'**
-  String get time_scopeHousework;
-
-  /// Time tracking text: "Other"
-  ///
-  /// In cs, this message translates to:
-  /// **'Ostatní'**
-  String get time_scopeOther;
-
   /// Time tracking text: "Type"
   ///
   /// In cs, this message translates to:
@@ -3025,12 +3001,6 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Co se ti podařilo?'**
   String get time_descriptionTitle;
-
-  /// Time tracking text: "Save Draft"
-  ///
-  /// In cs, this message translates to:
-  /// **'Uložit koncept'**
-  String get time_prefillSaveDraft;
 
   /// Time tracking text: "Edit description"
   ///

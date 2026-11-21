@@ -1894,18 +1894,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_subtypeShopping => 'Nákup';
 
   @override
-  String get time_scopeWorkPaid => 'Placená práce';
-
-  @override
-  String get time_scopeWorkUnpaid => 'Neplacená práce';
-
-  @override
-  String get time_scopeHousework => 'Domácí práce';
-
-  @override
-  String get time_scopeOther => 'Ostatní';
-
-  @override
   String get time_pickerTypeCaption => 'Typ';
 
   @override
@@ -1954,9 +1942,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get time_descriptionTitle => 'Co se ti podařilo?';
-
-  @override
-  String get time_prefillSaveDraft => 'Uložit koncept';
 
   @override
   String get time_editSheetTitle => 'Upravit popis';

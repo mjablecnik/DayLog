@@ -576,5 +576,9 @@
   "settings_importFailedUnknownColumn": "The file has a column \"{detail}\" that the app does not know. Nothing was changed.",
   "settings_importFailedForeignKey": "The data in the file does not refer to itself correctly (table \"{detail}\"). Nothing was changed.",
   "settings_importFailedCountMismatch": "A row count does not match ({detail}). Nothing was changed.",
-  "settings_importFailedGeneric": "The import failed. Nothing was changed."
+  "settings_importFailedGeneric": "The import failed. Nothing was changed.",
+  "time_timerCompleteNotificationBody": "Timer complete!",
+  "time_liveActivityCompleted": "Timer complete!",
+  "time_liveActivityDone": "Done!",
+  "time_liveActivityPaused": "paused"
 }

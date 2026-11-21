@@ -5,7 +5,6 @@ import 'providers/recurring_reminders_provider.dart';
 import 'providers/reminder_action_provider.dart';
 import 'providers/reminder_provider.dart';
 import 'providers/timer_provider.dart';
-import 'services/notification_service.dart';
 import 'services/recurring_reminder_service.dart';
 import 'services/reminder_service.dart';
 import 'services/timer_service.dart';
@@ -38,7 +37,7 @@ class TimeTrackingBootstrap {
   /// Runs the startup. [settingsReady] completes once the app settings (the
   /// language the notification texts use) are loaded.
   Future<void> start({required Future<void> Function() settingsReady}) async {
-    NotificationService().requestPermission();
+    _container.read(notificationServiceProvider).requestPermission();
 
     final reminderService = _container.read(reminderServiceProvider);
 

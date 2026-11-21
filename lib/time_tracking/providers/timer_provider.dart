@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import '../services/alarm_service.dart';
+import 'app_settings_bridge.dart';
 import '../services/native/live_activity_channel.dart';
 import '../services/notification_service.dart';
 import '../services/timer_service.dart';
@@ -13,11 +14,15 @@ final alarmServiceProvider = Provider<AlarmService>((ref) {
 });
 
 final liveActivityChannelProvider = Provider<LiveActivityChannel>((ref) {
-  return LiveActivityChannel();
+  return LiveActivityChannel(
+    loadLocalizations: ref.watch(localizationsLoaderProvider),
+  );
 });
 
 final notificationServiceProvider = Provider<NotificationService>((ref) {
-  return NotificationService();
+  return NotificationService(
+    loadLocalizations: ref.watch(localizationsLoaderProvider),
+  );
 });
 
 final timerProvider = StateNotifierProvider<TimerNotifier, TimerState>((ref) {

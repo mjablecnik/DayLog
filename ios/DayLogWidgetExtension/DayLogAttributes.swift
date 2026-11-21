@@ -10,4 +10,8 @@ public struct DayLogAttributes: ActivityAttributes {
         public var isCompleted: Bool
     }
     public var totalSeconds: Int
+    // Texts from the Flutter side (ARB files, language of the app).
+    public var completedText: String
+    public var doneText: String
+    public var pausedText: String
 }

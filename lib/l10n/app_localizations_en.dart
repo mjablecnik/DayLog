@@ -2228,4 +2228,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settings_importFailedGeneric =>
       'The import failed. Nothing was changed.';
+
+  @override
+  String get time_timerCompleteNotificationBody => 'Timer complete!';
+
+  @override
+  String get time_liveActivityCompleted => 'Timer complete!';
+
+  @override
+  String get time_liveActivityDone => 'Done!';
+
+  @override
+  String get time_liveActivityPaused => 'paused';
 }

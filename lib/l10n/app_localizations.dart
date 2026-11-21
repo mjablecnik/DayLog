@@ -3564,6 +3564,30 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'Import se nepodařil. Nic se nezměnilo.'**
   String get settings_importFailedGeneric;
+
+  /// Time tracking text: body of the notification and Live Activity text when the timer has finished
+  ///
+  /// In cs, this message translates to:
+  /// **'Časovač doběhl!'**
+  String get time_timerCompleteNotificationBody;
+
+  /// Time tracking text: Live Activity line on the lock screen when the timer has finished
+  ///
+  /// In cs, this message translates to:
+  /// **'Časovač doběhl!'**
+  String get time_liveActivityCompleted;
+
+  /// Time tracking text: short Live Activity text in the Dynamic Island when the timer has finished
+  ///
+  /// In cs, this message translates to:
+  /// **'Hotovo!'**
+  String get time_liveActivityDone;
+
+  /// Time tracking text: word shown next to the remaining time of a paused timer in the Live Activity
+  ///
+  /// In cs, this message translates to:
+  /// **'pozastaveno'**
+  String get time_liveActivityPaused;
 }
 
 class _AppLocalizationsDelegate

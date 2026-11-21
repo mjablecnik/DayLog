@@ -26,13 +26,13 @@ struct DayLogLockScreenView: View {
     @ViewBuilder
     private var timerLabel: some View {
         if context.state.isCompleted {
-            Text("Timer complete!")
+            Text(context.attributes.completedText)
                 .font(.system(.headline, design: .rounded))
                 .foregroundColor(Color(hex: "#E88A66"))
         } else if context.state.isPaused, let secs = context.state.pausedSecondsLeft {
             let mins = secs / 60
             let s = secs % 60
-            Text(String(format: "%02d:%02d  paused", mins, s))
+            Text(String(format: "%02d:%02d  %@", mins, s, context.attributes.pausedText))
                 .font(.system(.title3, design: .monospaced).weight(.light))
                 .foregroundColor(Color(hex: "#EEE6DC"))
         } else {
@@ -136,7 +136,7 @@ struct DayLogLiveActivity: Widget {
     @ViewBuilder
     private func expandedCountdown(context: ActivityViewContext<DayLogAttributes>) -> some View {
         if context.state.isCompleted {
-            Text("Done!")
+            Text(context.attributes.doneText)
                 .font(.system(.headline, design: .rounded))
                 .foregroundColor(Color(hex: "#E88A66"))
         } else if context.state.isPaused, let secs = context.state.pausedSecondsLeft {

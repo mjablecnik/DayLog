@@ -1,19 +1,31 @@
 import 'package:flutter/services.dart';
+
+import '../../providers/app_settings_bridge.dart' show LocalizationsLoader;
 import 'platform_channel.dart';
 
 enum LiveActivityUpdate { paused, resumed, completed }
 
 class LiveActivityChannel {
+  LiveActivityChannel({required this._loadLocalizations});
+
   static const _channel = MethodChannel(PlatformChannels.liveActivity);
+
+  /// The texts of the Live Activity come from the ARB files, in the language of
+  /// the app, because the native view has no access to them.
+  final LocalizationsLoader _loadLocalizations;
 
   Future<bool> startActivity({
     required DateTime endAt,
     required int totalSeconds,
   }) async {
     try {
+      final l10n = await _loadLocalizations();
       final result = await _channel.invokeMethod<bool>('startLiveActivity', {
         'endAt': endAt.millisecondsSinceEpoch,
         'totalSeconds': totalSeconds,
+        'completedText': l10n.time_liveActivityCompleted,
+        'doneText': l10n.time_liveActivityDone,
+        'pausedText': l10n.time_liveActivityPaused,
       });
       return result ?? false;
     } catch (_) {

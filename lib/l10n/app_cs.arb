@@ -3025,5 +3025,21 @@
   "settings_importFailedGeneric": "Import se nepodařil. Nic se nezměnilo.",
   "@settings_importFailedGeneric": {
     "description": "Import error: anything else."
+  },
+  "time_timerCompleteNotificationBody": "Časovač doběhl!",
+  "@time_timerCompleteNotificationBody": {
+    "description": "Time tracking text: body of the notification and Live Activity text when the timer has finished"
+  },
+  "time_liveActivityCompleted": "Časovač doběhl!",
+  "@time_liveActivityCompleted": {
+    "description": "Time tracking text: Live Activity line on the lock screen when the timer has finished"
+  },
+  "time_liveActivityDone": "Hotovo!",
+  "@time_liveActivityDone": {
+    "description": "Time tracking text: short Live Activity text in the Dynamic Island when the timer has finished"
+  },
+  "time_liveActivityPaused": "pozastaveno",
+  "@time_liveActivityPaused": {
+    "description": "Time tracking text: word shown next to the remaining time of a paused timer in the Live Activity"
   }
 }

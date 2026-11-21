@@ -1,7 +1,10 @@
+import 'dart:ui' show Locale;
+
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:daylog/l10n/app_localizations.dart';
 import 'package:daylog/time_tracking/services/native/platform_channel.dart';
 import 'package:daylog/time_tracking/services/alarm_service.dart';
 import 'package:daylog/time_tracking/services/native/live_activity_channel.dart';
@@ -27,7 +30,12 @@ void main() {
   });
 
   TimerNotifier createNotifier() {
-    return TimerNotifier(AlarmService(), LiveActivityChannel(), NotificationService());
+    Future<AppLocalizations> loader() async => lookupAppLocalizations(const Locale('en'));
+    return TimerNotifier(
+      AlarmService(),
+      LiveActivityChannel(loadLocalizations: loader),
+      NotificationService(loadLocalizations: loader),
+    );
   }
 
   test('stop() clears logTrigger set by stopAndLog()', () async {

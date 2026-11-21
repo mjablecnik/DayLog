@@ -60,7 +60,11 @@ class SceneDelegate: FlutterSceneDelegate {}
                     return
                 }
                 let endAt = Date(timeIntervalSince1970: Double(endAtMs) / 1000.0)
-                self.scheduleTimerNotification(at: endAt)
+                self.scheduleTimerNotification(
+                    at: endAt,
+                    title: args["title"] as? String ?? "",
+                    body: args["body"] as? String ?? ""
+                )
                 result(nil)
 
             case "cancelNotification":
@@ -78,15 +82,15 @@ class SceneDelegate: FlutterSceneDelegate {}
         }
     }
 
-    private func scheduleTimerNotification(at date: Date) {
+    private func scheduleTimerNotification(at date: Date, title: String, body: String) {
         let center = UNUserNotificationCenter.current()
 
         // Remove any existing scheduled notification
         center.removePendingNotificationRequests(withIdentifiers: ["daylog_timer_alarm"])
 
         let content = UNMutableNotificationContent()
-        content.title = "DayLog"
-        content.body = "Timer complete!"
+        content.title = title
+        content.body = body
         content.sound = UNNotificationSound(named: UNNotificationSoundName("alarm.caf"))
         content.interruptionLevel = .timeSensitive
         // Store a numeric notification ID in userInfo so that
@@ -136,7 +140,13 @@ class SceneDelegate: FlutterSceneDelegate {}
                     let endAtMs = (args["endAt"] as? NSNumber)?.int64Value ?? 0
                     let endAt = Date(timeIntervalSince1970: Double(endAtMs) / 1000.0)
                     let totalSeconds = (args["totalSeconds"] as? Int) ?? 1200
-                    result(manager.startLiveActivity(endAt: endAt, totalSeconds: totalSeconds))
+                    result(manager.startLiveActivity(
+                        endAt: endAt,
+                        totalSeconds: totalSeconds,
+                        completedText: args["completedText"] as? String ?? "",
+                        doneText: args["doneText"] as? String ?? "",
+                        pausedText: args["pausedText"] as? String ?? ""
+                    ))
 
                 case "updateLiveActivity":
                     if let args = call.arguments as? [String: Any],

@@ -2276,4 +2276,16 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get settings_importFailedGeneric =>
       'Import se nepodařil. Nic se nezměnilo.';
+
+  @override
+  String get time_timerCompleteNotificationBody => 'Časovač doběhl!';
+
+  @override
+  String get time_liveActivityCompleted => 'Časovač doběhl!';
+
+  @override
+  String get time_liveActivityDone => 'Hotovo!';
+
+  @override
+  String get time_liveActivityPaused => 'pozastaveno';
 }

@@ -11,6 +11,10 @@ struct DayLogAttributes: ActivityAttributes {
         var isCompleted: Bool
     }
     var totalSeconds: Int
+    // Texts from the Flutter side (ARB files, language of the app).
+    var completedText: String
+    var doneText: String
+    var pausedText: String
 }
 
 @available(iOS 16.2, *)
@@ -22,10 +26,21 @@ class LiveActivityManager {
         self.channel = channel
     }
 
-    func startLiveActivity(endAt: Date, totalSeconds: Int) -> Bool {
+    func startLiveActivity(
+        endAt: Date,
+        totalSeconds: Int,
+        completedText: String,
+        doneText: String,
+        pausedText: String
+    ) -> Bool {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return false }
 
-        let attributes = DayLogAttributes(totalSeconds: totalSeconds)
+        let attributes = DayLogAttributes(
+            totalSeconds: totalSeconds,
+            completedText: completedText,
+            doneText: doneText,
+            pausedText: pausedText
+        )
         let state = DayLogAttributes.ContentState(
             endAt: endAt,
             isPaused: false,

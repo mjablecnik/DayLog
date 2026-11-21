@@ -36,7 +36,7 @@ scripts/release.sh 1.0.0                  # bump pubspec, write CHANGELOG.md, co
 The Linux build needs GStreamer dev packages and a D-Bus session at run time. The sandbox has no root: download
 the `.deb` files with `apt-get download`, unpack them with `dpkg -x` into a scratch prefix, point the `.pc` files at
 it and build with `PKG_CONFIG_PATH`, `LIBRARY_PATH`, `CPATH`, `LDFLAGS=-Wl,-rpath-link,...` and `LD_LIBRARY_PATH`
-set to it (see DOCS.md Troubleshooting). The window cannot be screenshotted under Xvfb (it stays black). To look at the screens without a device, pump the app in a widget test and write the
+set to it (see DOCS.md Troubleshooting). Run it with `dbus-run-session -- xvfb-run -a`, then `scrot` and `xdotool` (skill `sandbox-flutter-linux-run`). To look at the screens without a device, pump the app in a widget test and write the
 `RepaintBoundary` image to a file.
 
 ## Layout

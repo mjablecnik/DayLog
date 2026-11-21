@@ -10,9 +10,9 @@ loading the data of the two old apps.
 ## Navigation
 
 - A bottom bar with five tabs: **Timer** (the first screen), **Quests**, **Calendar**, **Notes** and **Settings**.
-- A side drawer with **History**, **Statistics** (group Time) and **Missions** (group Planning), opened with the
-  menu button in the header of every page. While one of these pages is shown, the bar marks the tab it
-  belongs to (Timer, or Quests).
+- A side drawer with the complete navigation: **Timer**, **History**, **Statistics** (group Time), **Quests**,
+  **Missions**, **Calendar**, **Notes** (group Planning) and **Settings**, opened with the menu button in the
+  header of every page. While History or Statistics is shown, the bar marks Timer; for Missions it marks Quests.
 - A link such as `zafling://timer` opens a page: `timer`, `history`, `statistics`, `quests`, `missions`,
   `calendar`, `notes` or `settings`. A Home Screen icon from the Shortcuts app can open any of them.
 

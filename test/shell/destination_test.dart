@@ -4,10 +4,19 @@ import 'package:zafling/shell/destination.dart';
 
 void main() {
   // Feature: app-foundation, Property 1: Every Destination is reachable
-  test('every Destination is a tab or a Drawer item, never both and never neither', () {
-    for (final Destination d in Destination.values) {
-      expect(Destination.tabs.contains(d) != Destination.drawerItems.contains(d), isTrue, reason: d.name);
-    }
+  test('the Drawer lists every Destination once; the tabs are a subset', () {
+    expect(Destination.drawerItems.toSet(), Destination.values.toSet());
+    expect(Destination.drawerItems.length, Destination.values.length);
+    expect(Destination.drawerItems, <Destination>[
+      Destination.timer,
+      Destination.history,
+      Destination.statistics,
+      Destination.quests,
+      Destination.missions,
+      Destination.calendar,
+      Destination.notes,
+      Destination.settings,
+    ]);
     expect(Destination.tabs, <Destination>[
       Destination.timer,
       Destination.quests,
@@ -24,8 +33,7 @@ void main() {
     for (final Destination d in Destination.tabs) {
       expect(d.tab, d);
     }
-    for (final Destination d in Destination.drawerItems) {
-      expect(d.group, isNotNull, reason: d.name);
+    for (final Destination d in Destination.values) {
       expect(d.tab.isTab, isTrue, reason: d.name);
     }
   });

@@ -19,6 +19,7 @@ import 'package:zafling/quests/ui/missions/missions_screen.dart';
 import 'package:zafling/notes/ui/screens/notes/notes_screen.dart';
 import 'package:zafling/settings/ui/settings_screen.dart';
 import 'package:zafling/shell/deep_link.dart';
+import 'package:zafling/shell/app_drawer.dart';
 import 'package:zafling/shell/app_shell.dart';
 import 'package:zafling/shell/bottom_bar.dart';
 import 'package:zafling/shell/destination.dart';
@@ -264,7 +265,7 @@ void main() {
       );
     });
 
-    shellTest('History, Statistics and Missions are in the Drawer, not in the bar', (
+    shellTest('the Drawer lists the complete navigation, the tabs included', (
       tester,
     ) async {
       await pumpApp(tester);
@@ -272,19 +273,19 @@ void main() {
       await tester.tap(find.byType(MenuButton).hitTestable().first);
       await tester.pumpAndSettle();
       for (final Destination d in Destination.drawerItems) {
-        expect(find.byKey(ValueKey<Destination>(d)), findsOneWidget);
+        expect(find.byKey(drawerItemKey(d)), findsOneWidget, reason: d.name);
       }
-      expect(Destination.drawerItems, <Destination>[
-        Destination.history,
-        Destination.statistics,
-        Destination.missions,
-      ]);
-      for (final Destination d in Destination.tabs) {
-        // Only the bar has the tabs; the Drawer lists none of them.
-        expect(
-          find.descendant(of: find.byType(Drawer), matching: find.byKey(ValueKey<Destination>(d))),
-          findsNothing,
-        );
+      expect(Destination.drawerItems.length, Destination.values.length);
+    });
+
+    shellTest('every Destination can be opened from the Drawer', (tester) async {
+      await pumpApp(tester);
+      await settle(tester);
+      for (final Destination d in Destination.values) {
+        await tapDestination(tester, d, viaDrawer: true);
+        await settle(tester);
+        expect(shown(tester), d, reason: d.name);
+        expect(find.byType(Drawer), findsNothing, reason: d.name);
       }
     });
 

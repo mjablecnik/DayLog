@@ -65,8 +65,8 @@ page in the shell and, if it has settings, a group passed to `SettingsScreen.mod
 ### Navigation
 
 `Destination` is the one list of pages. The bottom bar shows the tabs (`Destination.tabs`: timer, quests,
-calendar, notes, settings), the drawer lists the rest (`Destination.drawerItems`: history, statistics,
-missions), and the deep-link parser reads the same names. A page that is not a tab marks the tab it belongs to
+calendar, notes, settings), the drawer lists every page (`Destination.drawerItems`: Time = timer, history, statistics; Planning = quests,
+missions, calendar, notes; then settings), and the deep-link parser reads the same names. A page that is not a tab marks the tab it belongs to
 (`Destination.tab`). Every page keeps its state while another is shown (`IndexedStack`). The menu button
 (`ui_kit/common/menu_button.dart`) opens the drawer; a pushed route is outside its scope and shows no button.
 

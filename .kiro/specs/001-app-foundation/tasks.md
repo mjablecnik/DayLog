@@ -77,7 +77,7 @@ Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its fil
 
   - [x] 4.3 Add the `BottomBar` and the `AppDrawer`
     - `BottomBar` from QuestLog's tab bar (rename `ShellTabBar`): tabs Timer, Quests, Calendar, Notes, Settings; marks the parent tab of History, Statistics and Missions
-    - `AppDrawer` lists History and Statistics (group Time) and Missions (group Planning); labels from l10n; closes on selection
+    - `AppDrawer` lists every Destination: Timer, History, Statistics (group Time), Quests, Missions, Calendar, Notes (group Planning) and Settings; labels from l10n; closes on selection
     - _Requirements: 4.2, 4.3, 4.5_
 
   - [x] 4.4 Rebuild `AppShell` around `Destination` and `IndexedStack`

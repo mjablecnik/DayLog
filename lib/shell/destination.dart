@@ -1,8 +1,9 @@
 import '../l10n/app_localizations.dart';
 import '../ui_kit/common/app_icon.dart';
 
-/// Where a Destination is listed in the Drawer.
-enum DestinationGroup { time, planning }
+/// Where a Destination is listed in the Drawer: Time and Planning have a
+/// heading, the app group (Settings) stands last without one.
+enum DestinationGroup { time, planning, app }
 
 /// A page of the app. The order of the values is the order of the pages in the
 /// shell's `IndexedStack`; the Bottom_Bar shows the tabs in the order of
@@ -26,10 +27,12 @@ enum Destination {
     settings,
   ];
 
-  /// The Destinations listed in the Drawer: everything that is not a tab.
+  /// The Destinations listed in the Drawer: the complete navigation, the tabs
+  /// included, in the order of [DestinationGroup].
   static List<Destination> get drawerItems => <Destination>[
-    for (final Destination d in values)
-      if (!d.isTab) d,
+    for (final DestinationGroup g in DestinationGroup.values)
+      for (final Destination d in values)
+        if (d.group == g) d,
   ];
 
   bool get isTab => tabs.contains(this);
@@ -41,11 +44,11 @@ enum Destination {
     _ => this,
   };
 
-  /// The group of a Drawer item; null for a tab.
-  DestinationGroup? get group => switch (this) {
-    history || statistics => DestinationGroup.time,
-    missions => DestinationGroup.planning,
-    _ => null,
+  /// The group of the Destination in the Drawer.
+  DestinationGroup get group => switch (this) {
+    timer || history || statistics => DestinationGroup.time,
+    quests || missions || calendar || notes => DestinationGroup.planning,
+    settings => DestinationGroup.app,
   };
 
   /// The name in a `zafling://<name>` link.

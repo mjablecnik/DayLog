@@ -18,7 +18,7 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 - **Shell**: The root screen that hosts the destinations, the navigation drawer, the splash and the Reconciliation.
 - **Destination**: One reachable page of the App: Timer, History, Statistics, Quests, Missions, Calendar, Notes, Settings.
 - **Bottom_Bar**: The bottom navigation bar with five tabs: Timer, Quests, Calendar, Notes, Settings.
-- **Drawer**: The side panel that lists the Destinations that are not tabs of the Bottom_Bar: History, Statistics and Missions.
+- **Drawer**: The side panel that lists the complete navigation: every Destination, including the tabs of the Bottom_Bar.
 - **Deep_Link**: A URL `zafling://<destination>` that opens a Destination.
 - **Database**: The single Drift database of the App, stored in one SQLite file.
 - **Legacy_App**: TimeLog or QuestLog in the frozen versions named above.
@@ -80,7 +80,7 @@ This is a pure move. No new functionality is added: no Today page, no XP from th
 
 1. WHEN the App starts, THE Shell SHALL show the Timer Destination first, after the splash.
 2. THE Shell SHALL provide a Bottom_Bar with the tabs Timer, Quests, Calendar, Notes and Settings, in this order.
-3. THE Shell SHALL provide a Drawer that lists History and Statistics (group Time) and Missions (group Planning).
+3. THE Shell SHALL provide a Drawer that lists every Destination: Timer, History and Statistics (group Time), Quests, Missions, Calendar and Notes (group Planning), and Settings.
 4. WHEN the user selects a tab of the Bottom_Bar, THE Shell SHALL show its Destination.
 5. WHEN the user selects a Destination in the Drawer, THE Shell SHALL show it and close the Drawer.
 6. WHILE the Destination shown is not a tab, THE Bottom_Bar SHALL mark the tab it belongs to: Timer for History and Statistics, Quests for Missions.

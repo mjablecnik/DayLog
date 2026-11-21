@@ -43,7 +43,7 @@ DOCS.md Troubleshooting. To look at the screens without a device, pump the app i
 lib/
   main.dart, app.dart   entry point; root widget (theme registry, locale, reward overlay, shell)
   core/ database/ theme/ ui_kit/ l10n/   shared building blocks (database/export, database/import)
-  shell/                bottom bar (5 tabs), drawer (History, Statistics, Missions), deep links, reconciliation
+  shell/                bottom bar (5 tabs), drawer (all pages), deep links, reconciliation
   settings/             settings screen, shortcut guide, export and import rows; takes module groups from the shell
   quests/ calendar/ notes/   the QuestLog modules (data/, domain/, services/, ui/)
   time_tracking/        the TimeLog feature; public surface is time_tracking.dart

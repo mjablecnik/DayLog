@@ -63,7 +63,7 @@ scripts/release.sh 1.0.0            # bump the version, update CHANGELOG.md, com
 ```
 
 The bottom bar has five tabs: Timer, Quests, Calendar, Notes and Settings. The side drawer, opened with the
-menu button in the header of every page, holds History, Statistics and Missions.
+menu button in the header of every page, lists all pages: the five tabs plus History, Statistics and Missions.
 
 **Moving from TimeLog and QuestLog.** In each old app (QuestLog 1.5.0, TimeLog 1.2.0), open Settings → Data →
 Export data and save the file. Then in Zafling open Settings → Data → Import data, pick the file, and confirm

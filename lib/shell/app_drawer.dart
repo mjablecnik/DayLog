@@ -6,8 +6,13 @@ import '../theme/tokens.dart';
 import '../ui_kit/common/app_icon.dart';
 import 'destination.dart';
 
-/// The side panel with the Destinations that are not tabs of the Bottom_Bar,
-/// grouped as Time and Planning.
+/// The side panel with the complete navigation: every Destination, grouped as
+/// Time, Planning and the app itself. The Bottom_Bar repeats the five tabs.
+
+/// The key of the Drawer row of [destination]; the Bottom_Bar tab has its own.
+Key drawerItemKey(Destination destination) =>
+    ValueKey<String>('drawer-${destination.name}');
+
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key, required this.selected, required this.onSelect});
 
@@ -43,25 +48,31 @@ class AppDrawer extends StatelessWidget {
             ),
             for (final DestinationGroup group
                 in DestinationGroup.values) ...<Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  Space.s12,
-                  Space.s24,
-                  Space.s12,
-                  Space.s8,
-                ),
-                child: Text(
-                  _groupLabel(l, group).toUpperCase(),
-                  style: context.bodyText.labelSmall!.copyWith(
-                    color: p.textFaint,
+              if (group == DestinationGroup.app)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: Space.s8),
+                  child: Divider(),
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    Space.s12,
+                    Space.s24,
+                    Space.s12,
+                    Space.s8,
+                  ),
+                  child: Text(
+                    _groupLabel(l, group).toUpperCase(),
+                    style: context.bodyText.labelSmall!.copyWith(
+                      color: p.textFaint,
+                    ),
                   ),
                 ),
-              ),
               for (final Destination d in items.where(
                 (Destination d) => d.group == group,
               ))
                 _DrawerItem(
-                  key: ValueKey<Destination>(d),
+                  key: drawerItemKey(d),
                   destination: d,
                   selected: d == selected,
                   onTap: () => onSelect(d),
@@ -77,6 +88,7 @@ class AppDrawer extends StatelessWidget {
       switch (group) {
         DestinationGroup.time => l.shell_groupTime,
         DestinationGroup.planning => l.shell_groupPlanning,
+        DestinationGroup.app => '',
       };
 }
 

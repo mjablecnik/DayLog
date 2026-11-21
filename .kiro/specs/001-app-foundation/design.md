@@ -9,7 +9,7 @@ The App is created by copying QuestLog 1.5.0 into `/workspace/Zafling`, renaming
 - **Feature-first folders with one isolated feature**: `time_tracking/` is independent and talks to the rest only through `core/`, `database/`, `theme/`, `ui_kit/`. The QuestLog modules (`quests/`, `calendar/`, `notes/`, `settings/`) were one product and depend on each other (the Board shows calendar events, an event awards XP, a Note in the Trash reuses quest actions). Untangling that would change QuestLog, which this spec does not do, so the coupling is allowed inside that group, and the test fences the group off from `time_tracking/` and the Shell. The Shell is the only place that knows every feature, so a new feature is one folder plus one Destination entry.
 - **One Database, original table names**: the importer in `003-legacy-import` can copy rows table by table without renaming. Table classes stay in their feature folder; `database/app_database.dart` lists them.
 - **One theme, a registry for more**: the blue theme of QuestLog (dark `guildBoard`, light `daylight`) is the only theme, and the Time_Module is restyled to it. `ThemeDefinition` objects in a registry hold the palettes, so a second theme is one more definition. The only restyling in the move is that of the Time_Module screens.
-- **Bottom bar for the five main pages, Drawer for the rest**: Timer, Quests, Calendar, Notes and Settings are tabs; History, Statistics and Missions are in the Drawer, and the bar marks the tab they belong to. `IndexedStack` keeps state alive.
+- **Bottom bar for the five main pages, Drawer for the rest**: Timer, Quests, Calendar, Notes and Settings are tabs; the Drawer lists the complete navigation (the five tabs, History, Statistics and Missions), and the bar marks the tab a Drawer-only page belongs to. `IndexedStack` keeps state alive.
 - **Own URL scheme**: `zafling://` so the Legacy_Apps keep their schemes while installed. The native handler of the Live Activity takes only `zafling://action/...`; every other `zafling://` link goes to `app_links` through `super`.
 - **iOS project from TimeLog**: a widget extension target cannot be created reliably by hand-editing `project.pbxproj`, so the App starts from TimeLog's `ios/` (which has it) and receives QuestLog's URL scheme and `FlutterDeepLinkingEnabled` entries.
 - **Menu button in the existing header**: every Destination already has its own header; the Shell supplies a `MenuButton` widget that each screen places in it, so no new bar appears.
@@ -131,7 +131,7 @@ class BottomBar extends StatelessWidget {
   final ValueChanged<Destination> onSelect;
 }
 
-/// Lists the Destinations that are not tabs.
+/// Lists every Destination: Time (Timer, History, Statistics), Planning (Quests, Missions, Calendar, Notes), then Settings.
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key, required this.selected, required this.onSelect});
   final Destination selected;
@@ -212,7 +212,7 @@ Tables are the union of the Legacy_Apps' tables with unchanged names:
 | Source | Tables |
 |---|---|
 | QuestLog (schema 6) | `missions`, `quests`, `recurring_rules`, `rule_quests`, `app_state`, `note_nodes`, `calendar_events`, `calendar_skipped_dates`, `calendar_completions`, `calendar_addresses` |
-| TimeLog (schema 8) | `time_entries`, `recurring_reminders`, `completion_records`, `task_projects`, `tasks` |
+| TimeLog (schema 8) | `time_entries`, `recurring_reminders`, `completion_records` (the Tasks tables `task_projects` and `tasks` are not carried over and are skipped on import) |
 
 No table name occurs twice. Foreign keys stay inside one feature, except those that already exist in QuestLog between `quests` and `calendar_events`; those two features are therefore allowed to share the table classes through `database/`, not through each other's folders.
 

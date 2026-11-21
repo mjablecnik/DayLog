@@ -20,3 +20,6 @@ coverage/
 # Export files of the old apps, kept here only while testing the import
 .import/
 test/goldens/failures/
+
+# Screenshots of the running app, kept for later work
+.screenshots-qa/

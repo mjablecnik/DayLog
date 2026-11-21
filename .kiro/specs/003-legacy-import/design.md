@@ -110,6 +110,9 @@ const ignoredPreferenceKeys = {
   'app_language', 'selected_theme',
   'pending_reminder_action_id', 'handled_launch_reminder_id',
 };
+
+/// Every key with this prefix is the persisted timer and is not imported either.
+const ignoredPreferencePrefix = 'timer_';
 Future<void> writePreferences(SharedPreferences prefs, Map<String, Object?> values);
 ```
 

@@ -93,7 +93,7 @@ The import is a one-off migration tool. It is part of Settings → Data so that 
 2. WHEN a `timelog-export` file is imported, THE Importer SHALL write the Time_Preferences into SharedPreferences with their types (string, int, double, bool, string list) after the transaction has committed.
 3. THE Importer SHALL NOT write the Time_Preferences keys `app_language` and `selected_theme`.
 4. WHEN the Time_Preferences hold reminder settings, THE Time_Module SHALL reschedule the notifications after the import.
-5. THE Importer SHALL NOT write the Time_Preferences keys of a pending reminder tap (`pending_reminder_action_id`, `handled_launch_reminder_id`).
+5. THE Importer SHALL NOT write the Time_Preferences keys of a pending reminder tap (`pending_reminder_action_id`, `handled_launch_reminder_id`) or of the persisted timer (every key that starts with `timer_`), because a running timer of another install means nothing here.
 6. IF writing the SharedPreferences fails, THEN THE Importer SHALL report it and leave the Database rows imported.
 
 ### Requirement 7: Zafling export

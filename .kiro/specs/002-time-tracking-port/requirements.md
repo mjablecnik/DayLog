@@ -133,7 +133,7 @@ This is a pure move: behaviour, texts and look stay as in TimeLog 1.2.0. TimeLog
 3. WHEN the Statistics Destination is selected, THE Shell SHALL call the Time_Module refresh hook.
 4. THE Time_Module SHALL NOT import another feature folder and SHALL expose only a `TimeTrackingBootstrap`, the three Destination widgets and its Settings group widgets.
 5. THE Timer_Screen, the History_Screen and the Statistics_Screen SHALL place the `MenuButton` in their existing header.
-6. THE Time_Module SHALL include the fonts Sora and JetBrainsMono and their licences in the bundled assets.
+6. THE Time_Module SHALL draw its text in the font of the App (Figtree) and SHALL NOT bundle a font of its own, because the font files of Legacy_Timelog are empty.
 
 ### Requirement 10: Equivalence with Legacy_Timelog
 

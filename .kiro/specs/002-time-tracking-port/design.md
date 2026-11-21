@@ -76,11 +76,12 @@ class TimeTrackingBootstrap {
 ### 2. Public API (`lib/time_tracking/time_tracking.dart`)
 
 ```dart
-class TimerDestination extends ConsumerWidget {}
-class HistoryDestination extends ConsumerWidget {}
-class StatisticsDestination extends ConsumerWidget {}
-class TimeSettingsGroups extends ConsumerWidget {}      // reminders, notifications
+class TimerScreen extends ConsumerStatefulWidget {}       // the Timer destination
+class HistoryScreen extends ConsumerWidget {}             // the History destination
+class StatisticsScreen extends ConsumerWidget {}          // the Statistics destination
+class TimeSettingsGroups extends ConsumerWidget {}        // reminders, testing tools
 class ReminderActionHost extends ConsumerStatefulWidget {} // opens Reminder_Action_Screen
+final timeLocaleProvider = Provider<Locale>(...);         // the app root overrides it with the app language
 void refreshStatistics(WidgetRef ref);
 ```
 

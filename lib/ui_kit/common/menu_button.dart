@@ -10,15 +10,24 @@ import 'app_icon.dart';
 /// A pushed route sits beside the Shell in the Navigator, not below this
 /// scope, so it never shows a [MenuButton] and keeps its back button.
 class ShellMenuScope extends InheritedWidget {
-  const ShellMenuScope({super.key, required this.open, required super.child});
+  const ShellMenuScope({
+    super.key,
+    required this.open,
+    required super.child,
+    this.openPage,
+  });
 
   final VoidCallback open;
+
+  /// Shows the page with this link name (`history`, `statistics`, ...) without
+  /// the Drawer; null where a screen cannot switch pages.
+  final ValueChanged<String>? openPage;
 
   static ShellMenuScope? maybeOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<ShellMenuScope>();
 
   @override
-  bool updateShouldNotify(ShellMenuScope oldWidget) => open != oldWidget.open;
+  bool updateShouldNotify(ShellMenuScope oldWidget) => open != oldWidget.open || openPage != oldWidget.openPage;
 }
 
 /// The button in a screen header that opens the Drawer. Draws nothing when no

@@ -4,7 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../theme/time_theme.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../ui_kit/common/menu_button.dart';
+import '../../../theme/tokens.dart';
+import '../../../ui_kit/common/app_icon.dart';
+import '../../../ui_kit/common/menu_button.dart' show ShellMenuScope;
+import '../../../ui_kit/common/screen_header.dart';
 import '../../providers/timer_provider.dart';
 import '../../services/timer_service.dart';
 import '../painters/ring_painter.dart';
@@ -178,15 +181,20 @@ class _TimerScreenState extends ConsumerState<TimerScreen> {
         Scaffold(
           backgroundColor: theme.background,
           body: SafeArea(
-            child: Column(
+        // The tab bar below already clears the bottom inset.
+        bottom: false,
+            // Scrolls when the screen is too short for the ring and the controls.
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints box) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: box.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Align(
                   alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 4, top: 4),
-                    child: MenuButton(),
-                  ),
+                  child: ScreenHeader(child: _PageShortcuts()),
                 ),
                 const Spacer(),
 
@@ -256,15 +264,25 @@ class _TimerScreenState extends ConsumerState<TimerScreen> {
 
                 if (status == TimerStatus.running || status == TimerStatus.paused) ...[
                   const SizedBox(height: 16),
-                  IconButton(
+                  Tooltip(
+                    message: l10n.time_timerPrefillTooltip,
+                    child: TextButton.icon(
                     onPressed: () => _showPrefillSheet(context, theme, timerState),
                     icon: Icon(Icons.edit_note_rounded, color: theme.dim),
-                    tooltip: l10n.time_timerPrefillTooltip,
+                    label: Text(
+                      l10n.time_timerPrefillTooltip,
+                      style: TextStyle(color: theme.dim, fontSize: 13),
+                    ),
+                    ),
                   ),
                 ],
 
                 const Spacer(),
               ],
+            ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -294,5 +312,45 @@ class _TimerScreenState extends ConsumerState<TimerScreen> {
       case TimerStatus.logging:
         return l10n.time_timerPhaseLogging;
     }
+  }
+}
+
+
+/// History and Statistics one tap away from the Timer, beside the menu button.
+class _PageShortcuts extends StatelessWidget {
+  const _PageShortcuts();
+
+  @override
+  Widget build(BuildContext context) {
+    final ShellMenuScope? scope = ShellMenuScope.maybeOf(context);
+    final void Function(String)? openPage = scope?.openPage;
+    if (openPage == null) return const SizedBox.shrink();
+    final AppLocalizations l = AppLocalizations.of(context);
+    final theme = AppThemeData.of(context);
+    Widget button(String icon, String label, String linkName) => Semantics(
+      button: true,
+      label: label,
+      excludeSemantics: true,
+      onTap: () => openPage(linkName),
+      child: Tooltip(
+        message: label,
+        child: InkWell(
+          onTap: () => openPage(linkName),
+          customBorder: const CircleBorder(),
+          child: SizedBox(
+            width: Metrics.touchTarget,
+            height: Metrics.touchTarget,
+            child: Center(child: AppIcon(icon, size: Metrics.iconSize, color: theme.dim)),
+          ),
+        ),
+      ),
+    );
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        button(IconAsset.history, l.shell_destinationHistory, 'history'),
+        button(IconAsset.statistics, l.shell_destinationStatistics, 'statistics'),
+      ],
+    );
   }
 }

@@ -11,7 +11,7 @@ import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/add_fab.dart';
 import '../../../ui_kit/common/app_icon.dart';
-import '../../../ui_kit/common/menu_button.dart';
+import '../../../ui_kit/common/screen_header.dart';
 import 'calendar_labels.dart';
 import 'event_form_screen.dart';
 import 'event_search_screen.dart';
@@ -78,94 +78,102 @@ class _Header extends ConsumerWidget {
     final bool canPrevious = isNavigableMonth(DateTime(month.year, month.month - 1));
     final bool canNext = isNavigableMonth(DateTime(month.year, month.month + 1));
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(Space.s8, Space.s4, Space.s8, Space.s8),
-      child: Row(
-        children: <Widget>[
-          const MenuButton(),
-          _IconTap(
-            icon: IconAsset.chevronLeft,
-            label: l.calendar_prevMonth,
-            onTap: canPrevious ? notifier.previous : null,
-            size: Metrics.iconSmall,
-          ),
-          Expanded(
-            child: Semantics(
-              button: true,
-              header: true,
-              label: '${monthTitle(month, l.localeName)}. ${l.calendar_pickMonth}',
-              excludeSemantics: true,
-              onTap: () => showMonthPicker(context),
-              child: InkWell(
-                onTap: () => showMonthPicker(context),
-                borderRadius: BorderRadius.circular(Radii.control),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-                  child: Center(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        monthTitle(month, l.localeName),
-                        maxLines: 1,
-                        style: context.displayText.titleLarge,
-                      ),
-                    ),
-                  ),
-                ),
+    final Widget monthTitleButton = Semantics(
+      button: true,
+      header: true,
+      label: '${monthTitle(month, l.localeName)}. ${l.calendar_pickMonth}',
+      excludeSemantics: true,
+      onTap: () => showMonthPicker(context),
+      child: InkWell(
+        onTap: () => showMonthPicker(context),
+        borderRadius: BorderRadius.circular(Radii.control),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                monthTitle(month, l.localeName),
+                maxLines: 1,
+                style: context.displayText.headlineMedium,
               ),
             ),
           ),
-          _IconTap(
-            icon: IconAsset.chevronRight,
-            label: l.calendar_nextMonth,
-            onTap: canNext ? notifier.next : null,
-            size: Metrics.iconSmall,
-          ),
-          const SizedBox(width: Space.s4),
-          Semantics(
-            button: true,
-            label: l.calendar_today,
-            excludeSemantics: true,
-            onTap: notifier.goToToday,
-            child: InkWell(
-              key: const ValueKey<String>('calendar-today'),
-              onTap: notifier.goToToday,
-              borderRadius: BorderRadius.circular(Radii.pill),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-                child: Center(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: p.brassSoft,
-                      borderRadius: BorderRadius.circular(Radii.pill),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: Space.s12, vertical: Space.s6),
-                      child: Text(
-                        l.calendar_today,
-                        style: context.bodyText.labelLarge!.copyWith(color: p.brassText),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          _IconTap(
-            icon: IconAsset.search,
-            label: l.calendar_search,
-            onTap: () => showEventSearch(context),
-            size: Metrics.iconSmall,
-          ),
-          _IconTap(
-            icon: IconAsset.filter,
-            label: l.calendar_filter,
-            onTap: () => showTypeFilter(context),
-            size: Metrics.iconSmall,
-            color: filterActive ? p.brassText : null,
-          ),
-        ],
+        ),
       ),
+    );
+
+    final Widget todayPill = Semantics(
+      button: true,
+      label: l.calendar_today,
+      excludeSemantics: true,
+      onTap: notifier.goToToday,
+      child: InkWell(
+        key: const ValueKey<String>('calendar-today'),
+        onTap: notifier.goToToday,
+        borderRadius: BorderRadius.circular(Radii.pill),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
+          child: Center(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: p.brassSoft,
+                borderRadius: BorderRadius.circular(Radii.pill),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Space.s12, vertical: Space.s6),
+                child: Text(
+                  l.calendar_today,
+                  style: context.bodyText.labelLarge!.copyWith(color: p.brassText),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    return Column(
+      children: <Widget>[
+        // The month beside the menu button, like the title of any other page.
+        ScreenHeader(child: monthTitleButton),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(Space.s8, 0, Space.s8, Space.s8),
+          child: Row(
+            children: <Widget>[
+              _IconTap(
+                icon: IconAsset.chevronLeft,
+                label: l.calendar_prevMonth,
+                onTap: canPrevious ? notifier.previous : null,
+                size: Metrics.iconSmall,
+              ),
+              _IconTap(
+                icon: IconAsset.chevronRight,
+                label: l.calendar_nextMonth,
+                onTap: canNext ? notifier.next : null,
+                size: Metrics.iconSmall,
+              ),
+              const SizedBox(width: Space.s4),
+              todayPill,
+              const Spacer(),
+              _IconTap(
+                icon: IconAsset.search,
+                label: l.calendar_search,
+                onTap: () => showEventSearch(context),
+                size: Metrics.iconSmall,
+              ),
+              _IconTap(
+                icon: IconAsset.filter,
+                label: l.calendar_filter,
+                onTap: () => showTypeFilter(context),
+                size: Metrics.iconSmall,
+                color: filterActive ? p.brassText : null,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

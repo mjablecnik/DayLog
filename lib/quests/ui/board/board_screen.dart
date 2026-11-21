@@ -5,8 +5,9 @@ import 'package:intl/intl.dart';
 import '../../../calendar/data/calendar_models.dart';
 import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../ui_kit/common/menu_button.dart';
+import '../../../ui_kit/common/screen_header.dart';
 import '../../services/providers.dart';
+import '../hero/hero_bar.dart';
 import '../sheets/quest_sheet.dart';
 import '../state/board_day.dart';
 import '../../../calendar/ui/state/calendar_state.dart';
@@ -15,7 +16,6 @@ import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/add_fab.dart';
 import '../../../ui_kit/common/empty_state.dart';
 import '../../../ui_kit/common/skeleton_list.dart';
-import '../hero/hero_bar.dart';
 import 'quest_list.dart';
 
 /// The Quest board: hero bar, title, the open Quests and those done today,
@@ -83,15 +83,6 @@ class _BoardScreenState extends ConsumerState<BoardScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    Space.s20,
-                    Space.s4,
-                    Space.s20,
-                    Space.s18,
-                  ),
-                  child: const HeroBar(),
-                ),
                 _TitleRow(
                   openCount: open == null
                       ? null
@@ -100,6 +91,15 @@ class _BoardScreenState extends ConsumerState<BoardScreen> {
                                 .where((EventOccurrence o) => !o.isCompleted)
                                 .length,
                   today: today,
+                ),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    Space.s20,
+                    Space.s8,
+                    Space.s20,
+                    Space.s4,
+                  ),
+                  child: HeroBar(),
                 ),
                 const SizedBox(height: Space.s10),
                 Expanded(child: body),
@@ -139,13 +139,8 @@ class _TitleRow extends StatelessWidget {
     final p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final String date = boardDateLabel(today, l.localeName);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Space.s20),
+    return ScreenHeader(
       child: Row(
-        children: <Widget>[
-          const MenuButton(),
-          Expanded(
-            child: Row(
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: <Widget>[
@@ -173,9 +168,6 @@ class _TitleRow extends StatelessWidget {
                   ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

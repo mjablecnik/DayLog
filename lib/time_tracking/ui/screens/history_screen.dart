@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../theme/time_theme.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../ui_kit/common/menu_button.dart';
+import '../../../ui_kit/common/screen_header.dart';
 import '../../providers/history_provider.dart';
 import '../widgets/controls/day_navigator.dart';
 import '../widgets/cards/day_summary.dart';
@@ -44,31 +44,30 @@ class HistoryScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: theme.background,
       body: SafeArea(
+        // The tab bar below already clears the bottom inset.
+        bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 12),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                const Positioned(left: 4, child: MenuButton()),
-                Text(
-                  l10n.time_historyTitle,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: theme.text,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
+            ScreenHeader(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.time_historyTitle,
+                      style: TextStyle(
+                        color: theme.text,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                ),
-                Positioned(
-                  right: 16,
-                  child: IconButton(
+                  IconButton(
                     icon: Icon(Icons.add, color: theme.text),
                     onPressed: () => _addEntry(context, theme, selectedDay),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 4),
             DayNavigator(theme: theme),

@@ -16,7 +16,7 @@ import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/add_fab.dart';
 import '../../../../ui_kit/common/app_icon.dart';
-import '../../../../ui_kit/common/menu_button.dart';
+import '../../../../ui_kit/common/screen_header.dart';
 import '../../../../ui_kit/common/empty_state.dart';
 import '../../../../ui_kit/common/skeleton_list.dart';
 import '../../widgets/trash_button.dart';
@@ -265,13 +265,8 @@ class _TitleRow extends ConsumerWidget {
           )
         : null;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Space.s20),
-      child: Row(
-        children: <Widget>[
-          const MenuButton(),
-          Expanded(
-            child: LayoutBuilder(
+    return ScreenHeader(
+      child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints box) {
           // The title is never squeezed to half a row: when it and the counts do
           // not fit side by side, the counts go under it.
@@ -305,9 +300,6 @@ class _TitleRow extends ConsumerWidget {
             ],
           );
         },
-      ),
-          ),
-        ],
       ),
     );
   }

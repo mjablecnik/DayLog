@@ -7,7 +7,8 @@ import 'package:intl/intl.dart';
 
 import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../ui_kit/common/menu_button.dart';
+import '../../../ui_kit/common/screen_header.dart';
+import '../hero/hero_bar.dart';
 import '../../services/providers.dart';
 import '../sheets/mission_sheet.dart';
 import '../state/board_day.dart';
@@ -20,7 +21,6 @@ import '../state/reorder.dart';
 import '../../../ui_kit/common/empty_state.dart';
 import '../../../ui_kit/common/haptics.dart';
 import '../../../ui_kit/common/skeleton_list.dart';
-import '../hero/hero_bar.dart';
 import '../../../ui_kit/sheet/confirm_destructive.dart';
 import '../mission_detail/mission_detail_screen.dart';
 import 'mission_swipe_row.dart';
@@ -129,18 +129,18 @@ class _MissionsScreenState extends ConsumerState<MissionsScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    Space.s20,
-                    Space.s4,
-                    Space.s20,
-                    Space.s18,
-                  ),
-                  child: const HeroBar(),
-                ),
                 _TitleRow(
                   openCount: openList?.length ?? 0,
                   doneCount: doneList?.length ?? 0,
+                ),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    Space.s20,
+                    Space.s8,
+                    Space.s20,
+                    Space.s4,
+                  ),
+                  child: HeroBar(),
                 ),
                 const SizedBox(height: Space.s10),
                 Expanded(child: body),
@@ -174,13 +174,8 @@ class _TitleRow extends StatelessWidget {
       if (openCount > 0) l.missions_openCount(openCount),
       if (doneCount > 0) l.missions_doneCount(doneCount),
     ];
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Space.s20),
+    return ScreenHeader(
       child: Row(
-        children: <Widget>[
-          const MenuButton(),
-          Expanded(
-            child: Row(
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: <Widget>[
@@ -205,9 +200,6 @@ class _TitleRow extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

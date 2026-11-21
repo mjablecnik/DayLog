@@ -8,7 +8,7 @@ import '../../theme/time_theme.dart';
 import '../../../database/app_database.dart' show TimeEntry;
 import '../../data/stats_data.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../ui_kit/common/menu_button.dart';
+import '../../../ui_kit/common/screen_header.dart';
 import '../../providers/statistics_provider.dart';
 import '../../providers/history_provider.dart' show logicalDay;
 import '../painters/bar_painter.dart';
@@ -49,26 +49,22 @@ class StatisticsScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: theme.background,
       body: SafeArea(
+        // The tab bar below already clears the bottom inset.
+        bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 12),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                const Positioned(left: 4, child: MenuButton()),
-                Text(
-                  l10n.time_statsTitle,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: theme.text,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
+            ScreenHeader(
+              child: Text(
+                l10n.time_statsTitle,
+                style: TextStyle(
+                  color: theme.text,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 4),
             _PeriodToggle(theme: theme),
             const SizedBox(height: 8),
             _DateNav(theme: theme),

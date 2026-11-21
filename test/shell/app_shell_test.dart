@@ -356,11 +356,9 @@ void main() {
       await open(tester, Destination.settings);
 
       expect(find.byType(TimeSettingsGroups), findsOneWidget);
-      expect(find.text('DAILY REMINDER'), findsOneWidget);
-      // The testing tools are a quiet row after About, not a group of their own.
-      expect(find.text('TESTING'), findsNothing);
+      expect(find.text('REMINDERS'), findsOneWidget);
       final double shortcut = tester.getTopLeft(find.text('HOME SCREEN SHORTCUT')).dy;
-      final double reminder = tester.getTopLeft(find.text('DAILY REMINDER')).dy;
+      final double reminder = tester.getTopLeft(find.text('REMINDERS')).dy;
       expect(reminder, greaterThan(shortcut));
     });
 

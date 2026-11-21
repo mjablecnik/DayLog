@@ -245,7 +245,6 @@ class _AppShellState extends ConsumerState<AppShell>
                   Destination.settings => SettingsScreen(
                     shortcutTargets: _shortcutTargets(context),
                     moduleGroups: const <Widget>[TimeSettingsGroups()],
-                    toolGroups: const <Widget>[TimeToolsGroup()],
                   ),
                 },
             ],

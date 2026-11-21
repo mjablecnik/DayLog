@@ -21,6 +21,7 @@ import 'import_row.dart';
 import '../../ui_kit/common/settings_nav_row.dart';
 import 'rules_screen.dart';
 import 'shortcut_guide.dart';
+import 'shortcut_screen.dart';
 
 /// The "Nastavení" tab: profile, language, appearance, recurring rules,
 /// the Home Screen shortcut guide and About.
@@ -33,7 +34,6 @@ class SettingsScreen extends ConsumerWidget {
     super.key,
     required this.shortcutTargets,
     this.moduleGroups = const <Widget>[],
-    this.toolGroups = const <Widget>[],
   });
 
   /// The pages the Home Screen shortcut guide offers.
@@ -43,10 +43,6 @@ class SettingsScreen extends ConsumerWidget {
   /// the shortcut guide and the data group. The shell supplies them, so this
   /// screen does not know the features.
   final List<Widget> moduleGroups;
-
-  /// Groups of the other features that are tools rather than settings, shown
-  /// after About so they stay out of the way.
-  final List<Widget> toolGroups;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -101,7 +97,15 @@ class SettingsScreen extends ConsumerWidget {
                   const SizedBox(height: Space.s24),
                   SettingsGroup(
                     label: l.settings_shortcutTitle,
-                    child: ShortcutGuide(targets: shortcutTargets),
+                    child: SettingsNavRow(
+                      title: l.settings_shortcutTitle,
+                      subtitle: l.settings_shortcutSubtitle,
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => ShortcutScreen(targets: shortcutTargets),
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: Space.s24),
                   for (final Widget group in moduleGroups) ...<Widget>[
@@ -119,10 +123,6 @@ class SettingsScreen extends ConsumerWidget {
                     label: l.settings_groupAbout,
                     child: const _AboutRow(),
                   ),
-                  for (final Widget group in toolGroups) ...<Widget>[
-                    const SizedBox(height: Space.s24),
-                    group,
-                  ],
                 ],
               ),
             ),

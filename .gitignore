@@ -17,3 +17,5 @@ coverage/
 
 # FVM Version Cache
 .fvm/
+# Export files of the old apps, kept here only while testing the import
+.import/

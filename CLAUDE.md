@@ -1,127 +1,91 @@
-# Questlog
+# Zafling
 
-Personal gamified TODO app for a single user (Martin): **Quests** (one-off tasks) and
-**Missions** (long-term goals made of quests), XP and levels, recurring missions posted
-from rules. Flutter, iOS primary (Linux desktop is used for development and tests),
-local-only SQLite via Drift + Riverpod — no server, no account, no network at runtime.
+Personal app for one user (Martin), the merger of two earlier Flutter apps: **TimeLog** (a countdown timer that
+logs time, with History, Statistics and reminders) and **QuestLog** (Quests and Missions with XP, a Calendar,
+Notes). It is a pure move of their features plus an importer for their data; do not add features that neither app
+had. Flutter, iOS primary (Linux desktop is used for development and tests), one local SQLite database via Drift +
+Riverpod 3 — no server, no account, no network at runtime. Code and docs are English; the UI is Czech and English.
 
 ## Status
 
-Both specs (`001-questlog-domain`, `002-questlog-ui`) are fully implemented and verified
-on the Linux desktop app (pipeline run `2026-11-15-1405`); `scripts/check.sh` is green.
-Quests have four effort tiers (10/25/50/100 XP, 2026-11-18, Martin's request; no migration).
-Board sections (2026-11-19, Martin's request; schema v2): the Board has Today and Todo. New quests
-land in Todo; a quest moves between sections by long-press drag (one flat reorderable list, the
-section headers are non-draggable entries) or the Board picker of the quest sheet. A mission's quests
-are off the Board (`quests.board` null) until Martin posts one, then it shows in Today/Todo, with
-the mission name on its card; the sheet's "Off the board" removes it again. Missions are reorderable
-by long-press drag (`missions.sort_order`). Quests without a mission always have a section.
-In the dark theme Quest cards are dark raised cards, not parchment slips (2026-11-18, Martin's
-request; `slip*` roles in `tokens.dart`); the light theme is unchanged.
-Calendar (2026-11-19, Martin's request, spec `003-questlog-calendar`; schema v3): a tab, Kalendář, with a month
-overview, day sheet, event detail, event form, search and a type filter. Eleven fixed event types (the eleventh, Quest, is the lime event of a Quest Deadline) with their own colour, repeat
-(daily, weekly, monthly, yearly), Czech public holidays, notable days and name days seeded once. An event with `On the board`
-shows on the Board as a task on its day and awards 10-100 XP (by length, or by type when all-day). The tab has no hero bar.
-Notes (2026-11-19, Martin's request, spec `004-questlog-notes`; schema v4): a fifth tab, Poznámky, between Kalendář and Nastavení. Folders and
-sub-Folders of any depth hold Notes written in a WYSIWYG editor (`super_editor`; the stored text is Markdown, converted by
-`lib/ui/screens/note_editor/note_markdown.dart`, which escapes plain text because the package's own codec is lossy) that saves by itself.
-Rename, move and delete work from a swipe and from a menu; deleting moves a node to a Trash (30 days, then purged at start, on
-return from the background and when the Trash opens). No XP, no hero bar. The mission ring now shows the quests still open.
-A Note has a title field (2026-11-20, Martin's request, spec `005-questlog-note-title`): a typed title is the name, an empty
-one leaves the name to the first line of the text; the editor keeps `super_editor`'s default overlay list (accent colour set), because a
-list with the desktop caret alone leaves iOS with no caret, handles or Cut/Copy/Paste toolbar.
-A Note in the Trash opens in a read-only preview (spec `007-questlog-trash-preview`; `SuperReader`, Obnovit button).
-Month view (2026-11-20, Martin's request, spec `006-questlog-calendar-spans`): an event of several days is one bar per week
-row across its days, lanes from `layoutWeek` (`lib/ui/screens/calendar/week_lanes.dart`) so a bar keeps one height.
-Address history (2026-11-20, Martin's request, spec `008-questlog-address-history`; schema v5): the Event_Form suggests addresses saved on earlier events, from the `calendar_addresses` table, forgotten after 30 days without use (no map service: there is no network).
-Deep links (spec `009-questlog-deep-links`): `questlog://calendar` (also quests, missions, notes, settings) opens that tab; Martin makes the Home Screen icon in Shortcuts (Open URL, Add to Home Screen). Package `app_links`; `deepLinksProvider` is empty except in `main`.
-Quest Deadline (2026-11-20, Martin's request, spec `010-questlog-quest-deadline`; schema v6): a Quest may have a date; it is an all-day event of the type Quest in the Calendar linked by `quests.event_id` (`ON DELETE SET NULL`), the Deadline is the event's end date, so editing the event moves it, deleting the event leaves the Quest without a date. An open Quest after its Deadline shows "Po termínu" (`destructiveText`). Completing happens only on the Quest.
-Not done: the iOS build and every on-device check — Martin does those himself (open LOW
-entry in `.agents/ISSUES.md`).
+Specs `001-app-foundation`, `002-time-tracking-port` and `003-legacy-import` in `.kiro/specs/` are implemented;
+`scripts/check.sh` is green. The first release is `1.0.0-dev.0`. Not checked here (Martin does it on the iPhone):
+the iOS build, the Live Activity, the alarm sound, notifications and taps on them, the share sheet and file picker.
+The old apps stay installed beside it until the import is compared (QuestLog tag `v1.5.0`, TimeLog tag `v1.2.0`, in
+`/workspace/QuestLog` and `/workspace/TimeLog`; they are read-only archives).
+
+The name Zafling is under trial; it lives in `pubspec.yaml` (`name`), `ios/` (bundle id `com.jablecnik.zafling`,
+App Group, extension target, Info.plist), `linux/`, the URL scheme (`lib/core/app_identity.dart`), the channel names
+in `lib/time_tracking/services/native/platform_channel.dart` and Swift, and the ARB key `app_name`.
 
 ## Commands
 
-Run from the project root. Once per sandbox:
-`git config --global --add safe.directory /opt/flutter` (skill `sandbox-flutter`).
+Run from the project root. Once per sandbox: `git config --global --add safe.directory /opt/flutter` (skill
+`sandbox-flutter`).
 
 ```bash
 flutter pub get
-timeout 500 dart run build_runner build   # Drift codegen, ~50 s: run it in the background and poll the log
-scripts/check.sh                          # analyze + all tests (~4 min) + structure check: the gate
+timeout 500 dart run build_runner build   # Drift + freezed codegen, 1-3 min: run it in the background and poll the log
+flutter gen-l10n                          # after editing an .arb file (app_cs.arb is the template)
+scripts/check.sh                          # analyze + all tests (~10 min) + structure check: the gate
 flutter test test/core/xp_rules_test.dart                  # one test file
 flutter test --update-goldens test/goldens                 # regenerate goldens, deliberately
-xvfb-run -a flutter run -d linux          # run the app (the sandbox has no DISPLAY)
+scripts/release.sh 1.0.0                  # bump pubspec, write CHANGELOG.md, commit, tag (clean tree only)
 ```
 
-`l10n.yaml` + `generate: true` regenerate `lib/l10n/app_localizations*.dart`; edit only the
-`.arb` files (`app_cs.arb` is the template). `lib/data/database.g.dart` is committed.
+The Linux build needs GStreamer dev packages (not installed in the sandbox) and a D-Bus session at run time; see
+DOCS.md Troubleshooting. To look at the screens without a device, pump the app in a widget test and write the
+`RepaintBoundary` image to a file.
 
 ## Layout
 
 ```
 lib/
-  main.dart, app.dart   entry point; root widget (theme, locale, shell)
-  core/                 pure Dart: clock, board day (04:00), XP/levels, cadence, errors; calendar/ (types, repeats, Easter, event XP); notes/ (tree rules, names, trash policy)
-  data/                 Drift tables, database (+ .g.dart), models, mappers, preferences; calendar/ (tables, seed, filter store); notes/ (note_nodes table)
-  services/             quest/mission/recurrence/settings services, XP engine, providers; calendar/ (service, providers); notes/ (service, providers)
-  ui/                   theme/ (tokens, typography), state/, screens/, sheets/,
-                        widgets/ (cards, common, hero, reward, sheet), forms/
-  l10n/                 ARB files (cs, en) + generated localizations
-assets/fonts, assets/icons   bundled static TTFs (+ licenses/ OFL texts) and 24px SVG icons (nothing fetched at runtime)
-drift_schemas/               schema dump per version (currently v6)
-scripts/                     check.sh, check-structure.sh (max 15 source files per directory)
-screenshots/                 README screenshots (English, dark theme, real app at 2x); retake them after visible UI changes
-test/                        mirrors lib/ (core, data, services, ui) + goldens/, helpers/
-.kiro/specs/                 001 domain, 002 UI, 003 calendar, 004 notes, 005-010 later changes: requirements, design, tasks
-.design/                     approved visual contract (DESIGN.md, artboards/, screens/, icon/generate.mjs = app icon + launch screen)
-.agents/                     pipeline artifacts: PIPELINE_STATE.json, ISSUES.md, MEMORY.md,
-                             USE_CASES.md, runs/2026-11-15-1405/ (one report per phase)
+  main.dart, app.dart   entry point; root widget (theme registry, locale, reward overlay, shell)
+  core/ database/ theme/ ui_kit/ l10n/   shared building blocks (database/export, database/import)
+  shell/                bottom bar (5 tabs), drawer (History, Statistics, Missions), deep links, reconciliation
+  settings/             settings screen, shortcut guide, export and import rows; takes module groups from the shell
+  quests/ calendar/ notes/   the QuestLog modules (data/, domain/, services/, ui/)
+  time_tracking/        the TimeLog feature; public surface is time_tracking.dart
+test/                   mirrors lib/ + goldens/, helpers/, architecture/, scripts/
+.kiro/specs/            001 foundation, 002 time tracking port, 003 legacy import
+.design/                visual design inherited from QuestLog
+.agents/REFACTOR.md     the cleanup list; read it before refactoring
 ```
 
-Humans read `README.md`, `FEATURES.md` and `DOCS.md`; do not duplicate them here.
+Humans read `README.md`, `FEATURES.md`, `DOCS.md` and `CHANGELOG.md`; do not duplicate them here.
 
 ## Rules for any agent working here
 
-- Follow the Kiro spec workflow (`kiro-spec` skill) and the global standards in
-  `~/.claude/standards/` (English code/docs, Czech+English user-facing strings).
+- Follow the Kiro spec workflow (`kiro-spec` skill) and the global standards in `~/.claude/standards/`.
+- The folder boundaries are tested (`test/architecture/feature_imports_test.dart`): `time_tracking/` imports only
+  itself, `core/`, `theme/`, `ui_kit/`, `l10n/` and `database/`; the QuestLog modules never import `time_tracking/`
+  or `shell/`. Put a shared piece in `core/`, `database/`, `theme/` or `ui_kit/`.
+- Screens read colours from `context.palette`; a new theme is a `ThemeDefinition` in `lib/theme/theme_registry.dart`.
+- In `lib/` outside `time_tracking/`: no `DateTime.now` outside `lib/core/clock.dart`, no literal colours, durations
+  or spacing in UI code, no icon-font icons; guard tests under `test/` fail on them. `time_tracking/` is exempt until
+  the cleanup in `.agents/REFACTOR.md` is done; do not add new violations there either.
+- Every user-facing string goes through the ARB files in both languages, with a prefix of its feature
+  (`time_`, `settings_`, `shell_`, ...) and a description in `app_cs.arb`.
+- A schema change needs a migration step and a new dump in `drift_schemas/`; the importer's `retiredColumns`
+  lists the columns old exports hold that no longer exist.
+- Riverpod 3: never change a provider while a widget builds; the TimeLog code uses `flutter_riverpod/legacy.dart`
+  (`StateNotifier`, `StateProvider`) and is not converted yet.
 - Where `.design/` artboards and spec requirements differ, the requirements win.
-- No streaks, history screen, notifications or projects in v1, and no due dates except the
-  optional Quest Deadline of spec `010` — do not add scope the specs do not ask for.
-- No `DateTime.now` outside `lib/core/clock.dart`, no literal colours, durations or
-  spacing in `lib/ui`, no icon-font icons; guard tests under `test/` fail on them.
-- Bundle id `com.jablecnik.questlog`, display name `Questlog`: iOS reads both from
-  `ios/Flutter/AppIdentity.xcconfig`; Linux keeps its own copy of the id
-  (`APPLICATION_ID` in `linux/CMakeLists.txt`).
-
-## Typography
-
-One face, Figtree, for body text and titles alike (Martin's choice, 2026-11-20; the title-font picker and
-the other five families are gone). Titles and XP figures differ only in weight and tight spacing
-(`buildDisplayTextTheme` in `lib/ui/theme/typography.dart`). The `display_font` column of `app_state`
-stays in the schema, unused, so that no migration is needed.
-
-## Palette
-
-The only palette is the blue one (Martin's choice, 2026-11-19): `guildBoard` is its dark theme,
-`daylight` its light theme, both in `lib/ui/theme/tokens.dart`; `brass` is the accent colour. The
-temporary palette switch is gone. The old `palette_choice.txt` beside the database is no longer
-read. The app icon and launch screen were not re-tinted.
 
 ## Sandbox gotchas
 
 - Only Linux desktop/web run here; the iOS build and device checks are Martin's.
-- Do NOT add `sqlite3_flutter_libs`. `glados` clashes with `flutter_test` names: hide the
-  clashing symbols on the glados import.
-- Widget tests draw text in Ahem unless the bundled fonts are loaded (see
-  `test/ui/a11y/_a11y_harness.dart`); Riverpod 3 stream providers need a listener in
-  tests. More lessons: `grep -n -i <topic> .agents/MEMORY.md` (never read it whole).
-- Never `pkill -f` / `pgrep -f` by pattern (it matches its own shell), and never run
-  `dart format` on a whole file that is not already formatted.
+- Do NOT add `sqlite3_flutter_libs`. `glados` clashes with `flutter_test` names: hide the clashing symbols.
+- Widget tests that mount the shell need `test/flutter_test_config.dart` (empty SharedPreferences, Figtree); a query
+  started while a widget mounts cannot finish in the fake-async zone.
+- Never `pkill -f` / `pgrep -f` by pattern, and never run `dart format` on a whole file that is not already formatted.
+- The real export files of the old apps are personal data: keep them in `.import/` (gitignored), never commit them or
+  print their content.
 
 ## Git
 
-Local repository, no remote: never push. Author exactly
-`Martin Jablečník <martin.jablecnik@email.cz>`; one Conventional Commit per task or
-logical change (`feat:`, `fix:`, `test:`, `docs:`, `chore:`...), per
-`~/.claude/standards/code-git.md`. Never add tool-attribution trailers
-(no Co-Authored-By/Generated-with/session links).
+Local repository, no remote: never push. Author exactly `Martin Jablečník <martin.jablecnik@email.cz>`; one
+Conventional Commit per task or logical change, per `~/.claude/standards/code-git.md`; dependency changes in their own
+`build:` commit. Never add tool-attribution trailers (no Co-Authored-By/Generated-with/session links). Releases are
+made with `scripts/release.sh`.

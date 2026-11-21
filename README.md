@@ -1,83 +1,83 @@
 <div align="center">
 
-# ⚔️ Questlog
+# Zafling
 
-### A guild notice board for your to-do list
+### One personal app for your day: time, quests, calendar and notes
 
-**Quests for one-off tasks, Missions for long-term goals, XP and levels for the satisfaction of turning them in. Everything stays on your phone.**
+**A countdown timer that logs your time, quests and missions with XP, a calendar and notes. Everything stays on your phone.**
 
-[Quick Start](#-installation) · [Usage](#-usage) · [Features](./FEATURES.md) · [Documentation](./DOCS.md)
+[Quick Start](#-installation) · [Usage](#-usage) · [Features](./FEATURES.md) · [Documentation](./DOCS.md) · [Changelog](./CHANGELOG.md)
 
 </div>
 
 ## 📋 Description
 
-Questlog turns your to-do list into a small guild notice board.
+Zafling is the merger of two earlier apps, TimeLog (time tracking) and QuestLog (quests, missions,
+calendar, notes), in one Flutter app for iOS. It adds nothing new to either: every page works as it did,
+and the data of both apps can be loaded into it.
 
-- **Quests** are one-off tasks; **Missions** are bigger goals made of quests.
-- Finishing them earns **XP** and levels.
-- A **Calendar** and **Notes** sit next to the Board.
-- Dark and light theme, Czech and English.
-- Everything stays on your phone: no server, no account, no network.
+- **Timer** (the first screen): a countdown that logs what you did, with History and Statistics.
+- **Quests and Missions**: one-off tasks and long-term goals that earn XP and levels.
+- **Calendar** and **Notes** next to them.
+- Dark and light theme, Czech and English. Everything stays on your phone: no server, no account, no network.
 
-Built with Flutter for iOS. Every feature in detail: [FEATURES.md](./FEATURES.md).
+Every feature in detail: [FEATURES.md](./FEATURES.md).
 
 ## 📸 Screenshots
 
-<a href="screenshots/01-board.png"><img src="screenshots/01-board.png" width="31%" alt="The Board with today's events and quests"></a>&nbsp;&nbsp;&nbsp;<a href="screenshots/02-missions.png"><img src="screenshots/02-missions.png" width="31%" alt="Missions with progress rings"></a>&nbsp;&nbsp;&nbsp;<a href="screenshots/03-new-quest.png"><img src="screenshots/03-new-quest.png" width="31%" alt="The new quest sheet"></a>
+<a href="screenshots/01-timer.png"><img src="screenshots/01-timer.png" width="23%" alt="The timer"></a>&nbsp;&nbsp;<a href="screenshots/02-history.png"><img src="screenshots/02-history.png" width="23%" alt="History of the day"></a>&nbsp;&nbsp;<a href="screenshots/03-statistics.png"><img src="screenshots/03-statistics.png" width="23%" alt="Statistics"></a>&nbsp;&nbsp;<a href="screenshots/04-board.png"><img src="screenshots/04-board.png" width="23%" alt="The Board with quests"></a>
 
-<a href="screenshots/04-calendar.png"><img src="screenshots/04-calendar.png" width="31%" alt="The calendar month with coloured event types"></a>&nbsp;&nbsp;&nbsp;<a href="screenshots/05-calendar-day.png"><img src="screenshots/05-calendar-day.png" width="31%" alt="The day sheet"></a>
+<a href="screenshots/05-missions.png"><img src="screenshots/05-missions.png" width="23%" alt="Missions"></a>&nbsp;&nbsp;<a href="screenshots/06-calendar.png"><img src="screenshots/06-calendar.png" width="23%" alt="The calendar month"></a>&nbsp;&nbsp;<a href="screenshots/07-settings.png"><img src="screenshots/07-settings.png" width="23%" alt="Settings"></a>&nbsp;&nbsp;<a href="screenshots/08-drawer.png"><img src="screenshots/08-drawer.png" width="23%" alt="The side drawer"></a>
 
 ## 🔧 Prerequisites
 
-- [Flutter](https://docs.flutter.dev/get-started/install) 3.47 or newer (Dart 3.13 or
-  newer; see `environment.sdk` in `pubspec.yaml`)
-- For the Linux desktop build: the Flutter Linux toolchain (clang, CMake, GTK 3
-  development headers); for running it on a machine without a display, `xvfb-run`
-- For the iOS build: a Mac with Xcode
+- [Flutter](https://docs.flutter.dev/get-started/install) 3.47 or newer (Dart 3.13 or newer; see
+  `environment.sdk` in `pubspec.yaml`)
+- For the iOS build: a Mac with Xcode (iOS 18 or newer on the device)
+- For the Linux desktop build, only to try the app: the Flutter Linux toolchain with GTK 3 headers, GStreamer
+  development packages (the alarm sound) and a D-Bus session (notifications); see Troubleshooting in
+  [DOCS.md](./DOCS.md)
 
 ## 🚀 Installation
 
 ```bash
-git clone <repository-url> questlog
-cd questlog
+git clone <repository-url> zafling
+cd zafling
 flutter pub get
-timeout 500 dart run build_runner build   # generates the Drift database code
+timeout 500 dart run build_runner build   # generates the Drift and freezed code
 ```
 
-Questlog has no environment variables. `.env.example` exists only to say so; there is
-nothing to copy.
+Zafling has no environment variables. `.env.example` exists only to say so.
 
 > [!NOTE]
-> The Drift code generation takes about a minute. The generated `lib/data/database.g.dart`
-> and the localization files in `lib/l10n/` are committed, so a fresh clone builds and
-> runs without it; run it again only after changing `lib/data/tables.dart`.
+> The code generation takes a few minutes. The generated files (`*.g.dart`, `*.freezed.dart`) and the
+> localizations in `lib/l10n/` are committed, so a fresh clone builds without it; run it again only after
+> changing a Drift table or the timer state.
 
 ## 🎮 Usage
 
 ```bash
-flutter run -d linux                # run the desktop app
-scripts/check.sh                    # flutter analyze + all tests (about 4 min) + directory-size check
+flutter run                         # run on a connected device or simulator
+scripts/check.sh                    # flutter analyze + all tests (about 10 min) + directory-size check
+scripts/release.sh 1.0.0            # bump the version, update CHANGELOG.md, commit and tag
 ```
 
-On a machine without a display, run the app as `xvfb-run -a flutter run -d linux`; the
-tests need no display.
+The bottom bar has five tabs: Timer, Quests, Calendar, Notes and Settings. The side drawer, opened with the
+menu button in the header of every page, holds History, Statistics and Missions.
 
-The app has five tabs: Quests (the Board), Missions, Calendar, Notes and Settings; new items are created
-with the plus button on the first four. The Board shows the quests without a mission plus the
-quests of a mission that you posted there; every quest of a mission is listed in that mission's detail.
+**Moving from TimeLog and QuestLog.** In each old app (QuestLog 1.5.0, TimeLog 1.2.0), open Settings → Data →
+Export data and save the file. Then in Zafling open Settings → Data → Import data, pick the file, and confirm
+what it replaces. Compare the counts with the old app before you stop using it. The steps are in
+[DOCS.md](./DOCS.md#moving-from-timelog-and-questlog).
 
-The bundle identifier and the display name for iOS are set in one place,
-`ios/Flutter/AppIdentity.xcconfig` (`APP_BUNDLE_IDENTIFIER`, `APP_DISPLAY_NAME`);
-`Info.plist` and the Runner target read them, so change them there before the iOS build. The `RunnerTests` target keeps its own literal identifier
-(`com.jablecnik.questlog.RunnerTests`); it is not shipped.
+**Home Screen shortcuts.** A link such as `zafling://timer` or `zafling://calendar` opens a page; Settings →
+Home Screen shortcut explains how to put it on the Home Screen with the Shortcuts app.
 
 ## 📦 Deployment
 
-There is no server and no hosted deployment. Questlog is installed on an iPhone from
-Xcode, built on a Mac from this repository. That build has not been run from this
-repository's Linux development environment, so it is the one part of the project that is
-not exercised by the checks above; the open items are listed in `.agents/ISSUES.md`.
+There is no server and no hosted deployment. Zafling is installed on an iPhone from Xcode, built on a Mac from
+this repository. The iOS build, the Live Activity, the alarm and the notifications cannot be exercised from the
+Linux development environment, so they are checked on the device by hand.
 
 ## 📚 Documentation
 

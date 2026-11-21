@@ -1,62 +1,82 @@
-# Questlog — Documentation
+# Zafling — Documentation
 
-Reference material for working on Questlog. For what the app is and how to start it, see
-[README.md](./README.md); for the full feature list, [FEATURES.md](./FEATURES.md).
+Reference material for working on Zafling. For what the app is and how to start it, see
+[README.md](./README.md); for the full feature list, [FEATURES.md](./FEATURES.md); for the history of the
+releases, [CHANGELOG.md](./CHANGELOG.md).
 
 ## Environment Variables
 
-None. Questlog is a local-only app with no server, no account and no network access at
-runtime, so it reads no environment variables. `.env.example` exists only to state that,
-as the project standard requires it; it holds no keys, and the code holds no `.env`
-loader.
+None. Zafling is a local-only app with no server, no account and no network access at runtime, so it reads no
+environment variables. `.env.example` exists only to state that, as the project standard requires it.
 
 ## Project Structure
 
 ```
-questlog/
+zafling/
 ├── lib/
-│   ├── main.dart            entry point: opens the database, starts the ProviderScope
-│   ├── app.dart             root widget: theme, locale, shell
-│   ├── core/                pure Dart: clock, board day (04:00), XP and levels, cadence,
-│   │   │                    validation, domain errors
-│   │   ├── calendar/        event types, repeat rules, Easter, event XP, month grid dates
-│   │   └── notes/           the notes tree (listing, moving, visibility, trash), names and previews, trash policy
-│   ├── data/                Drift tables, database, models, mappers, preferences enums
-│   │   ├── calendar/        calendar tables, models, mappers, the one-time seed, filter store
-│   │   └── notes/           the note_nodes table and its mappers
-│   ├── services/            quest, mission, recurrence and settings services, XP engine,
-│   │                        Riverpod providers
-│   │   ├── calendar/        calendar service and its providers
-│   │   └── notes/           notes service and its providers
-│   ├── ui/
-│   │   ├── theme/           design tokens (two themes of the blue palette), typography, ThemeData
-│   │   ├── state/           UI providers, reorder logic, reward queue, board-day signal
-│   │   ├── screens/         board, missions, mission_detail, settings, shell, calendar, notes (list and Trash), note_editor
-│   │   ├── sheets/          quest, mission and rule bottom sheets (calendar/: filter, month picker, delete; notes/: add, name, move, link)
-│   │   ├── widgets/         cards, common, hero, reward, sheet
-│   │   └── forms/           validators, posting day, error text
-│   └── l10n/                app_cs.arb (template), app_en.arb, generated localizations
+│   ├── main.dart            entry point: database, container, time tracking startup, runApp
+│   ├── app.dart             root widget: theme, locale, the reward overlay, the shell
+│   ├── core/                pure Dart: clock, errors, validation, board day (04:00), event types, app link scheme, font licences
+│   ├── database/            the one Drift database (app_database.dart, preferences enums, providers)
+│   │   ├── export/          the JSON export of every table and the preferences
+│   │   └── import/          the importer for the export files (parse, plan, transaction, preferences writer)
+│   ├── theme/               tokens (the palettes), typography, ThemeData, the theme registry
+│   ├── ui_kit/              widgets every feature uses: common/ (icons, snackbar, segmented, menu button, empty state), sheet/, forms/
+│   ├── l10n/                app_cs.arb (template), app_en.arb, generated localizations
+│   ├── shell/               the root screen: bottom bar, drawer, destinations, deep links, splash, reconciliation
+│   ├── settings/            the settings service and screen, the shortcut guide, export and import rows
+│   ├── quests/              Quests, Missions, XP, recurring rules (data/, domain/, services/, ui/)
+│   ├── calendar/            the Calendar (data/, domain/, services/, ui/)
+│   ├── notes/               Notes and the Trash (data/, domain/, services/, ui/)
+│   └── time_tracking/       Timer, History, Statistics, reminders (data/, domain/, services/, providers/, theme/, ui/)
 ├── assets/
 │   ├── fonts/               static TTFs of Figtree, the one typeface of the app
 │   │   └── licenses/        one SIL OFL text per family, `<Family>-OFL.txt`
-│   └── icons/               24px SVG icons drawn with currentColor strokes
-├── drift_schemas/           drift_schema_v1.json to v6, the schema dump per version
-├── test/                    mirrors lib/ (core, data, services, ui); goldens/, helpers/
-├── scripts/                 check.sh, check-structure.sh
-├── screenshots/             the five README screenshots (English, dark theme, 780x1688)
-├── ios/, linux/             platform projects (iOS identity: ios/Flutter/AppIdentity.xcconfig)
-├── .kiro/specs/             001-questlog-domain to 010-questlog-quest-deadline (requirements, design, tasks)
-├── .design/                 the approved visual design: DESIGN.md, artboards/, screens/, icon/ (app icon + launch screen generator)
-├── .agents/                 development pipeline artifacts (state, issues, use cases, reports)
+│   ├── icons/               24px SVG icons drawn with currentColor strokes
+│   └── audio/               the alarm sound
+├── drift_schemas/           drift_schema_v1.json, the schema dump
+├── test/                    mirrors lib/; goldens/, helpers/, architecture/, scripts/, fixtures of the import
+├── scripts/                 check.sh, check-structure.sh, release.sh
+├── screenshots/             the README screenshots (English, dark theme, 780x1688)
+├── ios/, linux/             platform projects; the iOS project holds the Live Activity extension
+├── .kiro/specs/             001-app-foundation, 002-time-tracking-port, 003-legacy-import (requirements, design, tasks)
+├── .design/                 the visual design inherited from QuestLog: DESIGN.md, artboards/, screens/, icon/
+├── .agents/                 working notes (REFACTOR.md)
+├── CHANGELOG.md             released versions, written by scripts/release.sh
 ├── l10n.yaml                Flutter localization generator configuration
-└── pubspec.yaml             dependencies, fonts, assets
+└── pubspec.yaml             dependencies, fonts, assets, the version
 ```
+
+### Folder rules
+
+`test/architecture/feature_imports_test.dart` fails the build when an import breaks the layering:
+
+- `core/`, `theme/`, `ui_kit/` and `l10n/` import no feature folder.
+- `time_tracking/` imports only itself, `core/`, `theme/`, `ui_kit/`, `l10n/` and `database/`.
+- `quests/`, `calendar/`, `notes/` and `settings/` (the QuestLog modules, which grew together: the Board shows
+  calendar events, an event awards XP, a note in the Trash reuses the quest actions) may import each other, but
+  not `time_tracking/` or `shell/`.
+- `shell/` and the app root compose everything. `time_tracking/` exposes one file, `time_tracking.dart`, and the
+  shell imports only that.
+
+A new feature is a new folder beside these, a new value in `Destination` (`lib/shell/destination.dart`), a
+page in the shell and, if it has settings, a group passed to `SettingsScreen.moduleGroups`.
+
+### Navigation
+
+`Destination` is the one list of pages. The bottom bar shows the tabs (`Destination.tabs`: timer, quests,
+calendar, notes, settings), the drawer lists the rest (`Destination.drawerItems`: history, statistics,
+missions), and the deep-link parser reads the same names. A page that is not a tab marks the tab it belongs to
+(`Destination.tab`). Every page keeps its state while another is shown (`IndexedStack`). The menu button
+(`ui_kit/common/menu_button.dart`) opens the drawer; a pushed route is outside its scope and shows no button.
 
 ### Data
 
-One SQLite file, `questlog.sqlite`, in the platform's application documents directory
-(`getApplicationDocumentsDirectory()`), opened lazily in a background isolate. Ten
-tables:
+One SQLite file, `zafling.sqlite`, in the platform's application documents directory
+(`getApplicationDocumentsDirectory()`), opened lazily in a background isolate. The schema is at version 1, created
+by `onCreate` (which also inserts the singleton `app_state` row and the 35 built-in calendar events); a change to
+the schema needs a migration step in `lib/database/app_database.dart` and a new dump in `drift_schemas/`
+(`dart run drift_dev schema dump lib/database/app_database.dart drift_schemas/`). Fifteen tables:
 
 | Table | Holds |
 |---|---|
@@ -64,18 +84,24 @@ tables:
 | `missions` | name, bonus size, status (open, completed, closed), sort order, awarded bonus, optional rule |
 | `recurring_rules` | name, cadence, anchor date, next index, bonus size, last posted date |
 | `rule_quests` | the quests a rule posts with each mission |
-| `app_state` | the singleton row: total XP, hero name, language, theme (the old display font column stays, unused) |
+| `app_state` | the singleton row: total XP, hero name, language, theme mode (light, dark or system) |
 | `calendar_events` | name, note, location, event type, start and end (a date plus minutes since midnight, no time zone, no minutes for an all-day event), repeat rule and its end, the On_Board flag |
 | `calendar_skipped_dates` | dates on which a repeating event is deleted for one occurrence |
 | `calendar_completions` | the completed occurrences of events (event, date, time, awarded XP) |
 | `calendar_addresses` | the addresses saved on events (lower-cased key, last spelling, last use), for suggestions; forgotten 30 days after the last use |
-| `note_nodes` | Folders and Notes in one table: optional parent (none is the top level; deleting a folder row deletes what is inside it), folder flag, name, the Markdown body, whether the name follows the first line, created, edited and deleted times |
+| `note_nodes` | Folders and Notes in one table: optional parent (deleting a folder row deletes what is inside it), folder flag, name, the Markdown body, whether the name follows the first line, created, edited and deleted times |
+| `time_entries` | a logged time span: start and end (ISO 8601 text), description, activity type, subtype, project, custom name |
+| `recurring_reminders` | a recurring reminder: name, description, time window (minutes from midnight), repeat interval, active days (7-bit mask), active flag |
+| `completion_records` | the days on which a recurring reminder was marked done |
+| `task_projects` | the projects of the old Tasks tab, with a category (`scope`); their names feed the name suggestions |
+| `tasks` | the tasks of the old Tasks tab; no screen shows them |
 
-The schema is at version 6 (v6 added `quests.event_id`; v5 added `calendar_addresses`; v4 added `note_nodes`; v3 added the three calendar tables and fills them once with 35 built-in events: 13 Czech public holidays, 16 notable and folk days and 6 name days; v2 added `quests.board` and `missions.sort_order`; the upgrade puts every quest without a mission in Todo and keeps the old Mission order). Adding the fourth effort tier (`fullDay`) needed no migration:
-`quests.difficulty` and `rule_quests.difficulty` are plain text holding the enum name, with no
-`CHECK`, so the stored values `easy`, `normal` and `hard` keep their meaning. A change to the
-schema needs a migration step in
-`lib/data/database.dart` and a new dump in `drift_schemas/`.
+Besides the database the time tracking feature keeps small state in SharedPreferences: the running timer
+(`timer_*` keys), the reminder settings (`reminder_*`), the last choices in the entry sheets and the name
+suggestion lists. The language and the theme mode are not among them: they live in `app_state` for the whole app.
+
+Quests and the calendar share one link (`quests.event_id`), and the importer deletes and refills whole tables, so
+the table classes live in their feature folders while the database lists them all.
 
 ### Calendar
 
@@ -84,33 +110,33 @@ The Kalendář tab is independent of quests and missions except for one link: an
 start date, and completing it awards XP once (a completion row per event and date; reopening
 removes it and the XP). Occurrences of a repeating event are never stored: the service expands
 the rule for the range on screen (daily, weekly, monthly and yearly reuse `occurrenceDate` of
-`lib/core/cadence.dart`; two built-in rules exist only for the seed: relative to Easter, and
+`lib/quests/domain/cadence.dart`; two built-in rules exist only for the seed: relative to Easter, and
 the n-th weekday of a month). Event XP: a timed event 10 / 25 / 50 / 100 XP by length (up to
 30 min, 2 h, 5 h, longer); an all-day event 10 XP for birthday, name day, public holiday,
 notable day and date, 25 XP for the rest. The calendar uses the calendar day (midnight), the
 Board uses the Board_Day (04:00). The type filter is remembered in `calendar_filter.txt` beside
 the database. In the month view an event of several days is one bar per week row across the days it
-covers (`layoutWeek` in `lib/ui/screens/calendar/week_lanes.dart` gives each bar a lane, the same on
+covers (`layoutWeek` in `lib/calendar/ui/screens/week_lanes.dart` gives each bar a lane, the same on
 all its days; up to three lanes show, more show two and a "+N" in the days that have events in the
 lanes left out). The Address field of the event form lists the remembered addresses that match what is typed (up to 5, newest first); an address is forgotten 30 days after its last use, at start and on every lookup, and the event keeps its own (spec `008-questlog-address-history`). Notifications, an event URL, week and day views and user-defined types are not
 part of it (specs `003-questlog-calendar`, `006-questlog-calendar-spans`).
 
 ### Notes
 
-The Poznámky tab is independent of the rest of the app and awards no XP. Folders and Notes are rows of
-`note_nodes`; `NoteTree` (`lib/core/notes/`) holds every rule about the tree in pure Dart, and
+The Notes tab is independent of the rest of the app and awards no XP. Folders and Notes are rows of
+`note_nodes`; `NoteTree` (`lib/notes/domain/`) holds every rule about the tree in pure Dart, and
 `NotesService` streams all rows, so the tree is built in memory. Deleting sets `deleted_at` on one row, so
 a Folder goes to the Trash with everything inside it; a node is visible only while neither it nor any
 ancestor is trashed. Restore clears the time, or first moves the node to the top level when its parent
 is gone or trashed. A Trashed_Node is purged 30 days after its deletion time (at start, on return from
 the background and when the Trash opens); the foreign key's cascade removes what is inside it. A Note's
-text is Markdown, edited with `super_editor` in `lib/ui/screens/note_editor/`; `note_markdown.dart` converts
+text is Markdown, edited with `super_editor` in `lib/notes/ui/screens/note_editor/`; `note_markdown.dart` converts
 between the two and escapes plain text, because the package's own codec changes text typed in a WYSIWYG
 editor (for example ABAP field symbols such as `<fs_line>`). The language after a code fence is not kept.
 A Note has a title field above its text. A typed title is the Note's name; with an empty title the name
 follows the first line of the text (and the title field stays empty), and renaming from the menu also sets
 a chosen name. A Note in the Trash opens in a read-only preview (`trash_preview_screen.dart`, a
-`SuperReader` with the editor's stylesheet) with an Obnovit button; opening it changes nothing.
+`SuperReader` with the editor's stylesheet) with an Restore button; opening it changes nothing.
 Search, tags, images, tables, opening links and a Trash undo are not part of it (specs
 `004-questlog-notes`, `005-questlog-note-title`, `007-questlog-trash-preview`). The editor keeps the package's own overlays (accent colour
 set) so that iOS shows the caret, the selection handles and the Cut, Copy and Paste toolbar; copy and paste
@@ -120,13 +146,123 @@ carry plain text only.
 
 A Quest may have a Deadline. Saving one creates an all-day event of the type Quest (not on the Board) named like the Quest and links it in `quests.event_id`; the Deadline is that event's end date, so changing the event in the Calendar changes the Deadline, and deleting the event (or undoing it) only clears (or restores) the link. Clearing the Deadline in the Quest sheet deletes the event, deleting the Quest deletes its event, and renaming the Quest renames the event. An open Quest whose Deadline is before the Board_Day shows "Overdue" in the destructive colour on its card (Board and Mission detail); a done Quest does not. Completing is only possible on the Quest (spec `010-questlog-quest-deadline`).
 
+### Time tracking
+
+The Timer, History and Statistics pages, the entry sheets and the reminders come from TimeLog 1.2.0 and behave as
+they did. The timer is a state machine in `lib/time_tracking/services/timer_service.dart` (idle, running, paused,
+ringing, logging, a freezed state) that persists itself in SharedPreferences and recomputes the remaining time
+from the stored end time on start; a timer that ran out while the app was closed comes back ringing.
+
+- **Logical day.** History and Statistics split days at 03:00 (`dayStartHour`), so an entry logged at 01:00
+  belongs to the day before; the Board day of the quests starts at 04:00. The two are kept as they were.
+- **Untracked time** in Statistics is 16 hours per day of the period minus the tracked time; the 16 is fixed.
+- **Activity types.** Twelve types, most with subtypes, are defined once in `activityRegistry`
+  (`lib/time_tracking/domain/activity_types.dart`). The stored keys (`time_entries.activity_type`, `subtype`) are
+  Czech or ASCII identifiers and are never translated; labels come from the localization files. Colours are
+  computed (`activityEntryColor(type, subtype, isDark:)`), never stored. To add a type or subtype, add it to the
+  registry and its labels to both ARB files.
+- **Name suggestions** are kept per category (paid work, unpaid work, housework, other) and read through
+  `suggestionsProvider`, which merges the old Tasks projects of the category with the names used in entries. Any
+  code that saves a name must call `ref.invalidate(suggestionsProvider)`.
+- **Theme.** The widgets read `AppThemeData` (`lib/time_tracking/theme/time_theme.dart`), an adapter that maps
+  each colour the widgets use to a role of the app palette, so the pages follow the active theme.
+- **Language.** Texts without a BuildContext (notifications) come from `localizationsLoaderProvider`, which reads
+  the app language through `timeLocaleProvider`; the app root overrides that provider with the app setting.
+- **Startup.** `TimeTrackingBootstrap` (called from `main`) asks for the notification permission, initialises the
+  reminder plugin, handles a notification tap that launched the app (once), and reschedules the reminders.
+  `ReminderActionHost` opens the reminder screen when a tap arrives, also after a return from the background.
+  A failure in this startup is reported and does not stop the rest of the app.
+- **Alarm.** `AlarmService` creates its audio player on the first alarm, so the plugin is not touched before.
+
+### iOS native code
+
+The Live Activity and the end-of-countdown notification are native (`ios/Runner/AppDelegate.swift`,
+`LiveActivityManager.swift`, the `ZaflingWidgetExtension` target). The Dart side talks to them over two method
+channels (`lib/time_tracking/services/native/platform_channel.dart`).
+
+| Channel | Method | Arguments | Purpose |
+|---|---|---|---|
+| `com.jablecnik.zafling/notifications` | `requestPermission` | none | ask for the notification permission (returns bool) |
+| | `scheduleNotification` | `{ endAtMs }` | schedule the end-of-countdown notification |
+| | `cancelNotification` | none | cancel it (pause, stop) |
+| `com.jablecnik.zafling/live_activity` | `startLiveActivity` | `{ endAt, totalSeconds }` | start the countdown activity (returns bool) |
+| | `updateLiveActivity` | `{ action: pause\|resume\|complete, endAt? }` | update it |
+| | `endLiveActivity` | none | end it |
+| | `areActivitiesEnabled` | none | whether the user allows Live Activities |
+
+The native side calls `onLockScreenAction` (`{ action, endAtMs? }`) on the Dart side when a lock-screen button is
+used. The extension and the app share the App Group `group.com.jablecnik.zafling`; the buttons also write a pending
+action there and post the Darwin notification `com.jablecnik.zafling.action`. A Live Activity link
+`zafling://action/<pause|resume|stop>` is taken by `AppDelegate.application(_:open:options:)`; every other
+`zafling://` link goes on to the deep-link handler. Live Activities need iOS 16.2 or newer and return `false`
+silently when disabled or unsupported (the iOS target is 18.0).
+
+### Theme
+
+The app has one theme, the blue one, in a dark and a light variant. A palette is an `AppPalette`
+(`lib/theme/tokens.dart`): `guildBoard` (dark) and `daylight` (light); `brass` is the accent colour in the code.
+A `ThemeDefinition` (`lib/theme/theme_registry.dart`) pairs a light and a dark palette under an id, and
+`themeRegistry` lists them. `activeThemeProvider` returns the active one and `ZaflingApp` builds the light and dark
+`ThemeData` from it. To add a theme: add a palette pair, add a `ThemeDefinition` to the registry, and make
+`activeThemeIdProvider` read a stored choice. No screen changes, because screens read `context.palette`.
+
+| Palette | Board / accent | Notes |
+|---|---|---|
+| Dark (`guildBoard`) | `#0F1319` / `#78B4C4` | Quest cards are dark raised cards (`slip*` roles), not parchment slips. |
+| Light (`daylight`) | `#EDF1F6` / `#2B7287` | Quest cards are paper slips. |
+
+The reward card and the empty-state slip stay parchment. Every body-text pair reaches 4.5:1, the accent as text
+4.5:1 and the accent as a fill 3:1 (`test/ui/theme/contrast_test.dart`).
+
 ### Deep links
 
-The URL scheme `questlog` (registered in `ios/Runner/Info.plist`) opens a tab: `questlog://quests`, `missions`, `calendar`, `notes` or `settings`; anything else is ignored. To get a Home Screen icon that opens the Calendar: in the iOS Shortcuts app make a shortcut with the action "Open URLs" and the URL `questlog://calendar`, then Share → Add to Home Screen and pick a name and an icon; the icon can be put in a folder. The same steps are in the app under Settings → Home Screen shortcut (`lib/ui/screens/settings/shortcut_guide.dart`): pick a tab, copy its link, follow the numbered steps. See `lib/ui/screens/shell/deep_link.dart` (spec `009-questlog-deep-links`).
+The URL scheme `zafling` (registered in `ios/Runner/Info.plist`) opens a page: `zafling://timer`, `history`,
+`statistics`, `quests`, `missions`, `calendar`, `notes` or `settings`; anything else is ignored. To get a Home
+Screen icon that opens the Calendar: in the iOS Shortcuts app make a shortcut with the action "Open URLs" and the
+URL `zafling://calendar`, then Share → Add to Home Screen and pick a name and an icon. The same steps are in the
+app under Settings → Home Screen shortcut (`lib/settings/ui/shortcut_guide.dart`). The old schemes `questlog` and
+`timelogapp` are not registered, so the old apps keep working beside this one. See `lib/shell/deep_link.dart`.
 
 ### Data export
 
-Settings → Data → Export data writes every table of the database into one JSON file (`questlog-export-<date>.json`, in the temporary directory) and opens the system share sheet, so the file can be saved to Files or sent with AirDrop. The export walks `db.allTables` and copies rows as stored, so a table or column added by a later migration is exported without changes (`lib/data/database_export.dart`, `lib/services/export_service.dart`, `lib/ui/screens/settings/export_row.dart`). The file has `format` (`questlog-export`), `formatVersion`, `app`, `appVersion`, `schemaVersion`, `exportedAt`, `rowCounts` (rows per table, for checking an import) and `tables` (table name to a list of rows keyed by column name). Integers stay integers, so dates and booleans keep the database representation; a BLOB would be `{"$blob": "<base64>"}`. There is no import yet.
+Settings → Data → Export data writes every table of the database and every SharedPreferences entry into one JSON
+file (`zafling-export-<date>.json`, in the temporary directory) and opens the system share sheet. The export walks
+`db.allTables` and copies rows as stored, so a table or column added later is exported without changes
+(`lib/database/export/`). The file has `format` (`zafling-export`), `formatVersion`, `app`, `appVersion`,
+`schemaVersion`, `exportedAt`, `rowCounts` (rows per table, for checking an import), `tables` (table name to a list
+of rows keyed by column name) and `preferences`. Integers stay integers, so dates and booleans keep the database
+representation; a BLOB would be `{"$blob": "<base64>"}`.
+
+### Data import
+
+Settings → Data → Import data (`lib/settings/ui/import_row.dart`, `lib/database/import/`) reads an export file of
+QuestLog (`questlog-export`), TimeLog (`timelog-export`) or Zafling (`zafling-export`), format version 1.
+
+1. `ExportFile.parse` validates the header and the sections and refuses anything else.
+2. `ImportPlan.build` matches every table and column of the file against the schema; an unknown one refuses the file
+   and names it. Columns that the old apps wrote and the database no longer has (`app_state.display_font`,
+   `time_entries.entertainment_type`) are skipped.
+3. The user sees what each table will lose and confirms.
+4. `DatabaseImporter.import` runs one transaction: it defers the foreign keys, deletes the rows of every table in the
+   file, inserts the file's rows with their ids (values are bound parameters, names come from the schema), runs
+   `PRAGMA foreign_key_check` and compares each table's row count with the file's `rowCounts`. Any failure rolls
+   everything back and the database is as it was.
+5. After the commit the preferences are written (`lib/database/import/preferences_writer.dart`; the language, the
+   theme, the persisted timer and a pending reminder tap are never imported) and the app root's hooks reschedule
+   the reminders; the shell checks the recurring rules again.
+
+The import replaces, it does not merge: importing a file twice gives the state of importing it once. A QuestLog
+file replaces the ten QuestLog tables (including the 35 events the first start seeded, so holidays are not
+doubled); a TimeLog file replaces the five time tables. Fixtures written by the old apps' own export code are in
+`test/database/import/fixtures/`.
+
+#### Moving from TimeLog and QuestLog
+
+1. In QuestLog 1.5.0 and in TimeLog 1.2.0, Settings → Data → Export data; save each file to Files.
+2. Open each file and check that it is not empty; the `rowCounts` in it are the numbers to expect.
+3. In Zafling, Settings → Data → Import data, pick the QuestLog file and confirm; then the TimeLog file.
+4. Compare the counts in the report and the pages (quests, history) with the old apps. Keep the old apps
+   installed until you have compared.
 
 ### Rules of the game
 
@@ -138,42 +274,32 @@ Settings → Data → Export data writes every table of the database into one JS
 | Board day | starts at 04:00 local time |
 | Recurring cadences | daily, weekly, biweekly, monthly, quarterly, yearly |
 
-Out of scope in version 1: streaks, a history screen, notifications and projects, and any
-due date except the optional Quest Deadline.
+Out of scope: streaks, XP for tracked time and any due date except the optional Quest Deadline.
 
 ### Font licences
 
-The bundled font family (Figtree) is under the SIL Open Font License 1.1, which requires the licence
-text to travel with the fonts. The unmodified texts from `google/fonts` are bundled as
-`assets/fonts/licenses/<Family>-OFL.txt` and registered with Flutter's `LicenseRegistry` at
-app start (`registerFontLicenses` in `lib/core/font_licenses.dart`). Settings → About →
-"Licenses" opens Flutter's licence page, which lists them as "<Family> (font)" beside the
-framework and package licences. A test fails when a font file has no licence file.
+The bundled font family (Figtree) is under the SIL Open Font License 1.1, which requires the licence text to
+travel with the fonts. The unmodified text is bundled as `assets/fonts/licenses/<Family>-OFL.txt` and registered
+with Flutter's `LicenseRegistry` at app start (`registerFontLicenses` in `lib/core/font_licenses.dart`). Settings
+→ About → "Licenses" opens Flutter's licence page, which lists it as "<Family> (font)". A test fails when a font
+file has no licence file. TimeLog's own fonts (Sora, JetBrains Mono) are zero-byte files in its repository, which Flutter cannot load, so
+TimeLog's text fell back to the system font; Zafling draws everything in Figtree, with tabular figures where
+TimeLog named a monospace face.
 
-### Palette
+## Releases
 
-The app has one palette in two themes, the blue one Martin chose on 2026-11-19 (it follows
-TimeLog's Midnight theme). `brass` is the accent colour in the code (the name is kept to avoid
-churn).
-
-| Theme | Board / accent | Notes |
-|---|---|---|
-| Dark (`guildBoard`) | `#0F1319` / `#78B4C4` | Quest cards are dark raised cards (`slip*` roles), not parchment slips. |
-| Light (`daylight`) | `#EDF1F6` / `#2B7287` | Quest cards are paper slips. |
-
-The reward card and the empty-state slip stay parchment. Every body-text pair reaches 4.5:1,
-the accent as text (`brassText` on boards, `brassOnParchment` on slips) 4.5:1 and the accent as
-a fill 3:1 (`test/ui/theme/contrast_test.dart`). The temporary palette switch (Original, Higher
-contrast, Blue, Green) was removed together with its `palette_choice.txt` file, which is no
-longer read.
+`scripts/release.sh <version>` (for example `1.0.0` or `1.0.0-dev.0`) needs a clean working tree. It prepends a
+section to `CHANGELOG.md` made of the commit subjects since the previous tag (grouped Features, Fixes, Other),
+sets `version:` in `pubspec.yaml` (the one source of the version; the build number is kept), commits both as
+`chore: bump version to <version>` and creates the annotated tag `v<version>`. It never pushes.
 
 ## Testing
 
-The tests are headless and need no display (also true for the golden tests); only running
-the app does.
+The tests are headless and need no display (also true for the golden tests); only running the app does. A
+`test/flutter_test_config.dart` gives every test file an empty SharedPreferences store and registers Figtree.
 
 ```bash
-scripts/check.sh                                # analyze + all tests (about 4 min) + structure check
+scripts/check.sh                                # analyze + all tests (about 10 min) + structure check
 flutter test                                    # every test
 flutter test test/core/xp_rules_test.dart       # one test file
 flutter test --update-goldens test/goldens      # regenerate goldens (deliberately)
@@ -183,24 +309,31 @@ scripts/check-structure.sh --list               # file count per directory
 
 `check-structure.sh` fails when a directory holds more than 15 source files.
 
-What the tests cover: the pure rules in `test/core/`, the database and services in
-`test/data/` and `test/services/` (including property tests with `glados`), and the
-screens, widgets, accessibility, localization and design-token guards in `test/ui/`.
-`test/ui/e2e_scenario_test.dart` plays a whole day in the app, and the goldens in
-`test/goldens/` cover Board, Missions and Settings in both themes. There is no coverage
-tooling configured.
+What the tests cover: the pure rules, the database, the services (including property tests with `glados`), the
+screens, accessibility, localization and design-token guards, the folder boundaries
+(`test/architecture/`), the export, the importer (against the old apps' own export files), the release script, and
+the TimeLog tests moved with the time tracking feature (`test/time_tracking/`). `test/ui/e2e_scenario_test.dart`
+plays a whole day in the app, and the goldens in `test/goldens/` cover Board, Missions and Settings in both themes.
+The time tracking feature is exempt from the token, clock and icon-font guards for now
+(see `.agents/REFACTOR.md`). The real share sheet, file picker, alarm, Live Activity and notifications are not
+covered; they are checked on the device.
 
 ## Troubleshooting
 
 | Symptom | Cause and fix |
 |---|---|
 | `fatal: detected dubious ownership in repository at '/opt/flutter'` | Git distrusts the SDK directory. Run `git config --global --add safe.directory /opt/flutter` once. |
+| The Linux build fails on `gstreamer-1.0` | `audioplayers` needs the GStreamer development packages (`libgstreamer1.0-dev`, `libgstreamer-plugins-base1.0-dev`) and, to play the alarm, the runtime plugins (`gstreamer1.0-plugins-base`, `-good`). |
+| The Linux app shows a black window and never starts | The notification plugin needs a D-Bus session bus; start one (`dbus-daemon --session --fork --print-address`) and export `DBUS_SESSION_BUS_ADDRESS`, or run the app inside `dbus-run-session`. |
 | `flutter run -d linux` fails with no display | Prefix it with `xvfb-run -a`; only running the app needs a display, the tests do not. |
-| Analyzer errors about a missing `database.g.dart` | Run `dart run build_runner build`; it takes about a minute, so give it a longer timeout than a shell's default. |
-| Widget tests overflow although the app does not | Tests draw text in the Ahem fallback unless the bundled fonts are loaded; use `test/ui/a11y/_a11y_harness.dart`. |
+| Analyzer errors about a missing `app_database.g.dart` or `timer_service.freezed.dart` | Run `dart run build_runner build`; it takes a few minutes, so give it a longer timeout than a shell's default. |
+| Widget tests overflow although the app does not | Tests draw text in the Ahem fallback unless the bundled fonts are loaded; `test/flutter_test_config.dart` loads Figtree for every test. |
+| A widget test hangs on a database query | A query started while a widget mounts runs in the fake-async zone and cannot finish; seed first, and start loads after the first frame. |
 | A test hangs while it reads a Riverpod stream | Riverpod 3 pauses stream providers without a listener; call `container.listen(provider, (_, _) {})` first. |
+| A screen throws "tried to modify a provider while the widget tree was building" | Riverpod 3 forbids it: start the load after the first frame (`addPostFrameCallback`), as `ReminderActionScreen` does. |
 | Importing `glados` and `flutter_test` is ambiguous | Hide the clashing symbols on the `glados` import. |
 | Goldens differ after a design change | Regenerate them with `--update-goldens` and review the images in the diff. |
+| The Live Activity never appears on iOS | It needs iOS 16.2 or newer and Live Activities enabled for the app; `startLiveActivity` then returns `false` and the app goes on without it. That is expected. |
+| A timer does not resume after a force quit | The state is restored from SharedPreferences by recomputing the remaining time from the stored end time; if it already elapsed the timer comes back ringing. |
 
-Known open points (the iOS-only checks, the
-unused translation keys) are tracked in `.agents/ISSUES.md`.
+Working notes and the cleanup list are in `.agents/REFACTOR.md`.

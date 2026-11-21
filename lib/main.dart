@@ -17,7 +17,7 @@ import 'database/import/database_importer.dart';
 import 'database/import/import_providers.dart';
 import 'database/import/preferences_writer.dart';
 import 'database/providers.dart';
-import 'quests/services/providers.dart' show settingsProvider;
+import 'settings/settings_loader.dart';
 import 'settings/ui_providers.dart';
 import 'shell/deep_link.dart';
 import 'time_tracking/time_tracking.dart';
@@ -59,7 +59,7 @@ Future<void> main() async {
   );
   try {
     await TimeTrackingBootstrap(container)
-        .start(settingsReady: () => container.read(settingsProvider.future));
+        .start(settingsReady: () => loadSettings(container));
   } catch (error, stack) {
     // A failing reminder or notification setup must not keep the rest of the
     // app (quests, calendar, notes) from starting.

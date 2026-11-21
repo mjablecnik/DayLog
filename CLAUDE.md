@@ -71,6 +71,11 @@ Humans read `README.md`, `FEATURES.md`, `DOCS.md` and `CHANGELOG.md`; do not dup
   (`time_`, `settings_`, `shell_`, ...) and a description in `app_cs.arb`.
 - A schema change needs a migration step and a new dump in `drift_schemas/`; the importer's `retiredColumns` and
   `retiredTables` list the columns and tables old exports hold that no longer exist.
+- Startup lives in `lib/startup.dart` (`buildApp`), `main.dart` stays thin; `test/startup_test.dart` runs it with fakes
+  and a time limit. Riverpod 3 pauses a provider nobody listens to: before the first frame wait through
+  `loadSettings` (`lib/settings/settings_loader.dart`), never `container.read(provider.future)` alone.
+- After a change that touches startup, run the real Linux app and look at the first screen (skill
+  `sandbox-flutter-linux-run`); the tests cannot see a hung start.
 - Riverpod 3: never change a provider while a widget builds; the TimeLog code uses `flutter_riverpod/legacy.dart`
   (`StateNotifier`, `StateProvider`) and is not converted yet.
 - Where `.design/` artboards and spec requirements differ, the requirements win.

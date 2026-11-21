@@ -14,7 +14,8 @@ environment variables. `.env.example` exists only to state that, as the project 
 ```
 zafling/
 ├── lib/
-│   ├── main.dart            entry point: database, container, time tracking startup, runApp
+│   ├── main.dart            entry point: the real database, folder and links, then runApp
+│   ├── startup.dart         buildApp: container, overrides, time tracking startup, the root widget (tested with fakes)
 │   ├── app.dart             root widget: theme, locale, the reward overlay, the shell
 │   ├── core/                pure Dart: clock, errors, validation, board day (04:00), event types, app link scheme, font licences
 │   ├── database/            the one Drift database (app_database.dart, preferences enums, providers)

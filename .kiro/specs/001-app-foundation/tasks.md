@@ -150,11 +150,11 @@ Create the Zafling project by copying QuestLog 1.5.0, rename it, regroup its fil
     - A bats-free shell test in `test/scripts/release_test.dart` runs the script in a temporary git repository: groups, tag, clean-tree refusal, bad version refusal, pre-release version
     - _Requirements: 11.2, 11.3, 11.4, 11.5_
 
-  - [ ] 7.3 Release `1.0.0-dev.0`
+  - [x] 7.3 Release `1.0.0-dev.0`
     - Run `scripts/release.sh 1.0.0-dev.0` after specs `001` to `003` are done and `scripts/check.sh` is green
     - _Requirements: 11.7_
 
-- [ ] 8. Checkpoint — foundation is green
+- [x] 8. Checkpoint — foundation is green
   - Ensure `scripts/check.sh` passes; commit in logical steps (scaffold, move, shell, docs); ask the user if questions arise
 
 ## Notes

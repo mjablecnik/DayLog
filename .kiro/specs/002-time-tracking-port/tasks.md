@@ -122,7 +122,7 @@ Move the TimeLog 1.2.0 features into `lib/time_tracking/` of Zafling, add the Ti
     - Diff every moved file against TimeLog `v1.2.0`; write `.agents/runs/002/EQUIVALENCE.md` listing differences beyond imports, the legacy Riverpod import and the removed bottom navigation
     - _Requirements: 10.2, 10.3_
 
-- [ ] 9. Checkpoint — Time_Module is green
+- [x] 9. Checkpoint — Time_Module is green
   - Ensure `scripts/check.sh` passes; list the items Martin must check on the iPhone (alarm, Live Activity, notification taps, reminders); ask the user if questions arise
 
 ## Notes

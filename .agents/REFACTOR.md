@@ -1,15 +1,37 @@
 # Refactor notes
 
-Things to clean up before the first release (delete lines as they are done).
+What is still to clean up after `1.0.0-dev.0`. Delete a line when it is done. Done in the first pass: the move into
+feature folders, the dead code of the TimeLog port (Tasks screen, project selector, reminder sheet), 55 unused
+translation keys, QuestLog's migration code and unused column, the old test layout, the stale golden failures.
 
-- `AppTheme` (light/dark/system) in `database/preferences.dart` and the `app_state.theme` column mean the brightness mode, not a theme: rename the enum (`ThemeModeSetting`) once the theme registry has a theme id.
-- `settings/ui_providers.dart` is imported by features: decide whether it belongs in `core`.
-- `AppSettings` and models sit in `quests/data/models.dart` but belong to settings.
-- Test files not moved by the path rule: `test/services/*`, `test/data/*`, `test/ui/*` still use the old layout; mirror them under the feature folders.
-- `test/ui/*` (widgets, sheets, screens) still sit in the old layout; mirror them under `test/<feature>/ui` and update `catalogue_test.dart`.
-- `lib/time_tracking/` keeps TimeLog's literal paddings, font sizes, durations and `DateTime.now()` calls: the token and clock guard tests skip it. Move them to `Space`/`Metrics` tokens and the `Clock`, then drop the exemption.
-- TimeLog screens read `AppThemeData` (an adapter over the palette); move them to `context.palette` and delete the adapter.
-- Time tracking tests still sit flat under `test/time_tracking/` (a copy of TimeLog's layout): mirror `lib/time_tracking/`.
-- `lib/time_tracking/data/time_tracking_queries.dart` is a long extension: split reminders, completions, tasks and entries.
-- Tasks (service, state providers, tables, 16 property tests) have no screen since TimeLog 1.1; only the project names feed the suggestions. Delete the rest of the Tasks layer and keep the two tables for the import.
-- `lib/time_tracking/` draws Material icon-font icons (`Icons.*`); move them to the bundled SVG icons and drop the exemption in `test/ui/assets_test.dart`.
+## Time tracking (the TimeLog code, moved as it was)
+
+- Literal paddings, font sizes and durations: move them to `Space`/`Metrics`/`Motion` tokens. The token guard test
+  (`test/theme/token_usage_test.dart`) skips `lib/time_tracking/` until then.
+- `DateTime.now()` calls: route them through the `Clock`. `test/core/clock_usage_test.dart` skips the folder.
+- Material icon-font icons (`Icons.*`): replace them with the bundled SVG icons. `test/assets_test.dart` skips the folder.
+- `AppThemeData` (`theme/time_theme.dart`) is an adapter over the palette: read `context.palette` in the widgets and
+  delete it.
+- Riverpod: `StateNotifier`, `StateProvider` and `StateNotifierProvider` come from `flutter_riverpod/legacy.dart`;
+  convert them to `Notifier`/`AsyncNotifier`.
+- `data/time_tracking_queries.dart` is one long extension: split reminders, completions, tasks and entries.
+- The Tasks layer (service methods, state providers, 16 property tests) has no screen since TimeLog 1.1. Only
+  `TaskService.getProjectNames` feeds the suggestions. Delete the rest and keep the two tables for the import.
+- The widgets use literal `Colors.red[400]` in a few dialogs: use the palette's destructive colour.
+
+## QuestLog modules
+
+- `settings/ui_providers.dart` (effective language, theme mode, app version) and `AppSettings` in
+  `quests/data/models.dart` are used by every feature: move them where all may import them (`core/` or `database/`),
+  so `settings/` stops being a dependency of the QuestLog modules.
+- `quests`, `calendar` and `notes` import each other (the Board shows events, an event awards XP, a Note in the Trash
+  reuses quest actions). Untangle in a spec of its own; the architecture test records the allowed direction.
+- Names from the old look (`guildBoard`, `brass`, `slip*`, `Board`) stay until the theme gets a second palette.
+
+## App
+
+- The app icon and the launch screen are TimeLog's. Replace them when the name is settled; the Quest launch colour
+  of spec 001 (Requirement 9.6) is not carried over.
+- Importing a file does not select its theme or language: both live in `app_state` and come only from a QuestLog or
+  Zafling file; the preferences ignore `app_language` and `selected_theme`.
+- Task 6.3 of spec 003: import Martin's real export files from `.import/` and compare the counts with the old apps.

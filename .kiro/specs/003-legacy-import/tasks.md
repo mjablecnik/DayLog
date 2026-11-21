@@ -102,7 +102,7 @@ Add a Replace_Import of the QuestLog and TimeLog Export_Files to the App: a pure
     - When Martin has put his two Export_Files into `.import/`, run the tagged test and write the counts into `.agents/runs/003/REPORT.md`
     - _Requirements: 9.3_
 
-- [ ] 7. Checkpoint — import is verified
+- [x] 7. Checkpoint — import is verified
   - Ensure `scripts/check.sh` passes; list the items Martin must check on the iPhone (file picker, import of both files, counts against the old apps); ask the user if questions arise
 
 ## Notes

@@ -48,7 +48,7 @@ class ModuleBar extends StatelessWidget {
     final tabs = Expanded(
       child: pages.length == 1
           ? Align(
-              alignment: left ? Alignment.centerLeft : Alignment.centerRight,
+              alignment: Alignment.center,
               child: SizedBox(
                 width: Metrics.singleTabMax,
                 child: tab(pages.first),

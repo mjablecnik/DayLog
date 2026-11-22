@@ -3661,6 +3661,18 @@ abstract class AppLocalizations {
   /// **'Tip: přejetím po tlačítku modulu se vrátíš na předchozí modul'**
   String get shell_launcherHint;
 
+  /// Heading of the drawer section with the timer, history and statistics.
+  ///
+  /// In cs, this message translates to:
+  /// **'Čas'**
+  String get shell_drawerSectionTime;
+
+  /// Heading of the drawer section with quests, calendar and notes.
+  ///
+  /// In cs, this message translates to:
+  /// **'Plánování'**
+  String get shell_drawerSectionPlanning;
+
   /// Accessible label of the module launcher button.
   ///
   /// In cs, this message translates to:

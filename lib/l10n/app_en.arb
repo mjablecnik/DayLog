@@ -593,6 +593,8 @@
   "time_nextPeriod": "Next period",
   "shell_modulesTitle": "Modules",
   "shell_launcherHint": "Tip: swipe across the module button to go back to the previous module",
+  "shell_drawerSectionTime": "Time",
+  "shell_drawerSectionPlanning": "Planning",
   "shell_moduleButtonLabel": "{module}, switch module",
   "shell_previousModule": "Previous module",
   "settings_groupExperiments": "Experiments",

@@ -4,25 +4,23 @@ import '../l10n/app_localizations.dart';
 import '../theme/app_theme.dart';
 import '../theme/tokens.dart';
 import '../ui_kit/common/app_icon.dart';
+import '../ui_kit/layout/section_headers.dart';
 import 'destination.dart';
 import 'module.dart';
 
 Key drawerItemKey(Destination destination) =>
     ValueKey<String>('drawer-${destination.name}');
 
-Key drawerModuleKey(Module module) =>
-    ValueKey<String>('drawer-module-${module.name}');
-
+/// The drawer is one flat list of every page, grouped in two sections.
 class AppDrawer extends StatelessWidget {
   const AppDrawer({
     super.key,
     required this.current,
-    required this.onSelectModule,
     required this.onSelectPage,
   });
 
-  final Module current;
-  final ValueChanged<Module> onSelectModule;
+  /// The page that is open now.
+  final Destination current;
   final ValueChanged<Destination> onSelectPage;
 
   @override
@@ -30,11 +28,30 @@ class AppDrawer extends StatelessWidget {
     final strings = AppLocalizations.of(context);
     final palette = context.palette;
 
-    Widget row(Module module) => _DrawerModuleRow(
-      key: drawerModuleKey(module),
-      module: module,
-      selected: module == current,
-      onTap: () => onSelectModule(module),
+    Widget row(Destination page) => KeyedSubtree(
+      key: drawerItemKey(page),
+      child: _DrawerRow(
+        page: page,
+        selected: page == current,
+        onTap: () => onSelectPage(page),
+      ),
+    );
+
+    Widget section(String label, List<Module> modules) => Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            Space.s12,
+            Space.s16,
+            Space.s12,
+            Space.s4,
+          ),
+          child: SectionLabel(label),
+        ),
+        for (final module in modules)
+          for (final page in module.pages) row(page),
+      ],
     );
 
     return Drawer(
@@ -74,56 +91,18 @@ class AppDrawer extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: Space.s24),
-                    for (final module in Module.launchable) ...[
-                      KeyedSubtree(
-                        key: drawerItemKey(module.pages.first),
-                        child: row(module),
-                      ),
-                      if (module.pages.length > 1)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: Metrics.drawerChipInset,
-                          ),
-                          child: Wrap(
-                            spacing: Space.s6,
-                            runSpacing: Space.s6,
-                            children: [
-                              for (final page in module.pages.skip(1))
-                                TextButton(
-                                  key: drawerItemKey(page),
-                                  onPressed: () => onSelectPage(page),
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: palette.card,
-                                    foregroundColor: palette.text,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: Space.s8,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        Radii.control,
-                                      ),
-                                      side: BorderSide(
-                                        color: palette.boardLine,
-                                      ),
-                                    ),
-                                    textStyle: context.bodyText.labelLarge
-                                        ?.copyWith(fontSize: 13),
-                                  ),
-                                  child: Text(page.label(strings)),
-                                ),
-                            ],
-                          ),
-                        ),
-                      const SizedBox(height: Space.s16),
-                    ],
+                    section(strings.shell_drawerSectionTime, const [
+                      Module.time,
+                    ]),
+                    section(strings.shell_drawerSectionPlanning, const [
+                      Module.quests,
+                      Module.calendar,
+                      Module.notes,
+                    ]),
                     const Spacer(),
                     const Divider(height: Metrics.hairline),
                     const SizedBox(height: Space.s8),
-                    KeyedSubtree(
-                      key: drawerItemKey(Destination.settings),
-                      child: row(Module.settings),
-                    ),
+                    row(Destination.settings),
                   ],
                 ),
               ),
@@ -135,15 +114,14 @@ class AppDrawer extends StatelessWidget {
   }
 }
 
-class _DrawerModuleRow extends StatelessWidget {
-  const _DrawerModuleRow({
-    super.key,
-    required this.module,
+class _DrawerRow extends StatelessWidget {
+  const _DrawerRow({
+    required this.page,
     required this.selected,
     required this.onTap,
   });
 
-  final Module module;
+  final Destination page;
   final bool selected;
   final VoidCallback onTap;
 
@@ -159,37 +137,40 @@ class _DrawerModuleRow extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Space.s12,
-              vertical: Space.s10,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: Metrics.drawerIcon,
-                  height: Metrics.drawerIcon,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: selected ? palette.brass : palette.tone,
-                    borderRadius: BorderRadius.circular(Radii.drawerIcon),
-                  ),
-                  child: AppIcon(
-                    module.icon,
-                    color: selected ? palette.inkOnBrass : palette.text,
-                  ),
-                ),
-                const SizedBox(width: Space.s14),
-                Expanded(
-                  child: Text(
-                    module.label(AppLocalizations.of(context)),
-                    style: context.bodyText.titleLarge?.copyWith(
-                      fontWeight: const FontWeight(650),
-                      color: selected ? palette.brassText : null,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Space.s12,
+                vertical: Space.s6,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: Metrics.drawerItemIcon,
+                    height: Metrics.drawerItemIcon,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: selected ? palette.brass : palette.tone,
+                      borderRadius: BorderRadius.circular(Radii.drawerIcon),
+                    ),
+                    child: AppIcon(
+                      page.icon,
+                      color: selected ? palette.inkOnBrass : palette.text,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: Space.s14),
+                  Expanded(
+                    child: Text(
+                      page.label(AppLocalizations.of(context)),
+                      style: context.bodyText.titleMedium?.copyWith(
+                        fontWeight: const FontWeight(650),
+                        color: selected ? palette.brassText : null,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

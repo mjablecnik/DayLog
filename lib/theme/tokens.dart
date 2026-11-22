@@ -228,7 +228,7 @@ abstract final class Metrics {
   static const double timerRing = 290;
   static const double timerStroke = 8;
   static const double timerPrimary = 84;
-  static const double drawerChipInset = 68;
+  static const double drawerItemIcon = 34;
   static const double launcherIcon = 40;
   static const double tileMin = 112;
   static const double settingsControlWidth = 144;

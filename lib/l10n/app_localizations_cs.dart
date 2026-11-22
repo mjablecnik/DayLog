@@ -2330,6 +2330,12 @@ class AppLocalizationsCs extends AppLocalizations {
       'Tip: přejetím po tlačítku modulu se vrátíš na předchozí modul';
 
   @override
+  String get shell_drawerSectionTime => 'Čas';
+
+  @override
+  String get shell_drawerSectionPlanning => 'Plánování';
+
+  @override
   String shell_moduleButtonLabel(String module) {
     return '$module, přepnout modul';
   }

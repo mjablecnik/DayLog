@@ -3067,6 +3067,14 @@
   "@shell_launcherHint": {
     "description": "Hint below the module launcher tiles."
   },
+  "shell_drawerSectionTime": "Čas",
+  "@shell_drawerSectionTime": {
+    "description": "Heading of the drawer section with the timer, history and statistics."
+  },
+  "shell_drawerSectionPlanning": "Plánování",
+  "@shell_drawerSectionPlanning": {
+    "description": "Heading of the drawer section with quests, calendar and notes."
+  },
   "shell_moduleButtonLabel": "{module}, přepnout modul",
   "@shell_moduleButtonLabel": {
     "description": "Accessible label of the module launcher button.",

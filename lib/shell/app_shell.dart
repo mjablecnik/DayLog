@@ -243,11 +243,7 @@ class _AppShellState extends ConsumerState<AppShell>
         drawerEdgeDragWidth: Metrics.drawerEdge,
         drawer: preferences.drawerEnabled
             ? AppDrawer(
-                current: _location.module,
-                onSelectModule: (module) {
-                  _scaffoldKey.currentState?.closeDrawer();
-                  _switchModule(module);
-                },
+                current: _location.destination,
                 onSelectPage: (page) {
                   _scaffoldKey.currentState?.closeDrawer();
                   _select(page);

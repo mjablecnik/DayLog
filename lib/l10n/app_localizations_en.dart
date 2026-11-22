@@ -2281,6 +2281,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tip: swipe across the module button to go back to the previous module';
 
   @override
+  String get shell_drawerSectionTime => 'Time';
+
+  @override
+  String get shell_drawerSectionPlanning => 'Planning';
+
+  @override
   String shell_moduleButtonLabel(String module) {
     return '$module, switch module';
   }

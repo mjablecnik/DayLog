@@ -648,9 +648,11 @@ class _FormTopBar extends StatelessWidget {
               minimumSize: const Size(Metrics.fab + Space.s16, Metrics.touchTarget),
               backgroundColor: p.brass,
               foregroundColor: p.inkOnBrass,
-              disabledBackgroundColor: p.field,
-              disabledForegroundColor: p.textFaint,
-              shape: const StadiumBorder(),
+              disabledBackgroundColor: p.brass.withValues(alpha: 0.45),
+              disabledForegroundColor: p.inkOnBrass.withValues(alpha: 0.9),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(Radii.control),
+              ),
               textStyle: context.bodyText.labelLarge,
             ),
             child: Text(l.common_save),
@@ -688,15 +690,18 @@ class _MomentRow extends StatelessWidget {
       onTap: onTap,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(Radii.control),
+        borderRadius: BorderRadius.circular(Radii.field),
         child: Container(
           constraints: const BoxConstraints(minHeight: Metrics.touchTarget, minWidth: Metrics.touchTarget),
           alignment: expand ? Alignment.centerLeft : Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: Space.s12),
           decoration: BoxDecoration(
-            color: p.field,
-            borderRadius: BorderRadius.circular(Radii.control),
-            border: error == null ? null : Border.all(color: p.destructive, width: Metrics.hairline),
+            color: p.card,
+            borderRadius: BorderRadius.circular(Radii.field),
+            border: Border.all(
+              color: error == null ? p.boardLine : p.destructive,
+              width: Metrics.hairline,
+            ),
           ),
           child: Text(
             text,
@@ -769,8 +774,9 @@ class _RepeatPicker extends StatelessWidget {
             constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
             padding: const EdgeInsets.symmetric(horizontal: Space.s12),
             decoration: BoxDecoration(
-              color: p.field,
-              borderRadius: BorderRadius.circular(Radii.control),
+              color: p.card,
+              borderRadius: BorderRadius.circular(Radii.field),
+              border: Border.all(color: p.boardLine, width: Metrics.hairline),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<RepeatChoice>(

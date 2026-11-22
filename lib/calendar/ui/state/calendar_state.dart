@@ -103,6 +103,21 @@ class SelectedDayNotifier extends Notifier<DateTime> {
   void select(DateTime day) => state = _dateOnly(day);
 }
 
+/// The day whose Day_Sheet is open, null while none is; the Month_View
+/// highlights its cell.
+final openDaySheetProvider = NotifierProvider<OpenDaySheetNotifier, DateTime?>(
+  OpenDaySheetNotifier.new,
+);
+
+class OpenDaySheetNotifier extends Notifier<DateTime?> {
+  @override
+  DateTime? build() => null;
+
+  void open(DateTime day) => state = _dateOnly(day);
+
+  void close() => state = null;
+}
+
 /// The Event_Types shown in the Month_View and the Day_Sheet (Type_Filter).
 final typeFilterProvider = NotifierProvider<TypeFilterNotifier, Set<EventType>>(
   TypeFilterNotifier.new,

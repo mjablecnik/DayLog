@@ -144,7 +144,7 @@ class _WeekRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextScaler scaler = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: EventChip.maxTextScale);
-    final double numberHeight = math.max(Metrics.iconSize, scaler.scale(11) * 1.35);
+    final double numberHeight = math.max(Metrics.iconSize, scaler.scale(13) * 1.35);
     final double chipHeight = EventChip.heightOf(context) + Space.s2;
     final List<WeekSegment> segments = layoutWeek(occurrences, dates.first);
     final int needed = segments.isEmpty ? 0 : segments.map((WeekSegment s) => s.lane).reduce(math.max) + 1;
@@ -245,6 +245,12 @@ class DayCell extends ConsumerWidget {
       count,
     );
     final BorderSide line = BorderSide(color: p.boardLine, width: Metrics.hairline);
+    final DateTime? sheetDay = ref.watch(openDaySheetProvider);
+    final bool tapped =
+        sheetDay != null &&
+        sheetDay.year == date.year &&
+        sheetDay.month == date.month &&
+        sheetDay.day == date.day;
     return Semantics(
       button: true,
       label: label,
@@ -255,7 +261,7 @@ class DayCell extends ConsumerWidget {
         onTap: () => _open(context, ref),
         child: Container(
           decoration: BoxDecoration(
-            color: inMonth ? null : p.tone,
+            color: tapped ? p.brassSoft : (inMonth ? null : p.tone),
             border: Border(bottom: line),
           ),
           child: ClipRect(
@@ -266,7 +272,7 @@ class DayCell extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Align(
-                    alignment: AlignmentDirectional.centerStart,
+                    alignment: Alignment.center,
                     child: Container(
                       constraints: const BoxConstraints(
                         minWidth: Metrics.iconSize,
@@ -282,7 +288,7 @@ class DayCell extends ConsumerWidget {
                         '${date.day}',
                         textScaler: scaler,
                         style: context.bodyText.bodySmall!.copyWith(
-                          fontSize: 11,
+                          fontSize: 13,
                           height: 1.35,
                           fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
                           color: isToday ? p.inkOnBrass : (inMonth ? p.text : p.textFaint),
@@ -301,7 +307,7 @@ class DayCell extends ConsumerWidget {
                         maxLines: 1,
                         textScaler: scaler,
                         style: context.bodyText.bodySmall!.copyWith(
-                          fontSize: 9.5,
+                          fontSize: 11,
                           height: 1.35,
                           fontWeight: FontWeight.w700,
                           color: p.textDim,
@@ -317,8 +323,14 @@ class DayCell extends ConsumerWidget {
     );
   }
 
-  void _open(BuildContext context, WidgetRef ref) {
+  Future<void> _open(BuildContext context, WidgetRef ref) async {
     ref.read(selectedDayProvider.notifier).select(date);
-    showDaySheet(context, date);
+    final OpenDaySheetNotifier open = ref.read(openDaySheetProvider.notifier);
+    open.open(date);
+    try {
+      await showDaySheet(context, date);
+    } finally {
+      if (context.mounted) open.close();
+    }
   }
 }

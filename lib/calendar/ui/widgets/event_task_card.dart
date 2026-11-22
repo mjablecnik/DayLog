@@ -8,9 +8,8 @@ import '../screens/calendar_labels.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/layout/grouped_list.dart';
-import '../../../quests/ui/cards/check_circle.dart';
+import '../../../ui_kit/controls/check_circle.dart';
 import '../../../quests/ui/cards/difficulty_pips.dart';
-import '../../../ui_kit/common/app_icon.dart';
 
 /// The Difficulty tier whose XP an Event_XP value is.
 Difficulty difficultyForXp(int xp) => switch (xp) {
@@ -144,10 +143,6 @@ class EventTaskCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(width: Space.s8),
-                ExcludeSemantics(
-                  child: AppIcon(IconAsset.calendar, size: Metrics.iconSmall, color: metaColor),
                 ),
                 const SizedBox(width: Space.s8),
                 done ? Opacity(opacity: 0.7, child: xpText) : xpText,

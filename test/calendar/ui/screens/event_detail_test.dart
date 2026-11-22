@@ -155,7 +155,7 @@ void main() {
       await h.settle(tester);
       expect(find.text(en.calendar_deleteTitle), findsOneWidget);
       expect(find.text(en.calendar_deleteBody('Jednou')), findsOneWidget);
-      await tester.tap(find.text(en.common_cancel));
+      await tester.tap(find.byTooltip(en.common_close).last);
       await h.settle(tester);
       expect(await tester.runAsync(() => h.service.getEvent(e.id)), isNotNull);
 
@@ -216,7 +216,7 @@ void main() {
       await h.settle(tester);
       await tester.tap(find.text(en.common_delete));
       await h.settle(tester);
-      await tester.tap(find.text(en.common_cancel));
+      await tester.tap(find.byTooltip(en.common_close).last);
       await h.settle(tester);
       expect(await tester.runAsync(() => h.service.getEvent(e.id)), isNotNull);
     });

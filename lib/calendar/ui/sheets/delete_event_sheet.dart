@@ -99,11 +99,6 @@ class _DeleteScopeSheet extends StatelessWidget {
               choice(DeleteScope.all, l.calendar_deleteAll),
             ],
           ),
-          const SizedBox(height: Space.s8),
-          TextButton(
-            onPressed: () => AppSheet.close<DeleteScope>(context),
-            child: Text(l.common_cancel),
-          ),
         ],
       ),
     );

@@ -12,11 +12,12 @@ import '../state/calendar_state.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../widgets/calendar_fields.dart';
-import '../widgets/event_chip.dart';
 import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/controls/app_buttons.dart';
 import '../../../ui_kit/layout/app_header.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 import '../../../ui_kit/layout/header_action.dart';
+import '../../../ui_kit/controls/choice_chip.dart';
 import '../../../ui_kit/sheet/menu_sheet.dart';
 import '../../../ui_kit/common/snackbar_host.dart';
 import 'calendar_labels.dart';
@@ -205,35 +206,11 @@ class _Body extends StatelessWidget {
     }
 
     Widget infoRow(String icon, String label, String value, {VoidCallback? onTap}) {
-      final Widget content = Padding(
-        padding: const EdgeInsets.symmetric(vertical: Space.s4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: Space.s2),
-              child: AppIcon(icon, size: Metrics.iconSize - Space.s2, color: p.brassText),
-            ),
-            const SizedBox(width: Space.s12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(label, style: context.bodyText.titleMedium),
-                  Text(value, style: context.bodyText.bodyLarge!.copyWith(color: p.textDim)),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-      if (onTap == null) return MergeSemantics(child: content);
-      return Semantics(
-        button: true,
-        label: '$label, $value',
-        excludeSemantics: true,
+      return ListRow(
+        title: label,
+        subtitle: value,
+        leading: IconTile(icon),
         onTap: onTap,
-        child: InkWell(onTap: onTap, borderRadius: BorderRadius.circular(Radii.control), child: content),
       );
     }
 
@@ -250,7 +227,7 @@ class _Body extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.centerLeft,
-              child: EventTypeBadge(type: event.type, label: eventTypeName(l, event.type)),
+              child: TypeTag(label: eventTypeName(l, event.type), color: p.eventColor(event.type)),
             ),
             if (event.allDay)
               Row(
@@ -307,8 +284,7 @@ class _Body extends StatelessWidget {
           ),
           const SizedBox(height: Space.s12),
         ],
-        CalendarCard(
-          gap: Space.s12,
+        GroupedList(
           children: <Widget>[
             infoRow(
               IconAsset.note,

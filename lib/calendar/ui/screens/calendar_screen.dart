@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../ui_kit/controls/step_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -92,20 +94,24 @@ class _Header extends ConsumerWidget {
       child: InkWell(
         key: const ValueKey<String>('calendar-today'),
         onTap: notifier.goToToday,
-        borderRadius: BorderRadius.circular(Radii.pill),
+        borderRadius: BorderRadius.circular(Radii.headerAction),
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
           child: Center(
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: p.brassSoft,
-                borderRadius: BorderRadius.circular(Radii.pill),
+                borderRadius: BorderRadius.circular(Radii.headerAction),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: Space.s12, vertical: Space.s6),
                 child: Text(
                   l.calendar_today,
-                  style: context.bodyText.labelLarge!.copyWith(color: p.brassText),
+                  style: context.bodyText.labelLarge!.copyWith(
+                    color: p.brassText,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
@@ -136,64 +142,28 @@ class _Header extends ConsumerWidget {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(Space.s8, 0, Space.s8, Space.s8),
+          padding: const EdgeInsets.fromLTRB(Space.s16, 0, Space.s16, Space.s8),
           child: Row(
             children: <Widget>[
-              _IconTap(
+              StepButton(
                 icon: IconAsset.chevronLeft,
                 label: l.calendar_prevMonth,
-                onTap: canPrevious ? notifier.previous : null,
-                size: Metrics.iconSmall,
+                onPressed: canPrevious ? notifier.previous : null,
+                size: 38,
               ),
-              _IconTap(
+              const SizedBox(width: Space.s8),
+              StepButton(
                 icon: IconAsset.chevronRight,
                 label: l.calendar_nextMonth,
-                onTap: canNext ? notifier.next : null,
-                size: Metrics.iconSmall,
+                onPressed: canNext ? notifier.next : null,
+                size: 38,
               ),
-              const SizedBox(width: Space.s4),
+              const Spacer(),
               todayPill,
-
             ],
           ),
         ),
       ],
-    );
-  }
-}
-
-class _IconTap extends StatelessWidget {
-  const _IconTap({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.size = Metrics.iconSize,
-  });
-
-  final String icon;
-  final String label;
-  final VoidCallback? onTap;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final AppPalette p = context.palette;
-    final Color tint = onTap == null ? p.textFaint : p.text;
-    return Semantics(
-      button: true,
-      enabled: onTap != null,
-      label: label,
-      excludeSemantics: true,
-      onTap: onTap,
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: SizedBox(
-          width: Metrics.touchTarget,
-          height: Metrics.touchTarget,
-          child: Center(child: AppIcon(icon, size: size, color: tint)),
-        ),
-      ),
     );
   }
 }
@@ -225,8 +195,8 @@ class _WeekdayRow extends StatelessWidget {
                     overflow: TextOverflow.clip,
                     style: context.bodyText.labelSmall!.copyWith(
                       color: p.textFaint,
-                      letterSpacing: 0.5,
-                      fontSize: 10.5,
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),

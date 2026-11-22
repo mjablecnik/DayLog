@@ -8,7 +8,7 @@ import '../../services/calendar_providers.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../widgets/calendar_fields.dart';
-import '../../../ui_kit/layout/app_header.dart';
+import '../../../ui_kit/layout/header_action.dart';
 import '../../../ui_kit/layout/grouped_list.dart';
 import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/common/empty_state.dart';
@@ -59,19 +59,32 @@ class _EventSearchScreenState extends ConsumerState<EventSearchScreen> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            AppHeader(
-              title: l.calendar_search,
-              leading: HeaderLeading.back,
-              leadingKey: const ValueKey<String>('search-back'),
-            ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Space.s16),
-              child: CalendarTextField(
-                key: const ValueKey<String>('search-field'),
-                controller: _controller,
-                hint: l.calendar_search,
-                autofocus: true,
-                onChanged: _search,
+              padding: const EdgeInsets.fromLTRB(
+                Space.s12,
+                Space.s8,
+                Space.s16,
+                Space.s8,
+              ),
+              child: Row(
+                children: <Widget>[
+                  HeaderBareAction(
+                    key: const ValueKey<String>('search-back'),
+                    icon: IconAsset.arrowLeft,
+                    semanticLabel: l.common_back,
+                    onPressed: () => Navigator.maybePop(context),
+                  ),
+                  const SizedBox(width: Space.s4),
+                  Expanded(
+                    child: CalendarTextField(
+                      key: const ValueKey<String>('search-field'),
+                      controller: _controller,
+                      hint: l.calendar_search,
+                      autofocus: true,
+                      onChanged: _search,
+                    ),
+                  ),
+                ],
               ),
             ),
             Expanded(

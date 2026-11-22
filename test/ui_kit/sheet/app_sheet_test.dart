@@ -400,6 +400,29 @@ void main() {
       );
     });
 
+    testWidgets('a focused field keeps its focus when the keyboard opens', (
+      WidgetTester tester,
+    ) async {
+      await _pumpHost(tester);
+      await _openSheet(tester);
+
+      await tester.tap(find.byType(TextField));
+      await tester.pump();
+      final EditableTextState before = tester.state(find.byType(EditableText));
+      expect(before.widget.focusNode.hasFocus, isTrue);
+
+      // The keyboard slides up after the tap, as on a device.
+      tester.view.viewInsets = const FakeViewPadding(bottom: 600);
+      addTearDown(tester.view.resetViewInsets);
+      await tester.pumpAndSettle();
+
+      final EditableTextState after = tester.state(find.byType(EditableText));
+      expect(identical(before, after), isTrue, reason: 'the field was rebuilt from scratch');
+      expect(after.widget.focusNode.hasFocus, isTrue);
+      await tester.enterText(find.byType(TextField), 'abc');
+      expect(find.text('abc'), findsOneWidget);
+    });
+
     testWidgets('with the keyboard open the button scrolls with the body', (
       WidgetTester tester,
     ) async {

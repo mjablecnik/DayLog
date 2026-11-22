@@ -274,19 +274,22 @@ class _AppSheetState extends State<AppSheet> {
                 Space.s20,
                 Space.s16,
               ),
-              child: keyboardOpen
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        widget.child,
-                        if (button != null) ...<Widget>[
-                          const SizedBox(height: Space.s16),
-                          button,
-                        ],
-                        ?widget.footer,
-                      ],
-                    )
-                  : widget.child,
+              // The body is always the first child of this column, so opening
+              // the keyboard never rebuilds it: a different wrapper would
+              // recreate the text field and drop its focus at once.
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  widget.child,
+                  if (keyboardOpen) ...<Widget>[
+                    if (button != null) ...<Widget>[
+                      const SizedBox(height: Space.s16),
+                      button,
+                    ],
+                    ?widget.footer,
+                  ],
+                ],
+              ),
             ),
           ),
           if (!keyboardOpen) ...<Widget>[

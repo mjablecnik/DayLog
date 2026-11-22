@@ -4,7 +4,9 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 
-/// One Note in the list: name, the date of its last edit and a two-line preview.
+/// One Note in the list: the whole name and the date of its last edit. The
+/// preview text is not drawn (it still reaches a screen reader); every row is
+/// at least [_minHeight] tall, so short and long names sit in rows of one size.
 class NoteRow extends StatelessWidget {
   const NoteRow({
     super.key,
@@ -14,12 +16,14 @@ class NoteRow extends StatelessWidget {
     required this.onTap,
   });
 
+  static const double _minHeight = 64;
+
   final String name;
 
   /// Already localized last-edited date ("dnes", "včera", "17. 11.").
   final String date;
 
-  /// The Note_Preview; may be empty.
+  /// The Note_Preview; may be empty. Read out, not drawn.
   final String preview;
   final VoidCallback onTap;
 
@@ -34,53 +38,35 @@ class NoteRow extends StatelessWidget {
       onTap: onTap,
       child: InkWell(
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Space.s16,
-            vertical: Space.s13,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Expanded(
-                    child: Text(
-                      name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.bodyText.titleMedium?.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: Space.s8),
-                  Text(
-                    date,
-                    style: context.bodyText.bodySmall?.copyWith(
-                      fontSize: 13,
-                      color: palette.textFaint,
-                    ),
-                  ),
-                ],
-              ),
-              if (preview.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: Space.s2),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: _minHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Space.s16,
+              vertical: Space.s13,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
                   child: Text(
-                    preview,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.bodyText.bodyMedium?.copyWith(
-                      fontSize: 14.5,
-                      color: palette.textDim,
+                    name,
+                    style: context.bodyText.titleMedium?.copyWith(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-            ],
+                const SizedBox(width: Space.s8),
+                Text(
+                  date,
+                  style: context.bodyText.bodySmall?.copyWith(
+                    fontSize: 13,
+                    color: palette.textFaint,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -401,7 +401,7 @@ Future<void> _seedCalendar(AppDatabase db, FixedClock clock) async {
   await add('Seminář TypeScript', EventType.seminar, DateTime(2026, 11, 18), from: 11 * 60, to: 15 * 60 + 32);
   await add('Narozeniny Tomáše', EventType.birthday, DateTime(2026, 11, 18), onBoard: true);
   await add('Zouk', EventType.dance, DateTime(2026, 11, 20), from: 20 * 60, to: 22 * 60);
-  await add('Večeře', EventType.date, DateTime(2026, 11, 21), from: 19 * 60, to: 21 * 60);
+  await add('Večeře', EventType.gaming, DateTime(2026, 11, 21), from: 19 * 60, to: 21 * 60);
 }
 
 /// Notes with long Czech names: a Folder with a Note inside (ids 1 and 4), a

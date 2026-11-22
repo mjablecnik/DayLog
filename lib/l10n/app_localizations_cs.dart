@@ -1034,7 +1034,16 @@ class AppLocalizationsCs extends AppLocalizations {
   String get calendar_typeNotableDay => 'Významný den';
 
   @override
-  String get calendar_typeDate => 'Rande';
+  String get calendar_typeGaming => 'Hraní her';
+
+  @override
+  String get calendar_typeDoctor => 'Doktor';
+
+  @override
+  String get calendar_typeOffice => 'Úřad';
+
+  @override
+  String get calendar_typeHairdresser => 'Kadeřnice';
 
   @override
   String get calendar_typeMeeting => 'Meeting';

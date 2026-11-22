@@ -6,7 +6,10 @@ enum EventType {
   nameDay('nameDay'),
   publicHoliday('publicHoliday'),
   notableDay('notableDay'),
-  date('date'),
+  gaming('gaming'),
+  doctor('doctor'),
+  office('office'),
+  hairdresser('hairdresser'),
   meeting('meeting'),
   seminar('seminar'),
   lesson('lesson'),
@@ -31,6 +34,13 @@ enum EventType {
   /// Whether a new event of this type is put on the Board by default.
   bool get onBoardByDefault =>
       this != EventType.publicHoliday && this != EventType.notableDay && this != EventType.quest;
+
+  /// Whether the person can pick this type when creating or editing an event.
+  /// Hidden types are made by the app or stay for stored events, never removed.
+  bool get userSelectable =>
+      this != EventType.publicHoliday &&
+      this != EventType.notableDay &&
+      this != EventType.quest;
 
   /// Whether the type is drawn as a Soft_Chip instead of a solid chip.
   bool get isSoft => this == EventType.notableDay;

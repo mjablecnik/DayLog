@@ -101,10 +101,11 @@ void main() {
     expect(xp(), findsOneWidget);
     expect(find.text(en.calendar_onBoardXp(25), skipOffstage: false), findsOneWidget);
 
-    await reveal(tester, t(en.calendar_typePublicHoliday));
-    await tester.tap(t(en.calendar_typePublicHoliday));
-    await tester.pump();
-    expect(xp(), findsNothing);
+    // Types made by the app are not offered when creating an event.
+    expect(t(en.calendar_typePublicHoliday), findsNothing);
+    expect(t(en.calendar_typeNotableDay), findsNothing);
+    expect(t(en.calendar_typeQuest), findsNothing);
+    expect(t(en.calendar_typeGaming), findsOneWidget);
 
     await reveal(tester, t(en.calendar_typeBirthday));
     await tester.tap(t(en.calendar_typeBirthday));

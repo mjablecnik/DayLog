@@ -30,7 +30,7 @@ void main() {
       EventType.nameDay,
       EventType.publicHoliday,
       EventType.notableDay,
-      EventType.date,
+      EventType.gaming,
     ]) {
       expect(eventXp(type: type, allDay: true, duration: Duration.zero), 10, reason: type.key);
     }

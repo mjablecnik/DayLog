@@ -54,7 +54,7 @@ void main() {
   test('the memory store round trips', () async {
     final MemoryCalendarFilterStore memory = MemoryCalendarFilterStore();
     expect(await memory.load(), all);
-    await memory.save(<EventType>{EventType.date});
-    expect(await memory.load(), <EventType>{EventType.date});
+    await memory.save(<EventType>{EventType.gaming});
+    expect(await memory.load(), <EventType>{EventType.gaming});
   });
 }

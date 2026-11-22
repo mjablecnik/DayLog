@@ -999,7 +999,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get calendar_typeNotableDay => 'Notable day';
 
   @override
-  String get calendar_typeDate => 'Date';
+  String get calendar_typeGaming => 'Gaming';
+
+  @override
+  String get calendar_typeDoctor => 'Doctor';
+
+  @override
+  String get calendar_typeOffice => 'Office';
+
+  @override
+  String get calendar_typeHairdresser => 'Hairdresser';
 
   @override
   String get calendar_typeMeeting => 'Meeting';

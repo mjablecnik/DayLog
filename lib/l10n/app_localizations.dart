@@ -1520,11 +1520,29 @@ abstract class AppLocalizations {
   /// **'Významný den'**
   String get calendar_typeNotableDay;
 
-  /// Name of the event type date.
+  /// Name of the event type gaming.
   ///
   /// In cs, this message translates to:
-  /// **'Rande'**
-  String get calendar_typeDate;
+  /// **'Hraní her'**
+  String get calendar_typeGaming;
+
+  /// Name of the event type doctor.
+  ///
+  /// In cs, this message translates to:
+  /// **'Doktor'**
+  String get calendar_typeDoctor;
+
+  /// Name of the event type office.
+  ///
+  /// In cs, this message translates to:
+  /// **'Úřad'**
+  String get calendar_typeOffice;
+
+  /// Name of the event type hairdresser.
+  ///
+  /// In cs, this message translates to:
+  /// **'Kadeřnice'**
+  String get calendar_typeHairdresser;
 
   /// Name of the event type meeting.
   ///

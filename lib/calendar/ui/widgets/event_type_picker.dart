@@ -7,10 +7,14 @@ import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/controls/choice_chip.dart';
 
-/// The ten event types as Choice_Chips, each tinted with its colour, exactly
+/// The event types the person can create as Choice_Chips, each tinted with its colour, exactly
 /// one selected. Replaces a free colour choice.
 class EventTypePicker extends StatelessWidget {
-  const EventTypePicker({super.key, required this.selected, required this.onSelected});
+  const EventTypePicker({
+    super.key,
+    required this.selected,
+    required this.onSelected,
+  });
 
   final EventType selected;
   final ValueChanged<EventType> onSelected;
@@ -26,14 +30,17 @@ class EventTypePicker extends StatelessWidget {
         spacing: Space.s8,
         runSpacing: Space.s8,
         children: <Widget>[
+          // Types the person cannot create stay out of the list, except the one
+          // an existing event already has, so that it still shows as selected.
           for (final EventType type in EventType.values)
-            ChoiceChipX(
-              label: eventTypeName(l, type),
-              selected: type == selected,
-              color: p.eventColor(type),
-              showDot: true,
-              onSelected: (_) => onSelected(type),
-            ),
+            if (type.userSelectable || type == selected)
+              ChoiceChipX(
+                label: eventTypeName(l, type),
+                selected: type == selected,
+                color: p.eventColor(type),
+                showDot: true,
+                onSelected: (_) => onSelected(type),
+              ),
         ],
       ),
     );

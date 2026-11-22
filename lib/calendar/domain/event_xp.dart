@@ -16,7 +16,10 @@ int eventXp({
       EventType.nameDay ||
       EventType.publicHoliday ||
       EventType.notableDay ||
-      EventType.date ||
+      EventType.gaming ||
+      EventType.doctor ||
+      EventType.office ||
+      EventType.hairdresser ||
       EventType.quest => 10,
       EventType.dance ||
       EventType.work ||

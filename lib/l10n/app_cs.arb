@@ -1327,9 +1327,21 @@
   "@calendar_typeNotableDay": {
     "description": "Name of the event type notableDay."
   },
-  "calendar_typeDate": "Rande",
-  "@calendar_typeDate": {
-    "description": "Name of the event type date."
+  "calendar_typeGaming": "Hraní her",
+  "@calendar_typeGaming": {
+    "description": "Name of the event type gaming."
+  },
+  "calendar_typeDoctor": "Doktor",
+  "@calendar_typeDoctor": {
+    "description": "Name of the event type doctor."
+  },
+  "calendar_typeOffice": "Úřad",
+  "@calendar_typeOffice": {
+    "description": "Name of the event type office."
+  },
+  "calendar_typeHairdresser": "Kadeřnice",
+  "@calendar_typeHairdresser": {
+    "description": "Name of the event type hairdresser."
   },
   "calendar_typeMeeting": "Meeting",
   "@calendar_typeMeeting": {

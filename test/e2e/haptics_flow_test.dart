@@ -10,7 +10,7 @@ import 'package:daylog/l10n/app_localizations_en.dart';
 import 'package:daylog/shell/app_shell.dart';
 import 'package:daylog/shell/destination.dart';
 import 'package:daylog/settings/ui_providers.dart';
-import 'package:daylog/quests/ui/cards/check_circle.dart';
+import 'package:daylog/ui_kit/controls/check_circle.dart';
 import 'package:daylog/quests/ui/reward/reward_card.dart';
 
 import '../helpers/fixed_clock.dart';

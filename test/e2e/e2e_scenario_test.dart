@@ -17,7 +17,7 @@ import 'package:daylog/quests/ui/state/reward_queue.dart';
 import 'package:daylog/settings/ui_providers.dart';
 import 'package:daylog/theme/app_theme.dart';
 import 'package:daylog/theme/tokens.dart';
-import 'package:daylog/quests/ui/cards/check_circle.dart';
+import 'package:daylog/ui_kit/controls/check_circle.dart';
 import 'package:daylog/quests/ui/reward/reward_card.dart';
 
 import '../helpers/fixed_clock.dart';
@@ -146,7 +146,7 @@ void main() {
       expect(find.text(en.mission_sheetCreateTitle), findsNothing);
       expect(find.text('Autumn clean-up'), findsOneWidget);
       expect(find.text(en.missions_remaining(75)), findsOneWidget);
-      expect(find.text('+100'), findsOneWidget);
+      expect(find.text(en.common_plusXp(100)), findsOneWidget);
       expect(find.text(en.missions_openCount(1)), findsOneWidget);
 
       // Both Quests belong to the Mission, so the Board does not list them.
@@ -154,7 +154,7 @@ void main() {
       expect(find.text('Rake the leaves'), findsNothing);
       expect(find.text('Clean the gutters'), findsNothing);
       expect(find.text(en.board_emptyTitle), findsOneWidget);
-      expect(find.text(en.board_subtitle(0, 'Monday, November 16')), findsOne);
+      expect(find.text('Monday, November 16'), findsOne);
 
       // ---- 2. Complete both Quests in the Mission, then the Mission -------
       await _show(tester, Destination.missions);
@@ -191,26 +191,25 @@ void main() {
       // Back on the Board: the Mission's done Quests are not listed there.
       await _tap(tester, find.bySemanticsLabel(en.common_back));
       await _show(tester, Destination.quests);
-      expect(find.text(en.board_doneSection.toUpperCase()), findsNothing);
+      expect(find.text(en.board_doneSection), findsNothing);
       expect(find.text('Rake the leaves'), findsNothing);
       expect(find.text(en.board_emptyTitle), findsOneWidget);
 
       // The Hero_Bar shows the new Level: 185 XP = Level 2, 85 / 150.
       expect(find.text(en.hero_level(2)), findsOneWidget);
       expect(find.textContaining(en.hero_xpProgress(85, 150)), findsOneWidget);
-      expect(find.textContaining(en.hero_xpRemaining(65, 3)), findsOneWidget);
+      expect(find.textContaining(en.hero_xpRemaining(65)), findsOneWidget);
 
       // ---- 3. Missions tab: "Completed today" with the earned bonus -------
       await _show(tester, Destination.missions);
       expect(
-        find.text(en.missions_sectionDoneToday.toUpperCase()),
+        find.text(en.missions_sectionDoneToday),
         findsOneWidget,
       );
-      expect(find.text(en.missions_sectionOpen.toUpperCase()), findsNothing);
+      expect(find.text(en.missions_sectionOpen), findsNothing);
       expect(find.text('Autumn clean-up'), findsOneWidget);
       expect(find.text(en.missions_completedLine(2, '12:00')), findsOneWidget);
-      expect(find.text('+100'), findsOneWidget);
-      expect(find.text(en.missions_earnedCaption.toUpperCase()), findsOne);
+      expect(find.text(en.common_plusXp(100)), findsOne);
       expect(find.text(en.missions_doneCount(1)), findsOneWidget);
 
       // ---- 4. Day_Start passes: both done lists empty (3.6, 17.3) ---------
@@ -218,15 +217,15 @@ void main() {
       await tester.pump(const Duration(hours: 17));
       await _settle(tester);
       expect(
-        find.text(en.missions_sectionDoneToday.toUpperCase()),
+        find.text(en.missions_sectionDoneToday),
         findsNothing,
       );
       expect(find.text('Autumn clean-up'), findsNothing);
       expect(find.text(en.missions_emptyTitle), findsOneWidget);
       await _show(tester, Destination.quests);
-      expect(find.text(en.board_doneSection.toUpperCase()), findsNothing);
+      expect(find.text(en.board_doneSection), findsNothing);
       expect(find.text(en.board_emptyTitle), findsOneWidget);
-      expect(find.text(en.board_subtitle(0, 'Tuesday, November 17')), findsOne);
+      expect(find.text('Tuesday, November 17'), findsOne);
       // The earned XP stays: history is not on the board, the level is.
       expect(find.text(en.hero_level(2)), findsOneWidget);
 
@@ -272,7 +271,6 @@ void main() {
       expect(find.text(cs.rule_sheetTitle), findsNothing);
       await tester.pump();
       expect(find.text('Water plants'), findsOneWidget);
-      expect(find.text(cs.settings_rulesActive(1).toUpperCase()), findsOneWidget);
       expect(find.text(cs.rule_postNow), findsOneWidget);
 
       await _tap(tester, find.text(cs.rule_postNow));
@@ -294,7 +292,7 @@ void main() {
       expect(find.byType(SettingsScreen), findsNothing);
       expect(find.byType(SnackBar), findsNothing);
       expect(find.text(cs.missions_title), findsWidgets);
-      expect(find.text(cs.missions_sectionOpen.toUpperCase()), findsOneWidget);
+      expect(find.text(cs.missions_sectionOpen), findsOneWidget);
       expect(find.text('Water plants'), findsOneWidget);
       expect(find.text(cs.missions_remaining(25)), findsOneWidget);
       expect(find.text(cs.missions_openCount(1)), findsOneWidget);

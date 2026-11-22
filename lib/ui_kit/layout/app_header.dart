@@ -48,13 +48,13 @@ class AppHeader extends StatelessWidget {
         onPressed: onLeading,
       ),
       HeaderLeading.menu => const MenuButton(),
-      HeaderLeading.back => HeaderAction(
+      HeaderLeading.back => HeaderBareAction(
         key: leadingKey,
         icon: IconAsset.arrowLeft,
         semanticLabel: strings.common_back,
         onPressed: pop,
       ),
-      HeaderLeading.close => HeaderAction(
+      HeaderLeading.close => HeaderBareAction(
         key: leadingKey,
         icon: IconAsset.close,
         semanticLabel: strings.common_close,

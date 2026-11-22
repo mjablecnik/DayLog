@@ -162,10 +162,18 @@ class ListRow extends StatelessWidget {
 }
 
 class IconTile extends StatelessWidget {
-  const IconTile(this.icon, {super.key, this.size = Metrics.iconTile});
+  const IconTile(
+    this.icon, {
+    super.key,
+    this.size = Metrics.iconTile,
+    this.destructive = false,
+  });
 
   final String icon;
   final double size;
+
+  /// Tints the tile as the icon of a destructive action.
+  final bool destructive;
 
   @override
   Widget build(BuildContext context) {
@@ -175,10 +183,16 @@ class IconTile extends StatelessWidget {
       height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: palette.brassSoft,
+        color: destructive
+            ? palette.destructive.withValues(alpha: 0.14)
+            : palette.brassSoft,
         borderRadius: BorderRadius.circular(Radii.iconTile),
       ),
-      child: AppIcon(icon, size: Space.s20, color: palette.brassText),
+      child: AppIcon(
+        icon,
+        size: Space.s20,
+        color: destructive ? palette.destructiveText : palette.brassText,
+      ),
     );
   }
 }
@@ -190,9 +204,44 @@ class AddRow extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => ListRow(
-    title: label,
-    leading: const IconTile(IconAsset.plus),
-    onTap: onTap,
-  );
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return MergeSemantics(
+      child: Semantics(
+        button: true,
+        child: InkWell(
+          onTap: onTap,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: Metrics.listRowMin),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: Space.s13,
+                horizontal: Space.s16,
+              ),
+              child: Row(
+                children: [
+                  AppIcon(
+                    IconAsset.plus,
+                    size: Space.s20,
+                    color: palette.brassText,
+                  ),
+                  const SizedBox(width: Space.s12),
+                  Expanded(
+                    child: Text(
+                      label,
+                      style: context.bodyText.titleMedium?.copyWith(
+                        color: palette.brassText,
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

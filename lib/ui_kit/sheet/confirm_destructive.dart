@@ -112,6 +112,7 @@ class _ConfirmDialog extends StatelessWidget {
           padding: const EdgeInsets.all(Space.s20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: Metrics.dialogIcon,
@@ -128,26 +129,26 @@ class _ConfirmDialog extends StatelessWidget {
                   color: destructive ? palette.destructive : palette.brassText,
                 ),
               ),
-              const SizedBox(height: Space.s4),
+              const SizedBox(height: Space.s12),
               Semantics(
                 namesRoute: true,
                 header: true,
                 child: Text(
                   title,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.start,
                   style: context.displayText.titleLarge?.copyWith(fontSize: 21),
                 ),
               ),
               const SizedBox(height: Space.s4),
               Text(
                 body,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: context.bodyText.bodyLarge?.copyWith(
                   fontSize: 15.5,
                   color: palette.textDim,
                 ),
               ),
-              const SizedBox(height: Space.s10),
+              const SizedBox(height: Space.s20),
               LayoutBuilder(
                 builder: (context, constraints) {
                   final labelWidth =

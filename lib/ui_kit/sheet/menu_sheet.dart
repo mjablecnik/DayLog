@@ -23,7 +23,7 @@ Future<T?> showMenuSheet<T>(
       children: [
         for (final item in items)
           ListRow(
-            leading: IconTile(item.icon),
+            leading: IconTile(item.icon, destructive: item.destructive),
             title: item.label,
             titleColor: item.destructive
                 ? sheetContext.palette.destructiveText

@@ -52,26 +52,29 @@ class AppSegmented<T> extends StatelessWidget {
     return Semantics(
       container: true,
       explicitChildNodes: true,
-      child: Container(
-        padding: const EdgeInsets.all(Space.s3),
-        decoration: BoxDecoration(
-          color: p.tone,
-          borderRadius: BorderRadius.circular(Radii.control),
-        ),
-        child: Row(
-          children: <Widget>[
-            for (int i = 0; i < options.length; i++) ...<Widget>[
-              if (i > 0) const SizedBox(width: Space.s4),
-              Expanded(
-                child: _Segment<T>(
-                  option: options[i],
-                  selected: options[i].value == selected,
-                  enabled: enabled,
-                  onTap: () => onChanged(options[i].value),
+      child: Align(
+        heightFactor: 1,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: Space.s3),
+          decoration: BoxDecoration(
+            color: p.tone,
+            borderRadius: BorderRadius.circular(Radii.control),
+          ),
+          child: Row(
+            children: <Widget>[
+              for (int i = 0; i < options.length; i++) ...<Widget>[
+                if (i > 0) const SizedBox(width: Space.s4),
+                Expanded(
+                  child: _Segment<T>(
+                    option: options[i],
+                    selected: options[i].value == selected,
+                    enabled: enabled,
+                    onTap: () => onChanged(options[i].value),
+                  ),
                 ),
-              ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -129,61 +132,68 @@ class _SegmentState<T> extends State<_Segment<T>> {
         onTapUp: widget.enabled ? (_) => _setPressed(false) : null,
         onTapCancel: () => _setPressed(false),
         onTap: widget.enabled ? widget.onTap : null,
-        child: AnimatedContainer(
-          duration: fade,
-          curve: Motion.curve,
+        child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-          padding: const EdgeInsets.symmetric(horizontal: Space.s8),
-          decoration: BoxDecoration(
-            color: background,
-            borderRadius: BorderRadius.circular(Radii.segment),
-            boxShadow: on && p.isLight ? AppGlow.segment(p) : null,
-          ),
-          child: Opacity(
-            opacity: widget.enabled ? 1 : 0.5,
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Row(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: Space.s3),
+            child: AnimatedContainer(
+              duration: fade,
+              curve: Motion.curve,
+              padding: const EdgeInsets.symmetric(horizontal: Space.s8),
+              decoration: BoxDecoration(
+                color: background,
+                borderRadius: BorderRadius.circular(Radii.segment),
+                boxShadow: on && p.isLight ? AppGlow.segment(p) : null,
+              ),
+              child: Opacity(
+                opacity: widget.enabled ? 1 : 0.5,
+                child: Center(
+                  heightFactor: 1,
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      if (o.icon != null) ...<Widget>[
-                        AppIcon(
-                          o.icon!,
-                          size: Metrics.iconSmall,
-                          color: foreground,
-                        ),
-                        if (o.label.isNotEmpty) const SizedBox(width: Space.s6),
-                      ],
-                      if (o.label.isNotEmpty)
-                        Flexible(
-                          child: Text(
-                            o.label,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: context.bodyText.labelLarge!.copyWith(
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          if (o.icon != null) ...<Widget>[
+                            AppIcon(
+                              o.icon!,
+                              size: Metrics.iconSmall,
                               color: foreground,
-                              fontSize: 13,
                             ),
+                            if (o.label.isNotEmpty)
+                              const SizedBox(width: Space.s6),
+                          ],
+                          if (o.label.isNotEmpty)
+                            Flexible(
+                              child: Text(
+                                o.label,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: context.bodyText.labelLarge!.copyWith(
+                                  color: foreground,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      if (o.caption != null)
+                        Text(
+                          o.caption!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.bodyText.labelSmall!.copyWith(
+                            color: on ? p.brass : p.textFaint,
+                            letterSpacing: 0,
+                            fontFeatures: const <FontFeature>[
+                              FontFeature.tabularFigures(),
+                            ],
                           ),
                         ),
                     ],
                   ),
-                  if (o.caption != null)
-                    Text(
-                      o.caption!,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.bodyText.labelSmall!.copyWith(
-                        color: on ? p.brass : p.textFaint,
-                        letterSpacing: 0,
-                        fontFeatures: const <FontFeature>[
-                          FontFeature.tabularFigures(),
-                        ],
-                      ),
-                    ),
-                ],
+                ),
               ),
             ),
           ),

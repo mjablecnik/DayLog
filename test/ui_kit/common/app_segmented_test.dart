@@ -62,8 +62,8 @@ void main() {
       final Size size = tester.getSize(
         find.ancestor(
           of: find.text(label),
-          matching: find.byType(AnimatedContainer),
-        ),
+          matching: find.byType(GestureDetector),
+        ).first,
       );
       expect(size.height, greaterThanOrEqualTo(Metrics.touchTarget));
       expect(size.width, greaterThanOrEqualTo(Metrics.touchTarget));

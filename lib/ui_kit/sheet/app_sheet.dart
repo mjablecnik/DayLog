@@ -390,12 +390,14 @@ class _Header extends StatelessWidget {
           const SizedBox(width: Space.s6),
           button,
         ],
-        const SizedBox(width: Space.s6),
-        HeaderAction(
-          icon: IconAsset.close,
-          semanticLabel: closeLabel,
-          onPressed: onCancel,
-        ),
+        if (onCancel != null) ...[
+          const SizedBox(width: Space.s6),
+          HeaderAction(
+            icon: IconAsset.close,
+            semanticLabel: closeLabel,
+            onPressed: onCancel,
+          ),
+        ],
       ],
     ),
   );

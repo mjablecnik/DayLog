@@ -80,3 +80,36 @@ class HeaderAction extends StatelessWidget {
     );
   }
 }
+
+/// The back or close element at the left of an App_Header: a bare icon in a
+/// 44 × 44 hit area, lighter than the tonal [HeaderAction]s on the right.
+class HeaderBareAction extends StatelessWidget {
+  const HeaderBareAction({
+    super.key,
+    required this.icon,
+    required this.semanticLabel,
+    required this.onPressed,
+  });
+
+  final String icon;
+  final String semanticLabel;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Semantics(
+      label: semanticLabel,
+      child: IconButton(
+        tooltip: semanticLabel,
+        onPressed: onPressed,
+        style: IconButton.styleFrom(
+          fixedSize: const Size.square(Metrics.touchTarget),
+          minimumSize: const Size.square(Metrics.touchTarget),
+          padding: EdgeInsets.zero,
+        ),
+        icon: AppIcon(icon, color: palette.textDim),
+      ),
+    );
+  }
+}

@@ -7,6 +7,56 @@ every release from the commit messages.
 
 ## [Unreleased]
 
+## [1.0.0-dev.1] - 2026-11-22
+
+### Features
+
+- add the licences page and the About group (settings)
+- restyle statistics, history, dialogs and reminder sheets (time-tracking)
+- show note rows, folder counts and the add sheet as in the redesign (notes)
+- match calendar screens and event forms to the redesign (calendar)
+- match mission, board and quest sheet screens to the redesign (quests)
+- add shared text field and step button, fix segmented control and icons (ui-kit)
+- redesign DayLog around module navigation
+- add a back button to History and Statistics (time-tracking)
+- use the app blue in the Live Activity and end stale activities (ios)
+- add a wide add-event button to the day sheet (calendar)
+- list every page in the drawer (shell)
+
+### Fixes
+
+- keep the date on one line under the title (board)
+- show the version from pubspec.yaml (settings)
+- take the native timer texts from the ARB files (i18n)
+- start the app when no widget listens for the settings yet
+
+### Other
+
+- docs: record the resolution of the redesign QA list
+- test(goldens): regenerate the screen goldens after the redesign fixes
+- test: update e2e and accessibility tests for the redesign fixes
+- chore: update .gitignore to include screenshots directory
+- docs(spec): add redesign specs 004-006 and their visual reference
+- build: drop the unused cupertino_icons dependency
+- chore(l10n): drop the strings no code uses any more
+- refactor: remove functions nothing calls
+- refactor(time-tracking): remove the pre-fill draft of the description
+- chore(l10n): drop the strings of the removed reminder and button
+- refactor(timer): remove the pre-fill description button
+- refactor(settings): group the recurring reminders and the testing tools
+- refactor(settings): open the Home Screen shortcut guide on its own page
+- refactor(time-tracking): remove the daily start-the-timer reminder
+- refactor(settings): open recurring missions and testing tools on their own pages
+- refactor(ui): put the menu button in one shared screen header
+- docs: refresh the Settings and drawer screenshots
+- docs: document the texts passed to the native timer code
+- refactor: rename the app from Zafling to DayLog
+- docs: describe startup.dart and the rule to run the app after startup changes
+- refactor: move the startup out of main into a tested buildApp
+- docs: describe running the Linux app under Xvfb
+- refactor: remove the Tasks of TimeLog with their data
+
+
 ## [1.0.0-dev.0] - 2026-11-21
 
 ### Features

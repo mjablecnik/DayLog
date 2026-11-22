@@ -79,8 +79,6 @@ class StatisticsScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const _DateNav(),
-            const SizedBox(height: 4),
             Expanded(
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
@@ -99,6 +97,7 @@ class StatisticsScreen extends ConsumerWidget {
                 },
                 child: statsAsync.when(
                   data: (stats) => _StatsBody(
+                    header: const _DateNav(),
                     stats: stats,
                     theme: theme,
                     l10n: l10n,
@@ -111,14 +110,28 @@ class StatisticsScreen extends ConsumerWidget {
                             l10n: l10n,
                           ),
                   ),
-                  loading: () => Center(
-                    child: CircularProgressIndicator(color: theme.accent),
+                  loading: () => Column(
+                    children: [
+                      const _DateNav(),
+                      Expanded(
+                        child: Center(
+                          child: CircularProgressIndicator(color: theme.accent),
+                        ),
+                      ),
+                    ],
                   ),
-                  error: (error, _) => Center(
-                    child: Text(
-                      l10n.time_statsLoadFailed,
-                      style: TextStyle(color: theme.dim),
-                    ),
+                  error: (error, _) => Column(
+                    children: [
+                      const _DateNav(),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            l10n.time_statsLoadFailed,
+                            style: TextStyle(color: theme.dim),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -316,12 +329,15 @@ class _WeekdayRow extends StatelessWidget {
 }
 
 class _StatsBody extends StatelessWidget {
+  /// The period navigator; it scrolls away with the content.
+  final Widget header;
   final StatsData stats;
   final AppThemeData theme;
   final AppLocalizations l10n;
   final Widget timeline;
 
   const _StatsBody({
+    required this.header,
     required this.stats,
     required this.theme,
     required this.l10n,
@@ -359,8 +375,14 @@ class _StatsBody extends StatelessWidget {
     );
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(Space.s16, Space.s8, Space.s16, Space.s24),
+      padding: EdgeInsets.zero,
       children: [
+        header,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(Space.s16, Space.s8, Space.s16, Space.s24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -463,6 +485,9 @@ class _StatsBody extends StatelessWidget {
             ],
           ),
         ],
+            ],
+          ),
+        ),
       ],
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../ui_kit/sheet/app_sheet.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -29,19 +30,22 @@ const _swipeVelocityThreshold = 300.0;
 
 bool _isToday(DateTime day, DateTime now) {
   final today = logicalDay(now);
-  return day.year == today.year && day.month == today.month && day.day == today.day;
+  return day.year == today.year &&
+      day.month == today.month &&
+      day.day == today.day;
 }
 
 class HistoryScreen extends ConsumerWidget {
   const HistoryScreen({super.key});
 
-  void _addEntry(BuildContext context, AppThemeData theme, DateTime selectedDay) {
+  void _addEntry(
+    BuildContext context,
+    AppThemeData theme,
+    DateTime selectedDay,
+  ) {
     showAppSheet<void>(
       context,
-      builder: (_) => ManualEntrySheet(
-        theme: theme,
-        selectedDay: selectedDay,
-      ),
+      builder: (_) => ManualEntrySheet(theme: theme, selectedDay: selectedDay),
     );
   }
 
@@ -102,9 +106,6 @@ class HistoryScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 4),
-            DayNavigator(theme: theme),
-            const SizedBox(height: 4),
             Expanded(
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
@@ -114,65 +115,88 @@ class HistoryScreen extends ConsumerWidget {
                   if (velocity < 0) {
                     // Swipe left → next day
                     if (_isToday(selectedDay, clock.now())) return;
-                    ref.read(selectedDayProvider.notifier).state =
-                        selectedDay.add(const Duration(days: 1));
+                    ref.read(selectedDayProvider.notifier).state = selectedDay
+                        .add(const Duration(days: 1));
                   } else {
                     // Swipe right → previous day
-                    ref.read(selectedDayProvider.notifier).state =
-                        selectedDay.subtract(const Duration(days: 1));
+                    ref.read(selectedDayProvider.notifier).state = selectedDay
+                        .subtract(const Duration(days: 1));
                   }
                 },
                 child: entriesAsync.when(
                   data: (entries) {
+                    // The day navigator and the summary scroll with the list;
+                    // only the page header stays in place.
                     if (entries.isEmpty) {
-                      return EmptyState(theme: theme);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          DayNavigator(theme: theme),
+                          Expanded(child: EmptyState(theme: theme)),
+                        ],
+                      );
                     }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        DaySummary(entries: entries, theme: theme),
-                        Expanded(
-                          child: SlidableAutoCloseBehavior(
-                            child: ListView(
-                              padding: const EdgeInsets.fromLTRB(
-                                Space.s16, Space.s8, Space.s16, Space.s16,
-                              ),
+                    return SlidableAutoCloseBehavior(
+                      child: ListView(
+                        padding: const EdgeInsets.only(bottom: Space.s16),
+                        children: [
+                          DayNavigator(theme: theme),
+                          DaySummary(entries: entries, theme: theme),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              Space.s16,
+                              Space.s8,
+                              Space.s16,
+                              0,
+                            ),
+                            child: GroupedList(
                               children: [
-                                GroupedList(
-                                  children: [
-                                    for (final entry in entries)
-                                      HistoryRow(
-                                        key: ValueKey(entry.id),
-                                        entry: entry,
-                                        theme: theme,
-                                        onEdit: () => _edit(context, theme, entry),
-                                        onDelete: () => _delete(context, ref, entry),
-                                      ),
-                                  ],
-                                ),
-                                const SizedBox(height: Space.s12),
-                                Text(
-                                  l10n.time_historySwipeHint,
-                                  textAlign: TextAlign.center,
-                                  style: context.bodyText.bodySmall?.copyWith(
-                                    color: context.palette.textFaint,
+                                for (final entry in entries)
+                                  HistoryRow(
+                                    key: ValueKey(entry.id),
+                                    entry: entry,
+                                    theme: theme,
+                                    onEdit: () => _edit(context, theme, entry),
+                                    onDelete: () =>
+                                        _delete(context, ref, entry),
                                   ),
-                                ),
                               ],
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: Space.s12),
+                          Text(
+                            l10n.time_historySwipeHint,
+                            textAlign: TextAlign.center,
+                            style: context.bodyText.bodySmall?.copyWith(
+                              color: context.palette.textFaint,
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   },
-                  loading: () => Center(
-                    child: CircularProgressIndicator(color: theme.accent),
+                  loading: () => Column(
+                    children: [
+                      DayNavigator(theme: theme),
+                      Expanded(
+                        child: Center(
+                          child: CircularProgressIndicator(color: theme.accent),
+                        ),
+                      ),
+                    ],
                   ),
-                  error: (error, _) => Center(
-                    child: Text(
-                      l10n.time_historyLoadError,
-                      style: TextStyle(color: theme.dim),
-                    ),
+                  error: (error, _) => Column(
+                    children: [
+                      DayNavigator(theme: theme),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            l10n.time_historyLoadError,
+                            style: TextStyle(color: theme.dim),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

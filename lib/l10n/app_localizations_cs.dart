@@ -2359,5 +2359,20 @@ class AppLocalizationsCs extends AppLocalizations {
   String get settings_drawerEnabled => 'Boční menu';
 
   @override
+  String get settings_historyTagStyle => 'Štítek typu v Historii';
+
+  @override
+  String get settings_historyTagPill => 'Štítek';
+
+  @override
+  String get settings_historyTagSmall => 'Malý';
+
+  @override
+  String get settings_historyTagDot => 'Tečka';
+
+  @override
+  String get settings_historyTagText => 'Text';
+
+  @override
   String get settings_titleWeight => 'Tloušťka nadpisů';
 }

@@ -3108,6 +3108,26 @@
   "@settings_drawerEnabled": {
     "description": "Toggle the navigation drawer."
   },
+  "settings_historyTagStyle": "Štítek typu v Historii",
+  "@settings_historyTagStyle": {
+    "description": "Experiment row: how the activity type is drawn on a History row."
+  },
+  "settings_historyTagPill": "Štítek",
+  "@settings_historyTagPill": {
+    "description": "History tag style: the filled tag as it was."
+  },
+  "settings_historyTagSmall": "Malý",
+  "@settings_historyTagSmall": {
+    "description": "History tag style: a smaller filled tag."
+  },
+  "settings_historyTagDot": "Tečka",
+  "@settings_historyTagDot": {
+    "description": "History tag style: a coloured dot and the name."
+  },
+  "settings_historyTagText": "Text",
+  "@settings_historyTagText": {
+    "description": "History tag style: the name in the type colour."
+  },
   "settings_titleWeight": "Tloušťka nadpisů",
   "@settings_titleWeight": {
     "description": "Set the font weight of page and sheet titles."

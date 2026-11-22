@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/ui_preferences.dart';
 
 import '../../../domain/activity_types.dart';
 import '../../../domain/date_format_utils.dart';
@@ -136,9 +139,10 @@ class _HistoryRowState extends State<HistoryRow> {
                       spacing: Space.s6,
                       runSpacing: Space.s4,
                       children: [
-                        TypeTag(
+                        _EntryTypeTag(
                           label: activityTypeLabel(l10n, entry.activityType),
                           color: color,
+                          separated: meta != null,
                         ),
                         if (meta != null)
                           Text(
@@ -173,5 +177,85 @@ class _HistoryRowState extends State<HistoryRow> {
         ),
       ),
     );
+  }
+}
+
+/// The activity type of a History row, drawn in the style chosen in Settings.
+class _EntryTypeTag extends ConsumerWidget {
+  const _EntryTypeTag({
+    required this.label,
+    required this.color,
+    required this.separated,
+  });
+
+  final String label;
+  final Color color;
+
+  /// Whether a meta text follows, which the plain styles part with a dot.
+  final bool separated;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final style = ref.watch(uiPreferencesProvider).historyTagStyle;
+    final palette = context.palette;
+    final body = context.bodyText;
+    switch (style) {
+      case HistoryTagStyle.pill:
+        return TypeTag(label: label, color: color);
+      case HistoryTagStyle.smallPill:
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            color: tintFill(color, palette.card, 0.20),
+            borderRadius: BorderRadius.circular(Radii.chipSmall + 1),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Space.s6 + 1,
+              vertical: 1,
+            ),
+            child: Text(
+              label,
+              style: body.bodySmall?.copyWith(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: tintInk(color, palette.text, 0.45),
+              ),
+            ),
+          ),
+        );
+      case HistoryTagStyle.dotText:
+      case HistoryTagStyle.colorText:
+        final dot = style == HistoryTagStyle.dotText;
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (dot) ...[
+              SizedBox.square(
+                dimension: Space.s8,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                ),
+              ),
+              const SizedBox(width: Space.s6),
+            ],
+            Text(
+              label,
+              style: body.bodySmall?.copyWith(
+                fontSize: 13,
+                fontWeight: dot ? FontWeight.w600 : FontWeight.w700,
+                color: dot ? palette.text : tintInk(color, palette.text, 0.6),
+              ),
+            ),
+            if (separated)
+              Padding(
+                padding: const EdgeInsets.only(left: Space.s6),
+                child: Text(
+                  '·',
+                  style: body.bodySmall?.copyWith(color: palette.textFaint),
+                ),
+              ),
+          ],
+        );
+    }
   }
 }

@@ -69,6 +69,34 @@ class ExperimentsGroup extends ConsumerWidget {
               ),
             ),
           ),
+          ListRow(
+            title: strings.settings_historyTagStyle,
+            trailing: SizedBox(
+              width: Metrics.weightControlWidth,
+              child: AppSegmented<HistoryTagStyle>(
+                options: [
+                  SegmentedOption(
+                    value: HistoryTagStyle.pill,
+                    label: strings.settings_historyTagPill,
+                  ),
+                  SegmentedOption(
+                    value: HistoryTagStyle.smallPill,
+                    label: strings.settings_historyTagSmall,
+                  ),
+                  SegmentedOption(
+                    value: HistoryTagStyle.dotText,
+                    label: strings.settings_historyTagDot,
+                  ),
+                  SegmentedOption(
+                    value: HistoryTagStyle.colorText,
+                    label: strings.settings_historyTagText,
+                  ),
+                ],
+                selected: prefs.historyTagStyle,
+                onChanged: notifier.setHistoryTagStyle,
+              ),
+            ),
+          ),
         ],
       ),
     );

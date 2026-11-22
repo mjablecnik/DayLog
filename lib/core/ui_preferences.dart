@@ -7,29 +7,49 @@ import '../theme/typography.dart';
 
 enum ModuleButtonSide { left, right }
 
+/// How the activity type is drawn on a History row; a setting to try the
+/// variants on the device.
+enum HistoryTagStyle {
+  /// The filled tag as it was.
+  pill,
+
+  /// A smaller filled tag.
+  smallPill,
+
+  /// A coloured dot and the name.
+  dotText,
+
+  /// The name in the type colour, no background.
+  colorText,
+}
+
 @immutable
 class UiPreferences {
   const UiPreferences({
     this.moduleButtonSide = ModuleButtonSide.left,
     this.drawerEnabled = true,
     this.titleWeight = defaultTitleWeight,
+    this.historyTagStyle = HistoryTagStyle.pill,
     this.lastLocation,
   });
 
   final ModuleButtonSide moduleButtonSide;
   final bool drawerEnabled;
   final FontWeight titleWeight;
+  final HistoryTagStyle historyTagStyle;
   final String? lastLocation;
 
   UiPreferences copyWith({
     ModuleButtonSide? moduleButtonSide,
     bool? drawerEnabled,
     FontWeight? titleWeight,
+    HistoryTagStyle? historyTagStyle,
     String? lastLocation,
   }) => UiPreferences(
     moduleButtonSide: moduleButtonSide ?? this.moduleButtonSide,
     drawerEnabled: drawerEnabled ?? this.drawerEnabled,
     titleWeight: titleWeight ?? this.titleWeight,
+    historyTagStyle: historyTagStyle ?? this.historyTagStyle,
     lastLocation: lastLocation ?? this.lastLocation,
   );
 }
@@ -38,6 +58,7 @@ abstract final class UiPreferenceKeys {
   static const moduleButtonSide = 'ui_module_button_side';
   static const drawerEnabled = 'ui_drawer_enabled';
   static const titleWeight = 'ui_title_weight';
+  static const historyTagStyle = 'ui_history_tag_style';
   static const lastLocation = 'ui_last_location';
 }
 
@@ -67,6 +88,10 @@ class SharedPrefsUiPreferencesStore implements UiPreferencesStore {
           : ModuleButtonSide.left,
       drawerEnabled: enabled is bool ? enabled : true,
       titleWeight: weight,
+      historyTagStyle: HistoryTagStyle.values.firstWhere(
+        (style) => style.name == _prefs.get(UiPreferenceKeys.historyTagStyle),
+        orElse: () => HistoryTagStyle.pill,
+      ),
       lastLocation: location is String && location.isNotEmpty ? location : null,
     );
   }
@@ -81,6 +106,10 @@ class SharedPrefsUiPreferencesStore implements UiPreferencesStore {
       ),
       _prefs.setBool(UiPreferenceKeys.drawerEnabled, value.drawerEnabled),
       _prefs.setInt(UiPreferenceKeys.titleWeight, value.titleWeight.value),
+      _prefs.setString(
+        UiPreferenceKeys.historyTagStyle,
+        value.historyTagStyle.name,
+      ),
       if (location == null)
         _prefs.remove(UiPreferenceKeys.lastLocation)
       else
@@ -112,6 +141,9 @@ class UiPreferencesNotifier extends Notifier<UiPreferences> {
 
   Future<void> setTitleWeight(FontWeight weight) =>
       _update(state.copyWith(titleWeight: weight));
+
+  Future<void> setHistoryTagStyle(HistoryTagStyle style) =>
+      _update(state.copyWith(historyTagStyle: style));
 
   Future<void> setLastLocation(String linkName) =>
       _update(state.copyWith(lastLocation: linkName));

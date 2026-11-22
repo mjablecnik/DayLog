@@ -3715,6 +3715,36 @@ abstract class AppLocalizations {
   /// **'Boční menu'**
   String get settings_drawerEnabled;
 
+  /// Experiment row: how the activity type is drawn on a History row.
+  ///
+  /// In cs, this message translates to:
+  /// **'Štítek typu v Historii'**
+  String get settings_historyTagStyle;
+
+  /// History tag style: the filled tag as it was.
+  ///
+  /// In cs, this message translates to:
+  /// **'Štítek'**
+  String get settings_historyTagPill;
+
+  /// History tag style: a smaller filled tag.
+  ///
+  /// In cs, this message translates to:
+  /// **'Malý'**
+  String get settings_historyTagSmall;
+
+  /// History tag style: a coloured dot and the name.
+  ///
+  /// In cs, this message translates to:
+  /// **'Tečka'**
+  String get settings_historyTagDot;
+
+  /// History tag style: the name in the type colour.
+  ///
+  /// In cs, this message translates to:
+  /// **'Text'**
+  String get settings_historyTagText;
+
   /// Set the font weight of page and sheet titles.
   ///
   /// In cs, this message translates to:

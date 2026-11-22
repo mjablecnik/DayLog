@@ -602,5 +602,10 @@
   "settings_moduleButtonLeft": "Left",
   "settings_moduleButtonRight": "Right",
   "settings_drawerEnabled": "Side menu",
+  "settings_historyTagStyle": "History type tag",
+  "settings_historyTagPill": "Tag",
+  "settings_historyTagSmall": "Small",
+  "settings_historyTagDot": "Dot",
+  "settings_historyTagText": "Text",
   "settings_titleWeight": "Title weight"
 }

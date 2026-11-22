@@ -2310,5 +2310,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_drawerEnabled => 'Side menu';
 
   @override
+  String get settings_historyTagStyle => 'History type tag';
+
+  @override
+  String get settings_historyTagPill => 'Tag';
+
+  @override
+  String get settings_historyTagSmall => 'Small';
+
+  @override
+  String get settings_historyTagDot => 'Dot';
+
+  @override
+  String get settings_historyTagText => 'Text';
+
+  @override
   String get settings_titleWeight => 'Title weight';
 }

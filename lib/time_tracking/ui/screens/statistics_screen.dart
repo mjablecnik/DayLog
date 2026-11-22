@@ -161,7 +161,7 @@ class _DateNav extends ConsumerWidget {
     return PeriodNavigator(
       title: _label(l10n, period, date),
       subtitle: period == StatsPeriod.daily
-          ? DateFormat.yMMMMEEEEd(l10n.localeName).format(date)
+          ? DateFormat.MMMMEEEEd(l10n.localeName).format(date)
           : '${dateFormat.format(start)} – ${dateFormat.format(start.add(const Duration(days: 6)))}',
       onPrevious: () {
         ref.read(statisticsDateProvider.notifier).state =
@@ -277,15 +277,20 @@ class _WeekdayRow extends StatelessWidget {
     }).toList();
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: 22,
-          child: Text(
-            label,
-            style: TextStyle(
-              color: theme.dim,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+          height: Space.s16,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: theme.dim,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ),
@@ -364,29 +369,49 @@ class _StatsBody extends StatelessWidget {
             total(l10n.time_statsUntracked, stats.untrackedTime, palette.textDim),
           ],
         ),
-        if (stats.totalTracked.inSeconds > 0) ...[
-          const SizedBox(height: Space.s12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(Radii.pill),
-            child: SizedBox(
-              height: Space.s12,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final (index, entry) in types.indexed) ...[
-                    if (index > 0) const SizedBox(width: Space.s2),
-                    Expanded(
-                      flex: entry.value.inSeconds.clamp(1, 1 << 30),
-                      child: ColoredBox(color: activityMainColor(entry.key, isDark: theme.isDark)),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ],
         const SizedBox(height: Space.s12),
-        GroupedList(children: [timeline]),
+        GroupedList(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (stats.totalTracked.inSeconds > 0)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      Space.s12,
+                      Space.s12,
+                      Space.s12,
+                      0,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(Radii.pill),
+                      child: SizedBox(
+                        height: Space.s12,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            for (final (index, entry) in types.indexed) ...[
+                              if (index > 0) const SizedBox(width: Space.s2),
+                              Expanded(
+                                flex: entry.value.inSeconds.clamp(1, 1 << 30),
+                                child: ColoredBox(
+                                  color: activityMainColor(
+                                    entry.key,
+                                    isDark: theme.isDark,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                timeline,
+              ],
+            ),
+          ],
+        ),
         const SizedBox(height: Space.s16),
         if (types.isEmpty)
           EmptyState(title: l10n.time_statsNoEntriesPeriod, icon: IconAsset.statistics)
@@ -500,28 +525,52 @@ class _ActivityTypeBar extends StatelessWidget {
       ));
     }
 
+    final palette = context.palette;
+    final body = context.bodyText;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
+            Container(
+              width: Space.s10,
+              height: Space.s10,
+              margin: const EdgeInsets.only(right: Space.s10),
+              decoration: BoxDecoration(
+                color: activityMainColor(type, isDark: isDark),
+                shape: BoxShape.circle,
+              ),
+            ),
             Expanded(
               child: Text(
                 activityTypeLabel(l10n, type),
-                style: TextStyle(
-                  color: theme.text,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                style: body.titleMedium?.copyWith(
+                  fontSize: 16,
+                  fontWeight: const FontWeight(650),
                 ),
               ),
             ),
-            Text(
-              '${formatDuration(l10n, duration)} · $percent%',
-              style: TextStyle(color: theme.dim, fontSize: 12),
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: formatDuration(l10n, duration),
+                    style: TextStyle(
+                      color: palette.text,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  TextSpan(
+                    text: ' · $percent %',
+                    style: TextStyle(color: palette.textDim),
+                  ),
+                ],
+              ),
+              style: body.bodyMedium?.copyWith(fontSize: 15),
             ),
           ],
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: Space.s8),
         SizedBox(
           height: 8,
           child: CustomPaint(
@@ -535,32 +584,23 @@ class _ActivityTypeBar extends StatelessWidget {
         ),
         for (final subtype in subtypes)
           Padding(
-            padding: const EdgeInsets.only(left: 14, top: 5),
+            padding: const EdgeInsets.only(left: Space.s20, top: Space.s8),
             child: Row(
               children: [
-                Container(
-                  width: 7,
-                  height: 7,
-                  margin: const EdgeInsets.only(right: 7),
-                  decoration: BoxDecoration(
-                    color: isDark ? subtype.dark : subtype.light,
-                    shape: BoxShape.circle,
-                  ),
-                ),
                 Expanded(
                   child: Text(
                     subtypeLabel(l10n, type, subtype.key),
-                    style: TextStyle(
-                      color: theme.dim,
-                      fontSize: 12,
+                    style: body.bodyMedium?.copyWith(
+                      fontSize: 14,
+                      color: palette.textDim,
                     ),
                   ),
                 ),
                 Text(
                   formatDuration(l10n, subtypeDurations[subtype.key]!),
-                  style: TextStyle(
-                    color: theme.dim,
-                    fontSize: 12,
+                  style: body.bodyMedium?.copyWith(
+                    fontSize: 14,
+                    color: palette.textDim,
                   ),
                 ),
               ],

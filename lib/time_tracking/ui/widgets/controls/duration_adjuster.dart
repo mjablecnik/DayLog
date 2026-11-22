@@ -29,21 +29,34 @@ class DurationAdjuster extends StatelessWidget {
     final strings = AppLocalizations.of(context);
     final palette = context.palette;
 
-    Widget step(String icon, String label, VoidCallback? onPressed) =>
-        IconButton(
-          tooltip: label,
-          onPressed: onPressed,
-          style: IconButton.styleFrom(
-            backgroundColor: palette.tone,
-            foregroundColor: palette.text,
-            disabledForegroundColor: palette.textFaint,
+    Widget step(String icon, String label, VoidCallback? onPressed) => Semantics(
+      button: true,
+      enabled: onPressed != null,
+      label: label,
+      excludeSemantics: true,
+      onTap: onPressed,
+      child: Tooltip(
+        message: label,
+        child: Material(
+          color: palette.tone,
+          shape: const CircleBorder(),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: onPressed,
+            child: SizedBox.square(
+              dimension: Metrics.touchTarget,
+              child: Center(
+                child: AppIcon(
+                  icon,
+                  size: Metrics.iconSize,
+                  color: onPressed == null ? palette.textFaint : palette.text,
+                ),
+              ),
+            ),
           ),
-          icon: AppIcon(
-            icon,
-            size: Metrics.iconSmall,
-            color: onPressed == null ? palette.textFaint : palette.text,
-          ),
-        );
+        ),
+      ),
+    );
 
     return Material(
       color: palette.card,

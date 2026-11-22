@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../../ui_kit/controls/step_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -51,7 +53,7 @@ class DayNavigator extends ConsumerWidget {
 
     return PeriodNavigator(
       title: _dayLabel(l10n, selectedDay, now),
-      subtitle: DateFormat.yMMMMEEEEd(l10n.localeName).format(selectedDay),
+      subtitle: DateFormat.MMMMEEEEd(l10n.localeName).format(selectedDay),
       onPrevious: () {
         ref.read(selectedDayProvider.notifier).state = selectedDay.subtract(
           const Duration(days: 1),
@@ -103,19 +105,7 @@ class PeriodNavigator extends StatelessWidget {
     final palette = context.palette;
 
     Widget arrow(String name, String label, VoidCallback? onPressed) =>
-        IconButton(
-          tooltip: label,
-          onPressed: onPressed,
-          style: IconButton.styleFrom(
-            backgroundColor: palette.tone,
-            foregroundColor: palette.textDim,
-            disabledForegroundColor: palette.textFaint,
-          ),
-          icon: AppIcon(
-            name,
-            color: onPressed == null ? palette.textFaint : palette.textDim,
-          ),
-        );
+        StepButton(icon: name, label: label, onPressed: onPressed);
 
     final heading = Padding(
       padding: const EdgeInsets.symmetric(horizontal: Space.s8),

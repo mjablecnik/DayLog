@@ -74,13 +74,35 @@ class _ReminderRowState extends ConsumerState<ReminderRow> {
     return '$h:$m';
   }
 
+  /// "Every day" for all seven days, otherwise the days with runs of three or
+  /// more written as a range ("Mo–Fr").
   String _formatActiveDays(AppLocalizations l10n, int mask) {
     final labels = weekdayShortLabels(l10n);
     final days = decodeDays(mask);
-    return List.generate(
-      7,
-      (i) => i + 1,
-    ).where(days.contains).map((day) => labels[day - 1]).join(', ');
+    if (List.generate(7, (i) => i + 1).every(days.contains)) {
+      return l10n.time_reminderEveryDay;
+    }
+    final parts = <String>[];
+    var day = 1;
+    while (day <= 7) {
+      if (!days.contains(day)) {
+        day++;
+        continue;
+      }
+      var end = day;
+      while (end < 7 && days.contains(end + 1)) {
+        end++;
+      }
+      if (end - day >= 2) {
+        parts.add('${labels[day - 1]}–${labels[end - 1]}');
+      } else {
+        for (var d = day; d <= end; d++) {
+          parts.add(labels[d - 1]);
+        }
+      }
+      day = end + 1;
+    }
+    return parts.join(', ');
   }
 
   Future<void> _toggleCompletion(bool? checked) async {

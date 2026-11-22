@@ -174,7 +174,7 @@ void main() {
 
     await tester.enterText(find.byType(TextField), 'Walk');
     await tester.pump();
-    expect(find.text('4 / 100'), findsOneWidget);
+    expect(find.text('4/100'), findsOneWidget);
     await tester.tap(find.byTooltip('Close'));
     await tester.pumpAndSettle();
     expect(find.text('Discard changes?'), findsOneWidget);

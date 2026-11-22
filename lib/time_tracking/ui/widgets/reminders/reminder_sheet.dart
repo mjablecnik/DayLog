@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+
+import '../../../../ui_kit/layout/grouped_list.dart';
+
+import '../../../../ui_kit/forms/app_text_field.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../theme/time_theme.dart';
@@ -185,13 +189,10 @@ class _ReminderSheetState extends ConsumerState<ReminderSheet> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextField(
+          AppTextField(
             controller: _nameController,
             maxLength: 100,
-            decoration: InputDecoration(
-              hintText: l10n.time_reminderNameHint,
-              counterText: '${_nameController.text.characters.length} / 100',
-            ),
+            hint: l10n.time_reminderNameHint,
             onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: Space.s12),
@@ -235,6 +236,7 @@ class _ReminderSheetState extends ConsumerState<ReminderSheet> {
           const SizedBox(height: Space.s4),
           Text(
             l10n.time_reminderMinutesUnit,
+            textAlign: TextAlign.end,
             style: context.bodyText.bodySmall?.copyWith(
               color: context.palette.textDim,
             ),
@@ -248,11 +250,17 @@ class _ReminderSheetState extends ConsumerState<ReminderSheet> {
             onChanged: (days) => setState(() => _activeDays = days),
           ),
           const SizedBox(height: Space.s16),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.time_reminderActiveLabel),
-            value: _isActive,
-            onChanged: (value) => setState(() => _isActive = value),
+          GroupedList(
+            children: [
+              ListRow(
+                title: l10n.time_reminderActiveLabel,
+                trailing: Switch(
+                  value: _isActive,
+                  onChanged: (value) => setState(() => _isActive = value),
+                ),
+                onTap: () => setState(() => _isActive = !_isActive),
+              ),
+            ],
           ),
           if (_error case final error?)
             Semantics(

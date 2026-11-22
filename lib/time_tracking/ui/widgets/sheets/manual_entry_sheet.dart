@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 
+import '../../../../ui_kit/forms/app_text_field.dart';
+
 import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/app_icon.dart';
@@ -257,11 +259,11 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
             onChanged: (selection) => setState(() => _selection = selection),
           ),
           const SizedBox(height: Space.s16),
-          TextField(
+          AppTextField(
             controller: _controller,
-            maxLines: 4,
+            multiline: true,
             maxLength: 500,
-            decoration: InputDecoration(hintText: strings.time_descriptionHint),
+            hint: strings.time_descriptionHint,
             onChanged: (_) => setState(() {}),
           ),
           if (_error case final error?)

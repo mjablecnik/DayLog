@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../../ui_kit/forms/app_text_field.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/activity_types.dart';
@@ -49,30 +51,13 @@ class SuggestionField extends ConsumerWidget {
       },
       onSelected: onChanged,
       fieldViewBuilder: (context, controller, focusNode, onSubmitted) {
-        return Container(
-          decoration: BoxDecoration(
-            color: theme.panel,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: theme.border),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          child: TextField(
-            controller: controller,
-            focusNode: focusNode,
-            autofocus: autofocus,
-            maxLength: maxLength,
-            onChanged: onChanged,
-            style: TextStyle(
-              color: theme.text,
-              fontSize: 15,
-            ),
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: TextStyle(color: theme.faint),
-              border: InputBorder.none,
-              counterStyle: TextStyle(color: theme.faint, fontSize: 11),
-            ),
-          ),
+        return AppTextField(
+          controller: controller,
+          focusNode: focusNode,
+          autofocus: autofocus,
+          maxLength: maxLength,
+          hint: hint,
+          onChanged: onChanged,
         );
       },
       optionsViewBuilder: (context, onSelected, options) {

@@ -58,7 +58,7 @@ class DaySummary extends StatelessWidget {
           pill(
             l10n.time_historyEntryCount(count),
             palette.tone,
-            palette.textDim,
+            palette.text,
           ),
           pill(
             l10n.time_historyTotalLabel(formatDuration(l10n, _totalTime())),

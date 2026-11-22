@@ -166,6 +166,7 @@ class _CircleButton extends StatelessWidget {
                 text,
                 style: context.bodyText.bodySmall?.copyWith(
                   fontWeight: FontWeight.w600,
+                  color: context.palette.textDim,
                 ),
               ),
             ],

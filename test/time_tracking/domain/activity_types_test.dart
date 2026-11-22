@@ -18,13 +18,14 @@ void main() {
   final cs = AppLocalizationsCs();
 
   group('registry contents', () {
-    test('has the twelve main types in order', () {
+    test('has the fourteen main types in order', () {
       expect(activityTypes, [
         'Práce',
         'Domácí práce',
         'Meeting',
         'Komunikace',
         'Přesun',
+        'Tanec',
         'Zábava',
         'Cvičení',
         'Seberozvoj',
@@ -32,6 +33,7 @@ void main() {
         'Hygiena',
         'Jídlo',
         'Ostatní',
+        'Nicnedělání',
       ]);
     });
 
@@ -50,7 +52,9 @@ void main() {
         'Meeting',
         'Komunikace',
         'Přesun',
+        'Tanec',
         'Ostatní',
+        'Nicnedělání',
       ]) {
         expect(activityTypeOf(type)!.subtypes, isEmpty, reason: type);
       }

@@ -2810,6 +2810,18 @@ abstract class AppLocalizations {
   /// **'Komunikace'**
   String get time_activityCommunication;
 
+  /// Time tracking text: "Dance"
+  ///
+  /// In cs, this message translates to:
+  /// **'Tanec'**
+  String get time_activityDance;
+
+  /// Time tracking text: "Doing nothing"
+  ///
+  /// In cs, this message translates to:
+  /// **'Nicnedělání'**
+  String get time_activityIdle;
+
   /// Time tracking text: "Other"
   ///
   /// In cs, this message translates to:

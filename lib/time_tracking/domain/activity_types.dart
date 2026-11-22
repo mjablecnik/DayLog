@@ -101,6 +101,11 @@ const List<ActivityType> activityRegistry = [
     light: Color(0xFF7A8BA4),
   ),
   ActivityType(
+    key: 'Tanec',
+    dark: Color(0xFFF89090),
+    light: Color(0xFFC0405A),
+  ),
+  ActivityType(
     key: 'Zábava',
     dark: Color(0xFF2CC4B0),
     light: Color(0xFF137E70),
@@ -234,6 +239,11 @@ const List<ActivityType> activityRegistry = [
     light: Color(0xFF7A746C),
     extra: TypeExtra.customName,
   ),
+  ActivityType(
+    key: 'Nicnedělání',
+    dark: Color(0xFFE0B0F0),
+    light: Color(0xFF804080),
+  ),
 ];
 
 /// Neutral colour for a type key that the registry does not define.
@@ -351,6 +361,8 @@ String activityTypeLabel(AppLocalizations l10n, String typeKey) {
       return l10n.time_activityCommunication;
     case 'Přesun':
       return l10n.time_activityCommute;
+    case 'Tanec':
+      return l10n.time_activityDance;
     case 'Zábava':
       return l10n.time_activityEntertainment;
     case 'Cvičení':
@@ -365,6 +377,8 @@ String activityTypeLabel(AppLocalizations l10n, String typeKey) {
       return l10n.time_activityMeal;
     case 'Ostatní':
       return l10n.time_activityOther;
+    case 'Nicnedělání':
+      return l10n.time_activityIdle;
     default:
       return typeKey;
   }

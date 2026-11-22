@@ -2432,6 +2432,14 @@
   "@time_activityCommunication": {
     "description": "Time tracking text: \"Communication\""
   },
+  "time_activityDance": "Tanec",
+  "@time_activityDance": {
+    "description": "Time tracking text: \"Dance\""
+  },
+  "time_activityIdle": "Nicnedělání",
+  "@time_activityIdle": {
+    "description": "Time tracking text: \"Doing nothing\""
+  },
   "time_activityOther": "Ostatní",
   "@time_activityOther": {
     "description": "Time tracking text: \"Other\""

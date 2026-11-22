@@ -452,6 +452,8 @@
   "time_activityMeal": "Meal",
   "time_activityMeeting": "Meeting",
   "time_activityCommunication": "Communication",
+  "time_activityDance": "Dance",
+  "time_activityIdle": "Doing nothing",
   "time_activityOther": "Other",
   "time_subtypePaid": "Paid",
   "time_subtypeUnpaid": "Unpaid",

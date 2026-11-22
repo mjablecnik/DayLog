@@ -1846,6 +1846,12 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_activityCommunication => 'Komunikace';
 
   @override
+  String get time_activityDance => 'Tanec';
+
+  @override
+  String get time_activityIdle => 'Nicnedělání';
+
+  @override
   String get time_activityOther => 'Ostatní';
 
   @override

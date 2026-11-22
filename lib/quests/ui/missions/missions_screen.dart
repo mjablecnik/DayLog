@@ -89,7 +89,14 @@ class _MissionsScreenState extends ConsumerState<MissionsScreen> {
     final List<MissionSummary>? openList = open.value;
     final List<MissionSummary>? doneList = done.value;
 
-    final Widget body;
+    // The level card scrolls with the list; only the title row stays.
+    const Widget levelCard = Padding(
+      padding: EdgeInsets.fromLTRB(Space.s20, Space.s8, Space.s20, Space.s14),
+      child: LevelCard(),
+    );
+
+    Widget body;
+    var listShown = false;
     if (open.hasError || done.hasError) {
       body = _LoadError(
         onRetry: () {
@@ -120,6 +127,14 @@ class _MissionsScreenState extends ConsumerState<MissionsScreen> {
         onOpen: _openDetail,
         onEdit: (MissionSummary m) => showMissionSheet(context, editing: m),
         onDelete: _delete,
+        header: levelCard,
+      );
+      listShown = true;
+    }
+    if (!listShown) {
+      body = Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[levelCard, Expanded(child: body)],
       );
     }
 
@@ -135,16 +150,6 @@ class _MissionsScreenState extends ConsumerState<MissionsScreen> {
                   openCount: openList?.length ?? 0,
                   doneCount: doneList?.length ?? 0,
                 ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    Space.s20,
-                    Space.s8,
-                    Space.s20,
-                    Space.s4,
-                  ),
-                  child: LevelCard(),
-                ),
-                const SizedBox(height: Space.s10),
                 Expanded(child: body),
               ],
             ),
@@ -191,8 +196,11 @@ class _MissionList extends ConsumerStatefulWidget {
     required this.onOpen,
     required this.onEdit,
     required this.onDelete,
+    required this.header,
   });
 
+  /// Scrolls away with the list, above the first section.
+  final Widget header;
   final List<MissionSummary> open;
   final List<MissionSummary> doneToday;
   final Set<int> leaving;
@@ -295,6 +303,7 @@ class _MissionListState extends ConsumerState<_MissionList> {
     return SlidableAutoCloseBehavior(
       child: CustomScrollView(
         slivers: <Widget>[
+          SliverToBoxAdapter(child: widget.header),
           if (open.isNotEmpty) ...<Widget>[
             SliverPadding(
               padding: side,

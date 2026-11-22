@@ -86,7 +86,11 @@ class QuestList extends ConsumerStatefulWidget {
     required this.today,
     this.missionNames = const <int, String>{},
     this.eventTasks = const <EventOccurrence>[],
+    this.header,
   });
+
+  /// Scrolls away with the list, above the first section.
+  final Widget? header;
 
   /// Every open Quest on the Board, in the manual order, both sections.
   final List<Quest> open;
@@ -416,6 +420,8 @@ class _QuestListState extends ConsumerState<QuestList> {
     return SlidableAutoCloseBehavior(
       child: CustomScrollView(
         slivers: <Widget>[
+          if (widget.header case final header?)
+            SliverToBoxAdapter(child: header),
           SliverReorderableList(
             itemCount: entries.length,
             proxyDecorator: _liftProxy,

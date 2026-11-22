@@ -57,7 +57,13 @@ class _BoardScreenState extends ConsumerState<BoardScreen> {
         eventTasks.isEmpty &&
         !doneAsync.isLoading;
 
-    final Widget body;
+    // The level card scrolls with the list; only the title row stays.
+    const Widget levelCard = Padding(
+      padding: EdgeInsets.fromLTRB(Space.s20, Space.s8, Space.s20, Space.s14),
+      child: LevelCard(),
+    );
+
+    Widget body;
     if (loading) {
       body = const Align(alignment: Alignment.topCenter, child: SkeletonList());
     } else if (empty) {
@@ -71,6 +77,13 @@ class _BoardScreenState extends ConsumerState<BoardScreen> {
         today: today,
         missionNames: <int, String>{for (final m in missions) m.id: m.name},
         eventTasks: eventTasks,
+        header: levelCard,
+      );
+    }
+    if (loading || empty) {
+      body = Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[levelCard, Expanded(child: body)],
       );
     }
 
@@ -84,16 +97,6 @@ class _BoardScreenState extends ConsumerState<BoardScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 _TitleRow(today: today),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    Space.s20,
-                    Space.s8,
-                    Space.s20,
-                    Space.s4,
-                  ),
-                  child: LevelCard(),
-                ),
-                const SizedBox(height: Space.s10),
                 Expanded(child: body),
               ],
             ),

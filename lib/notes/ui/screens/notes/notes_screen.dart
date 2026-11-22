@@ -231,7 +231,7 @@ class _NodeList extends ConsumerWidget {
           ],
           if (notes.isNotEmpty) ...[
             if (folders.isNotEmpty) const SizedBox(height: Space.s16),
-            SectionLabel(l.notes_sectionNotes),
+            SectionLabel(folderId == null ? l.notes_sectionNotes : '${l.notes_sectionNotes} · ${notes.length}'),
             const SizedBox(height: Space.s8),
             GroupedList(
               children: [

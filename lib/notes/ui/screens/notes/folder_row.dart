@@ -30,7 +30,7 @@ class FolderRow extends StatelessWidget {
       child: ListRow(
         leading: const IconTile(IconAsset.folder),
         title: name,
-        subtitle: summary,
+        value: summary,
         showChevron: true,
         onTap: onTap,
       ),

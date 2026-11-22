@@ -4,7 +4,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/app_icon.dart';
-import '../widgets/node_tiles.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 import '../../../ui_kit/sheet/app_sheet.dart';
 
 /// What the Add_Sheet creates.
@@ -33,20 +33,23 @@ class _AddSheet extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          _Choice(
-            choiceKey: const ValueKey<String>('add-note'),
-            icon: IconAsset.notePlus,
-            title: l.notes_addNote,
-            hint: l.notes_addNoteHint,
-            onTap: () => AppSheet.close<NewNodeKind>(context, NewNodeKind.note),
-          ),
-          const SizedBox(height: Space.s12),
-          _Choice(
-            choiceKey: const ValueKey<String>('add-folder'),
-            icon: IconAsset.folderPlus,
-            title: l.notes_addFolder,
-            hint: l.notes_addFolderHint,
-            onTap: () => AppSheet.close<NewNodeKind>(context, NewNodeKind.folder),
+          GroupedList(
+            children: <Widget>[
+              ListRow(
+                key: const ValueKey<String>('add-note'),
+                leading: const IconTile(IconAsset.notePlus),
+                title: l.notes_addNote,
+                subtitle: l.notes_addNoteHint,
+                onTap: () => AppSheet.close<NewNodeKind>(context, NewNodeKind.note),
+              ),
+              ListRow(
+                key: const ValueKey<String>('add-folder'),
+                leading: const IconTile(IconAsset.folderPlus),
+                title: l.notes_addFolder,
+                subtitle: l.notes_addFolderHint,
+                onTap: () => AppSheet.close<NewNodeKind>(context, NewNodeKind.folder),
+              ),
+            ],
           ),
           const SizedBox(height: Space.s16),
           Text(
@@ -55,66 +58,6 @@ class _AddSheet extends StatelessWidget {
             style: context.bodyText.bodySmall!.copyWith(color: p.textFaint),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _Choice extends StatelessWidget {
-  const _Choice({
-    required this.choiceKey,
-    required this.icon,
-    required this.title,
-    required this.hint,
-    required this.onTap,
-  });
-
-  final Key choiceKey;
-  final String icon;
-  final String title;
-  final String hint;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final AppPalette p = context.palette;
-    return Semantics(
-      button: true,
-      label: '$title. $hint',
-      excludeSemantics: true,
-      onTap: onTap,
-      child: Material(
-        color: p.field,
-        borderRadius: BorderRadius.circular(Radii.card),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          key: choiceKey,
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(Space.s12),
-            child: Row(
-              children: <Widget>[
-                NodeIconTile(icon: icon),
-                const SizedBox(width: Space.s12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        title,
-                        style: context.bodyText.bodyLarge!.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        hint,
-                        style: context.bodyText.bodySmall!.copyWith(color: p.textDim),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

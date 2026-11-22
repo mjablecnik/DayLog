@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
-import '../../../../ui_kit/common/app_icon.dart';
-import '../../../../ui_kit/layout/grouped_list.dart';
+import '../../../../theme/app_theme.dart';
+import '../../../../theme/tokens.dart';
 
 /// One Note in the list: name, the date of its last edit and a two-line preview.
 class NoteRow extends StatelessWidget {
@@ -26,17 +26,63 @@ class NoteRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final strings = AppLocalizations.of(context);
+    final palette = context.palette;
     return Semantics(
       button: true,
       label: '${strings.a11y_openNote(name)}. $date. $preview',
       excludeSemantics: true,
       onTap: onTap,
-      child: ListRow(
-        leading: const IconTile(IconAsset.note),
-        title: name,
-        subtitle: preview.isEmpty ? null : preview,
-        value: date,
+      child: InkWell(
         onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Space.s16,
+            vertical: Space.s13,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Expanded(
+                    child: Text(
+                      name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.bodyText.titleMedium?.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: Space.s8),
+                  Text(
+                    date,
+                    style: context.bodyText.bodySmall?.copyWith(
+                      fontSize: 13,
+                      color: palette.textFaint,
+                    ),
+                  ),
+                ],
+              ),
+              if (preview.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: Space.s2),
+                  child: Text(
+                    preview,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.bodyText.bodyMedium?.copyWith(
+                      fontSize: 14.5,
+                      color: palette.textDim,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

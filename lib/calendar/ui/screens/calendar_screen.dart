@@ -13,9 +13,9 @@ import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/layout/app_header.dart';
-import '../../../ui_kit/layout/header_action.dart';
+// import '../../../ui_kit/layout/header_action.dart'; // add button is switched off
 import 'calendar_labels.dart';
-import 'event_form_screen.dart';
+// import 'event_form_screen.dart'; // add button is switched off
 // import 'event_search_screen.dart'; // search button is switched off
 import 'month_grid.dart';
 
@@ -124,16 +124,18 @@ class _Header extends ConsumerWidget {
             //   badgeCount: filterActive ? 1 : null,
             //   onPressed: () => showTypeFilter(context),
             // ),
-            HeaderAction(
-              key: const ValueKey<String>('add-fab'),
-              icon: IconAsset.plus,
-              semanticLabel: l.calendar_add,
-              emphasized: true,
-              onPressed: () => showEventForm(
-                context,
-                presetDate: ref.read(selectedDayProvider),
-              ),
-            ),
+            // The add button is switched off for now; events are added from
+            // the day sheet.
+            // HeaderAction(
+            //   key: const ValueKey<String>('add-fab'),
+            //   icon: IconAsset.plus,
+            //   semanticLabel: l.calendar_add,
+            //   emphasized: true,
+            //   onPressed: () => showEventForm(
+            //     context,
+            //     presetDate: ref.read(selectedDayProvider),
+            //   ),
+            // ),
           ],
         ),
         Padding(

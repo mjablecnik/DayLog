@@ -35,13 +35,16 @@ void main() {
     expect(find.byType(EventTaskCard), findsNothing);
 
     // Create a birthday on today (15 November): it is On_Board by default.
-    await tap(find.byKey(const ValueKey<String>('add-fab')));
+    await tap(find.byKey(const ValueKey<String>('day-2026-11-15')));
+    await tap(find.widgetWithText(FilledButton, en.calendar_add));
     await tester.enterText(find.byKey(const ValueKey<String>('form-name')), 'Popřát Evě');
     await tester.pump();
     await tap(find.text(en.calendar_typeBirthday));
     await tap(find.byKey(const ValueKey<String>('form-save')));
     expect(find.text(en.calendar_formCreateTitle), findsNothing);
     expect(find.text('Popřát Evě'), findsWidgets);
+    // The day sheet the event was added from is still open.
+    await tap(find.byTooltip('Close'));
 
     // On the Board it is a task worth 25 XP (a timed one-hour event); do it.
     await tapDestination(tester, Destination.quests);

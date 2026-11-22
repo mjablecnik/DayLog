@@ -307,13 +307,12 @@ void main() {
     });
   });
 
-  calendarTest(h, 'tapping the add button of the month opens the form with the selected day', (tester) async {
+  // The add button of the month header is switched off; events are added from the day sheet.
+  calendarTest(h, 'the add button of the day sheet opens the form with that day', (tester) async {
     await h.pump(tester, home: const CalendarScreen(), now: DateTime(2026, 11, 19, 10));
     await tester.tap(find.byKey(const ValueKey<String>('day-2026-11-24')));
     await h.settle(tester);
-    await tester.tap(find.byTooltip('Close'));
-    await h.settle(tester);
-    await tester.tap(find.byKey(const ValueKey<String>('add-fab')));
+    await tester.tap(find.widgetWithText(FilledButton, en.calendar_add));
     await h.settle(tester);
     expect(find.text(en.calendar_formCreateTitle), findsOneWidget);
     expect(find.text('Tue, Nov 24, 2026'), findsNWidgets(2));

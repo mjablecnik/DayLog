@@ -33,6 +33,7 @@ class ChoiceChipX extends StatelessWidget {
       selected: selected,
       onSelected: onSelected,
       showCheckmark: false,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       backgroundColor: palette.card,
       selectedColor: tintFill(accent, palette.card, 0.20),
       side: BorderSide(

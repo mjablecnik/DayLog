@@ -49,34 +49,75 @@ class AppSegmented<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
+    final bool compact = options.every((SegmentedOption<T> o) => o.caption == null);
     return Semantics(
       container: true,
       explicitChildNodes: true,
       child: Align(
         heightFactor: 1,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: Space.s3),
-          decoration: BoxDecoration(
-            color: p.tone,
-            borderRadius: BorderRadius.circular(Radii.control),
-          ),
-          child: Row(
-            children: <Widget>[
-              for (int i = 0; i < options.length; i++) ...<Widget>[
-                if (i > 0) const SizedBox(width: Space.s4),
-                Expanded(
-                  child: _Segment<T>(
-                    option: options[i],
-                    selected: options[i].value == selected,
-                    enabled: enabled,
-                    onTap: () => onChanged(options[i].value),
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
+        child: compact ? _compactTrack(p) : _roomyTrack(p),
       ),
+    );
+  }
+
+  /// The pill is drawn [Metrics.segmentTrackHeight] tall while every segment
+  /// still reacts to taps over a full [Metrics.touchTarget].
+  Widget _compactTrack(AppPalette p) {
+    const double inset =
+        (Metrics.touchTarget - Metrics.segmentTrackHeight) / 2;
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+            left: 0,
+            right: 0,
+            top: inset,
+            bottom: inset,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: p.tone,
+                borderRadius: BorderRadius.circular(Radii.control),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Space.s3),
+            child: _segments(compact: true),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// For options with a caption the segments need their natural height.
+  Widget _roomyTrack(AppPalette p) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: Space.s3),
+      decoration: BoxDecoration(
+        color: p.tone,
+        borderRadius: BorderRadius.circular(Radii.control),
+      ),
+      child: _segments(compact: false),
+    );
+  }
+
+  Widget _segments({required bool compact}) {
+    return Row(
+      children: <Widget>[
+        for (int i = 0; i < options.length; i++) ...<Widget>[
+          if (i > 0) const SizedBox(width: Space.s4),
+          Expanded(
+            child: _Segment<T>(
+              option: options[i],
+              selected: options[i].value == selected,
+              enabled: enabled,
+              compact: compact,
+              onTap: () => onChanged(options[i].value),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -86,12 +127,16 @@ class _Segment<T> extends StatefulWidget {
     required this.option,
     required this.selected,
     required this.enabled,
+    required this.compact,
     required this.onTap,
   });
 
   final SegmentedOption<T> option;
   final bool selected;
   final bool enabled;
+
+  /// Draws the pill shorter than the tap area, see [AppSegmented].
+  final bool compact;
   final VoidCallback onTap;
 
   @override
@@ -135,7 +180,11 @@ class _SegmentState<T> extends State<_Segment<T>> {
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: Space.s3),
+            padding: EdgeInsets.symmetric(
+              vertical: widget.compact
+                  ? (Metrics.touchTarget - Metrics.segmentPillHeight) / 2
+                  : Space.s3,
+            ),
             child: AnimatedContainer(
               duration: fade,
               curve: Motion.curve,

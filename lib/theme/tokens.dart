@@ -248,6 +248,11 @@ abstract final class Metrics {
   static const double badge = 18;
   static const double focusBorder = 2;
   static const double touchTarget = 44;
+
+  /// Drawn height of a segmented control's track and of its selected pill; the
+  /// tap area of each segment stays [touchTarget].
+  static const double segmentTrackHeight = 34;
+  static const double segmentPillHeight = 28;
   static const double checkPainted = 28;
   static const double heroBar = 6;
   static const double ring = 56;

@@ -7,17 +7,16 @@ import 'package:intl/intl.dart';
 import '../../domain/calendar_dates.dart';
 import '../../../l10n/app_localizations.dart';
 import '../sheets/month_picker_sheet.dart';
-import '../sheets/type_filter_sheet.dart';
+// import '../sheets/type_filter_sheet.dart'; // filter button is switched off
 import '../state/calendar_state.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
-import '../../../ui_kit/common/add_fab.dart';
 import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/layout/app_header.dart';
 import '../../../ui_kit/layout/header_action.dart';
 import 'calendar_labels.dart';
 import 'event_form_screen.dart';
-import 'event_search_screen.dart';
+// import 'event_search_screen.dart'; // search button is switched off
 import 'month_grid.dart';
 
 /// The Kalendář tab: the Month_View with its header, and the add button.
@@ -27,7 +26,6 @@ class CalendarScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppPalette p = context.palette;
-    final AppLocalizations l = AppLocalizations.of(context);
     final bool filterHidesAll = ref.watch(typeFilterProvider).isEmpty;
     return Scaffold(
       backgroundColor: p.board,
@@ -35,37 +33,22 @@ class CalendarScreen extends ConsumerWidget {
         bottom: false,
         child: Stack(
           children: <Widget>[
-            Column(
+            // The month fills the screen down to the module bar.
+            const Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                const _Header(),
-                const _WeekdayRow(),
-                const Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: Metrics.fab + Space.s32),
-                    child: MonthPager(),
-                  ),
-                ),
+                _Header(),
+                _WeekdayRow(),
+                Expanded(child: MonthPager()),
               ],
             ),
             if (filterHidesAll)
               Positioned(
                 left: Space.s16,
-                right: Space.s20 + Metrics.fab + Space.s8,
+                right: Space.s16,
                 bottom: Space.s20,
                 child: const _FilterHidesAll(),
               ),
-            Positioned(
-              right: Space.s20,
-              bottom: Space.s20,
-              child: AddFab(
-                label: l.calendar_add,
-                onPressed: () => showEventForm(
-                  context,
-                  presetDate: ref.read(selectedDayProvider),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -81,7 +64,7 @@ class _Header extends ConsumerWidget {
     final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final DateTime month = ref.watch(visibleMonthProvider);
-    final bool filterActive = ref.watch(typeFilterActiveProvider);
+    // final bool filterActive = ref.watch(typeFilterActiveProvider); // filter is switched off
     final VisibleMonthNotifier notifier = ref.read(visibleMonthProvider.notifier);
     final bool canPrevious = isNavigableMonth(DateTime(month.year, month.month - 1));
     final bool canNext = isNavigableMonth(DateTime(month.year, month.month + 1));
@@ -128,16 +111,28 @@ class _Header extends ConsumerWidget {
           onTitleTap: () => showMonthPicker(context),
           titleActionLabel: '${monthTitle(month, l.localeName)}. ${l.calendar_pickMonth}',
           trailing: [
+            // Search and the type filter are switched off for now; kept to
+            // bring back if wanted.
+            // HeaderAction(
+            //   icon: IconAsset.search,
+            //   semanticLabel: l.calendar_search,
+            //   onPressed: () => showEventSearch(context),
+            // ),
+            // HeaderAction(
+            //   icon: IconAsset.filter,
+            //   semanticLabel: l.calendar_filter,
+            //   badgeCount: filterActive ? 1 : null,
+            //   onPressed: () => showTypeFilter(context),
+            // ),
             HeaderAction(
-              icon: IconAsset.search,
-              semanticLabel: l.calendar_search,
-              onPressed: () => showEventSearch(context),
-            ),
-            HeaderAction(
-              icon: IconAsset.filter,
-              semanticLabel: l.calendar_filter,
-              badgeCount: filterActive ? 1 : null,
-              onPressed: () => showTypeFilter(context),
+              key: const ValueKey<String>('add-fab'),
+              icon: IconAsset.plus,
+              semanticLabel: l.calendar_add,
+              emphasized: true,
+              onPressed: () => showEventForm(
+                context,
+                presetDate: ref.read(selectedDayProvider),
+              ),
             ),
           ],
         ),

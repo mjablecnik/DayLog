@@ -145,10 +145,11 @@ class CalendarUiHarness {
 void calendarTest(
   CalendarUiHarness h,
   String description,
-  Future<void> Function(WidgetTester tester) body,
-) {
+  Future<void> Function(WidgetTester tester) body, {
+  bool? skip,
+}) {
   testWidgets(description, (WidgetTester tester) async {
     await body(tester);
     await h.dispose(tester);
-  });
+  }, skip: skip);
 }

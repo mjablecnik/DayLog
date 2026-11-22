@@ -11,12 +11,16 @@ class HeaderAction extends StatelessWidget {
     required this.semanticLabel,
     required this.onPressed,
     this.badgeCount,
+    this.emphasized = false,
   });
 
   final String icon;
   final String semanticLabel;
   final VoidCallback? onPressed;
   final int? badgeCount;
+
+  /// Draws the action as a brass button, for the one primary action of a screen.
+  final bool emphasized;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +35,7 @@ class HeaderAction extends StatelessWidget {
           fixedSize: const Size.square(Metrics.touchTarget),
           minimumSize: const Size.square(Metrics.touchTarget),
           padding: EdgeInsets.zero,
-          backgroundColor: palette.tone,
+          backgroundColor: emphasized ? palette.brass : palette.tone,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(Radii.headerAction),
           ),
@@ -41,7 +45,12 @@ class HeaderAction extends StatelessWidget {
           children: [
             SizedBox.square(
               dimension: Metrics.touchTarget,
-              child: Center(child: AppIcon(icon, color: palette.textDim)),
+              child: Center(
+                child: AppIcon(
+                  icon,
+                  color: emphasized ? palette.inkOnBrass : palette.textDim,
+                ),
+              ),
             ),
             if (count > 0)
               Positioned(

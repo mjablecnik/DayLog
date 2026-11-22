@@ -7,19 +7,20 @@ import 'package:intl/intl.dart';
 import '../../domain/calendar_dates.dart';
 import '../../../l10n/app_localizations.dart';
 import '../sheets/month_picker_sheet.dart';
-// import '../sheets/type_filter_sheet.dart'; // filter button is switched off
+import '../sheets/type_filter_sheet.dart';
 import '../state/calendar_state.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/layout/app_header.dart';
-// import '../../../ui_kit/layout/header_action.dart'; // add button is switched off
+import '../../../ui_kit/layout/header_action.dart';
 import 'calendar_labels.dart';
 // import 'event_form_screen.dart'; // add button is switched off
-// import 'event_search_screen.dart'; // search button is switched off
+import 'event_search_screen.dart';
 import 'month_grid.dart';
 
-/// The Kalendář tab: the Month_View with its header, and the add button.
+/// The Kalendář tab: the Month_View with its header (search and filter; the add
+/// button is switched off, events are added from the day sheet).
 class CalendarScreen extends ConsumerWidget {
   const CalendarScreen({super.key});
 
@@ -64,7 +65,7 @@ class _Header extends ConsumerWidget {
     final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final DateTime month = ref.watch(visibleMonthProvider);
-    // final bool filterActive = ref.watch(typeFilterActiveProvider); // filter is switched off
+    final bool filterActive = ref.watch(typeFilterActiveProvider);
     final VisibleMonthNotifier notifier = ref.read(visibleMonthProvider.notifier);
     final bool canPrevious = isNavigableMonth(DateTime(month.year, month.month - 1));
     final bool canNext = isNavigableMonth(DateTime(month.year, month.month + 1));
@@ -111,19 +112,17 @@ class _Header extends ConsumerWidget {
           onTitleTap: () => showMonthPicker(context),
           titleActionLabel: '${monthTitle(month, l.localeName)}. ${l.calendar_pickMonth}',
           trailing: [
-            // Search and the type filter are switched off for now; kept to
-            // bring back if wanted.
-            // HeaderAction(
-            //   icon: IconAsset.search,
-            //   semanticLabel: l.calendar_search,
-            //   onPressed: () => showEventSearch(context),
-            // ),
-            // HeaderAction(
-            //   icon: IconAsset.filter,
-            //   semanticLabel: l.calendar_filter,
-            //   badgeCount: filterActive ? 1 : null,
-            //   onPressed: () => showTypeFilter(context),
-            // ),
+            HeaderAction(
+              icon: IconAsset.search,
+              semanticLabel: l.calendar_search,
+              onPressed: () => showEventSearch(context),
+            ),
+            HeaderAction(
+              icon: IconAsset.filter,
+              semanticLabel: l.calendar_filter,
+              badgeCount: filterActive ? 1 : null,
+              onPressed: () => showTypeFilter(context),
+            ),
             // The add button is switched off for now; events are added from
             // the day sheet.
             // HeaderAction(

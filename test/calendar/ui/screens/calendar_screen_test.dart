@@ -312,7 +312,7 @@ void main() {
       expect(find.text('Práce'), findsOneWidget);
       expect(h.filterStore.value, isNot(contains(EventType.dance)));
       expect(container(tester).read(typeFilterActiveProvider), isTrue);
-    }, skip: true); // the filter button is switched off in the header
+    });
 
     calendarTest(h, 'starts from the stored filter', (tester) async {
       await open(tester, filter: <EventType>{EventType.work});
@@ -404,8 +404,7 @@ void main() {
     });
   });
 
-  // The search button is switched off in the header; the tests stay for when it is back.
-  group('search', skip: true, () {
+  group('search', () {
     calendarTest(h, 'EventSearchScreen finds an event ignoring case and diacritics, shows its type and date, opens its detail', (tester) async {
       await open(tester);
       await h.add(tester, name: 'Řehoř na schůzce', type: EventType.meeting, date: d(2026, 12, 3));

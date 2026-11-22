@@ -18,7 +18,8 @@ import '../../../ui_kit/layout/app_header.dart';
 import '../../../ui_kit/common/empty_state.dart';
 import '../../../ui_kit/common/haptics.dart';
 import '../../../ui_kit/common/skeleton_list.dart';
-import 'detail_quest_row.dart';
+import '../board/quest_row.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 import 'detail_sections.dart';
 import 'mission_actions.dart';
 import 'mission_header.dart';
@@ -231,8 +232,9 @@ class _MissionDetailScreenState extends ConsumerState<MissionDetailScreen> {
 
     final Map<int, DateTime> deadlines = ref.watch(questDeadlinesProvider).value ?? const <int, DateTime>{};
 
-    Widget row(Quest quest) => DetailQuestRow(
+    Widget row(Quest quest, GroupEdges edges) => QuestRow(
       quest: quest,
+      groupEdges: edges,
       deadline: deadlines[quest.id],
       today: today,
       completedLabel: quest.completedAt == null
@@ -242,6 +244,9 @@ class _MissionDetailScreenState extends ConsumerState<MissionDetailScreen> {
       onEdit: () => showQuestSheet(context, editing: quest),
       onDelete: () => confirmAndDeleteQuest(context, ref, quest),
     );
+
+    // The open quests and the add row form one Grouped_List.
+    final bool addRowShown = open;
 
     final Widget header = MissionHeader(
       detail: detail,
@@ -291,9 +296,7 @@ class _MissionDetailScreenState extends ConsumerState<MissionDetailScreen> {
               ),
             ),
           ),
-        SliverPadding(
-          padding: padding,
-          sliver: SliverReorderableList(
+        SliverReorderableList(
             itemCount: openQuests.length,
             onReorderStart: (int _) => Haptics.light(),
             onReorderItem: (int from, int to) => _reorder(openQuests, from, to),
@@ -302,16 +305,19 @@ class _MissionDetailScreenState extends ConsumerState<MissionDetailScreen> {
               return ReorderableDelayedDragStartListener(
                 key: ValueKey<String>('open-quest-${quest.id}'),
                 index: index,
-                child: row(quest),
+                child: row(quest, (
+                  first: index == 0,
+                  last: !addRowShown && index == openQuests.length - 1,
+                )),
               );
             },
           ),
-        ),
         if (open)
           SliverPadding(
             padding: padding,
             sliver: SliverToBoxAdapter(
               child: AddQuestRow(
+                first: openQuests.isEmpty,
                 onTap: () => showQuestSheet(context, presetMissionId: _id),
               ),
             ),
@@ -330,14 +336,14 @@ class _MissionDetailScreenState extends ConsumerState<MissionDetailScreen> {
               ),
             ),
           ),
-          SliverPadding(
-            padding: padding,
-            sliver: SliverList.builder(
-              itemCount: doneQuests.length,
-              itemBuilder: (BuildContext context, int index) => KeyedSubtree(
-                key: ValueKey<String>('done-quest-${doneQuests[index].id}'),
-                child: row(doneQuests[index]),
-              ),
+          SliverList.builder(
+            itemCount: doneQuests.length,
+            itemBuilder: (BuildContext context, int index) => KeyedSubtree(
+              key: ValueKey<String>('done-quest-${doneQuests[index].id}'),
+              child: row(doneQuests[index], (
+                first: index == 0,
+                last: index == doneQuests.length - 1,
+              )),
             ),
           ),
         ],

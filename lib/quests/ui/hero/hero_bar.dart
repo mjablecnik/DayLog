@@ -64,7 +64,6 @@ class HeroBar extends ConsumerWidget {
                 child: Text(
                   l10n.hero_xpRemaining(
                     progress.threshold - progress.xpIntoLevel,
-                    progress.level + 1,
                   ),
                   maxLines: 2,
                   textAlign: TextAlign.end,

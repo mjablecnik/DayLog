@@ -168,20 +168,16 @@ void main() {
       expect(find.text(l10n.missions_remaining(20)), findsOneWidget);
       expect(find.text(l10n.missions_remaining(30)), findsOneWidget);
       expect(ringFigure(1, '3'), findsOneWidget);
-      expect(find.text('+100'), findsOneWidget);
-      expect(find.text('+200'), findsOneWidget);
-      expect(
-        find.text(l10n.missions_bonusCaption.toUpperCase()),
-        findsNWidgets(2),
-      );
+      expect(find.text(l10n.common_plusXp(100)), findsOneWidget);
+      expect(find.text(l10n.common_plusXp(200)), findsOneWidget);
       final ring = tester.widgetList<ProgressRing>(find.byType(ProgressRing));
       expect(ring.map((r) => '${r.done}/${r.total}'), <String>['1/3', '0/3']);
       expect(
-        find.text(l10n.missions_sectionOpen.toUpperCase()),
+        find.text(l10n.missions_sectionOpen),
         findsOneWidget,
       );
       expect(
-        find.text(l10n.missions_sectionDoneToday.toUpperCase()),
+        find.text(l10n.missions_sectionDoneToday),
         findsNothing,
       );
       await env.finish();
@@ -265,16 +261,12 @@ void main() {
       );
 
       expect(
-        find.text(l10n.missions_sectionDoneToday.toUpperCase()),
+        find.text(l10n.missions_sectionDoneToday),
         findsOneWidget,
       );
       expect(find.text('Finished today'), findsOneWidget);
       expect(find.text('Finished yesterday'), findsNothing);
-      expect(find.text('+50'), findsOneWidget);
-      expect(
-        find.text(l10n.missions_earnedCaption.toUpperCase()),
-        findsOneWidget,
-      );
+      expect(find.text(l10n.common_plusXp(50)), findsOneWidget);
       expect(find.text('Still open'), findsOneWidget);
       await env.finish();
     });
@@ -300,7 +292,7 @@ void main() {
 
       expect(find.text('Finished today'), findsNothing);
       expect(
-        find.text(l10n.missions_sectionDoneToday.toUpperCase()),
+        find.text(l10n.missions_sectionDoneToday),
         findsNothing,
       );
       expect(find.text('Still open'), findsOneWidget);

@@ -44,11 +44,6 @@ class MissionHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          l.mission_detailKicker.toUpperCase(),
-          style: context.bodyText.labelSmall!.copyWith(color: p.textFaint),
-        ),
-        const SizedBox(height: Space.s8),
         Semantics(
           header: true,
           child: Text(mission.name, style: context.displayText.displayMedium),
@@ -60,9 +55,9 @@ class MissionHeader extends StatelessWidget {
         const SizedBox(height: Space.s12),
         Text(
           l.mission_progressText(done, total),
-          style: context.bodyText.bodyMedium!.copyWith(color: p.text),
+          style: context.bodyText.bodyMedium!.copyWith(color: p.textDim),
         ),
-        const SizedBox(height: Space.s12),
+        const SizedBox(height: Space.s16),
         DecoratedBox(
           decoration: BoxDecoration(
             color: p.card,
@@ -70,20 +65,42 @@ class MissionHeader extends StatelessWidget {
             border: Border.all(color: p.boardLine),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(Space.s12),
+            padding: const EdgeInsets.all(Space.s16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (!completed)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: Space.s8),
-                    child: Text(
-                      l.mission_bonusOnCompletion(mission.bonus.xp),
-                      style: context.bodyText.labelLarge?.copyWith(
-                        color: p.brassText,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: Space.s12),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          l.mission_progressLabel,
+                          style: context.bodyText.titleMedium,
+                        ),
                       ),
-                    ),
+                      if (!completed)
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: p.brassSoft,
+                            borderRadius: BorderRadius.circular(Radii.pill),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Space.s10,
+                              vertical: Space.s4,
+                            ),
+                            child: Text(
+                              l.mission_bonusOnCompletion(mission.bonus.xp),
+                              style: context.bodyText.labelLarge?.copyWith(
+                                color: p.brassText,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
+                ),
                 _ProgressBar(done: done, total: total),
               ],
             ),

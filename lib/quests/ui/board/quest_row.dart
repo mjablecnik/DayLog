@@ -48,10 +48,6 @@ class QuestRow extends StatelessWidget {
     final p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final String name = quest.name;
-    final BorderRadius deleteRadius = const BorderRadius.horizontal(
-      right: Radius.circular(Radii.card),
-    );
-
     return Padding(
       padding: EdgeInsets.fromLTRB(Space.s20, 0, Space.s20, groupEdges?.last == false ? 0 : Space.s10),
       child: LayoutBuilder(
@@ -60,7 +56,9 @@ class QuestRow extends StatelessWidget {
           final double ratio = constraints.maxWidth.isFinite
               ? (2 * Metrics.swipeAction / constraints.maxWidth).clamp(0.1, 1.0)
               : 0.5;
-          return Slidable(
+          return ClipRRect(
+            borderRadius: groupedRadius(groupEdges),
+            child: Slidable(
             endActionPane: ActionPane(
               motion: const BehindMotion(),
               extentRatio: ratio,
@@ -79,7 +77,6 @@ class QuestRow extends StatelessWidget {
                   icon: IconAsset.trash,
                   background: p.destructive,
                   foreground: p.inkOnDestructive,
-                  radius: deleteRadius,
                   onPressed: onDelete,
                 ),
               ],
@@ -94,6 +91,7 @@ class QuestRow extends StatelessWidget {
               onToggle: onToggle,
               onTap: onEdit,
             ),
+          ),
           );
         },
       ),
@@ -109,7 +107,6 @@ class _Action extends StatelessWidget {
     required this.background,
     required this.foreground,
     required this.onPressed,
-    this.radius = BorderRadius.zero,
   });
 
   final String label;
@@ -117,7 +114,6 @@ class _Action extends StatelessWidget {
   final String icon;
   final Color background;
   final Color foreground;
-  final BorderRadius radius;
   final VoidCallback onPressed;
 
   @override
@@ -125,7 +121,6 @@ class _Action extends StatelessWidget {
     return CustomSlidableAction(
       backgroundColor: background,
       foregroundColor: foreground,
-      borderRadius: radius,
       onPressed: (_) => onPressed(),
       child: Semantics(
         label: semanticLabel,

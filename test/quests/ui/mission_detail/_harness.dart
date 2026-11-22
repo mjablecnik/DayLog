@@ -7,11 +7,11 @@ import 'package:daylog/database/app_database.dart';
 import 'package:daylog/quests/data/models.dart';
 import 'package:daylog/l10n/app_localizations.dart';
 import 'package:daylog/quests/services/providers.dart';
-import 'package:daylog/quests/ui/mission_detail/detail_quest_row.dart';
+import 'package:daylog/quests/ui/board/quest_row.dart' as board_row;
 import 'package:daylog/quests/ui/mission_detail/mission_detail_screen.dart';
 import 'package:daylog/theme/app_theme.dart';
 import 'package:daylog/theme/tokens.dart';
-import 'package:daylog/quests/ui/cards/check_circle.dart';
+import 'package:daylog/ui_kit/controls/check_circle.dart';
 
 import '../../../helpers/fixed_clock.dart';
 import '../../../helpers/test_database.dart';
@@ -170,7 +170,7 @@ Future<(DetailFixture, int)> pumpDetail(
 Finder checkOf(String questName) => find.descendant(
   of: find.ancestor(
     of: find.text(questName),
-    matching: find.byType(DetailQuestRow),
+    matching: find.byType(board_row.QuestRow),
   ),
   matching: find.byType(CheckCircle),
 );

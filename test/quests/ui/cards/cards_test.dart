@@ -4,7 +4,7 @@ import 'package:daylog/quests/domain/xp_rules.dart';
 import 'package:daylog/quests/data/models.dart';
 import 'package:daylog/l10n/app_localizations.dart';
 import 'package:daylog/theme/tokens.dart';
-import 'package:daylog/quests/ui/cards/check_circle.dart';
+import 'package:daylog/ui_kit/controls/check_circle.dart';
 import 'package:daylog/quests/ui/cards/difficulty_pips.dart';
 import 'package:daylog/quests/ui/cards/mission_card.dart';
 import 'package:daylog/quests/ui/cards/quest_card.dart';
@@ -407,11 +407,7 @@ void main() {
           find.text(isCs ? 'Zbývá: 75 XP' : 'Remaining: 75 XP'),
           findsOneWidget,
         );
-        expect(find.text('+50'), findsOneWidget);
-        expect(
-          find.text(isCs ? 'ZA DOKONČENÍ' : 'ON COMPLETION'),
-          findsOneWidget,
-        );
+        expect(find.text('+50 XP'), findsOneWidget);
         // 2 of 5 quests are done, so the ring shows the 3 still open.
         expect(find.text('3'), findsOneWidget);
         expect(
@@ -434,7 +430,7 @@ void main() {
           find.text(isCs ? 'Připraveno k dokončení' : 'Ready to complete'),
           findsOneWidget,
         );
-        expect(find.textContaining('XP'), findsNothing);
+        expect(find.textContaining(isCs ? 'Zbývá' : 'Remaining'), findsNothing);
       });
     }
 
@@ -457,8 +453,7 @@ void main() {
           completedTime: '7:52',
         ),
       );
-      expect(find.text('+150'), findsOneWidget);
-      expect(find.text('EARNED'), findsOneWidget);
+      expect(find.text('+150 XP'), findsOneWidget);
       expect(find.text('6 quests · completed today at 7:52'), findsOneWidget);
     });
 

@@ -5,6 +5,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/app_icon.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 
 /// Wraps a Mission card with the "Upravit" / "Smazat" swipe actions and the
 /// collapse transition used when the Mission is deleted.
@@ -19,6 +20,7 @@ class MissionSwipeRow extends StatelessWidget {
     required this.onDelete,
     required this.child,
     this.leaving = false,
+    this.groupEdges,
   });
 
   final String missionName;
@@ -29,11 +31,14 @@ class MissionSwipeRow extends StatelessWidget {
   /// True while the row plays its removal transition.
   final bool leaving;
 
+  /// Where the row sits in its Grouped_List; rounds only the group's corners.
+  final GroupEdges? groupEdges;
+
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
     final l = AppLocalizations.of(context);
-    final BorderRadius radius = BorderRadius.circular(Radii.card);
+    final BorderRadius radius = groupedRadius(groupEdges);
 
     final Widget row = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {

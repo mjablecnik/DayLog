@@ -131,16 +131,13 @@
       }
     }
   },
-  "hero_xpRemaining": "{xp} XP do úrovně {level}",
+  "hero_xpRemaining": "ještě {xp}",
   "@hero_xpRemaining": {
-    "description": "XP remaining until the next Level; level is the NEXT Level number.",
+    "description": "XP remaining until the next Level.",
     "placeholders": {
       "xp": {
         "type": "int",
         "format": "decimalPattern"
-      },
-      "level": {
-        "type": "int"
       }
     }
   },
@@ -823,9 +820,13 @@
   "@mission_editQuestsNote": {
     "description": "Note in the Mission_Sheet edit mode, where quest rows are hidden."
   },
-  "mission_detailKicker": "Mise",
-  "@mission_detailKicker": {
-    "description": "Small caps label above the Mission name on the detail screen."
+  "time_reminderEveryDay": "Každý den",
+  "@time_reminderEveryDay": {
+    "description": "Active days of a reminder that is active on all seven days."
+  },
+  "mission_progressLabel": "Postup",
+  "@mission_progressLabel": {
+    "description": "Label of the progress card on the Mission_Detail_Screen."
   },
   "mission_progressText": "{done} z {total} questů splněno",
   "@mission_progressText": {
@@ -839,7 +840,7 @@
       }
     }
   },
-  "mission_bonusOnCompletion": "+{xp} XP za dokončení mise",
+  "mission_bonusOnCompletion": "+{xp} XP za dokončení",
   "@mission_bonusOnCompletion": {
     "description": "Bonus line on the Mission_Detail_Screen.",
     "placeholders": {

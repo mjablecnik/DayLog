@@ -428,22 +428,6 @@ class _QuestListState extends ConsumerState<QuestList> {
             itemBuilder: (BuildContext context, int index) =>
                 _entry(entries, index, l),
           ),
-          if (shown.today.isNotEmpty || shown.todo.isNotEmpty)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Space.s20,
-                  vertical: Space.s4,
-                ),
-                child: Text(
-                  l.board_swipeHint,
-                  textAlign: TextAlign.center,
-                  style: context.bodyText.bodySmall!.copyWith(
-                    color: p.textFaint,
-                  ),
-                ),
-              ),
-            ),
           if (done.isNotEmpty) ...<Widget>[
             SliverToBoxAdapter(
               child: Padding(
@@ -466,6 +450,22 @@ class _QuestListState extends ConsumerState<QuestList> {
               },
             ),
           ],
+          if (shown.today.isNotEmpty || shown.todo.isNotEmpty)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Space.s20,
+                  vertical: Space.s4,
+                ),
+                child: Text(
+                  l.board_swipeHint,
+                  textAlign: TextAlign.center,
+                  style: context.bodyText.bodySmall!.copyWith(
+                    color: p.textFaint,
+                  ),
+                ),
+              ),
+            ),
           // Room so the last card can scroll clear of the add button.
           const SliverToBoxAdapter(
             child: SizedBox(height: Space.s64 + Space.s32),

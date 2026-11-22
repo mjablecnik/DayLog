@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../ui_kit/forms/app_text_field.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -500,76 +502,18 @@ class _TextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppPalette palette = context.palette;
-    final BorderRadius radius = BorderRadius.circular(Radii.control);
-    OutlineInputBorder border(Color color) => OutlineInputBorder(
-      borderRadius: radius,
-      borderSide: BorderSide(color: color, width: Metrics.hairline),
-    );
-    final OutlineInputBorder none = OutlineInputBorder(
-      borderRadius: radius,
-      borderSide: BorderSide.none,
-    );
     return Semantics(
       label: label,
-      child: _FocusFill(
-        builder: (bool focused) => TextField(
-          controller: controller,
-          autofocus: autofocus,
-          onChanged: onChanged,
-          textInputAction: textInputAction,
-          textCapitalization: textCapitalization,
-          keyboardType: multiline
-              ? TextInputType.multiline
-              : TextInputType.text,
-          minLines: multiline ? 2 : 1,
-          maxLines: multiline ? 5 : 1,
-          cursorColor: palette.brass,
-          style: context.bodyText.bodyLarge!.copyWith(color: palette.text),
-          decoration: InputDecoration(
-            hintText: placeholder,
-            hintStyle: context.bodyText.bodyLarge!.copyWith(
-              color: palette.textFaint,
-            ),
-            filled: true,
-            fillColor: focused ? palette.fieldActive : palette.field,
-            isDense: false,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: Space.s16,
-              vertical: Space.s12,
-            ),
-            border: none,
-            enabledBorder: hasError ? border(palette.destructive) : none,
-            focusedBorder: border(
-              hasError ? palette.destructive : palette.brass,
-            ),
-          ),
-        ),
+      child: AppTextField(
+        controller: controller,
+        hint: placeholder,
+        autofocus: autofocus,
+        onChanged: onChanged,
+        invalid: hasError,
+        multiline: multiline,
+        textInputAction: textInputAction,
+        textCapitalization: textCapitalization,
       ),
-    );
-  }
-}
-
-/// Tells its builder whether a descendant has focus, to tint the field.
-class _FocusFill extends StatefulWidget {
-  const _FocusFill({required this.builder});
-
-  final Widget Function(bool focused) builder;
-
-  @override
-  State<_FocusFill> createState() => _FocusFillState();
-}
-
-class _FocusFillState extends State<_FocusFill> {
-  bool _focused = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Focus(
-      canRequestFocus: false,
-      skipTraversal: true,
-      onFocusChange: (bool value) => setState(() => _focused = value),
-      child: widget.builder(_focused),
     );
   }
 }

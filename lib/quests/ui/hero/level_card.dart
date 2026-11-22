@@ -76,13 +76,35 @@ class LevelCard extends ConsumerWidget {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  Text(
-                    '${strings.hero_xpProgress(progress.xpIntoLevel, progress.threshold)} · '
-                    '${strings.hero_xpRemaining(progress.threshold - progress.xpIntoLevel, progress.level + 1)}',
-                    style: body.bodySmall?.copyWith(
-                      fontSize: 13,
-                      color: palette.textDim,
-                    ),
+                  Builder(
+                    builder: (context) {
+                      final String full = strings.hero_xpProgress(
+                        progress.xpIntoLevel,
+                        progress.threshold,
+                      );
+                      final int cut = full.indexOf(' ');
+                      return Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: full.substring(0, cut),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: palette.text,
+                              ),
+                            ),
+                            TextSpan(
+                              text:
+                                  '${full.substring(cut)} · ${strings.hero_xpRemaining(progress.threshold - progress.xpIntoLevel)}',
+                            ),
+                          ],
+                        ),
+                        style: body.bodySmall?.copyWith(
+                          fontSize: 13,
+                          color: palette.textDim,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ],

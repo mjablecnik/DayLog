@@ -109,13 +109,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String hero_xpRemaining(int xp, int level) {
+  String hero_xpRemaining(int xp) {
     final intl.NumberFormat xpNumberFormat = intl.NumberFormat.decimalPattern(
       localeName,
     );
     final String xpString = xpNumberFormat.format(xp);
 
-    return '$xpString XP to level $level';
+    return '$xpString to go';
   }
 
   @override
@@ -603,7 +603,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Quests are edited on the mission screen.';
 
   @override
-  String get mission_detailKicker => 'Mission';
+  String get time_reminderEveryDay => 'Every day';
+
+  @override
+  String get mission_progressLabel => 'Progress';
 
   @override
   String mission_progressText(int done, int total) {
@@ -617,7 +620,7 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     final String xpString = xpNumberFormat.format(xp);
 
-    return '+$xpString XP for completing the mission';
+    return '+$xpString XP on completion';
   }
 
   @override

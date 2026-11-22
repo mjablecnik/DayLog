@@ -51,8 +51,8 @@ void main() {
       expect(find.text('Cleaning'), findsOneWidget);
       expect(find.text(en.mission_progressText(2, 5)), findsOneWidget);
       expect(find.text(en.mission_bonusOnCompletion(100)), findsOneWidget);
-      expect(find.text(en.mission_sectionRemaining.toUpperCase()), findsOne);
-      expect(find.text(en.mission_sectionDone.toUpperCase()), findsOne);
+      expect(find.text(en.mission_sectionRemaining), findsOne);
+      expect(find.text(en.mission_sectionDone), findsOne);
       for (final String name in <String>[
         'Take out the trash',
         'Sweep the floor',
@@ -179,7 +179,7 @@ void main() {
     detailTest('texts and menu follow the Czech locale', (tester) async {
       await pumpDetail(tester, seed: _seedThree, locale: const Locale('cs'));
 
-      expect(find.text(cs.mission_sectionRemaining.toUpperCase()), findsOne);
+      expect(find.text(cs.mission_sectionRemaining), findsOne);
       expect(find.text(cs.mission_bonusOnCompletion(100)), findsOneWidget);
       await tester.tap(find.byTooltip(cs.a11y_missionMenu));
       await settle(tester);

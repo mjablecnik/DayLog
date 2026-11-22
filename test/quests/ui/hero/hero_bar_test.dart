@@ -98,7 +98,7 @@ void main() {
       expect(find.text('Level 1'), findsOneWidget);
       expect(find.textContaining('·'), findsNothing);
       expect(find.text('0 / 100 XP'), findsOneWidget);
-      expect(find.text('100 XP to level 2'), findsOneWidget);
+      expect(find.text('100 to go'), findsOneWidget);
       expect(_fill(tester), 0);
     });
 
@@ -125,7 +125,7 @@ void main() {
       await _pumpHero(tester, startXp: 40);
 
       expect(find.text('40 / 100 XP'), findsOneWidget);
-      expect(find.text('60 XP to level 2'), findsOneWidget);
+      expect(find.text('60 to go'), findsOneWidget);
       expect(_fill(tester), closeTo(0.4, 1e-9));
       // The badge carries the Level.
       expect(

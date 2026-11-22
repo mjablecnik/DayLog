@@ -89,11 +89,11 @@ class RewardCard extends StatelessWidget {
     final MissionProgress? mission = e is QuestReward ? e.mission : null;
 
     return Material(
-      color: p.parchment,
+      color: p.card,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Radii.reward),
-        side: BorderSide(color: p.parchmentEdge, width: Metrics.hairline),
+        side: BorderSide(color: p.boardLine, width: Metrics.hairline),
       ),
       clipBehavior: Clip.antiAlias,
       child: ConstrainedBox(
@@ -117,7 +117,7 @@ class RewardCard extends StatelessWidget {
                 child: _XpFigure(
                   text: l10n.common_plusXp(xp),
                   style: display.displayLarge!.copyWith(
-                    color: p.brassOnParchment,
+                    color: p.brassText,
                   ),
                 ),
               ),
@@ -126,7 +126,7 @@ class RewardCard extends StatelessWidget {
                 caption,
                 textAlign: TextAlign.center,
                 style: body.labelSmall!.copyWith(
-                  color: p.inkDim,
+                  color: p.textDim,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -135,14 +135,14 @@ class RewardCard extends StatelessWidget {
                 Text(
                   l10n.reward_levelUpBody(level),
                   textAlign: TextAlign.center,
-                  style: body.bodyMedium!.copyWith(color: p.brassOnParchment),
+                  style: body.bodyMedium!.copyWith(color: p.brassText),
                 ),
               ],
               const SizedBox(height: Space.s8),
               Text(
                 name,
                 textAlign: TextAlign.center,
-                style: display.headlineMedium!.copyWith(color: p.ink),
+                style: display.headlineMedium!.copyWith(color: p.text),
               ),
               if (mission != null) ...<Widget>[
                 const SizedBox(height: Space.s16),
@@ -303,11 +303,11 @@ class _MissionBlock extends StatelessWidget {
     final double fraction = progress.total == 0
         ? 0
         : (progress.done / progress.total).clamp(0.0, 1.0);
-    final TextStyle hint = body.bodySmall!.copyWith(color: p.inkDim);
+    final TextStyle hint = body.bodySmall!.copyWith(color: p.textDim);
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: p.parchmentEdge.withValues(alpha: 0.6),
+        color: p.boardLine.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(Radii.control),
       ),
       child: Padding(
@@ -326,7 +326,7 @@ class _MissionBlock extends StatelessWidget {
                     child: Text(
                       l10n.reward_missionLine(missionName!),
                       style: body.bodyMedium!.copyWith(
-                        color: p.ink,
+                        color: p.text,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -336,7 +336,7 @@ class _MissionBlock extends StatelessWidget {
                 const SizedBox(width: Space.s8),
                 Text(
                   l10n.reward_missionProgress(progress.done, progress.total),
-                  style: body.bodyMedium!.copyWith(color: p.inkDim),
+                  style: body.bodyMedium!.copyWith(color: p.textDim),
                 ),
               ],
             ),
@@ -346,7 +346,7 @@ class _MissionBlock extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: fraction,
                 minHeight: Metrics.heroBar,
-                backgroundColor: p.ink.withValues(alpha: 0.10),
+                backgroundColor: p.text.withValues(alpha: 0.10),
                 valueColor: AlwaysStoppedAnimation<Color>(p.brass),
               ),
             ),

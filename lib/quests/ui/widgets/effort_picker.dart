@@ -137,11 +137,13 @@ class _EffortOptionState extends State<_EffortOption> {
             vertical: Space.s8,
           ),
           decoration: BoxDecoration(
-            color: (on || _pressed) ? p.brassSoft : p.field,
+            color: on || _pressed
+                ? Color.alphaBlend(p.brass.withValues(alpha: 0.08), p.card)
+                : p.card,
             borderRadius: BorderRadius.circular(Radii.control),
             border: Border.all(
-              color: on ? p.brass : Colors.transparent,
-              width: on && _pressed ? Metrics.hairline * 2 : Metrics.hairline,
+              color: on ? p.brass : p.boardLine,
+              width: on ? 2 : Metrics.hairline,
             ),
           ),
           child: Opacity(
@@ -150,31 +152,37 @@ class _EffortOptionState extends State<_EffortOption> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                Text(
+                  name,
+                  style: context.bodyText.titleMedium?.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: Space.s2),
+                Text(
+                  time,
+                  style: context.bodyText.bodySmall?.copyWith(
+                    fontSize: 13,
+                    color: p.textDim,
+                  ),
+                ),
+                const SizedBox(height: Space.s8),
                 Row(
                   children: [
                     Expanded(
                       child: Text(
-                        name,
+                        xp,
                         style: context.bodyText.labelLarge?.copyWith(
-                          color: on ? p.brassText : p.text,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: p.brassText,
                         ),
                       ),
                     ),
-                    const SizedBox(width: Space.s4),
-                    Text(
-                      xp,
-                      style: context.bodyText.labelLarge?.copyWith(
-                        color: on ? p.brassText : p.textDim,
-                      ),
-                    ),
+                    DifficultyPips(widget.difficulty),
                   ],
                 ),
-                Text(
-                  time,
-                  style: context.bodyText.bodySmall?.copyWith(color: p.textDim),
-                ),
-                const SizedBox(height: Space.s4),
-                DifficultyPips(widget.difficulty),
               ],
             ),
           ),

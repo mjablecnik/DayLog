@@ -279,6 +279,7 @@ class _MissionListState extends ConsumerState<_MissionList> {
       child: MissionSwipeRow(
         missionName: m.name,
         leaving: widget.leaving.contains(m.id),
+        groupEdges: edges,
         onEdit: () => widget.onEdit(m),
         onDelete: () => widget.onDelete(m),
         child: MissionCard(
@@ -367,7 +368,7 @@ class _SectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(top: Space.s8, bottom: Space.s10),
-    child: CountHeader(title: text.toUpperCase(), count: count),
+    child: CountHeader(title: text, count: count),
   );
 }
 

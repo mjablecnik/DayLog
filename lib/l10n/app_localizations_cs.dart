@@ -111,13 +111,13 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String hero_xpRemaining(int xp, int level) {
+  String hero_xpRemaining(int xp) {
     final intl.NumberFormat xpNumberFormat = intl.NumberFormat.decimalPattern(
       localeName,
     );
     final String xpString = xpNumberFormat.format(xp);
 
-    return '$xpString XP do úrovně $level';
+    return 'ještě $xpString';
   }
 
   @override
@@ -628,7 +628,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Questy mise se upravují na jejím detailu.';
 
   @override
-  String get mission_detailKicker => 'Mise';
+  String get time_reminderEveryDay => 'Každý den';
+
+  @override
+  String get mission_progressLabel => 'Postup';
 
   @override
   String mission_progressText(int done, int total) {
@@ -642,7 +645,7 @@ class AppLocalizationsCs extends AppLocalizations {
     );
     final String xpString = xpNumberFormat.format(xp);
 
-    return '+$xpString XP za dokončení mise';
+    return '+$xpString XP za dokončení';
   }
 
   @override

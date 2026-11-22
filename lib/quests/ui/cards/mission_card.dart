@@ -124,27 +124,13 @@ class MissionCard extends StatelessWidget {
                       horizontal: Space.s8,
                       vertical: Space.s4,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '+$bonus',
-                          style: context.bodyText.labelLarge?.copyWith(
-                            color: p.brassText,
-                          ),
-                        ),
-                        Text(
-                          (completed
-                                  ? l.missions_earnedCaption
-                                  : l.missions_bonusCaption)
-                              .toUpperCase(),
-                          style: context.bodyText.bodySmall?.copyWith(
-                            color: p.textFaint,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      l.common_plusXp(bonus),
+                      style: context.bodyText.labelLarge?.copyWith(
+                        color: p.brassText,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),

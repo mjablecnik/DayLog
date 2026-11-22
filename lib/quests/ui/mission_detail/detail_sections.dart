@@ -25,10 +25,11 @@ class DetailSectionHead extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: Space.s24, bottom: Space.s12),
       child: CountHeader(
-        title: label.toUpperCase(),
+        title: label,
         trailing: Text(
-          strings.mission_sectionSummary(count, xp).toUpperCase(),
-          style: context.bodyText.labelSmall?.copyWith(
+          strings.mission_sectionSummary(count, xp),
+          style: context.bodyText.bodyMedium?.copyWith(
+            fontSize: 14,
             color: context.palette.textDim,
           ),
         ),
@@ -37,19 +38,38 @@ class DetailSectionHead extends StatelessWidget {
   }
 }
 
-/// Adds a quest to the current mission.
+/// Adds a quest to the current mission: the last row of the "Remaining" group.
 class AddQuestRow extends StatelessWidget {
-  const AddQuestRow({super.key, required this.onTap});
+  const AddQuestRow({super.key, required this.onTap, this.first = false});
 
   final VoidCallback onTap;
 
+  /// No quest row precedes it, so it draws the top edge of the group itself.
+  final bool first;
+
   @override
-  Widget build(BuildContext context) => GroupedList(
-    children: [
-      AddRow(
-        label: AppLocalizations.of(context).mission_addQuestToMission,
-        onTap: onTap,
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final GroupEdges edges = (first: first, last: true);
+    return Padding(
+      padding: EdgeInsets.only(
+        top: first ? Space.s20 : 0,
+        bottom: Space.s10,
       ),
-    ],
-  );
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: p.card,
+          borderRadius: groupedRadius(edges),
+          border: groupedBorder(p.boardLine, edges),
+        ),
+        child: ClipRRect(
+          borderRadius: groupedRadius(edges),
+          child: AddRow(
+            label: AppLocalizations.of(context).mission_addQuestToMission,
+            onTap: onTap,
+          ),
+        ),
+      ),
+    );
+  }
 }

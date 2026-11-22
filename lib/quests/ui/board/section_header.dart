@@ -36,7 +36,7 @@ class BoardSectionHeader extends StatelessWidget {
         Space.s10,
       ),
       child: CountHeader(
-        title: label.toUpperCase(),
+        title: label,
         count: count,
         trailing: DecoratedBox(
           decoration: BoxDecoration(
@@ -49,9 +49,11 @@ class BoardSectionHeader extends StatelessWidget {
               vertical: Space.s4,
             ),
             child: Text(
-              figure.toUpperCase(),
+              figure,
               style: context.bodyText.labelLarge?.copyWith(
                 color: figureColor ?? p.brassText,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),

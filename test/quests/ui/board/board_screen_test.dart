@@ -106,13 +106,13 @@ void main() {
       'Third',
       'Finished',
     ]);
-    expect(find.text('TODAY'), findsOneWidget);
-    expect(find.text('TODO'), findsOneWidget);
-    expect(find.text('DONE TODAY'), findsOneWidget);
-    expect(find.text('3 open · Sunday, November 15'), findsOneWidget);
-    expect(find.text('1 QUEST · 25 XP'), findsOneWidget);
+    expect(find.text('Today'), findsOneWidget);
+    expect(find.text('Todo'), findsOneWidget);
+    expect(find.text('Done today'), findsOneWidget);
+    expect(find.text('Sunday, November 15'), findsOneWidget);
+    expect(find.text('1 quest · 25 XP'), findsOneWidget);
     expect(find.text('today 08:52'), findsOneWidget);
-    final double doneHeader = tester.getTopLeft(find.text('DONE TODAY')).dy;
+    final double doneHeader = tester.getTopLeft(find.text('Done today')).dy;
     expect(tester.getTopLeft(find.text('Third')).dy, lessThan(doneHeader));
     expect(
       tester.getTopLeft(find.text('Finished')).dy,
@@ -140,11 +140,10 @@ void main() {
     expect(container(tester).read(rewardQueueProvider), isEmpty);
     expect(
       tester.getTopLeft(find.text('Alpha')).dy,
-      greaterThan(tester.getTopLeft(find.text('DONE TODAY')).dy),
+      greaterThan(tester.getTopLeft(find.text('Done today')).dy),
     );
     expect(check('Reopen quest Alpha'), findsOneWidget);
-    expect(find.text('2 open · Sunday, November 15'), findsNothing);
-    expect(find.text('1 open · Sunday, November 15'), findsOneWidget);
+    expect(find.text('Sunday, November 15'), findsOneWidget);
   });
 
   boardTest(h, 'a failed completion keeps the card and shows the error', (
@@ -164,7 +163,7 @@ void main() {
     expect(find.textContaining('disk full'), findsNothing);
     expect(container(tester).read(rewardQueueProvider), isEmpty);
     expect(check('Complete quest Alpha'), findsOneWidget);
-    expect(find.text('DONE TODAY'), findsNothing);
+    expect(find.text('Done today'), findsNothing);
   });
 
   boardTest(h, 'a not-found error shows the item-changed message', (
@@ -224,7 +223,7 @@ void main() {
     await tapCheck(tester, 'Reopen quest Beta');
 
     expect(find.text('25 XP withdrawn'), findsOneWidget);
-    expect(find.text('DONE TODAY'), findsNothing);
+    expect(find.text('Done today'), findsNothing);
     expect(check('Complete quest Beta'), findsOneWidget);
     expect(h.order(tester, ['Alpha', 'Beta']), ['Alpha', 'Beta']);
   });
@@ -252,9 +251,9 @@ void main() {
     expect(find.text('Free done'), findsOneWidget);
     expect(find.text('Bound'), findsNothing);
     expect(find.text('Bound done'), findsNothing);
-    expect(find.text('1 open · Sunday, November 15'), findsOneWidget);
+    expect(find.text('Sunday, November 15'), findsOneWidget);
     expect(find.text('+25 XP'), findsOneWidget);
-    expect(find.text('1 QUEST · 25 XP'), findsOneWidget);
+    expect(find.text('1 quest · 25 XP'), findsOneWidget);
   });
 
   boardTest(h, 'a board of mission quests only shows the empty state', (
@@ -269,8 +268,8 @@ void main() {
 
     expect(find.text('The board is empty'), findsOneWidget);
     expect(find.text('Bound'), findsNothing);
-    expect(find.text('TODO'), findsNothing);
-    expect(find.text('0 open · Sunday, November 15'), findsOneWidget);
+    expect(find.text('Todo'), findsNothing);
+    expect(find.text('Sunday, November 15'), findsOneWidget);
   });
 
   boardTest(h, 'a quest that gets a mission leaves the board and returns when freed', (
@@ -324,7 +323,7 @@ void main() {
     });
     await h.settle(tester);
     expect(find.text('Done early'), findsOneWidget);
-    expect(find.text('DONE TODAY'), findsOneWidget);
+    expect(find.text('Done today'), findsOneWidget);
 
     // Day_Start passes while the app is open: the signal fires on its own.
     h.clock.set(DateTime(2026, 11, 16, 4, 0, 1));
@@ -332,9 +331,9 @@ void main() {
     await h.settle(tester);
 
     expect(find.text('Done early'), findsNothing);
-    expect(find.text('DONE TODAY'), findsNothing);
+    expect(find.text('Done today'), findsNothing);
     expect(find.text('Open one'), findsOneWidget);
-    expect(find.text('1 open · Monday, November 16'), findsOneWidget);
+    expect(find.text('Monday, November 16'), findsOneWidget);
   });
 
   boardTest(h, 'swiping reveals Edit and Delete; delete asks first', (
@@ -569,11 +568,11 @@ void main() {
     expect(find.text('Cleanup'), findsOneWidget);
     expect(h.order(tester, ['Posted', 'Loose']), ['Posted', 'Loose']);
     expect(
-      tester.getTopLeft(find.text('TODO')).dy,
+      tester.getTopLeft(find.text('Todo')).dy,
       greaterThan(tester.getTopLeft(find.text('Posted')).dy),
     );
     expect(
-      tester.getTopLeft(find.text('TODO')).dy,
+      tester.getTopLeft(find.text('Todo')).dy,
       lessThan(tester.getTopLeft(find.text('Loose')).dy),
     );
   });
@@ -602,7 +601,7 @@ void main() {
     expect(board['Gamma'], BoardSection.todo);
     expect(
       tester.getTopLeft(find.text('Alpha')).dy,
-      lessThan(tester.getTopLeft(find.text('TODO')).dy),
+      lessThan(tester.getTopLeft(find.text('Todo')).dy),
     );
   });
 }

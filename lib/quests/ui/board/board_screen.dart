@@ -83,15 +83,7 @@ class _BoardScreenState extends ConsumerState<BoardScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                _TitleRow(
-                  openCount: open == null
-                      ? null
-                      : open.length +
-                            eventTasks
-                                .where((EventOccurrence o) => !o.isCompleted)
-                                .length,
-                  today: today,
-                ),
+                _TitleRow(today: today),
                 const Padding(
                   padding: EdgeInsets.fromLTRB(
                     Space.s20,
@@ -128,10 +120,8 @@ String boardDateLabel(DateTime date, String locale) {
 }
 
 class _TitleRow extends StatelessWidget {
-  const _TitleRow({required this.openCount, required this.today});
+  const _TitleRow({required this.today});
 
-  /// Null while the first load is pending.
-  final int? openCount;
   final DateTime today;
 
   @override
@@ -140,7 +130,7 @@ class _TitleRow extends StatelessWidget {
     final date = boardDateLabel(today, strings.localeName);
     return AppHeader(
       title: strings.board_title,
-      subtitle: openCount == null ? date : strings.board_subtitle(openCount!, date),
+      subtitle: date,
     );
   }
 }

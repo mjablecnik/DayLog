@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../ui_kit/forms/app_text_field.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors.dart';
@@ -274,7 +276,9 @@ class _MissionSheetState extends ConsumerState<MissionSheet> {
             )
           else ...<Widget>[
             _FieldLabel(l10n.mission_questsLabel(filledCount)),
-            AnimatedList(
+            GroupedList(
+              children: <Widget>[
+                AnimatedList(
               key: _listKey,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -291,7 +295,9 @@ class _MissionSheetState extends ConsumerState<MissionSheet> {
                     child: _rowWidget(context, _rows[index]),
                   ),
             ),
-            AddRow(label: l10n.mission_addQuest, onTap: _addRow),
+                AddRow(label: l10n.mission_addQuest, onTap: _addRow),
+              ],
+            ),
           ],
           if (_submitError != null) ...<Widget>[
             const SizedBox(height: Space.s12),
@@ -383,68 +389,20 @@ class _TextBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppPalette palette = context.palette;
-    final TextTheme body = context.bodyText;
-    final BorderRadius radius = BorderRadius.circular(Radii.control);
-    final bool hasError = error != null;
-    OutlineInputBorder border(Color color, double width) => OutlineInputBorder(
-      borderRadius: radius,
-      borderSide: width == 0
-          ? BorderSide.none
-          : BorderSide(color: color, width: width),
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Semantics(
-          label: semanticLabel,
-          textField: true,
-          child: TextField(
-            key: fieldKey,
-            controller: controller,
-            focusNode: focusNode,
-            onChanged: onChanged,
-            textCapitalization: textCapitalization,
-            textInputAction: TextInputAction.next,
-            style: body.bodyLarge!.copyWith(fontSize: 16),
-            cursorColor: palette.brass,
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: body.bodyLarge!.copyWith(
-                fontSize: 16,
-                color: palette.textFaint,
-              ),
-              filled: true,
-              fillColor: palette.field,
-              focusColor: palette.fieldActive,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: Space.s16,
-                vertical: Space.s12,
-              ),
-              suffixIcon: trailing,
-              enabledBorder: hasError
-                  ? border(palette.destructive, Metrics.hairline)
-                  : border(palette.brass, 0),
-              focusedBorder: border(
-                hasError ? palette.destructive : palette.brass,
-                Metrics.hairline,
-              ),
-            ),
-          ),
-        ),
-        if (hasError)
-          Padding(
-            padding: const EdgeInsets.only(top: Space.s6),
-            child: Semantics(
-              liveRegion: true,
-              child: Text(
-                error!,
-                style: body.bodySmall!.copyWith(color: palette.destructive),
-              ),
-            ),
-          ),
-      ],
+    return Semantics(
+      label: semanticLabel,
+      textField: true,
+      child: AppTextField(
+        fieldKey: fieldKey,
+        controller: controller,
+        focusNode: focusNode,
+        hint: hint,
+        onChanged: onChanged,
+        textCapitalization: textCapitalization,
+        textInputAction: TextInputAction.next,
+        errorText: error,
+        suffix: trailing,
+      ),
     );
   }
 }

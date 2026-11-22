@@ -8,7 +8,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/layout/grouped_list.dart';
-import 'check_circle.dart';
+import '../../../ui_kit/controls/check_circle.dart';
 import 'deadline_label.dart';
 import 'difficulty_pips.dart';
 
@@ -107,7 +107,11 @@ class QuestCard extends StatelessWidget {
         ),
         child: Text(
           '+$xp',
-          style: context.bodyText.labelLarge?.copyWith(color: p.brassText),
+          style: context.bodyText.labelLarge?.copyWith(
+            color: p.brassText,
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
     );
@@ -146,7 +150,7 @@ class QuestCard extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     // With the card's own 8 this makes the artboard's 14 above and below.
-                    padding: const EdgeInsets.symmetric(vertical: Space.s6),
+                    padding: const EdgeInsets.symmetric(vertical: Space.s4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,

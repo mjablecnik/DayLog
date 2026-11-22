@@ -236,11 +236,11 @@ abstract class AppLocalizations {
   /// **'{current} / {threshold} XP'**
   String hero_xpProgress(int current, int threshold);
 
-  /// XP remaining until the next Level; level is the NEXT Level number.
+  /// XP remaining until the next Level.
   ///
   /// In cs, this message translates to:
-  /// **'{xp} XP do úrovně {level}'**
-  String hero_xpRemaining(int xp, int level);
+  /// **'ještě {xp}'**
+  String hero_xpRemaining(int xp);
 
   /// Semantic label of the Level badge.
   ///
@@ -920,11 +920,17 @@ abstract class AppLocalizations {
   /// **'Questy mise se upravují na jejím detailu.'**
   String get mission_editQuestsNote;
 
-  /// Small caps label above the Mission name on the detail screen.
+  /// Active days of a reminder that is active on all seven days.
   ///
   /// In cs, this message translates to:
-  /// **'Mise'**
-  String get mission_detailKicker;
+  /// **'Každý den'**
+  String get time_reminderEveryDay;
+
+  /// Label of the progress card on the Mission_Detail_Screen.
+  ///
+  /// In cs, this message translates to:
+  /// **'Postup'**
+  String get mission_progressLabel;
 
   /// Progress line on the Mission_Detail_Screen.
   ///
@@ -935,7 +941,7 @@ abstract class AppLocalizations {
   /// Bonus line on the Mission_Detail_Screen.
   ///
   /// In cs, this message translates to:
-  /// **'+{xp} XP za dokončení mise'**
+  /// **'+{xp} XP za dokončení'**
   String mission_bonusOnCompletion(int xp);
 
   /// Section label above the open Quests of a Mission.

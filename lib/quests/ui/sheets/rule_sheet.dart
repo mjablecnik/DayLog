@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+
+import '../../../ui_kit/controls/choice_chip.dart';
+
+import '../../../ui_kit/forms/app_text_field.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -422,10 +427,10 @@ class _RuleSheetState extends ConsumerState<RuleSheet> {
             runSpacing: Space.s8,
             children: <Widget>[
               for (final Cadence cadence in Cadence.values)
-                _CadenceChip(
+                ChoiceChipX(
                   label: ruleCadenceLabel(l10n, cadence),
                   selected: cadence == _cadence,
-                  onTap: () => _selectCadence(cadence),
+                  onSelected: (_) => _selectCadence(cadence),
                 ),
             ],
           ),
@@ -466,19 +471,24 @@ class _RuleSheetState extends ConsumerState<RuleSheet> {
           ),
           const SizedBox(height: Space.s20),
           _FieldLabel(l10n.mission_questsLabel(filledCount)),
-          for (final _TemplateRow row in _rows)
-            _TemplateTile(
-              key: ValueKey<int>(row.id),
-              row: row,
-              onChanged: () => setState(() {
-                row.error = null;
-                _templatesError = null;
-                _submitError = null;
-              }),
-              onDifficultyChanged: (Difficulty difficulty) =>
-                  setState(() => row.difficulty = difficulty),
-              onRemove: () => _removeRow(row),
-            ),
+          GroupedList(
+            children: <Widget>[
+              for (final _TemplateRow row in _rows)
+                _TemplateTile(
+                  key: ValueKey<int>(row.id),
+                  row: row,
+                  onChanged: () => setState(() {
+                    row.error = null;
+                    _templatesError = null;
+                    _submitError = null;
+                  }),
+                  onDifficultyChanged: (Difficulty difficulty) =>
+                      setState(() => row.difficulty = difficulty),
+                  onRemove: () => _removeRow(row),
+                ),
+              AddRow(label: l10n.mission_addQuest, onTap: _addRow),
+            ],
+          ),
           if (_templatesError != null)
             Padding(
               padding: const EdgeInsets.only(bottom: Space.s8),
@@ -490,7 +500,6 @@ class _RuleSheetState extends ConsumerState<RuleSheet> {
                 ),
               ),
             ),
-          AddRow(label: l10n.mission_addQuest, onTap: _addRow),
           if (_submitError != null) ...<Widget>[
             const SizedBox(height: Space.s12),
             Semantics(
@@ -603,61 +612,6 @@ class _FieldLabel extends StatelessWidget {
   }
 }
 
-/// A Cadence chip: brass outline when selected, at least 44 px tall.
-class _CadenceChip extends StatelessWidget {
-  const _CadenceChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final AppPalette palette = context.palette;
-    return Semantics(
-      button: true,
-      selected: selected,
-      inMutuallyExclusiveGroup: true,
-      label: label,
-      excludeSemantics: true,
-      onTap: onTap,
-      child: Material(
-        color: selected ? palette.brassSoft : palette.field,
-        shape: StadiumBorder(
-          side: BorderSide(
-            color: selected ? palette.brass : palette.boardLine,
-            width: Metrics.hairline,
-          ),
-        ),
-        child: InkWell(
-          customBorder: const StadiumBorder(),
-          onTap: onTap,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Space.s16),
-              child: Center(
-                widthFactor: 1,
-                child: Text(
-                  label,
-                  style: context.bodyText.bodyMedium!.copyWith(
-                    color: selected ? palette.brassText : palette.textDim,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 /// The "Vyvěsit vždy · value ›" picker row.
 class _PostingDayRow extends StatelessWidget {
   const _PostingDayRow({
@@ -674,51 +628,12 @@ class _PostingDayRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppPalette palette = context.palette;
-    final TextTheme body = context.bodyText;
     return Semantics(
-      button: true,
-      label: '$label, $value',
       hint: hint,
-      excludeSemantics: true,
-      onTap: onTap,
-      child: Material(
-        color: palette.field,
-        borderRadius: BorderRadius.circular(Radii.control),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(Radii.control),
-          onTap: onTap,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: Metrics.touchTarget + Space.s8,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Space.s16),
-              child: Row(
-                children: <Widget>[
-                  Text(label, style: body.bodyLarge),
-                  const SizedBox(width: Space.s12),
-                  Expanded(
-                    child: Text(
-                      value,
-                      textAlign: TextAlign.end,
-                      style: body.bodyLarge!.copyWith(
-                        color: palette.brass,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: Space.s8),
-                  AppIcon(
-                    IconAsset.chevronRight,
-                    size: Metrics.iconSmall,
-                    color: palette.textFaint,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+      child: GroupedList(
+        children: <Widget>[
+          ListRow(title: label, value: value, showChevron: true, onTap: onTap),
+        ],
       ),
     );
   }
@@ -750,68 +665,20 @@ class _TextBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppPalette palette = context.palette;
-    final TextTheme body = context.bodyText;
-    final BorderRadius radius = BorderRadius.circular(Radii.control);
-    final bool hasError = error != null;
-    OutlineInputBorder border(Color color, double width) => OutlineInputBorder(
-      borderRadius: radius,
-      borderSide: width == 0
-          ? BorderSide.none
-          : BorderSide(color: color, width: width),
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Semantics(
-          label: semanticLabel,
-          textField: true,
-          child: TextField(
-            key: fieldKey,
-            controller: controller,
-            focusNode: focusNode,
-            onChanged: onChanged,
-            textCapitalization: textCapitalization,
-            textInputAction: TextInputAction.next,
-            style: body.bodyLarge!.copyWith(fontSize: 16),
-            cursorColor: palette.brass,
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: body.bodyLarge!.copyWith(
-                fontSize: 16,
-                color: palette.textFaint,
-              ),
-              filled: true,
-              fillColor: palette.field,
-              focusColor: palette.fieldActive,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: Space.s16,
-                vertical: Space.s12,
-              ),
-              suffixIcon: trailing,
-              enabledBorder: hasError
-                  ? border(palette.destructive, Metrics.hairline)
-                  : border(palette.brass, 0),
-              focusedBorder: border(
-                hasError ? palette.destructive : palette.brass,
-                Metrics.hairline,
-              ),
-            ),
-          ),
-        ),
-        if (hasError)
-          Padding(
-            padding: const EdgeInsets.only(top: Space.s6),
-            child: Semantics(
-              liveRegion: true,
-              child: Text(
-                error!,
-                style: body.bodySmall!.copyWith(color: palette.destructive),
-              ),
-            ),
-          ),
-      ],
+    return Semantics(
+      label: semanticLabel,
+      textField: true,
+      child: AppTextField(
+        fieldKey: fieldKey,
+        controller: controller,
+        focusNode: focusNode,
+        hint: hint,
+        onChanged: onChanged,
+        textCapitalization: textCapitalization,
+        textInputAction: TextInputAction.next,
+        errorText: error,
+        suffix: trailing,
+      ),
     );
   }
 }

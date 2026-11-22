@@ -231,10 +231,26 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
         onPressed: _saving ? null : _resetForm,
       ),
       dismissible: false,
-      footer: TextButton(
-        onPressed: _saving ? null : _skip,
-        style: TextButton.styleFrom(foregroundColor: context.palette.textDim),
-        child: Text(strings.time_commonSkip),
+      // Only the text reacts to a tap, not the empty space around it: the
+      // spacing is outside the button and the tap target is not padded.
+      footer: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Space.s10),
+        child: Center(
+          child: TextButton(
+            key: const ValueKey<String>('description-skip'),
+            onPressed: _saving ? null : _skip,
+            style: TextButton.styleFrom(
+              foregroundColor: context.palette.textDim,
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              padding: const EdgeInsets.symmetric(
+                horizontal: Space.s8,
+                vertical: Space.s4,
+              ),
+            ),
+            child: Text(strings.time_commonSkip),
+          ),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

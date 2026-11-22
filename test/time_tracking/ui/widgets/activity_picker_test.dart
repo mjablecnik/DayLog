@@ -480,6 +480,32 @@ void main() {
           triggeredByStop: true,
         );
 
+    testWidgets('Skip reacts to a tap on its text only, not on the space around it', (tester) async {
+      final db = createTestDatabase();
+      await _pump(tester, sheet(), database: db, scrollable: false);
+
+      final skip = find.byKey(const ValueKey('description-skip'));
+      await tester.ensureVisible(skip);
+      await tester.pumpAndSettle();
+
+      // The tap area is about as wide as the word, not the whole sheet.
+      final textWidth = tester.getSize(find.text('Skip')).width;
+      expect(tester.getSize(skip).width, lessThan(textWidth + 40));
+      expect(tester.getSize(skip).width, lessThan(tester.view.physicalSize.width / 3));
+
+      // A tap to the left and to the right of the word does nothing.
+      final box = tester.getRect(skip);
+      await tester.tapAt(Offset(box.left - 60, box.center.dy));
+      await tester.tapAt(Offset(box.right + 60, box.center.dy));
+      await tester.pumpAndSettle();
+      expect(await db.select(db.timeEntries).get(), isEmpty);
+      expect(find.byType(DescriptionSheet), findsOneWidget);
+
+      await tester.tap(find.text('Skip'));
+      await tester.pumpAndSettle();
+      expect(await db.select(db.timeEntries).get(), hasLength(1));
+    });
+
     testWidgets('Ostatní cannot be submitted without a name, but Skip still saves',
         (tester) async {
       final db = createTestDatabase();

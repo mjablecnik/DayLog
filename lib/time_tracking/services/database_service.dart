@@ -3,6 +3,15 @@ import 'package:drift/drift.dart';
 import '../domain/config.dart';
 import '../../database/app_database.dart';
 
+/// Thrown when an entry would end before it starts. No such entry is ever
+/// stored: it would show a negative duration.
+class InvalidTimeRangeException implements Exception {
+  const InvalidTimeRangeException();
+
+  @override
+  String toString() => 'InvalidTimeRangeException: an entry cannot end before it starts';
+}
+
 class DatabaseService {
   final AppDatabase _db;
 
@@ -16,6 +25,13 @@ class DatabaseService {
   }
 
   Future<int> insertTimeEntry(TimeEntriesCompanion entry) async {
+    if (entry.startTime.present && entry.endTime.present) {
+      final start = DateTime.tryParse(entry.startTime.value);
+      final end = DateTime.tryParse(entry.endTime.value);
+      if (start != null && end != null && end.isBefore(start)) {
+        throw const InvalidTimeRangeException();
+      }
+    }
     return await _db.into(_db.timeEntries).insert(entry);
   }
 
@@ -40,6 +56,9 @@ class DatabaseService {
     DateTime? startTime,
     DateTime? endTime,
   }) async {
+    if (startTime != null && endTime != null && endTime.isBefore(startTime)) {
+      throw const InvalidTimeRangeException();
+    }
     await (_db.update(_db.timeEntries)..where((t) => t.id.equals(id))).write(
       TimeEntriesCompanion(
         description: Value(description),

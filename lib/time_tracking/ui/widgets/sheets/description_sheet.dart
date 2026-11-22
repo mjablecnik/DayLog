@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 
+import '../../../../core/clock_provider.dart';
 import '../../../../ui_kit/forms/app_text_field.dart';
 
 import '../../../../theme/app_theme.dart';
@@ -117,10 +118,24 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
     super.dispose();
   }
 
+  /// The end of the session. A timer that hands over an end before the start
+  /// (a stale end time) would store a negative duration, so the end falls back
+  /// to now, and never to a time before the start.
+  DateTime get _endedAt {
+    final start = widget.sessionStart;
+    if (!widget.endedAt.isBefore(start)) return widget.endedAt;
+    final now = ref.read(clockProvider).now();
+    return now.isBefore(start) ? start : now;
+  }
+
   /// `Ostatní` needs a name to be submitted (Skip still saves without one).
   bool get _customNameMissing =>
       hasCustomNameField(_selection.typeKey) &&
       _selection.customName.trim().isEmpty;
+
+  bool get _descriptionMissing =>
+      isDescriptionRequired(_selection.typeKey) &&
+      _controller.text.trim().isEmpty;
 
   bool get _canSubmit =>
       !_descriptionMissing && !_saving && !_customNameMissing;
@@ -133,11 +148,7 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
   Future<void> _skip() async {
     if (_saving) return;
 
-  bool get _descriptionMissing =>
-      isDescriptionRequired(_selection.typeKey) &&
-      _controller.text.trim().isEmpty;
-
-    final elapsed = widget.endedAt.difference(widget.sessionStart);
+    final elapsed = _endedAt.difference(widget.sessionStart);
     if (elapsed.inSeconds < 120) {
       // Less than 2 minutes — discard without saving.
       if (widget.triggeredByStop) {
@@ -174,7 +185,7 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
       await dbService.insertTimeEntry(
         TimeEntriesCompanion(
           startTime: Value(widget.sessionStart.toIso8601String()),
-          endTime: Value(widget.endedAt.toIso8601String()),
+          endTime: Value(_endedAt.toIso8601String()),
           description: Value(description),
           activityType: Value(_selection.typeKey),
           project: Value(values.project),

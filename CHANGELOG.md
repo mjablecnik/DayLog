@@ -7,6 +7,36 @@ every release from the commit messages.
 
 ## [Unreleased]
 
+## [1.0.0-dev.3] - 2026-11-22
+
+### Features
+
+- switch off the add button in the month header (calendar)
+- scroll the level card with the Board and Missions lists (quests)
+- list notes by their full name only (notes)
+- add an experiment to try four styles of the History type tag (settings)
+- scroll the day navigator away with History and Statistics (time_tracking)
+- show today again whenever History or Statistics opens (time_tracking)
+- turn the drawer into one flat list with two sections (shell)
+- move the add button to the header and let the month fill the screen (calendar)
+- offer gaming, doctor, office and hairdresser instead of date (calendar)
+- make the description optional for meals (time_tracking)
+- scroll the sheet buttons with the body while the keyboard is open (ui_kit)
+- draw segmented controls lower than their tap area (ui_kit)
+
+### Fixes
+
+- keep the sheet body from being rebuilt when the keyboard opens (ui_kit)
+- centre a single tab in the bottom bar (shell)
+- never store an entry that ends before it starts (time_tracking)
+- remove the hidden tap padding between rows of choice chips (ui_kit)
+
+### Other
+
+- test(goldens): regenerate the calendar goldens after removing the header add button
+- test(goldens): regenerate the goldens after the layout changes
+
+
 ## [1.0.0-dev.2] - 2026-11-22
 
 ### Features

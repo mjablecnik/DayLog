@@ -35,6 +35,7 @@ class ActivityType {
     required this.light,
     this.subtypes = const [],
     this.extra = TypeExtra.none,
+    this.descriptionOptional = false,
   });
 
   /// Stable identifier persisted in `time_entries.activity_type` — never
@@ -52,6 +53,9 @@ class ActivityType {
 
   /// Extra field shown below the type chips.
   final TypeExtra extra;
+
+  /// Whether an entry of this type may be saved without a description.
+  final bool descriptionOptional;
 }
 
 /// The single source of truth for types, subtypes and colours. Every widget
@@ -195,6 +199,7 @@ const List<ActivityType> activityRegistry = [
     key: 'Jídlo',
     dark: Color(0xFFA97C50),
     light: Color(0xFF8A5E32),
+    descriptionOptional: true,
     subtypes: [
       ActivitySubtype(
         key: 'breakfast',
@@ -318,6 +323,10 @@ Color suggestionScopeColor(SuggestionScope scope, {required bool isDark}) {
       return activityMainColor('Ostatní', isDark: isDark);
   }
 }
+
+/// Whether an entry of [typeKey] needs a non-empty description to be saved.
+bool isDescriptionRequired(String typeKey) =>
+    activityTypeOf(typeKey)?.descriptionOptional != true;
 
 /// Whether [typeKey] shows the project text field.
 bool hasProjectField(String typeKey) =>

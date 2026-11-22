@@ -145,12 +145,16 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
       hasCustomNameField(_selection.typeKey) &&
       _selection.customName.trim().isEmpty;
 
+  bool get _descriptionMissing =>
+      isDescriptionRequired(_selection.typeKey) &&
+      _controller.text.trim().isEmpty;
+
   bool get _canSubmit =>
-      _controller.text.trim().isNotEmpty && !_saving && !_customNameMissing;
+      !_descriptionMissing && !_saving && !_customNameMissing;
 
   Future<void> _submit() async {
     final l10n = AppLocalizations.of(context);
-    if (_controller.text.trim().isEmpty) {
+    if (_descriptionMissing) {
       setState(() => _error = l10n.time_errorDescriptionEmpty);
       return;
     }

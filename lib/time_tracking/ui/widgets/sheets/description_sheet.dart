@@ -123,7 +123,7 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
       _selection.customName.trim().isEmpty;
 
   bool get _canSubmit =>
-      _controller.text.trim().isNotEmpty && !_saving && !_customNameMissing;
+      !_descriptionMissing && !_saving && !_customNameMissing;
 
   Future<void> _submit() async {
     if (!_canSubmit) return;
@@ -132,6 +132,10 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
 
   Future<void> _skip() async {
     if (_saving) return;
+
+  bool get _descriptionMissing =>
+      isDescriptionRequired(_selection.typeKey) &&
+      _controller.text.trim().isEmpty;
 
     final elapsed = widget.endedAt.difference(widget.sessionStart);
     if (elapsed.inSeconds < 120) {
@@ -218,9 +222,7 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
       dismissible: false,
       footer: TextButton(
         onPressed: _saving ? null : _skip,
-        style: TextButton.styleFrom(
-          foregroundColor: context.palette.textDim,
-        ),
+        style: TextButton.styleFrom(foregroundColor: context.palette.textDim),
         child: Text(strings.time_commonSkip),
       ),
       child: Column(

@@ -54,9 +54,10 @@ extension AppContext on BuildContext {
 /// Material 3 theme for one palette; every text is Figtree.
 ThemeData buildTheme({
   required AppPalette palette,
+  FontWeight titleWeight = defaultTitleWeight,
 }) {
   final AppPalette p = palette;
-  final TextTheme display = buildDisplayTextTheme(p);
+  final TextTheme display = buildDisplayTextTheme(p, titleWeight: titleWeight);
   final TextTheme body = buildBodyTextTheme(p);
 
   final ColorScheme scheme = ColorScheme(
@@ -98,6 +99,24 @@ ThemeData buildTheme({
     },
   );
 
+  final fieldBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(Radii.field),
+    borderSide: BorderSide(color: p.boardLine, width: Metrics.hairline),
+  );
+  final pickerShape = RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(Radii.dialog),
+  );
+  final pickerSelection = WidgetStateProperty.resolveWith<Color?>(
+    (states) => states.contains(WidgetState.selected) ? p.brass : null,
+  );
+  final pickerText = WidgetStateProperty.resolveWith<Color?>(
+    (states) => states.contains(WidgetState.disabled)
+        ? p.textFaint
+        : states.contains(WidgetState.selected)
+        ? p.inkOnBrass
+        : p.text,
+  );
+
   return ThemeData(
     useMaterial3: true,
     brightness: p.brightness,
@@ -119,6 +138,60 @@ ThemeData buildTheme({
       selectionColor: p.brass.withValues(alpha: 0.35),
       selectionHandleColor: p.brass,
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: p.card,
+      contentPadding: const EdgeInsets.symmetric(
+        vertical: Space.s10,
+        horizontal: Space.s14,
+      ),
+      border: fieldBorder,
+      enabledBorder: fieldBorder,
+      focusedBorder: fieldBorder.copyWith(
+        borderSide: BorderSide(color: p.brass, width: Metrics.focusBorder),
+      ),
+      hintStyle: body.titleMedium?.copyWith(
+        color: p.textFaint,
+        fontWeight: FontWeight.w400,
+      ),
+      labelStyle: body.bodySmall?.copyWith(
+        color: p.textFaint,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+      ),
+      floatingLabelStyle: body.bodySmall?.copyWith(
+        color: p.textFaint,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+    datePickerTheme: DatePickerThemeData(
+      backgroundColor: p.sheet,
+      surfaceTintColor: Colors.transparent,
+      headerBackgroundColor: p.brass,
+      headerForegroundColor: p.inkOnBrass,
+      dayForegroundColor: pickerText,
+      dayBackgroundColor: pickerSelection,
+      yearForegroundColor: pickerText,
+      yearBackgroundColor: pickerSelection,
+      weekdayStyle: body.bodySmall?.copyWith(color: p.textDim),
+      shape: pickerShape,
+    ),
+    timePickerTheme: TimePickerThemeData(
+      backgroundColor: p.sheet,
+      hourMinuteColor: WidgetStateColor.resolveWith(
+        (states) => pickerSelection.resolve(states) ?? p.tone,
+      ),
+      hourMinuteTextColor: WidgetStateColor.resolveWith(
+        (states) => pickerText.resolve(states) ?? p.text,
+      ),
+      dialHandColor: p.brass,
+      dialTextColor: WidgetStateColor.resolveWith(
+        (states) => pickerText.resolve(states) ?? p.text,
+      ),
+      helpTextStyle: body.labelLarge?.copyWith(color: p.textDim),
+      shape: pickerShape,
+    ),
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: p.sheet,
       modalBackgroundColor: p.sheet,
@@ -126,7 +199,9 @@ ThemeData buildTheme({
       showDragHandle: false,
       clipBehavior: Clip.antiAlias,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(Radii.sheet)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(Radii.sheetTop),
+        ),
       ),
     ),
     dialogTheme: DialogThemeData(
@@ -135,7 +210,7 @@ ThemeData buildTheme({
       titleTextStyle: display.titleLarge,
       contentTextStyle: body.bodyLarge,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Radii.sheet),
+        borderRadius: BorderRadius.circular(Radii.dialog),
       ),
     ),
     snackBarTheme: SnackBarThemeData(
@@ -175,4 +250,36 @@ ThemeData buildTheme({
       AppStyle(palette: p, display: display, body: body),
     ],
   );
+}
+
+/// Glow for primary controls and the timer arc.
+abstract final class AppGlow {
+  static List<BoxShadow> segment(AppPalette palette) => [
+    BoxShadow(
+      color: palette.text.withValues(alpha: 0.05),
+      blurRadius: 2,
+      offset: const Offset(0, 1),
+    ),
+    BoxShadow(
+      color: palette.text.withValues(alpha: 0.06),
+      blurRadius: 18,
+      offset: const Offset(0, 6),
+    ),
+  ];
+
+  static List<BoxShadow> button(AppPalette palette) => <BoxShadow>[
+    BoxShadow(
+      color: palette.glowButton,
+      blurRadius: palette.glowButtonBlur,
+      offset: Offset(0, palette.glowButtonOffsetY),
+    ),
+  ];
+
+  static Paint ring(AppPalette palette, {required double strokeWidth}) =>
+      Paint()
+        ..color = palette.glowRing
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = strokeWidth
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, palette.glowRingBlur);
 }

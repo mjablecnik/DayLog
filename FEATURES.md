@@ -9,10 +9,12 @@ loading the data of the two old apps.
 
 ## Navigation
 
-- A bottom bar with five tabs: **Timer** (the first screen), **Quests**, **Calendar**, **Notes** and **Settings**.
-- A side drawer with the complete navigation: **Timer**, **History**, **Statistics** (group Time), **Quests**,
-  **Missions**, **Calendar**, **Notes** (group Planning) and **Settings**, opened with the menu button in the
-  header of every page. While History or Statistics is shown, the bar marks Timer; for Missions it marks Quests.
+- The module bar shows Timer, History and Statistics in **Time**, Quests and Missions in **Quests**, and
+  one tab each in **Calendar**, **Notes** and **Settings**.
+- Tap the module button to pick a module, or swipe across it to return to the previous module. The app
+  remembers each module's last page during a session and restores the most recently shown page after restart.
+- Settings → Experiments controls which side holds the module button, whether the side drawer is available,
+  and the font weight of page and sheet titles.
 - A link such as `daylog://timer` opens a page: `timer`, `history`, `statistics`, `quests`, `missions`,
   `calendar`, `notes` or `settings`. A Home Screen icon from the Shortcuts app can open any of them.
 
@@ -25,11 +27,12 @@ loading the data of the two old apps.
   (Work, Housework, Meeting, Communication, Travel, Entertainment, Exercise, Self-development, Rest, Hygiene,
   Meal, Other), most with subtypes shown as shades of the type's colour. Work and Housework take a project
   name, Other a free-text name, with suggestions kept apart for paid work, unpaid work, housework and others.
-- History: day navigation, a daily summary, edit and delete, and manually adding a past entry. The day starts at 03:00.
+- History shows a daily summary and lets you add past entries. Tap a row to edit it or swipe left to reveal
+  Edit and Delete. The day starts at 03:00.
 - Statistics: a daily or weekly view with a timeline, the time by activity type (with subtypes), by project and by
   name, and the untracked time (16 waking hours a day minus the tracked time).
 - Recurring reminders for habits with a time window, an interval and active days, which repeat until marked done
-  and can be snoozed. (The daily "start the timer" reminder of TimeLog was removed; the app cancels one an older
+  and can be snoozed. Tap a reminder to edit it in a bottom sheet or swipe left to reveal Delete. (The daily "start the timer" reminder of TimeLog was removed; the app cancels one an older
   version left scheduled.)
 
 ## Quests, Missions and the Board
@@ -65,7 +68,7 @@ loading the data of the two old apps.
 
 ## Settings and data
 
-- Profile name, language (Czech, English or the device's), light, dark or system appearance, recurring mission
+- Edit the hero name from the profile card. Settings also includes language (Czech, English or the device's), light, dark or system appearance, recurring mission
   rules and the Home Screen shortcut guide (each on a page of its own), the recurring reminders and the testing
   tools, data export and import, and the licences of the bundled font with the version below them.
 - One theme, the blue one, in a dark and a light variant; further themes are one more entry in a registry.

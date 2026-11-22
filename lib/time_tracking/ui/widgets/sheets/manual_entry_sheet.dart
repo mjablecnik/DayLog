@@ -1,5 +1,13 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
+
+import '../../../../theme/app_theme.dart';
+import '../../../../theme/tokens.dart';
+import '../../../../ui_kit/common/app_icon.dart';
+import '../../../../ui_kit/forms/form_field_box.dart';
+import '../../../../ui_kit/layout/header_action.dart';
+import '../../../../ui_kit/sheet/app_sheet.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/activity_types.dart';
@@ -47,7 +55,9 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
     final now = DateTime.now();
     final today = logicalDay(now);
     final isToday =
-        day.year == today.year && day.month == today.month && day.day == today.day;
+        day.year == today.year &&
+        day.month == today.month &&
+        day.day == today.day;
 
     // Synchronous fallback so the `late` fields are set before the first
     // build; overwritten below if a prior entry is found for this day.
@@ -130,7 +140,8 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
   }
 
   bool get _customNameMissing =>
-      hasCustomNameField(_selection.typeKey) && _selection.customName.trim().isEmpty;
+      hasCustomNameField(_selection.typeKey) &&
+      _selection.customName.trim().isEmpty;
 
   bool get _canSubmit =>
       _controller.text.trim().isNotEmpty && !_saving && !_customNameMissing;
@@ -192,225 +203,75 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
     }
   }
 
+  int _pickerGeneration = 0;
+
+  void _resetForm() {
+    setState(() {
+      _controller.clear();
+      _selection = _initialSelection;
+      _pickerGeneration++;
+      _error = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = widget.theme;
-    final l10n = AppLocalizations.of(context);
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      behavior: HitTestBehavior.translucent,
-      child: Padding(
-        padding: EdgeInsets.only(bottom: bottomInset),
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.85,
-          ),
-          decoration: BoxDecoration(
-            color: theme.background,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            border: Border(top: BorderSide(color: theme.border)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+    final strings = AppLocalizations.of(context);
+    return AppSheet(
+      title: strings.time_manualEntryTitle,
+      primaryLabel: strings.time_commonSave,
+      primaryEnabled: _canSubmit,
+      onPrimary: _submit,
+      headerAction: HeaderAction(
+        icon: IconAsset.refresh,
+        semanticLabel: strings.time_descriptionClearFormTooltip,
+        onPressed: _saving ? null : _resetForm,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
             children: [
-              const SizedBox(height: 12),
-              Container(
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: theme.dim,
-                  borderRadius: BorderRadius.circular(2),
+              Expanded(
+                child: FormFieldBox(
+                  label: strings.time_timeFieldStart,
+                  value: _formatTime(_startTime),
+                  onTap: () => _pickTime(true),
                 ),
               ),
-              const SizedBox(height: 20),
-              Flexible(
-                child: ListView(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  children: [
-                    Text(
-                      l10n.time_manualEntryTitle,
-                      style: TextStyle(
-                        color: theme.text,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _TimeField(
-                            theme: theme,
-                            label: l10n.time_timeFieldStart,
-                            time: _formatTime(_startTime),
-                            onTap: () => _pickTime(true),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _TimeField(
-                            theme: theme,
-                            label: l10n.time_timeFieldEnd,
-                            time: _formatTime(_endTime),
-                            onTap: () => _pickTime(false),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    ActivityPicker(
-                      theme: theme,
-                      initial: _initialSelection,
-                      onChanged: (selection) => setState(() => _selection = selection),
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: theme.panel,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: theme.border),
-                      ),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      child: TextField(
-                        controller: _controller,
-                        maxLines: 4,
-                        maxLength: 500,
-                        autofocus: true,
-                        style: TextStyle(
-                            color: theme.text, fontSize: 15),
-                        decoration: InputDecoration(
-                          hintText: l10n.time_descriptionHint,
-                          hintStyle:
-                              TextStyle(color: theme.faint),
-                          border: InputBorder.none,
-                          counterStyle:
-                              TextStyle(color: theme.faint, fontSize: 11),
-                        ),
-                        onChanged: (_) => setState(() {}),
-                      ),
-                    ),
-                    if (_error != null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        _error!,
-                        style: TextStyle(
-                          color: Colors.red[400],
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: _canSubmit ? _submit : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: theme.accent,
-                          foregroundColor: theme.ink,
-                          disabledBackgroundColor:
-                              theme.accent.withValues(alpha: 0.3),
-                          disabledForegroundColor:
-                              theme.ink.withValues(alpha: 0.5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: _saving
-                            ? SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  color: theme.ink,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(
-                                l10n.time_commonSubmit,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  color: theme.ink,
-                                ),
-                              ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed:
-                          _saving ? null : () => Navigator.of(context).pop(),
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.dim,
-                      ),
-                      child: Text(
-                        l10n.time_commonCancel,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: theme.dim,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
+              const SizedBox(width: Space.s12),
+              Expanded(
+                child: FormFieldBox(
+                  label: strings.time_timeFieldEnd,
+                  value: _formatTime(_endTime),
+                  onTap: () => _pickTime(false),
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TimeField extends StatelessWidget {
-  final AppThemeData theme;
-  final String label;
-  final String time;
-  final VoidCallback onTap;
-
-  const _TimeField({
-    required this.theme,
-    required this.label,
-    required this.time,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: theme.panel,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: theme.border),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          const SizedBox(height: Space.s16),
+          ActivityPicker(
+            key: ValueKey(_pickerGeneration),
+            theme: widget.theme,
+            initial: _initialSelection,
+            onChanged: (selection) => setState(() => _selection = selection),
+          ),
+          const SizedBox(height: Space.s16),
+          TextField(
+            controller: _controller,
+            maxLines: 4,
+            maxLength: 500,
+            decoration: InputDecoration(hintText: strings.time_descriptionHint),
+            onChanged: (_) => setState(() {}),
+          ),
+          if (_error case final error?)
             Text(
-              label,
-              style: TextStyle(
-                color: theme.faint,
-                fontSize: 11,
+              error,
+              style: context.bodyText.bodySmall?.copyWith(
+                color: context.palette.destructiveText,
               ),
             ),
-            const SizedBox(height: 2),
-            Text(
-              time,
-              style: TextStyle(
-                color: theme.text,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

@@ -11,11 +11,10 @@ import '../state/board_day.dart';
 import '../state/quest_actions.dart';
 import '../../../settings/ui_providers.dart';
 import '../state/reorder.dart';
-import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../cards/quest_card.dart';
 import '../../../ui_kit/common/announce.dart';
-import '../../../ui_kit/common/app_icon.dart';
+import '../../../ui_kit/layout/app_header.dart';
 import '../../../ui_kit/common/empty_state.dart';
 import '../../../ui_kit/common/haptics.dart';
 import '../../../ui_kit/common/skeleton_list.dart';
@@ -356,56 +355,10 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = context.palette;
-    final AppLocalizations l = AppLocalizations.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        Space.s12,
-        Space.s4,
-        Space.s16,
-        Space.s8,
-      ),
-      child: Row(
-        children: <Widget>[
-          Semantics(
-            button: true,
-            label: l.common_back,
-            excludeSemantics: true,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(Radii.control),
-              onTap: () => Navigator.of(context).maybePop(),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: Metrics.touchTarget,
-                  minWidth: Metrics.touchTarget,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Space.s4),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      AppIcon(
-                        IconAsset.chevronLeft,
-                        size: Metrics.iconSize,
-                        color: p.brass,
-                      ),
-                      const SizedBox(width: Space.s4),
-                      Text(
-                        l.missions_title,
-                        style: context.bodyText.bodyLarge!.copyWith(
-                          color: p.brass,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const Spacer(),
-          ?menu,
-        ],
-      ),
+    return AppHeader(
+      leading: HeaderLeading.back,
+      title: AppLocalizations.of(context).missions_title,
+      trailing: [?menu],
     );
   }
 }

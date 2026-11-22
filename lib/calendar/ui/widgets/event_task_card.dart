@@ -7,6 +7,7 @@ import '../../../l10n/app_localizations.dart';
 import '../screens/calendar_labels.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 import '../../../quests/ui/cards/check_circle.dart';
 import '../../../quests/ui/cards/difficulty_pips.dart';
 import '../../../ui_kit/common/app_icon.dart';
@@ -34,11 +35,13 @@ class EventTaskCard extends StatelessWidget {
     required this.occurrence,
     required this.onToggle,
     required this.onTap,
+    this.groupEdges,
   });
 
   final EventOccurrence occurrence;
   final VoidCallback onToggle;
   final VoidCallback onTap;
+  final GroupEdges? groupEdges;
 
   @override
   Widget build(BuildContext context) {
@@ -47,33 +50,33 @@ class EventTaskCard extends StatelessWidget {
     final CalendarEvent event = occurrence.event;
     final bool done = occurrence.isCompleted;
     final int xp = eventTaskXp(occurrence);
-    final Color nameColor = done ? p.textDim : p.slipText;
+    final Color nameColor = done ? p.textFaint : p.text;
     final Color metaColor = done ? p.textFaint : p.slipTextDim;
     final TextStyle meta = context.bodyText.bodySmall!.copyWith(color: metaColor);
     final String time = event.allDay
         ? l.calendar_taskAllDay
         : '${minuteLabel(event.startMinute!)}–${minuteLabel(event.endMinute!)}';
-    final BorderRadius radius = BorderRadius.circular(Radii.card);
+    final radius = groupedRadius(groupEdges);
 
-    final Widget xpText = Text(
-      '+$xp',
-      style: context.displayText.titleMedium!.copyWith(color: p.brass),
+    final xpText = DecoratedBox(
+      decoration: BoxDecoration(
+        color: p.brassSoft,
+        borderRadius: BorderRadius.circular(Radii.pill),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Space.s8, vertical: Space.s4),
+        child: Text(
+          '+$xp',
+          style: context.bodyText.labelLarge?.copyWith(color: p.brassText),
+        ),
+      ),
     );
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: done ? p.slipDone : p.slip,
+        color: p.card,
         borderRadius: radius,
-        border: Border.all(color: p.slipEdge, width: Metrics.hairline),
-        boxShadow: p.isLight
-            ? <BoxShadow>[
-                BoxShadow(
-                  color: p.ink.withValues(alpha: 0.10),
-                  blurRadius: 18,
-                  offset: const Offset(0, Space.s6),
-                ),
-              ]
-            : null,
+        border: groupedBorder(p.boardLine, groupEdges),
       ),
       child: Material(
         type: MaterialType.transparency,

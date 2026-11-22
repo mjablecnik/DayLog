@@ -3,9 +3,11 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../common/app_icon.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
+import '../common/app_icon.dart';
+import '../controls/app_buttons.dart';
+import '../layout/header_action.dart';
 import 'confirm_destructive.dart';
 
 /// Opens a bottom sheet and resolves to the value the sheet closed with (or
@@ -74,8 +76,8 @@ Future<T?> showAppSheet<T>(
   );
 }
 
-/// The visual sheet: grabber, header ("Zrušit" at the left, the centred
-/// display title), a scrollable body and one brass primary button pinned at
+/// The visual sheet: grabber, title and close action, a scrollable body and
+/// one brass primary button pinned at
 /// the bottom (so it stays visible above the keyboard).
 ///
 /// Put it at the root of the widget returned from the [showAppSheet]
@@ -92,10 +94,21 @@ class AppSheet extends StatefulWidget {
     this.onPrimary,
     this.primaryEnabled = true,
     this.isDirty = false,
+    this.headerAction,
+    this.dismissible = true,
+    this.footer,
+    this.subtitle,
+    this.discardCopy,
   });
 
-  /// Already localized, shown centred in the display face.
+  /// Already localized title.
   final String title;
+  final HeaderAction? headerAction;
+  final bool dismissible;
+  final Widget? footer;
+  final String? subtitle;
+  final ({String title, String body, String confirm, String cancel})?
+  discardCopy;
 
   /// Already localized label of the brass button ("Vyvěsit quest", "Uložit").
   /// Null for a sheet that has no primary button (a sheet of choices).
@@ -166,12 +179,13 @@ class _AppSheetState extends State<AppSheet> {
     if (_confirming) return;
     _confirming = true;
     final AppLocalizations l10n = AppLocalizations.of(context);
+    final copy = widget.discardCopy;
     final bool discard = await confirmDestructive(
       context,
-      title: l10n.sheet_discardTitle,
-      body: l10n.sheet_discardBody,
-      confirmLabel: l10n.common_discard,
-      cancelLabel: l10n.sheet_keepEditing,
+      title: copy?.title ?? l10n.sheet_discardTitle,
+      body: copy?.body ?? l10n.sheet_discardBody,
+      confirmLabel: copy?.confirm ?? l10n.common_discard,
+      cancelLabel: copy?.cancel ?? l10n.sheet_keepEditing,
     );
     _confirming = false;
     if (discard && mounted) Navigator.of(context).pop();
@@ -213,7 +227,9 @@ class _AppSheetState extends State<AppSheet> {
       color: palette.sheet,
       clipBehavior: Clip.antiAlias,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(Radii.sheet)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(Radii.sheetTop),
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -221,17 +237,21 @@ class _AppSheetState extends State<AppSheet> {
         children: <Widget>[
           GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onVerticalDragStart: _dragStart,
-            onVerticalDragUpdate: _dragUpdate,
-            onVerticalDragEnd: _dragEnd,
+            onVerticalDragStart: widget.dismissible ? _dragStart : null,
+            onVerticalDragUpdate: widget.dismissible ? _dragUpdate : null,
+            onVerticalDragEnd: widget.dismissible ? _dragEnd : null,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 const _Grabber(),
                 _Header(
                   title: widget.title,
-                  cancelLabel: l10n.common_cancel,
-                  onCancel: () => AppSheet.requestClose(context),
+                  closeLabel: l10n.common_close,
+                  action: widget.headerAction,
+                  onCancel: widget.dismissible
+                      ? () => AppSheet.requestClose(context)
+                      : null,
+                  subtitle: widget.subtitle,
                 ),
               ],
             ),
@@ -253,24 +273,31 @@ class _AppSheetState extends State<AppSheet> {
               Space.s20,
               Space.s4,
               Space.s20,
-              Space.s12 + media.padding.bottom,
+              widget.footer == null
+                  ? Space.s12 + media.padding.bottom
+                  : Space.s4,
             ),
             child: widget.primaryLabel == null
                 ? null
-                : _PrimaryButton(
+                : AppButton.primary(
                     label: widget.primaryLabel!,
                     icon: widget.primaryIcon,
                     onPressed: canSubmit ? _submit : null,
                   ),
           ),
+          if (widget.footer case final footer?)
+            Padding(
+              padding: EdgeInsets.only(bottom: media.padding.bottom),
+              child: footer,
+            ),
         ],
       ),
     );
 
     return PopScope<Object?>(
-      canPop: !widget.isDirty,
+      canPop: widget.dismissible && !widget.isDirty,
       onPopInvokedWithResult: (bool didPop, Object? result) {
-        if (!didPop) _confirmDiscard();
+        if (!didPop && widget.dismissible) _confirmDiscard();
       },
       child: Semantics(
         container: true,
@@ -316,122 +343,64 @@ class _Grabber extends StatelessWidget {
 class _Header extends StatelessWidget {
   const _Header({
     required this.title,
-    required this.cancelLabel,
+    required this.closeLabel,
     required this.onCancel,
+    this.action,
+    this.subtitle,
   });
 
   final String title;
-  final String cancelLabel;
-  final VoidCallback onCancel;
+  final String closeLabel;
+  final VoidCallback? onCancel;
+  final String? subtitle;
+  final HeaderAction? action;
 
   @override
-  Widget build(BuildContext context) {
-    final AppPalette palette = context.palette;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Space.s12),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            // Reserves the width of the cancel button on both sides, so the
-            // title is centred on the sheet rather than in the leftover space.
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Metrics.touchTarget + Space.s32,
-              ),
-              child: Semantics(
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: Space.s20),
+    child: Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Semantics(
+                container: true,
                 header: true,
                 namesRoute: true,
                 child: Text(
                   title,
-                  textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: context.displayText.headlineMedium,
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  minimumSize: const Size(
-                    Metrics.touchTarget,
-                    Metrics.touchTarget,
-                  ),
-                  foregroundColor: palette.text,
-                  padding: const EdgeInsets.symmetric(horizontal: Space.s8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(Radii.control),
+              if (subtitle case final text?)
+                Text(
+                  text,
+                  style: context.bodyText.bodySmall?.copyWith(
+                    color: context.palette.textDim,
                   ),
                 ),
-                onPressed: onCancel,
-                child: Text(cancelLabel, style: context.bodyText.titleMedium),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PrimaryButton extends StatelessWidget {
-  const _PrimaryButton({
-    required this.label,
-    required this.onPressed,
-    this.icon,
-  });
-
-  final String label;
-  final String? icon;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final AppPalette palette = context.palette;
-    return FilledButton(
-      onPressed: onPressed,
-      style: ButtonStyle(
-        minimumSize: const WidgetStatePropertyAll<Size>(
-          Size(double.infinity, Metrics.touchTarget + Space.s8),
-        ),
-        shape: WidgetStatePropertyAll<OutlinedBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Radii.control),
+            ],
           ),
         ),
-        backgroundColor: WidgetStateProperty.resolveWith<Color>(
-          (Set<WidgetState> states) => states.contains(WidgetState.disabled)
-              ? palette.brass.withValues(alpha: 0.35)
-              : palette.brass,
+        if (action case final button?) ...[
+          const SizedBox(width: Space.s6),
+          button,
+        ],
+        const SizedBox(width: Space.s6),
+        HeaderAction(
+          icon: IconAsset.close,
+          semanticLabel: closeLabel,
+          onPressed: onCancel,
         ),
-        foregroundColor: WidgetStateProperty.resolveWith<Color>(
-          (Set<WidgetState> states) => states.contains(WidgetState.disabled)
-              ? palette.inkOnBrass.withValues(alpha: 0.6)
-              : palette.inkOnBrass,
-        ),
-        textStyle: WidgetStatePropertyAll<TextStyle?>(
-          context.bodyText.titleMedium,
-        ),
-      ),
-      child: icon == null
-          ? Text(label, textAlign: TextAlign.center)
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                AppIcon(icon!, size: 18),
-                const SizedBox(width: Space.s8),
-                Flexible(child: Text(label, textAlign: TextAlign.center)),
-              ],
-            ),
-    );
-  }
+      ],
+    ),
+  );
 }
 
-/// Route behind [showAppSheet]: scrim, slide-up (fade under reduced
-/// motion), keyboard inset and a height cap that keeps the status bar clear.
 class _SheetRoute<T> extends PopupRoute<T> {
   _SheetRoute({
     required this.builder,

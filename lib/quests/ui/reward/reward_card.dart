@@ -5,6 +5,7 @@ import '../../../l10n/app_localizations.dart';
 import '../state/reward_queue.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
+import '../../../ui_kit/controls/app_buttons.dart';
 import '../../../ui_kit/common/app_icon.dart';
 
 /// Diameter of the brass seal and of the ray burst around it.
@@ -381,37 +382,9 @@ class _RewardButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) {
-    final p = context.palette;
-    final BorderRadius radius = BorderRadius.circular(Radii.control);
-    return Semantics(
-      button: true,
-      label: label,
-      excludeSemantics: true,
-      onTap: onPressed,
-      child: Material(
-        color: primary ? p.brass : p.parchment,
-        borderRadius: radius,
-        child: InkWell(
-          borderRadius: radius,
-          onTap: onPressed,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: Metrics.touchTarget + Space.s8,
-            ),
-            child: Center(
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                style: context.bodyText.labelLarge!.copyWith(
-                  color: primary ? p.inkOnBrass : p.ink,
-                  fontWeight: primary ? FontWeight.w700 : FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppButton(
+    label: label,
+    onPressed: onPressed,
+    kind: primary ? AppButtonKind.primary : AppButtonKind.tonal,
+  );
 }

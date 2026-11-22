@@ -3001,5 +3001,94 @@
   "time_liveActivityPaused": "pozastaveno",
   "@time_liveActivityPaused": {
     "description": "Time tracking text: word shown next to the remaining time of a paused timer in the Live Activity"
+  },
+  "time_historySwipeHint": "Klepnutím upravíš · tažením doleva smažeš",
+  "@time_historySwipeHint": {"description": "Hint for tapping or swiping History rows."},
+  "time_reminderSwipeHint": "Klepnutím upravíš · tažením doleva smažeš · kroužkem označíš jako hotové",
+  "@time_reminderSwipeHint": {"description": "Hint for interacting with reminder rows."},
+  "time_timerLogCaption": "Zapsat",
+  "time_timerFinishCaption": "Dokončit",
+  "@time_timerLogCaption": {"description": "Caption under the timer log action."},
+  "@time_timerFinishCaption": {"description": "Caption under the timer finish action."},
+  "settings_groupAppearanceLanguage": "Vzhled a jazyk",
+  "@settings_groupAppearanceLanguage": {
+    "description": "Group for appearance and language settings."
+  },
+  "settings_groupPlanning": "Plánování",
+  "@settings_groupPlanning": {
+    "description": "Group for recurring missions, reminders and testing."
+  },
+  "settings_groupDeviceData": "Zařízení a data",
+  "@settings_groupDeviceData": {
+    "description": "Group for device shortcuts and data transfer."
+  },
+  "settings_editHeroName": "Upravit jméno",
+  "@settings_editHeroName": {
+    "description": "Accessible label for editing the hero name."
+  },
+  "settings_languageCsShort": "CZ",
+  "@settings_languageCsShort": {
+    "description": "Short Czech language label."
+  },
+  "settings_languageEnShort": "EN",
+  "@settings_languageEnShort": {
+    "description": "Short English language label."
+  },
+  "time_statsTracked": "Sledováno",
+  "time_statsUntracked": "Nesledováno",
+  "@time_statsTracked": {"description": "Tracked time total."},
+  "@time_statsUntracked": {"description": "Untracked time total."},
+  "time_reminderMinutesUnit": "minut",
+  "time_reminderWindow": "{from}–{to} · každých {minutes} min",
+  "@time_reminderMinutesUnit": {"description": "Unit of the reminder interval selector."},
+  "@time_reminderWindow": {"description": "Time window and repeat interval of a reminder.", "placeholders": {"from": {"type": "String"}, "to": {"type": "String"}, "minutes": {"type": "int"}}},
+  "time_previousPeriod": "Předchozí období",
+  "time_nextPeriod": "Následující období",
+  "@time_previousPeriod": {"description": "Previous day or week in time tracking."},
+  "@time_nextPeriod": {"description": "Next day or week in time tracking."},
+  "shell_modulesTitle": "Moduly",
+  "@shell_modulesTitle": {
+    "description": "Module launcher title."
+  },
+  "shell_launcherHint": "Tip: přejetím po tlačítku modulu se vrátíš na předchozí modul",
+  "@shell_launcherHint": {
+    "description": "Hint below the module launcher tiles."
+  },
+  "shell_moduleButtonLabel": "{module}, přepnout modul",
+  "@shell_moduleButtonLabel": {
+    "description": "Accessible label of the module launcher button.",
+    "placeholders": {
+      "module": {
+        "type": "String"
+      }
+    }
+  },
+  "shell_previousModule": "Předchozí modul",
+  "@shell_previousModule": {
+    "description": "Accessible action to switch back to the previous module."
+  },
+  "settings_groupExperiments": "Experimenty",
+  "@settings_groupExperiments": {
+    "description": "Settings group for experimental interface controls."
+  },
+  "settings_moduleButtonSide": "Tlačítko modulů",
+  "@settings_moduleButtonSide": {
+    "description": "Setting for the side of the module button."
+  },
+  "settings_moduleButtonLeft": "Vlevo",
+  "@settings_moduleButtonLeft": {
+    "description": "Place the module button on the left."
+  },
+  "settings_moduleButtonRight": "Vpravo",
+  "@settings_moduleButtonRight": {
+    "description": "Place the module button on the right."
+  },
+  "settings_drawerEnabled": "Boční menu",
+  "@settings_drawerEnabled": {
+    "description": "Toggle the navigation drawer."
+  },
+  "settings_titleWeight": "Tloušťka nadpisů",
+  "@settings_titleWeight": {
+    "description": "Set the font weight of page and sheet titles."
   }
 }

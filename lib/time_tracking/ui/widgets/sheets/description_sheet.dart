@@ -1,5 +1,12 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
+
+import '../../../../theme/app_theme.dart';
+import '../../../../theme/tokens.dart';
+import '../../../../ui_kit/common/app_icon.dart';
+import '../../../../ui_kit/layout/header_action.dart';
+import '../../../../ui_kit/sheet/app_sheet.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -110,7 +117,8 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
 
   /// `Ostatní` needs a name to be submitted (Skip still saves without one).
   bool get _customNameMissing =>
-      hasCustomNameField(_selection.typeKey) && _selection.customName.trim().isEmpty;
+      hasCustomNameField(_selection.typeKey) &&
+      _selection.customName.trim().isEmpty;
 
   bool get _canSubmit =>
       _controller.text.trim().isNotEmpty && !_saving && !_customNameMissing;
@@ -194,164 +202,47 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = widget.theme;
-    final l10n = AppLocalizations.of(context);
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-
-    return PopScope(
-      canPop: false,
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        behavior: HitTestBehavior.translucent,
-        child: Padding(
-          padding: EdgeInsets.only(bottom: bottomInset),
-          child: Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.85,
-            ),
-            decoration: BoxDecoration(
-              color: theme.background,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-              border: Border(top: BorderSide(color: theme.border)),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 12),
-                Container(
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: theme.dim,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Flexible(
-                  child: ListView(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          l10n.time_descriptionTitle,
-                          style: TextStyle(
-                            color: theme.text,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 44,
-                        height: 44,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: _saving ? null : _resetForm,
-                          icon: Icon(Icons.restart_alt, color: theme.dim),
-                          tooltip: l10n.time_descriptionClearFormTooltip,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  ActivityPicker(
-                    key: ValueKey(_pickerGeneration),
-                    theme: theme,
-                    initial: _initialSelection,
-                    onChanged: (selection) => setState(() => _selection = selection),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: theme.panel,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: theme.border),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: TextField(
-                      controller: _controller,
-                      maxLines: 4,
-                      maxLength: 500,
-                      autofocus: true,
-                      style: TextStyle(color: theme.text, fontSize: 15),
-                      decoration: InputDecoration(
-                        hintText: l10n.time_descriptionHint,
-                        hintStyle: TextStyle(color: theme.faint),
-                        border: InputBorder.none,
-                        counterStyle: TextStyle(color: theme.faint, fontSize: 11),
-                      ),
-                      onChanged: (_) => setState(() {}),
-                    ),
-                  ),
-                  if (_error != null) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      _error!,
-                      style: TextStyle(
-                        color: Colors.red[400],
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: _canSubmit ? _submit : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.accent,
-                        foregroundColor: theme.ink,
-                        disabledBackgroundColor: theme.accent.withValues(alpha: 0.3),
-                        disabledForegroundColor: theme.ink.withValues(alpha: 0.5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: _saving
-                          ? SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: theme.ink,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : Text(
-                              l10n.time_commonSubmit,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: theme.ink,
-                              ),
-                            ),
-                    ),
-                  ),
-                  TextButton(
-                      onPressed: _saving ? null : _skip,
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.dim,
-                      ),
-                      child: Text(
-                        l10n.time_commonSkip,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: theme.dim,
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 24),
-                ],
+    final strings = AppLocalizations.of(context);
+    return AppSheet(
+      title: strings.time_descriptionTitle,
+      primaryLabel: strings.time_commonSave,
+      primaryEnabled: _canSubmit,
+      onPrimary: _submit,
+      headerAction: HeaderAction(
+        icon: IconAsset.refresh,
+        semanticLabel: strings.time_descriptionClearFormTooltip,
+        onPressed: _saving ? null : _resetForm,
+      ),
+      dismissible: false,
+      footer: TextButton(
+        onPressed: _saving ? null : _skip,
+        child: Text(strings.time_commonSkip),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ActivityPicker(
+            key: ValueKey(_pickerGeneration),
+            theme: widget.theme,
+            initial: _initialSelection,
+            onChanged: (selection) => setState(() => _selection = selection),
+          ),
+          const SizedBox(height: Space.s16),
+          TextField(
+            controller: _controller,
+            maxLines: 4,
+            maxLength: 500,
+            decoration: InputDecoration(hintText: strings.time_descriptionHint),
+            onChanged: (_) => setState(() {}),
+          ),
+          if (_error case final error?)
+            Text(
+              error,
+              style: context.bodyText.bodySmall?.copyWith(
+                color: context.palette.destructiveText,
               ),
             ),
-          ],
-        ),
-      ),
-      ),
+        ],
       ),
     );
   }

@@ -11,7 +11,8 @@ import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/add_fab.dart';
 import '../../../ui_kit/common/app_icon.dart';
-import '../../../ui_kit/common/screen_header.dart';
+import '../../../ui_kit/layout/app_header.dart';
+import '../../../ui_kit/layout/header_action.dart';
 import 'calendar_labels.dart';
 import 'event_form_screen.dart';
 import 'event_search_screen.dart';
@@ -37,7 +38,12 @@ class CalendarScreen extends ConsumerWidget {
               children: <Widget>[
                 const _Header(),
                 const _WeekdayRow(),
-                const Expanded(child: MonthPager()),
+                const Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: Metrics.fab + Space.s32),
+                    child: MonthPager(),
+                  ),
+                ),
               ],
             ),
             if (filterHidesAll)
@@ -78,32 +84,6 @@ class _Header extends ConsumerWidget {
     final bool canPrevious = isNavigableMonth(DateTime(month.year, month.month - 1));
     final bool canNext = isNavigableMonth(DateTime(month.year, month.month + 1));
 
-    final Widget monthTitleButton = Semantics(
-      button: true,
-      header: true,
-      label: '${monthTitle(month, l.localeName)}. ${l.calendar_pickMonth}',
-      excludeSemantics: true,
-      onTap: () => showMonthPicker(context),
-      child: InkWell(
-        onTap: () => showMonthPicker(context),
-        borderRadius: BorderRadius.circular(Radii.control),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                monthTitle(month, l.localeName),
-                maxLines: 1,
-                style: context.displayText.headlineMedium,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-
     final Widget todayPill = Semantics(
       button: true,
       label: l.calendar_today,
@@ -136,8 +116,25 @@ class _Header extends ConsumerWidget {
 
     return Column(
       children: <Widget>[
-        // The month beside the menu button, like the title of any other page.
-        ScreenHeader(child: monthTitleButton),
+        AppHeader(
+          title: monthName(month, l.localeName),
+          titleSuffix: month.year.toString(),
+          onTitleTap: () => showMonthPicker(context),
+          titleActionLabel: '${monthTitle(month, l.localeName)}. ${l.calendar_pickMonth}',
+          trailing: [
+            HeaderAction(
+              icon: IconAsset.search,
+              semanticLabel: l.calendar_search,
+              onPressed: () => showEventSearch(context),
+            ),
+            HeaderAction(
+              icon: IconAsset.filter,
+              semanticLabel: l.calendar_filter,
+              badgeCount: filterActive ? 1 : null,
+              onPressed: () => showTypeFilter(context),
+            ),
+          ],
+        ),
         Padding(
           padding: const EdgeInsets.fromLTRB(Space.s8, 0, Space.s8, Space.s8),
           child: Row(
@@ -156,20 +153,7 @@ class _Header extends ConsumerWidget {
               ),
               const SizedBox(width: Space.s4),
               todayPill,
-              const Spacer(),
-              _IconTap(
-                icon: IconAsset.search,
-                label: l.calendar_search,
-                onTap: () => showEventSearch(context),
-                size: Metrics.iconSmall,
-              ),
-              _IconTap(
-                icon: IconAsset.filter,
-                label: l.calendar_filter,
-                onTap: () => showTypeFilter(context),
-                size: Metrics.iconSmall,
-                color: filterActive ? p.brassText : null,
-              ),
+
             ],
           ),
         ),
@@ -184,19 +168,17 @@ class _IconTap extends StatelessWidget {
     required this.label,
     required this.onTap,
     this.size = Metrics.iconSize,
-    this.color,
   });
 
   final String icon;
   final String label;
   final VoidCallback? onTap;
   final double size;
-  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     final AppPalette p = context.palette;
-    final Color tint = onTap == null ? p.textFaint : (color ?? p.text);
+    final Color tint = onTap == null ? p.textFaint : p.text;
     return Semantics(
       button: true,
       enabled: onTap != null,

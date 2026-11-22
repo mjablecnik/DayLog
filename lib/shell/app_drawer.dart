@@ -5,141 +5,186 @@ import '../theme/app_theme.dart';
 import '../theme/tokens.dart';
 import '../ui_kit/common/app_icon.dart';
 import 'destination.dart';
+import 'module.dart';
 
-/// The side panel with the complete navigation: every Destination, grouped as
-/// Time, Planning and the app itself. The Bottom_Bar repeats the five tabs.
-
-/// The key of the Drawer row of [destination]; the Bottom_Bar tab has its own.
 Key drawerItemKey(Destination destination) =>
     ValueKey<String>('drawer-${destination.name}');
 
-class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key, required this.selected, required this.onSelect});
+Key drawerModuleKey(Module module) =>
+    ValueKey<String>('drawer-module-${module.name}');
 
-  /// The shown Destination, marked in the list when it is listed here.
-  final Destination selected;
-  final ValueChanged<Destination> onSelect;
+class AppDrawer extends StatelessWidget {
+  const AppDrawer({
+    super.key,
+    required this.current,
+    required this.onSelectModule,
+    required this.onSelectPage,
+  });
+
+  final Module current;
+  final ValueChanged<Module> onSelectModule;
+  final ValueChanged<Destination> onSelectPage;
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l = AppLocalizations.of(context);
-    final AppPalette p = context.palette;
-    final List<Destination> items = Destination.drawerItems;
+    final strings = AppLocalizations.of(context);
+    final palette = context.palette;
+
+    Widget row(Module module) => _DrawerModuleRow(
+      key: drawerModuleKey(module),
+      module: module,
+      selected: module == current,
+      onTap: () => onSelectModule(module),
+    );
+
     return Drawer(
-      backgroundColor: p.boardRaised,
+      width: Metrics.drawerWidth,
+      backgroundColor: palette.sheet,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(
+          right: Radius.circular(Radii.dialog),
+        ),
+      ),
       child: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(
-            Space.s12,
-            Space.s20,
-            Space.s12,
-            Space.s16,
-          ),
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Space.s12),
-              child: Semantics(
-                header: true,
-                child: Text(
-                  l.app_name,
-                  style: context.displayText.headlineMedium,
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Space.s16,
+              vertical: Space.s22,
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: (constraints.maxHeight - Space.s22 * 2).clamp(
+                  0.0,
+                  double.infinity,
+                ),
+              ),
+              child: IntrinsicHeight(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Semantics(
+                      header: true,
+                      child: Text(
+                        strings.app_name,
+                        style: context.displayText.displaySmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: Space.s16),
+                    for (final module in Module.launchable) ...[
+                      KeyedSubtree(
+                        key: drawerItemKey(module.pages.first),
+                        child: row(module),
+                      ),
+                      if (module.pages.length > 1)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: Metrics.drawerChipInset,
+                          ),
+                          child: Wrap(
+                            spacing: Space.s6,
+                            children: [
+                              for (final page in module.pages.skip(1))
+                                TextButton(
+                                  key: drawerItemKey(page),
+                                  onPressed: () => onSelectPage(page),
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: palette.card,
+                                    foregroundColor: palette.text,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: Space.s8,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        Radii.control,
+                                      ),
+                                      side: BorderSide(
+                                        color: palette.boardLine,
+                                      ),
+                                    ),
+                                    textStyle: context.bodyText.labelLarge
+                                        ?.copyWith(fontSize: 13),
+                                  ),
+                                  child: Text(page.label(strings)),
+                                ),
+                            ],
+                          ),
+                        ),
+                    ],
+                    const Spacer(),
+                    const Divider(height: Metrics.hairline),
+                    const SizedBox(height: Space.s8),
+                    KeyedSubtree(
+                      key: drawerItemKey(Destination.settings),
+                      child: row(Module.settings),
+                    ),
+                  ],
                 ),
               ),
             ),
-            for (final DestinationGroup group
-                in DestinationGroup.values) ...<Widget>[
-              if (group == DestinationGroup.app)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: Space.s8),
-                  child: Divider(),
-                )
-              else
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    Space.s12,
-                    Space.s24,
-                    Space.s12,
-                    Space.s8,
-                  ),
-                  child: Text(
-                    _groupLabel(l, group).toUpperCase(),
-                    style: context.bodyText.labelSmall!.copyWith(
-                      color: p.textFaint,
-                    ),
-                  ),
-                ),
-              for (final Destination d in items.where(
-                (Destination d) => d.group == group,
-              ))
-                _DrawerItem(
-                  key: drawerItemKey(d),
-                  destination: d,
-                  selected: d == selected,
-                  onTap: () => onSelect(d),
-                ),
-            ],
-          ],
+          ),
         ),
       ),
     );
   }
-
-  static String _groupLabel(AppLocalizations l, DestinationGroup group) =>
-      switch (group) {
-        DestinationGroup.time => l.shell_groupTime,
-        DestinationGroup.planning => l.shell_groupPlanning,
-        DestinationGroup.app => '',
-      };
 }
 
-class _DrawerItem extends StatelessWidget {
-  const _DrawerItem({
+class _DrawerModuleRow extends StatelessWidget {
+  const _DrawerModuleRow({
     super.key,
-    required this.destination,
+    required this.module,
     required this.selected,
     required this.onTap,
   });
 
-  final Destination destination;
+  final Module module;
   final bool selected;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final AppPalette p = context.palette;
-    final String label = destination.label(AppLocalizations.of(context));
-    final Color color = selected ? p.brassText : p.text;
+    final palette = context.palette;
     return Semantics(
       button: true,
       selected: selected,
-      label: label,
-      excludeSemantics: true,
-      onTap: onTap,
       child: Material(
-        type: MaterialType.transparency,
+        color: selected ? palette.brassSoft : Colors.transparent,
+        borderRadius: BorderRadius.circular(Radii.button),
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(Radii.control),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Space.s12),
-              child: Row(
-                children: <Widget>[
-                  AppIcon(
-                    destination.icon,
-                    size: Metrics.iconSize,
-                    color: color,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Space.s12,
+              vertical: Space.s6,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: Metrics.drawerIcon,
+                  height: Metrics.drawerIcon,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: selected ? palette.brass : palette.tone,
+                    borderRadius: BorderRadius.circular(Radii.drawerIcon),
                   ),
-                  const SizedBox(width: Space.s16),
-                  Expanded(
-                    child: Text(
-                      label,
-                      style: context.bodyText.bodyLarge!.copyWith(color: color),
+                  child: AppIcon(
+                    module.icon,
+                    color: selected ? palette.inkOnBrass : palette.text,
+                  ),
+                ),
+                const SizedBox(width: Space.s14),
+                Expanded(
+                  child: Text(
+                    module.label(AppLocalizations.of(context)),
+                    style: context.bodyText.titleLarge?.copyWith(
+                      fontWeight: const FontWeight(650),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

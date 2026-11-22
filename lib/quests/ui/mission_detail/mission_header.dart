@@ -6,6 +6,7 @@ import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
+import '../../../ui_kit/controls/app_buttons.dart';
 import '../../../ui_kit/common/app_icon.dart';
 
 /// Top of the Mission detail: kicker, name, recurrence caption, progress with
@@ -50,7 +51,7 @@ class MissionHeader extends StatelessWidget {
         const SizedBox(height: Space.s8),
         Semantics(
           header: true,
-          child: Text(mission.name, style: context.displayText.headlineLarge),
+          child: Text(mission.name, style: context.displayText.displayMedium),
         ),
         if (mission.ruleId != null) ...<Widget>[
           const SizedBox(height: Space.s8),
@@ -61,18 +62,33 @@ class MissionHeader extends StatelessWidget {
           l.mission_progressText(done, total),
           style: context.bodyText.bodyMedium!.copyWith(color: p.text),
         ),
-        if (!completed) ...<Widget>[
-          const SizedBox(height: Space.s4),
-          Text(
-            l.mission_bonusOnCompletion(mission.bonus.xp),
-            style: context.bodyText.bodyMedium!.copyWith(
-              color: p.brassText,
-              fontWeight: FontWeight.w600,
+        const SizedBox(height: Space.s12),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: p.card,
+            borderRadius: BorderRadius.circular(Radii.group),
+            border: Border.all(color: p.boardLine),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(Space.s12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (!completed)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: Space.s8),
+                    child: Text(
+                      l.mission_bonusOnCompletion(mission.bonus.xp),
+                      style: context.bodyText.labelLarge?.copyWith(
+                        color: p.brassText,
+                      ),
+                    ),
+                  ),
+                _ProgressBar(done: done, total: total),
+              ],
             ),
           ),
-        ],
-        const SizedBox(height: Space.s12),
-        _ProgressBar(done: done, total: total),
+        ),
         if (bonusWithdrawn && !completed) ...<Widget>[
           const SizedBox(height: Space.s16),
           _Notice(text: l.mission_bonusWithdrawn),
@@ -83,18 +99,9 @@ class MissionHeader extends StatelessWidget {
         ],
         if (ready) ...<Widget>[
           const SizedBox(height: Space.s16),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: completing ? null : onComplete,
-              style: FilledButton.styleFrom(
-                minimumSize: const Size.fromHeight(Metrics.touchTarget),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Radii.control),
-                ),
-              ),
-              child: Text(l.mission_completeAction),
-            ),
+          AppButton.primary(
+            label: l.mission_completeAction,
+            onPressed: completing ? null : onComplete,
           ),
         ],
       ],

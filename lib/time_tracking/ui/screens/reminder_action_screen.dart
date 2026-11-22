@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+
+import '../../../theme/app_theme.dart';
+import '../../../theme/tokens.dart';
+import '../../../ui_kit/controls/app_buttons.dart';
+import '../../../ui_kit/layout/app_header.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../l10n/app_localizations.dart';
@@ -14,7 +20,8 @@ class ReminderActionScreen extends ConsumerStatefulWidget {
   const ReminderActionScreen({super.key, required this.reminderId});
 
   @override
-  ConsumerState<ReminderActionScreen> createState() => _ReminderActionScreenState();
+  ConsumerState<ReminderActionScreen> createState() =>
+      _ReminderActionScreenState();
 }
 
 class _ReminderActionScreenState extends ConsumerState<ReminderActionScreen> {
@@ -71,112 +78,90 @@ class _ReminderActionScreenState extends ConsumerState<ReminderActionScreen> {
           MaterialPageRoute(builder: (_) => const ReminderSettingsScreen()),
         );
       });
-      return Scaffold(backgroundColor: theme.background, body: const SizedBox.shrink());
+      return Scaffold(
+        backgroundColor: theme.background,
+        body: const SizedBox.shrink(),
+      );
     }
 
     final reminder = state.reminder!;
     final description = reminder.description?.trim();
 
+    String time(int minutes) =>
+        '${(minutes ~/ 60).toString().padLeft(2, '0')}:${(minutes % 60).toString().padLeft(2, '0')}';
+
     return Scaffold(
       backgroundColor: theme.background,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            children: [
-              const Spacer(flex: 3),
-              Text(
-                reminder.name,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: theme.text,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
+        child: Column(
+          children: [
+            AppHeader(
+              title: l10n.time_settingsRecurringRemindersLabel,
+              leading: HeaderLeading.close,
+            ),
+            Expanded(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(Space.s24),
+                  child: Column(
+                    children: [
+                      Text(
+                        reminder.name,
+                        textAlign: TextAlign.center,
+                        style: context.displayText.displayMedium,
+                      ),
+                      const SizedBox(height: Space.s8),
+                      Text(
+                        l10n.time_reminderWindow(
+                          time(reminder.startTime),
+                          time(reminder.endTime),
+                          reminder.repeatInterval,
+                        ),
+                        textAlign: TextAlign.center,
+                        style: context.bodyText.bodyLarge?.copyWith(
+                          color: context.palette.textDim,
+                        ),
+                      ),
+                      if (description != null && description.isNotEmpty) ...[
+                        const SizedBox(height: Space.s16),
+                        Text(description, textAlign: TextAlign.center),
+                      ],
+                      if (state.error case final error?) ...[
+                        const SizedBox(height: Space.s16),
+                        Text(
+                          error,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: context.palette.destructiveText,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ),
-              if (description != null && description.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                Text(
-                  description,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: theme.dim,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-              if (state.error != null) ...[
-                const SizedBox(height: 20),
-                Text(
-                  state.error!,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.red[400],
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-              const Spacer(flex: 4),
-              Row(
+            ),
+            Padding(
+              padding: const EdgeInsets.all(Space.s24),
+              child: Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
+                    child: AppButton.tonal(
+                      label: l10n.time_reminderSnooze,
                       onPressed: state.isLoading ? null : _handleSnooze,
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: theme.dim,
-                        side: BorderSide(color: theme.border),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
-                      child: Text(
-                        l10n.time_reminderSnooze,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: Space.s12),
                   Expanded(
-                    child: ElevatedButton(
+                    child: AppButton.primary(
+                      label: l10n.time_reminderDone,
                       onPressed: state.isLoading ? null : _handleDone,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.accent,
-                        foregroundColor: theme.ink,
-                        disabledBackgroundColor: theme.accent.withValues(alpha: 0.3),
-                        disabledForegroundColor: theme.ink.withValues(alpha: 0.5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        elevation: 0,
-                      ),
-                      child: state.isLoading
-                          ? SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: theme.ink,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : Text(
-                              l10n.time_reminderDone,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 32),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

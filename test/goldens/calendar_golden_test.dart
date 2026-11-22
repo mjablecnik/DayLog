@@ -73,7 +73,8 @@ void main() {
   a11yTest('the event form in the dark theme', (tester, track) async {
     final A11yEnv env = await open(tester, track, Subject.calendar, themes['dark']!);
     await tapKey(tester, env, 'day-2026-11-18');
-    await tapKey(tester, env, 'day-add');
+    await tester.tap(find.byType(FilledButton).last);
+    await env.settle();
     await expectLater(find.byType(MaterialApp), matchesGoldenFile('calendar_form_dark.png'));
   });
 }

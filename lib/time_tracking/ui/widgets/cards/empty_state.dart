@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../theme/time_theme.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../ui_kit/common/app_icon.dart';
+import '../../../../ui_kit/common/empty_state.dart' as shared;
 
 class EmptyState extends StatelessWidget {
   final AppThemeData theme;
@@ -11,29 +13,10 @@ class EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.history_toggle_off_outlined, size: 52, color: theme.faint),
-          const SizedBox(height: 16),
-          Text(
-            l10n.time_historyEmptyTitle,
-            style: TextStyle(
-              color: theme.dim,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            l10n.time_historyEmptySubtitle,
-            style: TextStyle(
-              color: theme.faint,
-              fontSize: 13,
-            ),
-          ),
-        ],
-      ),
+    return shared.EmptyState(
+      title: l10n.time_historyEmptyTitle,
+      body: l10n.time_historyEmptySubtitle,
+      icon: IconAsset.history,
     );
   }
 }

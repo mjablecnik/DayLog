@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_theme.dart';
 import '../theme/tokens.dart';
+import '../ui_kit/controls/app_buttons.dart';
 
 /// Inline message shown when Reconciliation failed: the stored data stays
 /// usable, and "Try again" runs Reconciliation once more.
@@ -19,7 +20,7 @@ class ReconcileBanner extends StatelessWidget {
       liveRegion: true,
       container: true,
       child: Material(
-        color: p.boardRaised,
+        color: p.card,
         shape: Border(
           top: BorderSide(color: p.boardLine, width: Metrics.hairline),
         ),
@@ -39,17 +40,7 @@ class ReconcileBanner extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: Space.s8),
-              TextButton(
-                onPressed: onRetry,
-                style: TextButton.styleFrom(
-                  foregroundColor: p.brassText,
-                  minimumSize: const Size(
-                    Metrics.touchTarget,
-                    Metrics.touchTarget,
-                  ),
-                ),
-                child: Text(l10n.common_retry),
-              ),
+              PillButton(label: l10n.common_retry, onPressed: onRetry),
             ],
           ),
         ),

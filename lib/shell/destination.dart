@@ -1,13 +1,8 @@
 import '../l10n/app_localizations.dart';
 import '../ui_kit/common/app_icon.dart';
+import 'module.dart';
 
-/// Where a Destination is listed in the Drawer: Time and Planning have a
-/// heading, the app group (Settings) stands last without one.
-enum DestinationGroup { time, planning, app }
-
-/// A page of the app. The order of the values is the order of the pages in the
-/// shell's `IndexedStack`; the Bottom_Bar shows the tabs in the order of
-/// [Destination.tabs].
+/// A location in the shell and the target of a DayLog deep link.
 enum Destination {
   timer,
   history,
@@ -18,41 +13,12 @@ enum Destination {
   notes,
   settings;
 
-  /// The five tabs of the Bottom_Bar, left to right.
-  static const List<Destination> tabs = <Destination>[
-    timer,
-    quests,
-    calendar,
-    notes,
-    settings,
-  ];
-
-  /// The Destinations listed in the Drawer: the complete navigation, the tabs
-  /// included, in the order of [DestinationGroup].
-  static List<Destination> get drawerItems => <Destination>[
-    for (final DestinationGroup g in DestinationGroup.values)
-      for (final Destination d in values)
-        if (d.group == g) d,
-  ];
-
-  bool get isTab => tabs.contains(this);
-
-  /// The tab the Bottom_Bar marks while this Destination is shown.
-  Destination get tab => switch (this) {
-    history || statistics => timer,
-    missions => quests,
-    _ => this,
-  };
-
-  /// The group of the Destination in the Drawer.
-  DestinationGroup get group => switch (this) {
-    timer || history || statistics => DestinationGroup.time,
-    quests || missions || calendar || notes => DestinationGroup.planning,
-    settings => DestinationGroup.app,
-  };
-
   /// The name in a `daylog://<name>` link.
   String get linkName => name;
+
+  Module get module => Module.values.firstWhere(
+    (module) => module.pages.contains(this),
+  );
 
   String get icon => switch (this) {
     timer => IconAsset.timer,

@@ -35,6 +35,8 @@ void main() {
         for (int i = 0; i < 8; i++) 'key_${random.nextInt(30)}': random.nextInt(100),
         for (final String key in ignoredPreferenceKeys) key: 'x',
         'timer_endAt': 'y',
+        'ui_last_location': 'settings',
+        'ui_future_${random.nextInt(5)}': 'a',
         'timer_anything_${random.nextInt(5)}': 'z',
       };
       await prefs.clear();
@@ -46,6 +48,7 @@ void main() {
     expect(isImportedPreference('app_language'), isFalse);
     expect(isImportedPreference('selected_theme'), isFalse);
     expect(isImportedPreference('timer_status'), isFalse);
+    expect(isImportedPreference('ui_last_location'), isFalse);
     expect(isImportedPreference('reminder_enabled'), isTrue);
   });
 }

@@ -4,13 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../../l10n/app_localizations.dart';
-import '../../../ui_kit/common/settings_group.dart';
-import '../../../ui_kit/common/settings_nav_row.dart';
-import '../../../ui_kit/common/sub_page_header.dart';
+import '../../../theme/tokens.dart';
+import '../../../ui_kit/common/app_icon.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
+import '../../../ui_kit/layout/app_header.dart';
 import '../../providers/reminder_action_provider.dart';
 import '../../providers/reminder_provider.dart';
 import '../../services/recurring_reminder_service.dart';
-import '../../theme/time_theme.dart';
+import '../../../theme/app_theme.dart';
 import 'reminder_settings_screen.dart';
 import '../../data/time_tracking_queries.dart';
 import '../../../database/providers.dart';
@@ -24,92 +25,31 @@ class TimeSettingsGroups extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return SettingsGroup(
-      label: l10n.time_settingsRemindersSection,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SettingsNavRow(
-            title: l10n.time_settingsRecurringRemindersLabel,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const ReminderSettingsScreen(),
-              ),
+    return Column(
+      children: [
+        ListRow(
+          title: l10n.time_settingsRecurringRemindersLabel,
+          leading: const IconTile(IconAsset.bell),
+          showChevron: true,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => const ReminderSettingsScreen(),
             ),
-          ),
-          const SizedBox(height: 12),
-          SettingsNavRow(
-            title: l10n.time_settingsTestingSection,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const TimeTestingScreen()),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// A rounded panel in the colours of the time tracking theme.
-class _Panel extends StatelessWidget {
-  const _Panel({required this.theme, required this.child});
-
-  final AppThemeData theme;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.panel,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.border),
-      ),
-      child: child,
-    );
-  }
-}
-
-class _ToolRow extends StatelessWidget {
-  const _ToolRow({
-    required this.theme,
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final AppThemeData theme;
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return _Panel(
-      theme: theme,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              Icon(icon, color: theme.dim, size: 20),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(color: theme.text, fontSize: 14),
-                ),
-              ),
-            ],
           ),
         ),
-      ),
+        const Divider(height: Metrics.hairline),
+        ListRow(
+          title: l10n.time_settingsTestingSection,
+          leading: const IconTile(IconAsset.flask),
+          showChevron: true,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => const TimeTestingScreen()),
+          ),
+        ),
+      ],
     );
   }
 }
-
 
 /// The testing tools for notifications and the reminder dialog.
 class TimeTestingScreen extends ConsumerWidget {
@@ -182,31 +122,32 @@ class TimeTestingScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = AppThemeData.of(context);
+    final theme = context.palette;
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      backgroundColor: theme.background,
+      backgroundColor: theme.board,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SubPageHeader(title: l10n.time_settingsTestingSection),
+            AppHeader(leading: HeaderLeading.back, title: l10n.time_settingsTestingSection),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
                 children: [
-                  _ToolRow(
-                    theme: theme,
-                    icon: Icons.bug_report,
-                    label: l10n.time_settingsTestNotificationButton,
-                    onTap: () => _scheduleTestNotification(context, ref),
-                  ),
-                  const SizedBox(height: 8),
-                  _ToolRow(
-                    theme: theme,
-                    icon: Icons.open_in_new,
-                    label: l10n.time_settingsShowModalDebugButton,
-                    onTap: () => _showReminderActionForFirst(context, ref),
+                  GroupedList(
+                    children: [
+                      ListRow(
+                        leading: const IconTile(IconAsset.bell),
+                        title: l10n.time_settingsTestNotificationButton,
+                        onTap: () => _scheduleTestNotification(context, ref),
+                      ),
+                      ListRow(
+                        leading: const IconTile(IconAsset.flask),
+                        title: l10n.time_settingsShowModalDebugButton,
+                        onTap: () => _showReminderActionForFirst(context, ref),
+                      ),
+                    ],
                   ),
                 ],
               ),

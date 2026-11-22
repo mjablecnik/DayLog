@@ -55,16 +55,34 @@ void main() {
     final TextTheme b = buildBodyTextTheme(p);
     expect(d.displayLarge!.fontSize, 48);
     expect(d.displayLarge!.fontWeight, FontWeight.w800);
-    expect(d.headlineLarge!.fontSize, 34);
-    expect(d.headlineMedium!.fontSize, 24);
+    expect(d.headlineLarge!.fontSize, 22);
+    expect(d.headlineMedium!.fontSize, 22);
     expect(d.titleLarge!.fontSize, 20);
     expect(d.titleMedium!.fontSize, 17);
     expect(d.titleMedium!.letterSpacing, closeTo(-0.34, 1e-9));
     expect(b.bodyLarge!.fontSize, 15);
     expect(b.titleMedium!.fontSize, 16);
     expect(b.bodySmall!.fontSize, 12.5);
-    expect(b.labelSmall!.letterSpacing, closeTo(11 * 0.14, 1e-9));
+    expect(b.labelSmall!.letterSpacing, closeTo(12 * 0.09, 1e-9));
     expect(b.bodyLarge!.color, p.text);
+  });
+
+  test('the title-weight experiment affects only page and sheet titles', () {
+    for (final palette in palettes) {
+      final baseline = buildDisplayTextTheme(palette);
+      for (final weight in [FontWeight.w500, FontWeight.w600, FontWeight.w700, FontWeight.w800]) {
+        final themed = buildDisplayTextTheme(palette, titleWeight: weight);
+        expect(themed.headlineLarge?.fontWeight, weight);
+        expect(themed.headlineMedium?.fontWeight, weight);
+        expect(
+          themed.copyWith(
+            headlineLarge: baseline.headlineLarge,
+            headlineMedium: baseline.headlineMedium,
+          ),
+          baseline,
+        );
+      }
+    }
   });
 
   test('line heights follow the artboards: 1.35 body, 1.1 display', () {

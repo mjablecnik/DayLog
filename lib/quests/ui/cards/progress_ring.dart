@@ -72,10 +72,12 @@ class ProgressRingPainter extends CustomPainter {
       old.done != done ||
       old.total != total ||
       old.trackColor != trackColor ||
-      old.progressColor != progressColor;
+      old.progressColor != progressColor ||
+      old.radius != radius ||
+      old.strokeWidth != strokeWidth;
 }
 
-/// The 56px Mission ring: the arc shows how much is done, the figure in the
+/// The Mission ring: the arc shows how much is done, the figure in the
 /// middle (or [center]) how many quests are still open, so a low number is
 /// the Mission that is nearly finished.
 class ProgressRing extends StatelessWidget {
@@ -99,7 +101,8 @@ class ProgressRing extends StatelessWidget {
     final p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
     final TextStyle figure = context.displayText.titleMedium!.copyWith(
-      fontSize: 15,
+      fontSize: 18,
+      fontWeight: FontWeight.w800,
       color: p.text,
     );
 
@@ -114,13 +117,13 @@ class ProgressRing extends StatelessWidget {
           painter: ProgressRingPainter(
             done: done,
             total: total,
-            trackColor: p.boardLine,
+            trackColor: p.lineStrong,
+            radius: (size - Metrics.ringStroke) / 2,
             progressColor: p.brass,
           ),
           child: Center(
             child:
-                center ??
-                Text('${math.max(total - done, 0)}', style: figure),
+                center ?? Text('${math.max(total - done, 0)}', style: figure),
           ),
         ),
       ),

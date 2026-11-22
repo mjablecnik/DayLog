@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../../theme/app_theme.dart';
+import '../../../../theme/tokens.dart';
+import '../../../../ui_kit/common/app_segmented.dart';
+import '../../../../ui_kit/controls/choice_chip.dart';
+
 import '../../../domain/activity_types.dart';
 import '../../../theme/time_theme.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -26,106 +31,66 @@ class SubtypeBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final isDark = theme.isDark;
-    final mainColor = activityMainColor(type.key, isDark: isDark);
-
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      padding: const EdgeInsets.all(Space.s12),
       decoration: BoxDecoration(
-        color: mainColor.withValues(alpha: 0.09),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: mainColor.withValues(alpha: 0.55)),
+        color: context.palette.tone,
+        borderRadius: BorderRadius.circular(Radii.button),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
             children: [
               Expanded(
                 child: Text(
-                  '↳ ${l10n.time_pickerSubtypeHeading(activityTypeLabel(l10n, type.key))}',
-                  style: TextStyle(
-                    color: mainColor,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                  l10n.time_pickerSubtypeHeading(
+                    activityTypeLabel(l10n, type.key),
                   ),
+                  style: context.bodyText.labelLarge,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: Space.s8),
               Text(
                 l10n.time_pickerSubtypeHint,
-                style: TextStyle(
-                  color: theme.dim,
-                  fontSize: 11,
+                style: context.bodyText.bodySmall?.copyWith(
+                  color: context.palette.textDim,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final subtype in type.subtypes)
-                _SubtypeChip(
-                  key: ValueKey('subtype-chip-${subtype.key}'),
-                  theme: theme,
-                  label: subtypeLabel(l10n, type.key, subtype.key),
-                  color: isDark ? subtype.dark : subtype.light,
-                  isSelected: subtype.key == selectedKey,
-                  onTap: () => onSelected(subtype.key),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SubtypeChip extends StatelessWidget {
-  final AppThemeData theme;
-  final String label;
-  final Color color;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _SubtypeChip({
-    super.key,
-    required this.theme,
-    required this.label,
-    required this.color,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      selected: isSelected,
-      label: label,
-      excludeSemantics: true,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: isSelected ? color.withValues(alpha: 0.2) : theme.panel,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: isSelected ? color : theme.border),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? color : theme.text,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+          const SizedBox(height: Space.s8),
+          if (type.subtypes.length <= 3)
+            AppSegmented<String?>(
+              options: [
+                for (final subtype in type.subtypes)
+                  SegmentedOption(
+                    value: subtype.key,
+                    label: subtypeLabel(l10n, type.key, subtype.key),
+                  ),
+              ],
+              selected: selectedKey,
+              onChanged: (key) {
+                if (key != null) onSelected(key);
+              },
+            )
+          else
+            Wrap(
+              spacing: Space.s8,
+              runSpacing: Space.s8,
+              children: [
+                for (final subtype in type.subtypes)
+                  ChoiceChipX(
+                    key: ValueKey('subtype-chip-${subtype.key}'),
+                    label: subtypeLabel(l10n, type.key, subtype.key),
+                    color: isDark ? subtype.dark : subtype.light,
+                    selected: subtype.key == selectedKey,
+                    onSelected: (_) => onSelected(subtype.key),
+                  ),
+              ],
             ),
-          ),
-        ),
+        ],
       ),
     );
   }

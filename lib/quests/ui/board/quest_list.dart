@@ -13,6 +13,7 @@ import '../state/quest_actions.dart';
 import '../sheets/quest_sheet.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 import '../../../calendar/ui/screens/event_detail_screen.dart';
 import '../../../calendar/ui/widgets/event_task_card.dart';
 import '../cards/quest_card.dart';
@@ -272,10 +273,11 @@ class _QuestListState extends ConsumerState<QuestList> {
     }
   }
 
-  Widget _row(Quest quest, AppLocalizations l) {
+  Widget _row(Quest quest, AppLocalizations l, GroupEdges groupEdges) {
     final DateTime? completedAt = quest.completedAt;
     return QuestRow(
       quest: quest,
+      groupEdges: groupEdges,
       deadline: ref.watch(questDeadlinesProvider).value?[quest.id],
       today: widget.today,
       completedLabel: completedAt == null
@@ -321,7 +323,12 @@ class _QuestListState extends ConsumerState<QuestList> {
     );
   }
 
-  Widget _entry(_Entry entry, int index, AppLocalizations l) {
+  Widget _entry(List<_Entry> entries, int index, AppLocalizations l) {
+    final entry = entries[index];
+    final groupEdges = (
+      first: index == 0 || entries[index - 1] is _HeaderEntry,
+      last: index == entries.length - 1 || entries[index + 1] is _HeaderEntry,
+    );
     final p = context.palette;
     final ({List<Quest> today, List<Quest> todo}) shown = _shown;
     switch (entry) {
@@ -344,6 +351,9 @@ class _QuestListState extends ConsumerState<QuestList> {
             label: section == BoardSection.today
                 ? l.board_todaySection
                 : l.board_todoSection,
+            count: quests.length + (section == BoardSection.today
+                ? widget.eventTasks.where((event) => !event.isCompleted).length
+                : 0),
             figure: l.common_plusXp(xp),
             figureColor: p.brass,
           ),
@@ -357,18 +367,26 @@ class _QuestListState extends ConsumerState<QuestList> {
             Space.s20,
             Space.s10,
           ),
-          child: Text(
-            section == BoardSection.today
-                ? l.board_todayEmpty
-                : l.board_todoEmpty,
-            style: context.bodyText.bodySmall!.copyWith(color: p.textFaint),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: p.tone,
+              borderRadius: BorderRadius.circular(Radii.group),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(Space.s12),
+              child: Text(
+                section == BoardSection.today ? l.board_todayEmpty : l.board_todoEmpty,
+                style: context.bodyText.bodySmall?.copyWith(color: p.textFaint),
+              ),
+            ),
           ),
         );
       case _EventEntry(:final EventOccurrence occurrence):
         return Padding(
           key: entry.key,
-          padding: const EdgeInsets.fromLTRB(Space.s20, 0, Space.s20, Space.s10),
+          padding: EdgeInsets.fromLTRB(Space.s20, 0, Space.s20, groupEdges.last ? Space.s10 : 0),
           child: EventTaskCard(
+            groupEdges: groupEdges,
             occurrence: occurrence,
             onToggle: () => toggleEventTask(context, ref, occurrence),
             onTap: () => showEventDetail(context, occurrence.event.id, occurrence.start),
@@ -378,7 +396,7 @@ class _QuestListState extends ConsumerState<QuestList> {
         return ReorderableDelayedDragStartListener(
           key: entry.key,
           index: index,
-          child: Semantics(hint: l.a11y_dragHint, child: _row(quest, l)),
+          child: Semantics(hint: l.a11y_dragHint, child: _row(quest, l, groupEdges)),
         );
     }
   }
@@ -408,7 +426,7 @@ class _QuestListState extends ConsumerState<QuestList> {
               return index < 0 ? null : index;
             },
             itemBuilder: (BuildContext context, int index) =>
-                _entry(entries[index], index, l),
+                _entry(entries, index, l),
           ),
           if (shown.today.isNotEmpty || shown.todo.isNotEmpty)
             SliverToBoxAdapter(
@@ -432,6 +450,7 @@ class _QuestListState extends ConsumerState<QuestList> {
                 padding: const EdgeInsets.only(top: Space.s8),
                 child: BoardSectionHeader(
                   label: l.board_doneSection,
+                  count: done.length,
                   figure: l.board_doneSummary(done.length, doneXp),
                 ),
               ),
@@ -442,7 +461,7 @@ class _QuestListState extends ConsumerState<QuestList> {
                 final Quest quest = done[index];
                 return KeyedSubtree(
                   key: ValueKey<int>(quest.id),
-                  child: _row(quest, l),
+                  child: _row(quest, l, (first: index == 0, last: index == done.length - 1)),
                 );
               },
             ),

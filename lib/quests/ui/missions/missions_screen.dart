@@ -7,8 +7,10 @@ import 'package:intl/intl.dart';
 
 import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../ui_kit/common/screen_header.dart';
-import '../hero/hero_bar.dart';
+import '../../../ui_kit/layout/app_header.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
+import '../../../ui_kit/layout/section_headers.dart';
+import '../hero/level_card.dart';
 import '../../services/providers.dart';
 import '../sheets/mission_sheet.dart';
 import '../state/board_day.dart';
@@ -140,7 +142,7 @@ class _MissionsScreenState extends ConsumerState<MissionsScreen> {
                     Space.s20,
                     Space.s4,
                   ),
-                  child: HeroBar(),
+                  child: LevelCard(),
                 ),
                 const SizedBox(height: Space.s10),
                 Expanded(child: body),
@@ -174,32 +176,9 @@ class _TitleRow extends StatelessWidget {
       if (openCount > 0) l.missions_openCount(openCount),
       if (doneCount > 0) l.missions_doneCount(doneCount),
     ];
-    return ScreenHeader(
-      child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: <Widget>[
-                Semantics(
-                  header: true,
-                  child: Text(
-                    l.missions_title,
-                    style: context.displayText.headlineLarge,
-                  ),
-                ),
-                const SizedBox(width: Space.s12),
-                Expanded(
-                  child: Text(
-                    parts.join(' · '),
-                    textAlign: TextAlign.end,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.bodyText.bodySmall!.copyWith(
-                      color: context.palette.textDim,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+    return AppHeader(
+      title: l.missions_title,
+      subtitle: parts.isEmpty ? null : parts.join(' · '),
     );
   }
 }
@@ -294,9 +273,9 @@ class _MissionListState extends ConsumerState<_MissionList> {
     final String locale = l.localeName;
     final List<MissionSummary> open = _shownOpen;
 
-    Widget row(MissionSummary m, {String? time}) => Padding(
+    Widget row(MissionSummary m, GroupEdges edges, {String? time}) => Padding(
       key: ValueKey<int>(m.id),
-      padding: const EdgeInsets.only(bottom: Space.s10),
+      padding: EdgeInsets.only(bottom: edges.last ? Space.s10 : 0),
       child: MissionSwipeRow(
         missionName: m.name,
         leaving: widget.leaving.contains(m.id),
@@ -304,6 +283,7 @@ class _MissionListState extends ConsumerState<_MissionList> {
         onDelete: () => widget.onDelete(m),
         child: MissionCard(
           mission: m,
+          groupEdges: edges,
           completedTime: time,
           onTap: () => widget.onOpen(m),
         ),
@@ -318,7 +298,7 @@ class _MissionListState extends ConsumerState<_MissionList> {
             SliverPadding(
               padding: side,
               sliver: SliverToBoxAdapter(
-                child: _SectionLabel(l.missions_sectionOpen),
+                child: _SectionLabel(l.missions_sectionOpen, open.length),
               ),
             ),
             SliverPadding(
@@ -333,7 +313,13 @@ class _MissionListState extends ConsumerState<_MissionList> {
                   return ReorderableDelayedDragStartListener(
                     key: ValueKey<int>(m.id),
                     index: index,
-                    child: Semantics(hint: l.a11y_dragHint, child: row(m)),
+                    child: Semantics(
+                      hint: l.a11y_dragHint,
+                      child: row(m, (
+                        first: index == 0,
+                        last: index == open.length - 1,
+                      )),
+                    ),
                   );
                 },
               ),
@@ -347,10 +333,17 @@ class _MissionListState extends ConsumerState<_MissionList> {
               children: <Widget>[
                 if (widget.doneToday.isNotEmpty) ...<Widget>[
                   if (open.isNotEmpty) const SizedBox(height: Space.s6),
-                  _SectionLabel(l.missions_sectionDoneToday),
-                  for (final MissionSummary m in widget.doneToday)
+                  _SectionLabel(
+                    l.missions_sectionDoneToday,
+                    widget.doneToday.length,
+                  ),
+                  for (final (index, m) in widget.doneToday.indexed)
                     row(
                       m,
+                      (
+                        first: index == 0,
+                        last: index == widget.doneToday.length - 1,
+                      ),
                       time: m.completedAt == null
                           ? null
                           : DateFormat.Hm(locale).format(m.completedAt!),
@@ -366,25 +359,16 @@ class _MissionListState extends ConsumerState<_MissionList> {
 }
 
 class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.text);
+  const _SectionLabel(this.text, this.count);
 
   final String text;
+  final int count;
 
   @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      header: true,
-      child: Padding(
-        padding: const EdgeInsets.only(top: Space.s8, bottom: Space.s10),
-        child: Text(
-          text.toUpperCase(),
-          style: context.bodyText.labelSmall!.copyWith(
-            color: context.palette.textFaint,
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: Space.s8, bottom: Space.s10),
+    child: CountHeader(title: text.toUpperCase(), count: count),
+  );
 }
 
 class _LoadError extends StatelessWidget {

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../theme/app_theme.dart';
+import '../../../../theme/tokens.dart';
+
 import '../../../domain/date_format_utils.dart';
 import '../../../theme/time_theme.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -31,30 +34,41 @@ class DaySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final labels = weekdayShortLabels(AppLocalizations.of(context));
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final palette = context.palette;
+    return Wrap(
+      spacing: Space.s2,
+      runSpacing: Space.s4,
+      alignment: WrapAlignment.spaceBetween,
       children: List.generate(7, (index) {
         final day = index + 1;
-        final isSelected = activeDays.contains(day);
-        return GestureDetector(
-          onTap: () => _toggle(day),
-          child: Container(
-            width: 36,
-            height: 36,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isSelected ? theme.accent : theme.panel,
-              border: Border.all(
-                color: isSelected ? theme.accent : theme.border,
-              ),
-            ),
-            child: Text(
-              labels[index],
-              style: TextStyle(
-                color: isSelected ? theme.ink : theme.dim,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
+        final selected = activeDays.contains(day);
+        return Semantics(
+          selected: selected,
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: () => _toggle(day),
+              child: SizedBox.square(
+                dimension: Metrics.touchTarget,
+                child: Center(
+                  child: Container(
+                    width: Metrics.nodeIcon,
+                    height: Metrics.nodeIcon,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: selected ? palette.brass : palette.tone,
+                    ),
+                    child: Text(
+                      labels[index],
+                      style: context.bodyText.labelLarge?.copyWith(
+                        fontSize: 13,
+                        color: selected ? palette.inkOnBrass : palette.textDim,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

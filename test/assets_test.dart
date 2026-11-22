@@ -9,6 +9,22 @@ const _fontWeights = <String, List<int>>{
 };
 
 const _icons = <String>[
+  'alert',
+  'arrow_left',
+  'bell',
+  'contrast',
+  'download',
+  'flag',
+  'flask',
+  'globe',
+  'minus',
+  'monitor',
+  'pause',
+  'play',
+  'refresh',
+  'smartphone',
+  'stop',
+  'upload',
   'arrow_up',
   'auto',
   'bold',
@@ -96,6 +112,7 @@ void main() {
       expect(manifest.listAssets(), contains(path), reason: path);
       final svg = await rootBundle.loadString(path);
       expect(svg, contains('<svg'), reason: path);
+      expect(svg, contains('currentColor'), reason: path);
     }
   });
 

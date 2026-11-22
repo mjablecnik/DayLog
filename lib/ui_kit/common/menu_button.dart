@@ -15,9 +15,11 @@ class ShellMenuScope extends InheritedWidget {
     required this.open,
     required super.child,
     this.openPage,
+    this.enabled = true,
   });
 
   final VoidCallback open;
+  final bool enabled;
 
   /// Shows the page with this link name (`history`, `statistics`, ...) without
   /// the Drawer; null where a screen cannot switch pages.
@@ -27,7 +29,10 @@ class ShellMenuScope extends InheritedWidget {
       context.dependOnInheritedWidgetOfExactType<ShellMenuScope>();
 
   @override
-  bool updateShouldNotify(ShellMenuScope oldWidget) => open != oldWidget.open || openPage != oldWidget.openPage;
+  bool updateShouldNotify(ShellMenuScope oldWidget) =>
+      open != oldWidget.open ||
+      openPage != oldWidget.openPage ||
+      enabled != oldWidget.enabled;
 }
 
 /// The button in a screen header that opens the Drawer. Draws nothing when no
@@ -38,7 +43,9 @@ class MenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ShellMenuScope? scope = ShellMenuScope.maybeOf(context);
-    if (scope == null) return const SizedBox.shrink();
+    if (scope == null || !scope.enabled) {
+      return const SizedBox.shrink();
+    }
     final String label = AppLocalizations.of(context).shell_openMenu;
     return Semantics(
       button: true,

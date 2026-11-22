@@ -1,6 +1,7 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
+
+import '../../../../ui_kit/controls/choice_chip.dart';
+
 import 'package:flutter/scheduler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -220,14 +221,13 @@ class _ActivityPickerState extends State<ActivityPicker> {
           runSpacing: 8,
           children: [
             for (final t in activityRegistry)
-              _TypeChip(
+              ChoiceChipX(
                 key: ValueKey('type-chip-${t.key}'),
-                theme: theme,
                 label: activityTypeLabel(l10n, t.key),
                 color: activityMainColor(t.key, isDark: isDark),
-                isSelected: t.key == _selection.typeKey,
-                dashed: t.extra == TypeExtra.customName,
-                onTap: () => _selectType(t.key),
+                selected: t.key == _selection.typeKey,
+                showDot: true,
+                onSelected: (_) => _selectType(t.key),
               ),
           ],
         ),
@@ -266,97 +266,4 @@ class _ActivityPickerState extends State<ActivityPicker> {
       ],
     );
   }
-}
-
-class _TypeChip extends StatelessWidget {
-  final AppThemeData theme;
-  final String label;
-  final Color color;
-  final bool isSelected;
-  final bool dashed;
-  final VoidCallback onTap;
-
-  const _TypeChip({
-    super.key,
-    required this.theme,
-    required this.label,
-    required this.color,
-    required this.isSelected,
-    required this.dashed,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final borderColor = isSelected ? color : theme.border;
-    final chip = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? color.withValues(alpha: 0.2) : theme.panel,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: dashed ? Colors.transparent : borderColor),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: isSelected ? color : theme.text,
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-
-    return Semantics(
-      button: true,
-      selected: isSelected,
-      label: label,
-      excludeSemantics: true,
-      child: GestureDetector(
-        onTap: onTap,
-        child: dashed
-            ? CustomPaint(
-                foregroundPainter: _DashedBorderPainter(color: borderColor),
-                child: chip,
-              )
-            : chip,
-      ),
-    );
-  }
-}
-
-/// Draws a dashed rounded border, used for the free-form "Other" type chip.
-class _DashedBorderPainter extends CustomPainter {
-  final Color color;
-
-  _DashedBorderPainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-    final rect = Rect.fromLTWH(0.5, 0.5, size.width - 1, size.height - 1);
-    final path = Path()
-      ..addRRect(RRect.fromRectAndRadius(rect, const Radius.circular(20)));
-    const dash = 4.0;
-    const gap = 3.0;
-    for (final metric in path.computeMetrics()) {
-      var distance = 0.0;
-      while (distance < metric.length) {
-        canvas.drawPath(
-          metric.extractPath(
-            distance,
-            math.min(distance + dash, metric.length),
-          ),
-          paint,
-        );
-        distance += dash + gap;
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(_DashedBorderPainter oldDelegate) =>
-      oldDelegate.color != color;
 }

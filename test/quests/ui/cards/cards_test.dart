@@ -257,7 +257,7 @@ void main() {
       expect(toggled, 1);
     });
 
-    testWidgets('light theme draws the parchment-edge outline', (tester) async {
+    testWidgets('light theme draws the shared card outline', (tester) async {
       await pumpCards(
         tester,
         QuestCard(quest: boardQuest(), onToggle: () {}),
@@ -275,7 +275,7 @@ void main() {
       expect(d.border, isNotNull);
       expect(
         (d.border! as Border).top.color,
-        AppPalette.daylight.parchmentEdge,
+        AppPalette.daylight.boardLine,
       );
     });
 
@@ -302,7 +302,7 @@ void main() {
         expect(tester.widget<Text>(find.text('+25')).style!.color, p.brass);
       });
 
-      testWidgets('dark theme: a done card is outlined, not filled '
+      testWidgets('dark theme: a done card is filled and struck through '
           '(palette #$i)', (tester) async {
         await pumpCards(
           tester,
@@ -313,15 +313,15 @@ void main() {
           palette: p,
         );
         final BoxDecoration d = _cardDecoration(tester);
-        expect(d.color, const Color(0x00000000));
+        expect(d.color, p.card);
         expect((d.border! as Border).top.color, p.boardLine);
         final Text name = tester.widget(find.text('Take out the trash'));
         expect(name.style!.decoration, TextDecoration.lineThrough);
-        expect(name.style!.color, p.textDim);
+        expect(name.style!.color, p.textFaint);
       });
     }
 
-    testWidgets('light theme: an open card keeps the parchment slip', (
+    testWidgets('light theme: an open card uses the shared card surface', (
       tester,
     ) async {
       final AppPalette p = AppPalette.daylight;
@@ -331,8 +331,8 @@ void main() {
         palette: p,
       );
       final BoxDecoration d = _cardDecoration(tester);
-      expect(d.color, p.parchment);
-      expect(d.boxShadow, isNotNull);
+      expect(d.color, p.card);
+      expect(d.boxShadow, isNull);
       expect(
         tester.widget<Text>(find.text('Take out the trash')).style!.color,
         p.ink,

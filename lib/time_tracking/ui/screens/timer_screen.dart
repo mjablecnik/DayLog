@@ -1,13 +1,14 @@
+import '../../../theme/app_theme.dart';
+import '../../../theme/tokens.dart';
 import 'package:flutter/material.dart';
+
+import '../../../ui_kit/sheet/app_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../theme/time_theme.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../theme/tokens.dart';
-import '../../../ui_kit/common/app_icon.dart';
-import '../../../ui_kit/common/menu_button.dart' show ShellMenuScope;
-import '../../../ui_kit/common/screen_header.dart';
+import '../../../ui_kit/layout/app_header.dart';
 import '../../providers/timer_provider.dart';
 import '../../services/timer_service.dart';
 import '../painters/ring_painter.dart';
@@ -88,12 +89,8 @@ class _TimerScreenState extends ConsumerState<TimerScreen> {
     if (_sheetOpen) return;
     _sheetOpen = true;
 
-    showModalBottomSheet<void>(
-      context: context,
-      isDismissible: false,
-      enableDrag: false,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+    showAppSheet<void>(
+      context,
       builder: (_) => DescriptionSheet(
         theme: theme,
         sessionStart: timerState.sessionStart ?? DateTime.now(),
@@ -153,58 +150,35 @@ class _TimerScreenState extends ConsumerState<TimerScreen> {
                     child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: ScreenHeader(child: _PageShortcuts()),
-                ),
+                AppHeader(title: AppLocalizations.of(context).shell_tabTimer),
                 const Spacer(),
 
-                // Ring + countdown
-                SizedBox(
-                  width: 288,
-                  height: 288,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CustomPaint(
-                        size: const Size(288, 288),
-                        painter: RingPainter(
-                          progress: progress.clamp(0.0, 1.0),
-                          theme: theme,
+                Semantics(
+                  label: '${_phaseLabel(l10n, status)}, $timeText',
+                  excludeSemantics: true,
+                  child: SizedBox.square(
+                    dimension: Metrics.timerRing,
+                    child: CustomPaint(
+                      painter: RingPainter(
+                        progress: progress.clamp(0.0, 1.0),
+                        palette: context.palette,
+                      ),
+                      child: Center(
+                        child: Text(
+                          timeText,
+                          style: TextStyle(
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                            fontSize: 80,
+                            fontWeight: FontWeight.w600,
+                            color: theme.text,
+                            letterSpacing: -2,
+                          ),
                         ),
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            timeText,
-                            style: TextStyle(
-                              fontFeatures: const [FontFeature.tabularFigures()],
-                              fontSize: 64,
-                              fontWeight: FontWeight.w300,
-                              color: theme.text,
-                              letterSpacing: -2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-
-                const SizedBox(height: 8),
-
-                // Phase label
-                Text(
-                  _phaseLabel(l10n, status),
-                  style: TextStyle(
-                    color: theme.dim,
-                    fontSize: 13,
-                    letterSpacing: 0.8,
-                  ),
-                ),
-
-                const SizedBox(height: 32),
+                const SizedBox(height: Space.s36),
 
                 // Duration adjuster (idle only)
                 if (isIdle) ...[
@@ -216,9 +190,8 @@ class _TimerScreenState extends ConsumerState<TimerScreen> {
                     max: _maxDurationMinutes,
                     theme: theme,
                   ),
-                  const SizedBox(height: 24),
-                ] else
-                  const SizedBox(height: 48 + 24),
+                  const SizedBox(height: Space.s36),
+                ],
 
                 // Controls
                 TimerControls(theme: theme, adjustedMinutes: _adjustedMinutes),
@@ -258,45 +231,5 @@ class _TimerScreenState extends ConsumerState<TimerScreen> {
       case TimerStatus.logging:
         return l10n.time_timerPhaseLogging;
     }
-  }
-}
-
-
-/// History and Statistics one tap away from the Timer, beside the menu button.
-class _PageShortcuts extends StatelessWidget {
-  const _PageShortcuts();
-
-  @override
-  Widget build(BuildContext context) {
-    final ShellMenuScope? scope = ShellMenuScope.maybeOf(context);
-    final void Function(String)? openPage = scope?.openPage;
-    if (openPage == null) return const SizedBox.shrink();
-    final AppLocalizations l = AppLocalizations.of(context);
-    final theme = AppThemeData.of(context);
-    Widget button(String icon, String label, String linkName) => Semantics(
-      button: true,
-      label: label,
-      excludeSemantics: true,
-      onTap: () => openPage(linkName),
-      child: Tooltip(
-        message: label,
-        child: InkWell(
-          onTap: () => openPage(linkName),
-          customBorder: const CircleBorder(),
-          child: SizedBox(
-            width: Metrics.touchTarget,
-            height: Metrics.touchTarget,
-            child: Center(child: AppIcon(icon, size: Metrics.iconSize, color: theme.dim)),
-          ),
-        ),
-      ),
-    );
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        button(IconAsset.history, l.shell_destinationHistory, 'history'),
-        button(IconAsset.statistics, l.shell_destinationStatistics, 'statistics'),
-      ],
-    );
   }
 }

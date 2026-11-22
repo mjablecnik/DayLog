@@ -349,7 +349,7 @@ void main() {
     testWidgets('a clean sheet closes without asking', (tester) async {
       await _pump(tester);
 
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
 
       expect(find.text(l10n.mission_sheetCreateTitle), findsNothing);
@@ -361,7 +361,7 @@ void main() {
       await tester.enterText(_nameField, 'Move house');
       await tester.pump();
 
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
       expect(find.text(l10n.sheet_discardTitle), findsOneWidget);
 
@@ -370,7 +370,7 @@ void main() {
       expect(find.text(l10n.mission_sheetCreateTitle), findsOneWidget);
       expect(find.text('Move house'), findsOneWidget);
 
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.common_discard));
       await tester.pumpAndSettle();
@@ -384,7 +384,7 @@ void main() {
       await tester.enterText(_rowFields.first, 'Pack');
       await tester.pump();
 
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
 
       expect(find.text(l10n.sheet_discardTitle), findsOneWidget);
@@ -429,7 +429,7 @@ void main() {
     testWidgets('is clean until something changes', (tester) async {
       await _pump(tester, editing: _summary());
 
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
       expect(find.byType(AppSheet), findsNothing);
     });
@@ -444,7 +444,7 @@ void main() {
         tester,
         () => seedMission(f.db, name: 'Old name', bonus: MissionBonus.small),
       );
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
       final BuildContext context = tester.element(find.text('open'));
       showMissionSheet(

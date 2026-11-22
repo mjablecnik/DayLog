@@ -424,7 +424,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(
         find.descendant(
-          of: find.byType(AlertDialog),
+          of: find.byType(Dialog),
           matching: find.text(l10n.common_delete),
         ),
       );

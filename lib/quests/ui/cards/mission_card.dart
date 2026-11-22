@@ -6,6 +6,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/app_icon.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 import 'progress_ring.dart';
 
 /// One Mission: progress ring, name, what is left and the completion bonus.
@@ -19,10 +20,12 @@ class MissionCard extends StatelessWidget {
     required this.mission,
     this.onTap,
     this.completedTime,
+    this.groupEdges,
   });
 
   final MissionSummary mission;
   final VoidCallback? onTap;
+  final GroupEdges? groupEdges;
 
   /// Already localized completion time of a completed Mission ("7:52").
   final String? completedTime;
@@ -56,12 +59,12 @@ class MissionCard extends StatelessWidget {
       subText = l.missions_remaining(mission.remainingXp);
     }
 
-    final BorderRadius radius = BorderRadius.circular(Radii.card);
+    final radius = groupedRadius(groupEdges);
     final Widget card = DecoratedBox(
       decoration: BoxDecoration(
-        color: p.boardRaised,
+        color: p.card,
         borderRadius: radius,
-        border: Border.all(color: p.boardLine, width: Metrics.hairline),
+        border: groupedBorder(p.boardLine, groupEdges),
       ),
       child: Material(
         type: MaterialType.transparency,
@@ -74,6 +77,7 @@ class MissionCard extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 ProgressRing(
+                  size: Metrics.missionRing,
                   done: completed ? mission.total : mission.done,
                   total: mission.total,
                   center: completed
@@ -110,30 +114,39 @@ class MissionCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: Space.s12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      '+$bonus',
-                      style: context.displayText.titleMedium!.copyWith(
-                        fontSize: 15,
-                        color: p.brassText,
-                      ),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: p.brassSoft,
+                    borderRadius: BorderRadius.circular(Radii.pill),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Space.s8,
+                      vertical: Space.s4,
                     ),
-                    const SizedBox(height: Space.s2),
-                    Text(
-                      (completed
-                              ? l.missions_earnedCaption
-                              : l.missions_bonusCaption)
-                          .toUpperCase(),
-                      style: context.bodyText.labelSmall!.copyWith(
-                        fontSize: 10,
-                        letterSpacing: 1,
-                        color: p.textFaint,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '+$bonus',
+                          style: context.bodyText.labelLarge?.copyWith(
+                            color: p.brassText,
+                          ),
+                        ),
+                        Text(
+                          (completed
+                                  ? l.missions_earnedCaption
+                                  : l.missions_bonusCaption)
+                              .toUpperCase(),
+                          style: context.bodyText.bodySmall?.copyWith(
+                            color: p.textFaint,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),

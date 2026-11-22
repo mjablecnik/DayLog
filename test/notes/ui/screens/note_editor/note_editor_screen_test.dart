@@ -1,3 +1,4 @@
+import 'package:daylog/ui_kit/layout/header_action.dart';
 import 'dart:ui' show CheckedState;
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
@@ -430,12 +431,12 @@ void main() {
   group('menu', () {
     notesTest(h, 'is disabled until the note exists', (tester) async {
       await open(tester);
-      final PopupMenuButton<dynamic> menu = tester.widget(find.byKey(const ValueKey<String>('node-menu')));
-      expect(menu.enabled, isFalse);
+      final HeaderAction menu = tester.widget(find.byKey(const ValueKey<String>('node-menu')));
+      expect(menu.onPressed != null, isFalse);
       await type(tester, 'Saved');
       await afterAutosave(tester);
-      final PopupMenuButton<dynamic> after = tester.widget(find.byKey(const ValueKey<String>('node-menu')));
-      expect(after.enabled, isTrue);
+      final HeaderAction after = tester.widget(find.byKey(const ValueKey<String>('node-menu')));
+      expect(after.onPressed != null, isTrue);
     });
 
     notesTest(h, 'rename, move and trash work on the open note; trash closes the editor', (tester) async {

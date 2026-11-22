@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../domain/activity_types.dart';
 import '../../domain/config.dart';
 import '../../theme/time_theme.dart';
+import '../../../theme/tokens.dart';
 import '../../../database/app_database.dart' show TimeEntry;
 
 /// Draws a single-day timeline bar: a full-width track in [theme.track]
@@ -21,10 +22,13 @@ class TimelinePainter extends CustomPainter {
   final int? startHour;
   final int? endHour;
   final bool isDark;
+  final bool showHourMarkers;
+  final AppPalette? palette;
 
   static const double _markerAreaHeight = 16;
-  static const double _barCornerRadius = 6;
+  static const double _barCornerRadius = Space.s8;
   static const double _minBlockWidth = 3;
+
   /// The default visible window: full logical day from [dayStartHour] to
   /// [dayStartHour] next day (24h span).
   static const int _defaultStartHour = dayStartHour;
@@ -37,6 +41,8 @@ class TimelinePainter extends CustomPainter {
     this.startHour,
     this.endHour,
     this.isDark = true,
+    this.showHourMarkers = true,
+    this.palette,
   });
 
   /// The start of this logical day (6:00 on [day]).
@@ -78,14 +84,24 @@ class TimelinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final barHeight = (size.height - _markerAreaHeight).clamp(0.0, size.height);
+    final barHeight = showHourMarkers
+        ? (size.height - _markerAreaHeight).clamp(0.0, size.height)
+        : size.height;
     final barRect = Rect.fromLTWH(0, 0, size.width, barHeight);
     final radius = Radius.circular(_barCornerRadius);
 
     canvas.drawRRect(
       RRect.fromRectAndRadius(barRect, radius),
-      Paint()..color = theme.track,
+      Paint()..color = palette?.tone ?? theme.track,
     );
+
+    canvas.save();
+    canvas.clipRRect(RRect.fromRectAndRadius(barRect, radius));
+    final grid = Paint()..color = palette?.boardLine ?? theme.border;
+    for (var quarter = 1; quarter < 4; quarter++) {
+      final x = size.width * quarter / 4;
+      canvas.drawLine(Offset(x, 0), Offset(x, barHeight), grid);
+    }
 
     final (rangeStartHour, rangeEndHour) = _resolveRange();
     // Convert display hours back to real DateTimes relative to this day.
@@ -93,7 +109,10 @@ class TimelinePainter extends CustomPainter {
     final rangeStart = DateTime(day.year, day.month, day.day, rangeStartHour);
     final rangeEnd = DateTime(day.year, day.month, day.day, rangeEndHour);
     final totalMs = rangeEnd.difference(rangeStart).inMilliseconds;
-    if (totalMs <= 0) return;
+    if (totalMs <= 0) {
+      canvas.restore();
+      return;
+    }
 
     // Sorted so overlapping entries stack in a deterministic order (the
     // later-starting one paints on top) instead of following list order.
@@ -103,14 +122,18 @@ class TimelinePainter extends CustomPainter {
     for (final entry in sortedEntries) {
       final entryStart = DateTime.parse(entry.startTime);
       final entryEnd = DateTime.parse(entry.endTime);
-      final clampedStart = entryStart.isBefore(rangeStart) ? rangeStart : entryStart;
+      final clampedStart = entryStart.isBefore(rangeStart)
+          ? rangeStart
+          : entryStart;
       final clampedEnd = entryEnd.isAfter(rangeEnd) ? rangeEnd : entryEnd;
       if (clampedEnd.isBefore(clampedStart)) continue;
 
-      var x1 = size.width *
+      var x1 =
+          size.width *
           clampedStart.difference(rangeStart).inMilliseconds /
           totalMs;
-      var x2 = size.width *
+      var x2 =
+          size.width *
           clampedEnd.difference(rangeStart).inMilliseconds /
           totalMs;
       // Zero (or near-zero) duration entries still get a visible sliver
@@ -131,7 +154,10 @@ class TimelinePainter extends CustomPainter {
       );
     }
 
-    _paintHourMarkers(canvas, size, barHeight, rangeStartHour, rangeEndHour);
+    canvas.restore();
+    if (showHourMarkers) {
+      _paintHourMarkers(canvas, size, barHeight, rangeStartHour, rangeEndHour);
+    }
   }
 
   void _paintHourMarkers(
@@ -143,14 +169,14 @@ class TimelinePainter extends CustomPainter {
   ) {
     final span = endHour - startHour;
     if (span <= 0) return;
-    final step = span <= 6 ? 1 : (span <= 12 ? 2 : 3);
+    final step = (span / 4).ceil();
 
     for (var hour = startHour; hour <= endHour; hour += step) {
       final fraction = (hour - startHour) / span;
       final x = size.width * fraction;
       final textPainter = TextPainter(
         text: TextSpan(
-          text: '${hour % 24}',
+          text: '${hour % 24}:00',
           style: TextStyle(color: theme.faint, fontSize: 9),
         ),
         textDirection: TextDirection.ltr,
@@ -168,6 +194,8 @@ class TimelinePainter extends CustomPainter {
   bool shouldRepaint(TimelinePainter oldDelegate) =>
       oldDelegate.entries != entries ||
       oldDelegate.day != day ||
+      oldDelegate.palette != palette ||
+      oldDelegate.showHourMarkers != showHourMarkers ||
       oldDelegate.theme != theme ||
       oldDelegate.startHour != startHour ||
       oldDelegate.endHour != endHour ||

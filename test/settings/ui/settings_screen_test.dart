@@ -9,6 +9,7 @@ import 'package:daylog/database/preferences.dart';
 import 'package:daylog/l10n/app_localizations.dart';
 import 'package:daylog/database/export/export_service.dart';
 import 'package:daylog/settings/ui/settings_screen.dart';
+import 'package:daylog/settings/ui/hero_name_sheet.dart';
 import 'package:daylog/settings/ui_providers.dart';
 import 'package:daylog/theme/app_theme.dart';
 import 'package:daylog/theme/tokens.dart';
@@ -122,21 +123,27 @@ void main() {
 
   Finder heroField() => find.byType(TextField);
 
-  Future<void> blur(WidgetTester tester) async {
-    FocusManager.instance.primaryFocus?.unfocus();
+  Future<void> openHeroName(WidgetTester tester) async {
+    await tester.tap(find.byTooltip('Edit name'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> saveHeroName(WidgetTester tester) async {
+    await tester.tap(find.text('Save'));
     await settle(tester);
+    await tester.pumpAndSettle();
   }
 
   settingsTest('shows the groups in the required order', (tester) async {
     await open(tester, size: const Size(390, 1200));
-    final labels = ['PROFILE', 'LANGUAGE', 'APPEARANCE', 'DATA', 'ABOUT'];
+    final labels = ['APPEARANCE AND LANGUAGE', 'PLANNING', 'DEVICE AND DATA', 'EXPERIMENTS', 'ABOUT'];
     final tops = [
       for (final label in labels) tester.getTopLeft(find.text(label)).dy,
     ];
     expect(tops, orderedEquals([...tops]..sort()));
     expect(tops.toSet().length, labels.length);
     expect(find.text('Settings'), findsOneWidget);
-    expect(find.text('0 / 40'), findsOneWidget);
+    expect(find.byTooltip('Edit name'), findsOneWidget);
   });
 
   settingsTest('the export row shares the data and reports a failure', (
@@ -165,45 +172,45 @@ void main() {
     await tester.pump(const Duration(seconds: 10));
   });
 
-  settingsTest('saves the trimmed hero name on blur and shows it', (
+  settingsTest('saves the trimmed hero name from the sheet and shows it', (
     tester,
   ) async {
     await open(tester);
-    await tester.tap(heroField());
+    await openHeroName(tester);
     await tester.enterText(heroField(), '  Aria  ');
     await tester.pump();
     expect((await stored(tester)).heroName, '');
 
-    await blur(tester);
+    await saveHeroName(tester);
 
     expect((await stored(tester)).heroName, 'Aria');
-    expect(find.widgetWithText(TextField, 'Aria'), findsOneWidget);
+    expect(find.text('Aria'), findsOneWidget);
   });
 
   settingsTest('saves the hero name on submit', (tester) async {
     await open(tester);
-    await tester.tap(heroField());
+    await openHeroName(tester);
     await tester.enterText(heroField(), 'Brom');
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await settle(tester);
+    await saveHeroName(tester);
     expect((await stored(tester)).heroName, 'Brom');
   });
 
   settingsTest('41 characters show an error and are not saved', (tester) async {
     await open(tester);
-    await tester.tap(heroField());
+    await openHeroName(tester);
     await tester.enterText(heroField(), 'a' * 40);
-    await blur(tester);
+    await saveHeroName(tester);
     expect((await stored(tester)).heroName, 'a' * 40);
     expect(find.text('The name can be at most 40 characters.'), findsNothing);
 
-    await tester.tap(heroField());
+    await openHeroName(tester);
     await tester.enterText(heroField(), 'b' * 41);
     await tester.pump();
     expect(find.text('The name can be at most 40 characters.'), findsOneWidget);
+    expect(find.byType(HeroNameSheet), findsOneWidget);
     expect(find.text('41 / 40'), findsOneWidget);
 
-    await blur(tester);
+    expect(tester.widget<FilledButton>(find.widgetWithText(FilledButton, 'Save')).onPressed, isNull);
 
     expect((await stored(tester)).heroName, 'a' * 40);
     // The input is kept so the user can fix it.
@@ -228,9 +235,9 @@ void main() {
     await tester.pump();
     final offset = scrollable().position.pixels;
     expect(offset, greaterThan(0));
-    expect(find.text('LANGUAGE'), findsOneWidget);
+    expect(find.text('APPEARANCE AND LANGUAGE'), findsOneWidget);
 
-    await tester.tap(find.text('Čeština'));
+    await tester.tap(find.text('CZ'));
     // Never an empty or loading frame while the change travels through.
     for (var i = 0; i < 3; i++) {
       await tester.runAsync(
@@ -243,8 +250,8 @@ void main() {
     await settle(tester);
 
     expect((await stored(tester)).language, AppLanguage.cs);
-    expect(find.text('JAZYK'), findsOneWidget);
-    expect(find.text('LANGUAGE'), findsNothing);
+    expect(find.text('VZHLED A JAZYK'), findsOneWidget);
+    expect(find.text('APPEARANCE AND LANGUAGE'), findsNothing);
     expect(scrollable().position.pixels, offset);
     final cs = find.bySemanticsLabel('Čeština');
     expect(cs, findsWidgets);
@@ -256,7 +263,8 @@ void main() {
         Theme.of(tester.element(find.byType(SettingsScreen))).brightness;
     expect(brightness(), Brightness.light);
 
-    await tester.tap(find.text('Dark'));
+    final semantics = tester.ensureSemantics();
+    await tester.tap(find.bySemanticsLabel('Dark'));
     await settle(tester);
     // MaterialApp animates the theme change.
     await tester.pump(const Duration(milliseconds: 400));
@@ -264,11 +272,12 @@ void main() {
     expect((await stored(tester)).theme, ThemeModeSetting.dark);
     expect(brightness(), Brightness.dark);
 
-    await tester.tap(find.text('Light'));
+    await tester.tap(find.bySemanticsLabel('Light'));
     await settle(tester);
     await tester.pump(const Duration(milliseconds: 400));
     expect((await stored(tester)).theme, ThemeModeSetting.light);
     expect(brightness(), Brightness.light);
+    semantics.dispose();
   });
 
   settingsTest('shows the version from the platform info provider', (

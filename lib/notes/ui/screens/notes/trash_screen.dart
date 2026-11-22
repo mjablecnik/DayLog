@@ -11,6 +11,9 @@ import '../../../../quests/ui/state/quest_actions.dart' show showDomainError;
 import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/app_icon.dart';
+import '../../../../ui_kit/controls/app_buttons.dart';
+import '../../../../ui_kit/layout/app_header.dart';
+import '../../../../ui_kit/layout/grouped_list.dart';
 import '../../../../ui_kit/common/empty_state.dart';
 import '../../../../ui_kit/common/skeleton_list.dart';
 import '../../../../ui_kit/common/snackbar_host.dart';
@@ -124,10 +127,10 @@ class _TrashScreenState extends ConsumerState<TrashScreen> {
               style: context.bodyText.labelSmall!.copyWith(color: p.textFaint),
             ),
             const SizedBox(height: Space.s10),
+            GroupedList(children: [
             for (final NoteNode node in entries)
-              Padding(
+              KeyedSubtree(
                 key: ValueKey<int>(node.id),
-                padding: const EdgeInsets.only(bottom: Space.s10),
                 child: SwipeRow(
                   groupTag: 'trash',
                   actions: <SwipeActionSpec>[
@@ -160,6 +163,7 @@ class _TrashScreenState extends ConsumerState<TrashScreen> {
                   ),
                 ),
               ),
+            ]),
           ],
         ),
       );
@@ -170,81 +174,21 @@ class _TrashScreenState extends ConsumerState<TrashScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(Space.s8, Space.s4, Space.s8, 0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Semantics(
-                  button: true,
-                  label: l.common_back,
-                  excludeSemantics: true,
-                  onTap: () => Navigator.of(context).maybePop(),
-                  child: InkWell(
-                    key: const ValueKey<String>('trash-back'),
-                    onTap: () => Navigator.of(context).maybePop(),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          AppIcon(IconAsset.chevronLeft, size: Metrics.iconSmall, color: p.brassText),
-                          const SizedBox(width: Space.s4),
-                          Text(
-                            l.notes_title,
-                            style: context.bodyText.bodyLarge!.copyWith(
-                              color: p.brassText,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Space.s20),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: <Widget>[
-                  Semantics(
-                    header: true,
-                    child: Text(l.trash_title, style: context.displayText.headlineLarge),
-                  ),
-                  const SizedBox(width: Space.s12),
-                  Expanded(
-                    child: Text(
-                      tree == null ? '' : l.trash_count(entries.length),
-                      textAlign: TextAlign.end,
-                      style: context.bodyText.bodySmall!.copyWith(color: p.textDim),
-                    ),
-                  ),
-                ],
-              ),
+            AppHeader(
+              leading: HeaderLeading.back,
+      leadingKey: const ValueKey<String>('trash-back'),
+              title: l.trash_title,
+              subtitle: tree == null ? null : l.trash_count(entries.length),
             ),
             const SizedBox(height: Space.s12),
             Expanded(child: body),
             if (entries.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(Space.s20, Space.s4, Space.s20, Space.s16),
-                child: OutlinedButton(
+                child: AppButton.destructive(
                   key: const ValueKey<String>('trash-empty'),
                   onPressed: () => _empty(entries.length),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(Metrics.touchTarget + Space.s8),
-                    foregroundColor: p.destructive,
-                    side: BorderSide(color: p.destructive, width: Metrics.hairline),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Radii.control)),
-                  ),
-                  child: Text(
-                    l.trash_emptyAction,
-                    style: context.bodyText.bodyLarge!.copyWith(
-                      color: p.destructive,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  label: l.trash_emptyAction,
                 ),
               ),
           ],
@@ -263,7 +207,7 @@ class _Info extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppPalette p = context.palette;
     return DecoratedBox(
-      decoration: BoxDecoration(color: p.field, borderRadius: BorderRadius.circular(Radii.control)),
+      decoration: BoxDecoration(color: p.tone, borderRadius: BorderRadius.circular(Radii.button)),
       child: Padding(
         padding: const EdgeInsets.all(Space.s12),
         child: Text(text, style: context.bodyText.bodySmall!.copyWith(color: p.textDim)),

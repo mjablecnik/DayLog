@@ -26,8 +26,7 @@ String effortTime(AppLocalizations l, Difficulty difficulty) =>
     };
 
 /// One option per effort step, each with its name, time description, XP and
-/// four pips. A stacked list rather than a row of segments so every
-/// description stays readable at large text sizes.
+/// four pips. Two columns on standard screens and one at large text sizes.
 class EffortPicker extends StatelessWidget {
   const EffortPicker({
     super.key,
@@ -47,19 +46,33 @@ class EffortPicker extends StatelessWidget {
     return Semantics(
       container: true,
       explicitChildNodes: true,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          for (int i = 0; i < Difficulty.values.length; i++) ...<Widget>[
-            if (i > 0) const SizedBox(height: Space.s4),
-            _EffortOption(
-              difficulty: Difficulty.values[i],
-              selected: Difficulty.values[i] == selected,
-              enabled: enabled,
-              onTap: () => onChanged(Difficulty.values[i]),
-            ),
-          ],
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final scaled = MediaQuery.textScalerOf(context).scale(15);
+          final columns =
+              constraints.maxWidth >= Metrics.settingsControlWidth * 2 &&
+                  scaled <= 20
+              ? 2
+              : 1;
+          final width =
+              (constraints.maxWidth - Space.s8 * (columns - 1)) / columns;
+          return Wrap(
+            spacing: Space.s8,
+            runSpacing: Space.s8,
+            children: [
+              for (final difficulty in Difficulty.values)
+                SizedBox(
+                  width: width,
+                  child: _EffortOption(
+                    difficulty: difficulty,
+                    selected: difficulty == selected,
+                    enabled: enabled,
+                    onTap: () => onChanged(difficulty),
+                  ),
+                ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -133,46 +146,35 @@ class _EffortOptionState extends State<_EffortOption> {
           ),
           child: Opacity(
             opacity: widget.enabled ? 1 : 0.5,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
                         name,
-                        style: context.bodyText.labelLarge!.copyWith(
+                        style: context.bodyText.labelLarge?.copyWith(
                           color: on ? p.brassText : p.text,
                         ),
                       ),
-                      Text(
-                        time,
-                        style: context.bodyText.bodySmall!.copyWith(
-                          color: p.textDim,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: Space.s12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
+                    ),
+                    const SizedBox(width: Space.s4),
                     Text(
                       xp,
-                      style: context.bodyText.labelLarge!.copyWith(
-                        color: on ? p.brass : p.textDim,
-                        fontFeatures: const <FontFeature>[
-                          FontFeature.tabularFigures(),
-                        ],
+                      style: context.bodyText.labelLarge?.copyWith(
+                        color: on ? p.brassText : p.textDim,
                       ),
                     ),
-                    const SizedBox(height: Space.s4),
-                    DifficultyPips(widget.difficulty, emptyColor: p.textFaint),
                   ],
                 ),
+                Text(
+                  time,
+                  style: context.bodyText.bodySmall?.copyWith(color: p.textDim),
+                ),
+                const SizedBox(height: Space.s4),
+                DifficultyPips(widget.difficulty),
               ],
             ),
           ),

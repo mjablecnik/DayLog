@@ -19,6 +19,9 @@ void main() {
     'board': Subject.board,
     'missions': Subject.missions,
     'settings': Subject.settings,
+    'history': Subject.history,
+    'notes': Subject.notes,
+    'reminders': Subject.reminders,
   };
 
   for (final MapEntry<String, Subject> screen in screens.entries) {

@@ -144,7 +144,7 @@ class _WeekRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextScaler scaler = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: EventChip.maxTextScale);
-    final double numberHeight = scaler.scale(11) * 1.35 + Space.s2;
+    final double numberHeight = math.max(Metrics.iconSize, scaler.scale(11) * 1.35);
     final double chipHeight = EventChip.heightOf(context) + Space.s2;
     final List<WeekSegment> segments = layoutWeek(occurrences, dates.first);
     final int needed = segments.isEmpty ? 0 : segments.map((WeekSegment s) => s.lane).reduce(math.max) + 1;
@@ -170,7 +170,6 @@ class _WeekRow extends StatelessWidget {
                       hidden: segments
                           .where((WeekSegment s) => s.covers(col) && s.lane >= shown)
                           .length,
-                      leftEdge: col == 0,
                     ),
                   ),
               ],
@@ -220,7 +219,6 @@ class DayCell extends ConsumerWidget {
     required this.count,
     required this.lanesShown,
     required this.hidden,
-    required this.leftEdge,
   });
 
   final DateTime date;
@@ -235,7 +233,6 @@ class DayCell extends ConsumerWidget {
 
   /// How many events of this date are left out of the lanes shown.
   final int hidden;
-  final bool leftEdge;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -258,17 +255,9 @@ class DayCell extends ConsumerWidget {
         onTap: () => _open(context, ref),
         child: Container(
           decoration: BoxDecoration(
-            color: isToday ? p.brassSoft : null,
-            border: Border(
-              right: line,
-              bottom: line,
-              left: leftEdge ? line : BorderSide.none,
-            ),
+            color: inMonth ? null : p.tone,
+            border: Border(bottom: line),
           ),
-          // The today mark: an outline in the accent colour, inside the cell.
-          foregroundDecoration: isToday
-              ? BoxDecoration(border: Border.all(color: p.brass, width: Metrics.badgeBorder))
-              : null,
           child: ClipRect(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(Space.s2, Space.s2, Space.s2, 0),
@@ -276,16 +265,28 @@ class DayCell extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: Space.s2),
-                    child: Text(
-                      '${date.day}',
-                      textScaler: scaler,
-                      style: context.bodyText.bodySmall!.copyWith(
-                        fontSize: 11,
-                        height: 1.35,
-                        fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
-                        color: isToday ? p.brassText : (inMonth ? p.text : p.textFaint),
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        minWidth: Metrics.iconSize,
+                        minHeight: Metrics.iconSize,
+                      ),
+                      alignment: Alignment.center,
+                      width: Metrics.iconSize,
+                      decoration: BoxDecoration(
+                        color: isToday ? p.brass : null,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        '${date.day}',
+                        textScaler: scaler,
+                        style: context.bodyText.bodySmall!.copyWith(
+                          fontSize: 11,
+                          height: 1.35,
+                          fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
+                          color: isToday ? p.inkOnBrass : (inMonth ? p.text : p.textFaint),
+                        ),
                       ),
                     ),
                   ),

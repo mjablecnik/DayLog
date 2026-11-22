@@ -8,7 +8,10 @@ import '../../services/calendar_providers.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../widgets/calendar_fields.dart';
+import '../../../ui_kit/layout/app_header.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 import '../../../ui_kit/common/app_icon.dart';
+import '../../../ui_kit/common/empty_state.dart';
 import 'calendar_labels.dart';
 import 'event_detail_screen.dart';
 
@@ -56,36 +59,19 @@ class _EventSearchScreenState extends ConsumerState<EventSearchScreen> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
+            AppHeader(
+              title: l.calendar_search,
+              leading: HeaderLeading.back,
+              leadingKey: const ValueKey<String>('search-back'),
+            ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(Space.s8, Space.s4, Space.s16, Space.s8),
-              child: Row(
-                children: <Widget>[
-                  Semantics(
-                    button: true,
-                    label: l.common_close,
-                    excludeSemantics: true,
-                    onTap: () => Navigator.of(context).maybePop(),
-                    child: InkWell(
-                      key: const ValueKey<String>('search-back'),
-                      onTap: () => Navigator.of(context).maybePop(),
-                      customBorder: const CircleBorder(),
-                      child: SizedBox(
-                        width: Metrics.touchTarget,
-                        height: Metrics.touchTarget,
-                        child: Center(child: AppIcon(IconAsset.chevronLeft, size: Metrics.iconSmall, color: p.text)),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: CalendarTextField(
-                      key: const ValueKey<String>('search-field'),
-                      controller: _controller,
-                      hint: l.calendar_search,
-                      autofocus: true,
-                      onChanged: _search,
-                    ),
-                  ),
-                ],
+              padding: const EdgeInsets.symmetric(horizontal: Space.s16),
+              child: CalendarTextField(
+                key: const ValueKey<String>('search-field'),
+                controller: _controller,
+                hint: l.calendar_search,
+                autofocus: true,
+                onChanged: _search,
               ),
             ),
             Expanded(
@@ -101,63 +87,60 @@ class _EventSearchScreenState extends ConsumerState<EventSearchScreen> {
                       ),
                     )
                   : _results.isEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.all(Space.s20),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Semantics(
-                          liveRegion: true,
-                          child: Text(
-                            l.calendar_searchNone,
-                            style: context.bodyText.bodyLarge!.copyWith(color: p.textDim),
-                          ),
-                        ),
+                  ? Semantics(
+                      liveRegion: true,
+                      child: EmptyState(
+                        title: l.calendar_searchNone,
+                        icon: IconAsset.search,
                       ),
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(Space.s16, 0, Space.s16, Space.s24),
+                      padding: const EdgeInsets.fromLTRB(
+                        Space.s16, Space.s12, Space.s16, Space.s24,
+                      ),
                       itemCount: _results.length,
-                      itemBuilder: (BuildContext context, int i) {
-                        final SearchResult r = _results[i];
-                        final String date = shortDateLabel(r.occurrenceDate, locale);
-                        return Semantics(
-                          button: true,
-                          label: '${r.event.name}, ${eventTypeName(l, r.event.type)}, $date',
-                          excludeSemantics: true,
-                          onTap: () => showEventDetail(context, r.event.id, r.occurrenceDate),
-                          child: InkWell(
-                            key: ValueKey<String>('search-result-${r.event.id}'),
-                            onTap: () => showEventDetail(context, r.event.id, r.occurrenceDate),
-                            borderRadius: BorderRadius.circular(Radii.control),
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(minHeight: Metrics.touchTarget + Space.s16),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: Space.s4, vertical: Space.s8),
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      width: Space.s12,
-                                      height: Space.s12,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: p.eventColor(r.event.type),
-                                      ),
+                      itemBuilder: (context, index) {
+                        final result = _results[index];
+                        final event = result.event;
+                        final date = shortDateLabel(result.occurrenceDate, locale);
+                        final type = eventTypeName(l, event.type);
+                        final edges = (
+                          first: index == 0,
+                          last: index == _results.length - 1,
+                        );
+                        void open() =>
+                            showEventDetail(context, event.id, result.occurrenceDate);
+                        return Material(
+                          color: p.card,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: groupedRadius(edges),
+                            side: BorderSide.none,
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              border: groupedBorder(p.boardLine, edges),
+                              borderRadius: groupedRadius(edges),
+                            ),
+                            child: Semantics(
+                              button: true,
+                              label: '${event.name}, $type, $date',
+                              excludeSemantics: true,
+                              onTap: open,
+                              child: ListRow(
+                                key: ValueKey<String>('search-result-${event.id}'),
+                                title: event.name,
+                                subtitle: '$type · $date',
+                                leading: SizedBox.square(
+                                  dimension: Space.s12,
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: p.eventColor(event.type),
                                     ),
-                                    const SizedBox(width: Space.s12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(r.event.name, style: context.bodyText.titleMedium),
-                                          Text(
-                                            '${eventTypeName(l, r.event.type)} · $date',
-                                            style: context.bodyText.bodySmall!.copyWith(color: p.textDim),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
+                                onTap: open,
                               ),
                             ),
                           ),

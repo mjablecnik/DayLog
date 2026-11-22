@@ -2257,4 +2257,89 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get time_liveActivityPaused => 'pozastaveno';
+
+  @override
+  String get time_historySwipeHint =>
+      'Klepnutím upravíš · tažením doleva smažeš';
+
+  @override
+  String get time_reminderSwipeHint =>
+      'Klepnutím upravíš · tažením doleva smažeš · kroužkem označíš jako hotové';
+
+  @override
+  String get time_timerLogCaption => 'Zapsat';
+
+  @override
+  String get time_timerFinishCaption => 'Dokončit';
+
+  @override
+  String get settings_groupAppearanceLanguage => 'Vzhled a jazyk';
+
+  @override
+  String get settings_groupPlanning => 'Plánování';
+
+  @override
+  String get settings_groupDeviceData => 'Zařízení a data';
+
+  @override
+  String get settings_editHeroName => 'Upravit jméno';
+
+  @override
+  String get settings_languageCsShort => 'CZ';
+
+  @override
+  String get settings_languageEnShort => 'EN';
+
+  @override
+  String get time_statsTracked => 'Sledováno';
+
+  @override
+  String get time_statsUntracked => 'Nesledováno';
+
+  @override
+  String get time_reminderMinutesUnit => 'minut';
+
+  @override
+  String time_reminderWindow(String from, String to, int minutes) {
+    return '$from–$to · každých $minutes min';
+  }
+
+  @override
+  String get time_previousPeriod => 'Předchozí období';
+
+  @override
+  String get time_nextPeriod => 'Následující období';
+
+  @override
+  String get shell_modulesTitle => 'Moduly';
+
+  @override
+  String get shell_launcherHint =>
+      'Tip: přejetím po tlačítku modulu se vrátíš na předchozí modul';
+
+  @override
+  String shell_moduleButtonLabel(String module) {
+    return '$module, přepnout modul';
+  }
+
+  @override
+  String get shell_previousModule => 'Předchozí modul';
+
+  @override
+  String get settings_groupExperiments => 'Experimenty';
+
+  @override
+  String get settings_moduleButtonSide => 'Tlačítko modulů';
+
+  @override
+  String get settings_moduleButtonLeft => 'Vlevo';
+
+  @override
+  String get settings_moduleButtonRight => 'Vpravo';
+
+  @override
+  String get settings_drawerEnabled => 'Boční menu';
+
+  @override
+  String get settings_titleWeight => 'Tloušťka nadpisů';
 }

@@ -310,7 +310,7 @@ void main() {
     await h.pump(tester, home: const CalendarScreen(), now: DateTime(2026, 11, 19, 10));
     await tester.tap(find.byKey(const ValueKey<String>('day-2026-11-24')));
     await h.settle(tester);
-    await tester.tap(find.byKey(const ValueKey<String>('day-close')));
+    await tester.tap(find.byTooltip('Close'));
     await h.settle(tester);
     await tester.tap(find.byKey(const ValueKey<String>('add-fab')));
     await h.settle(tester);

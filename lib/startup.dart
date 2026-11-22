@@ -10,6 +10,7 @@ import 'calendar/data/calendar_filter_store.dart';
 import 'calendar/services/calendar_providers.dart';
 import 'core/clock.dart';
 import 'core/clock_provider.dart';
+import 'core/ui_preferences.dart';
 import 'database/app_database.dart';
 import 'database/import/database_importer.dart';
 import 'database/import/import_providers.dart';
@@ -22,11 +23,10 @@ import 'time_tracking/time_tracking.dart';
 
 /// Starts the time tracking feature: it gets the container and a function that
 /// completes once the app settings are loaded.
-typedef TimeTrackingStarter =
-    Future<void> Function(
-      ProviderContainer container,
-      Future<void> Function() settingsReady,
-    );
+typedef TimeTrackingStarter = Future<void> Function(
+  ProviderContainer container,
+  Future<void> Function() settingsReady,
+);
 
 Future<void> _startTimeTracking(
   ProviderContainer container,
@@ -42,7 +42,12 @@ Future<Widget> buildApp({
   required Directory documentsDirectory,
   required Stream<Uri> deepLinks,
   TimeTrackingStarter startTimeTracking = _startTimeTracking,
+  UiPreferencesStore? uiPreferencesStore,
 }) async {
+  final preferencesStore =
+      uiPreferencesStore ??
+      SharedPrefsUiPreferencesStore(await SharedPreferences.getInstance());
+  final uiPreferences = await preferencesStore.load();
   final calendarFilterStore = FileCalendarFilterStore(
     File(p.join(documentsDirectory.path, 'calendar_filter.txt')),
   );
@@ -51,6 +56,8 @@ Future<Widget> buildApp({
   container = ProviderContainer(
     overrides: [
       databaseProvider.overrideWithValue(database),
+      uiPreferencesStoreProvider.overrideWithValue(preferencesStore),
+      initialUiPreferencesProvider.overrideWithValue(uiPreferences),
       clockProvider.overrideWithValue(const SystemClock()),
       calendarFilterStoreProvider.overrideWithValue(calendarFilterStore),
       initialCalendarFilterProvider.overrideWithValue(calendarFilter),

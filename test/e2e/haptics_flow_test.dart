@@ -109,7 +109,7 @@ void main() {
     await _settle(tester);
     await tester.tap(find.bySemanticsLabel(en.common_back));
     await _settle(tester);
-    await tester.tap(find.byKey(const ValueKey<Destination>(Destination.quests)));
+    await tapDestination(tester, Destination.quests);
     await _settle(tester);
 
     // Lifting a card to reorder it.

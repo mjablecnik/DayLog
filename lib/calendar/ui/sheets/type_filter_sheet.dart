@@ -8,10 +8,14 @@ import '../state/calendar_state.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/sheet/app_sheet.dart';
+import '../../../ui_kit/controls/app_buttons.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 
 /// Opens the Type_Filter sheet: one switch per event type.
-Future<void> showTypeFilter(BuildContext context) =>
-    showAppSheet<void>(context, builder: (BuildContext _) => const _TypeFilterSheet());
+Future<void> showTypeFilter(BuildContext context) => showAppSheet<void>(
+  context,
+  builder: (BuildContext _) => const _TypeFilterSheet(),
+);
 
 class _TypeFilterSheet extends ConsumerWidget {
   const _TypeFilterSheet();
@@ -29,33 +33,22 @@ class _TypeFilterSheet extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          if (shown.length < EventType.values.length)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                onPressed: notifier.showAll,
-                style: TextButton.styleFrom(
-                  minimumSize: const Size(Metrics.touchTarget, Metrics.touchTarget),
-                  foregroundColor: p.brassText,
-                  padding: EdgeInsets.zero,
-                ),
-                child: Text(l.calendar_filterShowAll, style: context.bodyText.labelLarge),
-              ),
-            ),
-          for (final EventType type in EventType.values)
-            MergeSemantics(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: Space.s12,
-                      height: Space.s12,
-                      decoration: BoxDecoration(shape: BoxShape.circle, color: p.eventColor(type)),
+          GroupedList(
+            children: [
+              for (final type in EventType.values)
+                ListRow(
+                  title: eventTypeName(l, type),
+                  leading: Container(
+                    width: Space.s12,
+                    height: Space.s12,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: p.eventColor(type),
                     ),
-                    const SizedBox(width: Space.s12),
-                    Expanded(child: Text(eventTypeName(l, type), style: context.bodyText.titleMedium)),
-                    Switch(
+                  ),
+                  trailing: Semantics(
+                    label: eventTypeName(l, type),
+                    child: Switch(
                       key: ValueKey<String>('filter-${type.key}'),
                       value: shown.contains(type),
                       onChanged: (_) => notifier.toggle(type),
@@ -63,12 +56,21 @@ class _TypeFilterSheet extends ConsumerWidget {
                       activeTrackColor: p.brass,
                       inactiveThumbColor: p.textFaint,
                       inactiveTrackColor: p.field,
-                      trackOutlineColor: WidgetStatePropertyAll<Color>(p.boardLine),
+                      trackOutlineColor: WidgetStatePropertyAll<Color>(
+                        p.boardLine,
+                      ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+            ],
+          ),
+          if (shown.length < EventType.values.length) ...[
+            const SizedBox(height: Space.s12),
+            AppButton.tonal(
+              label: l.calendar_filterShowAll,
+              onPressed: notifier.showAll,
             ),
+          ],
         ],
       ),
     );

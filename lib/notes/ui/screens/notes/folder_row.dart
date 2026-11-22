@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
-import '../../../../theme/app_theme.dart';
-import '../../../../theme/tokens.dart';
+import '../../../../ui_kit/layout/grouped_list.dart';
 import '../../../../ui_kit/common/app_icon.dart';
-import '../../widgets/node_tiles.dart';
 
 /// One Folder in the list: icon, name, what is inside, and a chevron.
 class FolderRow extends StatelessWidget {
@@ -23,49 +21,18 @@ class FolderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppPalette p = context.palette;
-    final AppLocalizations l = AppLocalizations.of(context);
+    final strings = AppLocalizations.of(context);
     return Semantics(
       button: true,
-      label: '${l.a11y_openFolder(name)}. $summary',
+      label: '${strings.a11y_openFolder(name)}. $summary',
       excludeSemantics: true,
       onTap: onTap,
-      child: NodeCard(
+      child: ListRow(
+        leading: const IconTile(IconAsset.folder),
+        title: name,
+        subtitle: summary,
+        showChevron: true,
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Space.s12,
-            vertical: Space.s10,
-          ),
-          child: Row(
-            children: <Widget>[
-              const NodeIconTile(icon: IconAsset.folder),
-              const SizedBox(width: Space.s12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.bodyText.bodyLarge!.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                    Text(
-                      summary,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.bodyText.bodySmall!.copyWith(color: p.textDim),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: Space.s8),
-              AppIcon(IconAsset.chevronRight, size: Metrics.iconSmall, color: p.textFaint),
-            ],
-          ),
-        ),
       ),
     );
   }

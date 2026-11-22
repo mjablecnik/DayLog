@@ -115,7 +115,7 @@ void main() {
 
       // Saving with end before start must be rejected.
       final saveButton =
-          find.widgetWithText(ElevatedButton, 'Save', skipOffstage: false);
+          find.widgetWithText(FilledButton, 'Save', skipOffstage: false);
       await tester.ensureVisible(saveButton);
       await tester.pumpAndSettle();
       await tester.tap(saveButton);

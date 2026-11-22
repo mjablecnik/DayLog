@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
-import '../../ui_kit/common/sub_page_header.dart';
+import '../../ui_kit/layout/app_header.dart';
 import 'shortcut_guide.dart';
 
 /// The Home Screen shortcut page, opened from Settings: pick a page, copy its
@@ -22,7 +22,7 @@ class ShortcutScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            SubPageHeader(title: l.settings_shortcutTitle),
+            AppHeader(leading: HeaderLeading.back, title: l.settings_shortcutTitle),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(

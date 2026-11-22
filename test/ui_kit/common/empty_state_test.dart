@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:daylog/theme/tokens.dart';
 import 'package:daylog/ui_kit/common/empty_state.dart';
+import 'package:daylog/ui_kit/common/app_icon.dart';
 
 import '_harness.dart';
 
@@ -16,7 +17,7 @@ void main() {
     expect(find.text('The board is empty'), findsOneWidget);
     expect(find.text('Post a quest.'), findsOneWidget);
     expect(find.byType(FilledButton), findsNothing);
-    expect(find.byType(BlankSlip), findsOneWidget);
+    expect(find.byType(AppIcon), findsOneWidget);
   });
 
   testWidgets('body is optional', (tester) async {
@@ -41,7 +42,7 @@ void main() {
     expect(taps, 1);
   });
 
-  testWidgets('title is a semantic header and the slip is decorative', (
+  testWidgets('title is a semantic header and the icon is decorative', (
     tester,
   ) async {
     final SemanticsHandle handle = tester.ensureSemantics();

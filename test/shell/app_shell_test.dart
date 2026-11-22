@@ -1,3 +1,4 @@
+import 'dart:ui' show Tristate;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -21,7 +22,8 @@ import 'package:daylog/settings/ui/settings_screen.dart';
 import 'package:daylog/shell/deep_link.dart';
 import 'package:daylog/shell/app_drawer.dart';
 import 'package:daylog/shell/app_shell.dart';
-import 'package:daylog/shell/bottom_bar.dart';
+import 'package:daylog/shell/module.dart';
+import 'package:daylog/shell/module_bar.dart';
 import 'package:daylog/shell/destination.dart';
 import 'package:daylog/shell/reconcile_banner.dart';
 import 'package:daylog/shell/splash_screen.dart';
@@ -68,13 +70,6 @@ Mission _mission(int id, String name) => Mission(
   completedAt: null,
   awardedBonus: null,
 );
-
-const Key _timerTab = ValueKey<Destination>(Destination.timer);
-const Key _questsTab = ValueKey<Destination>(Destination.quests);
-const Key _missionsTab = ValueKey<Destination>(Destination.missions);
-const Key _settingsTab = ValueKey<Destination>(Destination.settings);
-const Key _calendarTab = ValueKey<Destination>(Destination.calendar);
-const Key _notesTab = ValueKey<Destination>(Destination.notes);
 
 void main() {
   late AppDatabase db;
@@ -181,7 +176,7 @@ void main() {
       await tester.pump();
       expect(find.byType(SplashScreen), findsOneWidget);
       expect(find.text('Preparing your board…'), findsOneWidget);
-      expect(find.byType(BottomBar), findsOneWidget);
+      expect(find.byType(ModuleBar), findsOneWidget);
       expect(find.byType(BoardScreen), findsNothing);
       expect(spy.calls, 1);
 
@@ -190,7 +185,7 @@ void main() {
       await tester.pump();
       expect(find.byType(SplashScreen), findsNothing);
       expect(find.byType(BoardScreen), findsOneWidget);
-      expect(find.byType(BottomBar), findsOneWidget);
+      expect(find.byType(ModuleBar), findsOneWidget);
       expect(spy.calls, 1);
     });
 
@@ -208,29 +203,16 @@ void main() {
   });
 
   group('tabs', () {
-    shellTest('five tabs, Timer, Quests, Calendar, Notes, then Settings, switch on tap', (
+    shellTest('shows the current module tabs and switches modules through the launcher', (
       tester,
     ) async {
       await pumpApp(tester);
       await settle(tester);
 
-      expect(
-        find.descendant(
-          of: find.byType(BottomBar),
-          matching: find.byType(InkWell),
-        ),
-        findsNWidgets(5),
-      );
-      for (final Destination tab in Destination.tabs) {
-        expect(find.byKey(ValueKey<Destination>(tab)), findsOneWidget);
-      }
-      expect(find.byKey(_missionsTab), findsNothing);
-      for (final String label in <String>['Timer', 'Quests', 'Calendar', 'Notes', 'Settings']) {
-        expect(
-          find.descendant(of: find.byType(BottomBar), matching: find.text(label)),
-          findsOneWidget,
-        );
-      }
+      expect(find.byKey(moduleButtonKey), findsOneWidget);
+      expect(find.byKey(moduleBarTabKey(Destination.quests)), findsOneWidget);
+      expect(find.byKey(moduleBarTabKey(Destination.missions)), findsOneWidget);
+      expect(find.byKey(moduleBarTabKey(Destination.timer)), findsNothing);
       expect(shown(tester), Destination.quests);
 
       await open(tester, Destination.timer);
@@ -260,7 +242,7 @@ void main() {
       await settle(tester);
       expect(shown(tester), Destination.timer);
       expect(
-        tester.widget<BottomBar>(find.byType(BottomBar)).selected,
+        tester.widget<ModuleBar>(find.byType(ModuleBar)).location.destination,
         Destination.timer,
       );
     });
@@ -272,10 +254,9 @@ void main() {
       await settle(tester);
       await tester.tap(find.byType(MenuButton).hitTestable().first);
       await tester.pumpAndSettle();
-      for (final Destination d in Destination.drawerItems) {
+      for (final Destination d in Destination.values) {
         expect(find.byKey(drawerItemKey(d)), findsOneWidget, reason: d.name);
       }
-      expect(Destination.drawerItems.length, Destination.values.length);
     });
 
     shellTest('every Destination can be opened from the Drawer', (tester) async {
@@ -297,12 +278,12 @@ void main() {
       await open(tester, Destination.missions);
       expect(shown(tester), Destination.missions);
       expect(find.byType(MissionsScreen), findsOneWidget);
-      expect(tester.widget<BottomBar>(find.byType(BottomBar)).selected, Destination.quests);
+      expect(tester.widget<ModuleBar>(find.byType(ModuleBar)).location.destination, Destination.missions);
       expect(find.byType(Drawer), findsNothing);
 
       await open(tester, Destination.statistics);
       expect(shown(tester), Destination.statistics);
-      expect(tester.widget<BottomBar>(find.byType(BottomBar)).selected, Destination.timer);
+      expect(tester.widget<ModuleBar>(find.byType(ModuleBar)).location.destination, Destination.statistics);
 
       await open(tester, Destination.history);
       expect(shown(tester), Destination.history);
@@ -313,23 +294,20 @@ void main() {
     ) async {
       await pumpApp(tester);
       await settle(tester);
-      for (final Key key in <Key>[_timerTab, _questsTab, _calendarTab, _notesTab, _settingsTab]) {
-        final Size size = tester.getSize(find.byKey(key));
+      final questsTab = find.byKey(moduleBarTabKey(Destination.quests));
+      final missionsTab = find.byKey(moduleBarTabKey(Destination.missions));
+      for (final tab in [questsTab, missionsTab]) {
+        final size = tester.getSize(tab);
         expect(size.height, greaterThanOrEqualTo(44));
         expect(size.width, greaterThanOrEqualTo(44));
       }
       final handle = tester.ensureSemantics();
-      final quests = tester.getSemantics(find.byKey(_questsTab));
-      final timer = tester.getSemantics(find.byKey(_timerTab));
+      final quests = tester.getSemantics(questsTab);
+      final missions = tester.getSemantics(missionsTab);
       expect(quests.label, 'Quests');
-      expect(timer.label, 'Timer');
-      expect(tester.getSemantics(find.byKey(_calendarTab)).label, 'Calendar');
-      expect(tester.getSemantics(find.byKey(_notesTab)).label, 'Notes');
-      expect(tester.getSemantics(find.byKey(_settingsTab)).label, 'Settings');
-      expect(
-        quests.flagsCollection.isSelected,
-        isNot(timer.flagsCollection.isSelected),
-      );
+      expect(missions.label, 'Missions');
+      expect(quests.flagsCollection.isSelected, Tristate.isTrue);
+      expect(missions.flagsCollection.isSelected, Tristate.isFalse);
       handle.dispose();
     });
 
@@ -344,11 +322,11 @@ void main() {
       expect(find.text('Back'), findsNothing);
       expect(find.byType(HeroBar), findsNothing);
       expect(find.byType(AddFab), findsNothing);
-      expect(find.byType(BottomBar), findsOneWidget);
+      expect(find.byType(ModuleBar), findsOneWidget);
       expect(find.bySemanticsLabel('Settings'), findsWidgets);
     });
 
-    shellTest('Settings carries the reminder groups of the timer, after the shortcut guide', (
+    shellTest('Settings places recurring reminders in the planning group', (
       tester,
     ) async {
       await pumpApp(tester);
@@ -356,10 +334,10 @@ void main() {
       await open(tester, Destination.settings);
 
       expect(find.byType(TimeSettingsGroups), findsOneWidget);
-      expect(find.text('REMINDERS'), findsOneWidget);
-      final double shortcut = tester.getTopLeft(find.text('HOME SCREEN SHORTCUT')).dy;
-      final double reminder = tester.getTopLeft(find.text('REMINDERS')).dy;
-      expect(reminder, greaterThan(shortcut));
+      expect(find.text('Recurring reminders'), findsOneWidget);
+      final double shortcut = tester.getTopLeft(find.text('Home Screen shortcut')).dy;
+      final double reminder = tester.getTopLeft(find.text('Recurring reminders')).dy;
+      expect(reminder, lessThan(shortcut));
     });
 
     shellTest('a message raised on the Settings tab is cleared on leaving it', (
@@ -409,6 +387,7 @@ void main() {
       expect(lists, findsWidgets);
       await tester.drag(lists.first, const Offset(0, -600));
       await settle(tester);
+      await tester.pumpAndSettle();
       final double before = offset(tester, screen);
       expect(before, greaterThan(0));
 
@@ -653,7 +632,7 @@ void main() {
         prime: (s) => s.failure = const StorageError('disk full'),
       );
       await settle(tester);
-      final Size size = tester.getSize(find.byType(TextButton));
+      final Size size = tester.getSize(find.widgetWithText(FilledButton, 'Try again'));
       expect(size.height, greaterThanOrEqualTo(44));
       expect(size.width, greaterThanOrEqualTo(44));
     });
@@ -684,6 +663,12 @@ void main() {
       links.add(Uri.parse('daylog://missions'));
       await settle(tester);
       expect(shown(tester), Destination.missions);
+      links.add(Uri.parse('daylog://statistics'));
+      await settle(tester);
+      expect(shown(tester), Destination.statistics);
+      final bar = tester.widget<ModuleBar>(find.byType(ModuleBar));
+      expect(bar.location.module, Module.time);
+      expect(bar.location.previous, Module.quests);
       links.add(Uri.parse('daylog://timer'));
       await settle(tester);
       expect(shown(tester), Destination.timer);

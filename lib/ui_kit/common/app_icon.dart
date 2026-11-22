@@ -5,6 +5,22 @@ import '../../theme/tokens.dart';
 
 /// Names of the bundled SVG icons in `assets/icons/`.
 abstract final class IconAsset {
+  static const monitor = 'monitor';
+  static const flag = 'flag';
+  static const stop = 'stop';
+  static const pause = 'pause';
+  static const play = 'play';
+  static const minus = 'minus';
+  static const bell = 'bell';
+  static const download = 'download';
+  static const upload = 'upload';
+  static const flask = 'flask';
+  static const smartphone = 'smartphone';
+  static const contrast = 'contrast';
+  static const globe = 'globe';
+  static const refresh = 'refresh';
+  static const alert = 'alert';
+  static const arrowLeft = 'arrow_left';
   static const arrowUp = 'arrow_up';
   static const auto = 'auto';
   static const calendar = 'calendar';

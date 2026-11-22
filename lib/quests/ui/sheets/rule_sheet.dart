@@ -1,5 +1,3 @@
-import 'dart:ui' show PathMetric;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +19,8 @@ import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/common/app_segmented.dart';
 import '../../../ui_kit/sheet/confirm_destructive.dart';
 import '../../../ui_kit/sheet/app_sheet.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
+import '../../../ui_kit/controls/app_buttons.dart';
 import '../../../core/clock_provider.dart';
 
 /// Opens the Rule_Sheet: create mode, or edit mode (with "Smazat pravidlo")
@@ -490,7 +490,7 @@ class _RuleSheetState extends ConsumerState<RuleSheet> {
                 ),
               ),
             ),
-          _AddRow(label: l10n.mission_addQuest, onTap: _addRow),
+          AddRow(label: l10n.mission_addQuest, onTap: _addRow),
           if (_submitError != null) ...<Widget>[
             const SizedBox(height: Space.s12),
             Semantics(
@@ -511,46 +511,18 @@ class _RuleSheetState extends ConsumerState<RuleSheet> {
   }
 }
 
-/// Dialog with a title and a wrapping set of choices, on the sheet surface.
+/// Opens the posting-day choices in a sheet.
 Future<T?> _showChoiceDialog<T>(
   BuildContext context, {
   required String title,
   required List<Widget> children,
-}) {
-  return showDialog<T>(
-    context: context,
-    barrierColor: context.palette.scrim,
-    barrierLabel: AppLocalizations.of(context).common_close,
-    builder: (BuildContext dialogContext) {
-      final AppPalette palette = dialogContext.palette;
-      return Dialog(
-        backgroundColor: palette.sheet,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Radii.card),
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(Space.s16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Semantics(
-                header: true,
-                namesRoute: true,
-                child: Text(
-                  title,
-                  style: dialogContext.displayText.titleMedium,
-                ),
-              ),
-              const SizedBox(height: Space.s12),
-              Wrap(spacing: Space.s4, runSpacing: Space.s4, children: children),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
+}) => showAppSheet<T>(
+  context,
+  builder: (_) => AppSheet(
+    title: title,
+    child: Wrap(spacing: Space.s4, runSpacing: Space.s4, children: children),
+  ),
+);
 
 class _ChoiceTile extends StatelessWidget {
   const _ChoiceTile({
@@ -945,98 +917,6 @@ class _TemplateTile extends StatelessWidget {
 }
 
 /// The dashed "add quest" row below the template rows.
-class _AddRow extends StatelessWidget {
-  const _AddRow({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final AppPalette palette = context.palette;
-    return Semantics(
-      button: true,
-      label: label,
-      excludeSemantics: true,
-      onTap: onTap,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(Radii.control),
-        onTap: onTap,
-        child: CustomPaint(
-          painter: DashedBorderPainter(
-            color: palette.textFaint,
-            radius: Radii.control,
-          ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: Metrics.touchTarget + Space.s4,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Space.s16),
-              child: Row(
-                children: <Widget>[
-                  AppIcon(
-                    IconAsset.plus,
-                    size: Metrics.iconSmall,
-                    color: palette.textFaint,
-                  ),
-                  const SizedBox(width: Space.s12),
-                  Expanded(
-                    child: Text(
-                      label,
-                      style: context.bodyText.bodyLarge!.copyWith(
-                        color: palette.textFaint,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Dashed rounded outline of the "add" rows.
-class DashedBorderPainter extends CustomPainter {
-  const DashedBorderPainter({required this.color, required this.radius});
-
-  final Color color;
-  final double radius;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = Metrics.dashStroke;
-    final Path outline = Path()
-      ..addRRect(
-        RRect.fromRectAndRadius(
-          Offset.zero & size,
-          Radius.circular(radius),
-        ).deflate(paint.strokeWidth / 2),
-      );
-    for (final PathMetric metric in outline.computeMetrics()) {
-      double distance = 0;
-      while (distance < metric.length) {
-        canvas.drawPath(
-          metric.extractPath(distance, distance + Metrics.dashLength),
-          paint,
-        );
-        distance += Metrics.dashLength + Metrics.dashGap;
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(DashedBorderPainter old) =>
-      old.color != color || old.radius != radius;
-}
-
-/// Outlined destructive button ("Smazat pravidlo").
 class _DeleteButton extends StatelessWidget {
   const _DeleteButton({required this.label, required this.onPressed});
 
@@ -1044,23 +924,6 @@ class _DeleteButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) {
-    final AppPalette palette = context.palette;
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size(
-          double.infinity,
-          Metrics.touchTarget + Space.s8,
-        ),
-        foregroundColor: palette.destructive,
-        side: BorderSide(color: palette.destructive, width: Metrics.hairline),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Radii.control),
-        ),
-        textStyle: context.bodyText.titleMedium,
-      ),
-      child: Text(label, textAlign: TextAlign.center),
-    );
-  }
+  Widget build(BuildContext context) =>
+      AppButton.destructive(label: label, onPressed: onPressed);
 }

@@ -7,6 +7,7 @@ import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 import 'check_circle.dart';
 import 'deadline_label.dart';
 import 'difficulty_pips.dart';
@@ -43,6 +44,7 @@ class QuestCard extends StatelessWidget {
     this.trailing,
     this.deadline,
     this.today,
+    this.groupEdges,
   });
 
   final Quest quest;
@@ -51,6 +53,7 @@ class QuestCard extends StatelessWidget {
   /// [today] that decides whether it is overdue.
   final DateTime? deadline;
   final DateTime? today;
+  final GroupEdges? groupEdges;
 
   /// The check circle: completes an open Quest, reopens a done one.
   final VoidCallback onToggle;
@@ -74,7 +77,7 @@ class QuestCard extends StatelessWidget {
     final bool done = quest.isDone;
     final int xp = quest.awardedXp ?? quest.difficulty.xp;
 
-    final Color nameColor = done ? p.textDim : p.slipText;
+    final Color nameColor = done ? p.textFaint : p.text;
     final Color metaColor = done ? p.textFaint : p.slipTextDim;
     final TextStyle meta = context.bodyText.bodySmall!.copyWith(
       color: metaColor,
@@ -92,30 +95,29 @@ class QuestCard extends StatelessWidget {
         DeadlineLabel(deadline: deadline!, today: today!, style: meta),
     ];
 
-    final Widget xpText = Text(
-      '+$xp',
-      style: context.displayText.titleMedium!.copyWith(color: p.brass),
+    final Widget xpText = DecoratedBox(
+      decoration: BoxDecoration(
+        color: p.brassSoft,
+        borderRadius: BorderRadius.circular(Radii.pill),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Space.s8,
+          vertical: Space.s4,
+        ),
+        child: Text(
+          '+$xp',
+          style: context.bodyText.labelLarge?.copyWith(color: p.brassText),
+        ),
+      ),
     );
 
-    final BorderRadius radius = BorderRadius.circular(Radii.card);
-    final Color ground = done ? p.slipDone : p.slip;
-    // Daylight draws the parchment-edge outline and a soft shadow on every
-    // Quest card, done ones included (the artboard does); the dark theme has
-    // the faint board line and no shadow.
+    final radius = groupedRadius(groupEdges);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: ground,
+        color: p.card,
         borderRadius: radius,
-        border: Border.all(color: p.slipEdge, width: Metrics.hairline),
-        boxShadow: p.isLight
-            ? <BoxShadow>[
-                BoxShadow(
-                  color: p.ink.withValues(alpha: 0.10),
-                  blurRadius: 18,
-                  offset: const Offset(0, Space.s6),
-                ),
-              ]
-            : null,
+        border: groupedBorder(p.boardLine, groupEdges),
       ),
       child: Material(
         type: MaterialType.transparency,

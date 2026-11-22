@@ -51,10 +51,11 @@ void main() {
 
   calendarTest(h, 'marks Calendar_Today and fades the days of the neighbouring months', (tester) async {
     await open(tester);
-    final Container today = tester.widget<Container>(find.descendant(of: cell(11, 19), matching: find.byType(Container)).first);
-    expect(today.foregroundDecoration, isNotNull);
-    final Container other = tester.widget<Container>(find.descendant(of: cell(11, 18), matching: find.byType(Container)).first);
-    expect(other.foregroundDecoration, isNull);
+    BoxDecoration dayNumber(int day) => tester.widget<Container>(
+      find.descendant(of: cell(11, day), matching: find.byType(Container)).last,
+    ).decoration! as BoxDecoration;
+    expect(dayNumber(19).color, isNotNull);
+    expect(dayNumber(18).color, isNull);
   });
 
   calendarTest(h, 'the today mark moves at local midnight, not at 04:00', (tester) async {
@@ -64,8 +65,10 @@ void main() {
     h.clock.set(DateTime(2026, 11, 20, 0, 0));
     c.read(calendarTodayProvider.notifier).didChangeAppLifecycleState(AppLifecycleState.resumed);
     await h.settle(tester);
-    final Container today = tester.widget<Container>(find.descendant(of: cell(11, 20), matching: find.byType(Container)).first);
-    expect(today.foregroundDecoration, isNotNull);
+    final marker = tester.widget<Container>(
+      find.descendant(of: cell(11, 20), matching: find.byType(Container)).last,
+    );
+    expect((marker.decoration! as BoxDecoration).color, isNotNull);
   });
 
   calendarTest(h, 'the arrows, "Today" and the swipe change the month', (tester) async {
@@ -127,15 +130,16 @@ void main() {
     expect(find.descendant(of: cell(11, 4), matching: find.textContaining('+')), findsNothing);
   });
 
-  calendarTest(h, 'a notable day is a soft chip, a public holiday a solid one', (tester) async {
+  calendarTest(h, 'notable days and public holidays use tinted chips', (tester) async {
     await open(tester);
     await h.add(tester, name: 'Den veteránů', type: EventType.notableDay, date: d(2026, 11, 11), startMinute: null);
     await h.add(tester, name: 'Boj za svobodu', type: EventType.publicHoliday, date: d(2026, 11, 17), startMinute: null);
     BoxDecoration decoration(Finder cellFinder) => tester
         .widget<Container>(find.descendant(of: chipsIn(tester, cellFinder), matching: find.byType(Container)).first)
         .decoration! as BoxDecoration;
-    expect(decoration(cell(11, 11)).border, isNotNull);
+    expect(decoration(cell(11, 11)).border, isNull);
     expect(decoration(cell(11, 17)).border, isNull);
+    expect(decoration(cell(11, 11)).color, isNot(decoration(cell(11, 17)).color));
   });
 
   calendarTest(h, 'a multi-day event is one bar across the dates it touches, with no gap', (tester) async {
@@ -263,7 +267,7 @@ void main() {
       await h.add(tester, name: 'Tanec', type: EventType.dance, date: d(2026, 11, 18));
       await h.add(tester, name: 'Práce', type: EventType.work, date: d(2026, 11, 18), startMinute: 600, endMinute: 700);
       expect(find.byType(EventChip), findsNWidgets(2));
-      await tester.tap(find.bySemanticsLabel(en.calendar_filter));
+      await tester.tap(find.byTooltip(en.calendar_filter));
       await h.settle(tester);
       await tester.tap(find.byKey(const ValueKey<String>('filter-dance')));
       await h.settle(tester);
@@ -320,7 +324,7 @@ void main() {
       await tester.tap(cell(11, 13));
       await h.settle(tester);
       expect(find.text(en.calendar_dayEmpty), findsWidgets);
-      expect(find.byKey(const ValueKey<String>('day-add')), findsOneWidget);
+      expect(find.widgetWithText(FilledButton, en.calendar_add), findsOneWidget);
     });
 
     calendarTest(h, 'a multi-day timed event shows only its part of the day', (tester) async {
@@ -330,12 +334,12 @@ void main() {
       await h.settle(tester);
       expect(find.text('09:00'), findsOneWidget);
       expect(find.text('23:59'), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey<String>('day-close')));
+      await tester.tap(find.byTooltip(en.common_close));
       await h.settle(tester);
       await tester.tap(cell(11, 19));
       await h.settle(tester);
       expect(find.text(en.calendar_allDay), findsWidgets);
-      await tester.tap(find.byKey(const ValueKey<String>('day-close')));
+      await tester.tap(find.byTooltip(en.common_close));
       await h.settle(tester);
       await tester.tap(cell(11, 20));
       await h.settle(tester);
@@ -347,7 +351,7 @@ void main() {
       await open(tester);
       await tester.tap(cell(11, 18));
       await h.settle(tester);
-      await tester.tap(find.byKey(const ValueKey<String>('day-close')));
+      await tester.tap(find.byTooltip(en.common_close));
       await h.settle(tester);
       expect(find.text('Wednesday, November 18'), findsNothing);
       expect(find.text('November 2026'), findsOneWidget);
@@ -369,7 +373,7 @@ void main() {
     calendarTest(h, 'EventSearchScreen finds an event ignoring case and diacritics, shows its type and date, opens its detail', (tester) async {
       await open(tester);
       await h.add(tester, name: 'Řehoř na schůzce', type: EventType.meeting, date: d(2026, 12, 3));
-      await tester.tap(find.bySemanticsLabel(en.calendar_search));
+      await tester.tap(find.byTooltip(en.calendar_search));
       await h.settle(tester);
       expect(find.text(en.calendar_searchPrompt), findsOneWidget);
       await tester.enterText(find.byKey(const ValueKey<String>('search-field')), 'REHOR');
@@ -383,7 +387,7 @@ void main() {
 
     calendarTest(h, 'says "Nothing found" for no match', (tester) async {
       await open(tester);
-      await tester.tap(find.bySemanticsLabel(en.calendar_search));
+      await tester.tap(find.byTooltip(en.calendar_search));
       await h.settle(tester);
       await tester.enterText(find.byKey(const ValueKey<String>('search-field')), 'zzz');
       await h.settle(tester);
@@ -393,7 +397,7 @@ void main() {
     calendarTest(h, 'ignores the type filter', (tester) async {
       await open(tester, filter: <EventType>{EventType.work});
       await h.add(tester, name: 'Tanec', type: EventType.dance, date: d(2026, 12, 3));
-      await tester.tap(find.bySemanticsLabel(en.calendar_search));
+      await tester.tap(find.byTooltip(en.calendar_search));
       await h.settle(tester);
       await tester.enterText(find.byKey(const ValueKey<String>('search-field')), 'tanec');
       await h.settle(tester);

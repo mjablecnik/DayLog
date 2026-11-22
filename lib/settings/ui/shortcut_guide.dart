@@ -5,17 +5,26 @@ import '../../core/app_identity.dart';
 import '../../l10n/app_localizations.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
-import '../../ui_kit/common/app_segmented.dart';
+import '../../ui_kit/common/app_icon.dart';
+import '../../ui_kit/layout/grouped_list.dart';
+import '../../ui_kit/layout/section_headers.dart';
 import '../../ui_kit/common/snackbar_host.dart';
 
 /// A page the guide can make a Home Screen icon for: the name in its
 /// `daylog://<name>` link and its localized label.
 @immutable
 class ShortcutTarget {
-  const ShortcutTarget({required this.linkName, required this.label});
+  const ShortcutTarget({
+    required this.linkName,
+    required this.label,
+    this.moduleLabel,
+    this.icon,
+  });
 
   final String linkName;
   final String label;
+  final String? moduleLabel;
+  final String? icon;
 }
 
 /// Settings guide for a Home Screen icon that opens DayLog on a chosen page:
@@ -33,10 +42,8 @@ class ShortcutGuide extends StatefulWidget {
 }
 
 class _ShortcutGuideState extends State<ShortcutGuide> {
-  /// The most targets in one row of the picker.
-  static const int _perRow = 4;
-
-  late String _target = widget.targets.any((ShortcutTarget t) => t.linkName == 'calendar')
+  late String _target =
+      widget.targets.any((ShortcutTarget t) => t.linkName == 'calendar')
       ? 'calendar'
       : widget.targets.first.linkName;
 
@@ -66,48 +73,54 @@ class _ShortcutGuideState extends State<ShortcutGuide> {
       l.settings_shortcutStep6,
     ];
 
-    return Container(
-      decoration: BoxDecoration(
-        color: p.boardRaised,
-        borderRadius: BorderRadius.circular(Radii.card),
-        border: Border.all(color: p.boardLine, width: Metrics.hairline),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-              padding: const EdgeInsets.all(Space.s16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Text(l.settings_shortcutPickLabel, style: small),
-                  const SizedBox(height: Space.s8),
-                  for (int start = 0; start < widget.targets.length; start += _perRow) ...<Widget>[
-                    if (start > 0) const SizedBox(height: Space.s8),
-                    AppSegmented<String>(
-                      options: <SegmentedOption<String>>[
-                        for (final ShortcutTarget t in widget.targets.skip(start).take(_perRow))
-                          SegmentedOption<String>(value: t.linkName, label: t.label),
-                      ],
-                      selected: _target,
-                      onChanged: (String name) => setState(() => _target = name),
-                    ),
-                  ],
-                  const SizedBox(height: Space.s16),
-                  _LinkBox(link: _link, onCopy: () => _copy(context)),
-                  const SizedBox(height: Space.s16),
-                  for (int i = 0; i < steps.length; i++)
-                    _Step(number: i + 1, text: steps[i]),
-                  const SizedBox(height: Space.s4),
-                  Text(
-                    l.settings_shortcutNote,
-                    style: small.copyWith(color: p.textFaint),
-                  ),
-                ],
-              ),
+    final groups = <String?, List<ShortcutTarget>>{};
+    for (final target in widget.targets) {
+      groups
+          .putIfAbsent(target.moduleLabel, () => <ShortcutTarget>[])
+          .add(target);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(l.settings_shortcutPickLabel, style: small),
+        for (final group in groups.entries) ...[
+          const SizedBox(height: Space.s12),
+          if (group.key case final label?)
+            Padding(
+              padding: const EdgeInsets.only(bottom: Space.s6),
+              child: SectionLabel(label),
             ),
+          GroupedList(
+            children: [
+              for (final target in group.value)
+                Semantics(
+                  selected: _target == target.linkName,
+                  child: ListRow(
+                    leading: target.icon == null
+                        ? null
+                        : IconTile(target.icon!),
+                    title: target.label,
+                    trailing: _target == target.linkName
+                        ? AppIcon(IconAsset.check, color: p.brassText)
+                        : null,
+                    onTap: () => setState(() => _target = target.linkName),
+                  ),
+                ),
+            ],
+          ),
         ],
-      ),
+        const SizedBox(height: Space.s16),
+        _LinkBox(link: _link, onCopy: () => _copy(context)),
+        const SizedBox(height: Space.s16),
+        for (int i = 0; i < steps.length; i++)
+          _Step(number: i + 1, text: steps[i]),
+        const SizedBox(height: Space.s4),
+        Text(
+          l.settings_shortcutNote,
+          style: small.copyWith(color: p.textFaint),
+        ),
+      ],
     );
   }
 }
@@ -132,10 +145,7 @@ class _LinkBox extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Expanded(
-            child: SelectableText(
-              link,
-              style: context.bodyText.bodyMedium,
-            ),
+            child: SelectableText(link, style: context.bodyText.bodyMedium),
           ),
           Semantics(
             button: true,

@@ -91,7 +91,7 @@ void main() {
 
       // Description starts blank, so Submit is disabled.
       expect(
-        tester.widget<ElevatedButton>(find.byType(ElevatedButton)).onPressed,
+        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
         isNull,
       );
 
@@ -120,15 +120,15 @@ void main() {
       );
       await tester.pump();
       expect(
-        tester.widget<ElevatedButton>(find.byType(ElevatedButton)).onPressed,
+        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
         isNotNull,
       );
 
       // Submit sits below the fold once the error text and description are
       // filled in, so scroll it into the ListView's viewport before tapping.
-      await tester.ensureVisible(find.byType(ElevatedButton));
+      await tester.ensureVisible(find.byType(FilledButton));
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(ElevatedButton));
+      await tester.tap(find.byType(FilledButton));
       await tester.pumpAndSettle();
 
       // Sheet closed after a successful save.

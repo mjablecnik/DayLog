@@ -5,9 +5,9 @@ import 'package:intl/intl.dart';
 import '../../../calendar/data/calendar_models.dart';
 import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../ui_kit/common/screen_header.dart';
+import '../../../ui_kit/layout/app_header.dart';
 import '../../services/providers.dart';
-import '../hero/hero_bar.dart';
+import '../hero/level_card.dart';
 import '../sheets/quest_sheet.dart';
 import '../state/board_day.dart';
 import '../../../calendar/ui/state/calendar_state.dart';
@@ -99,7 +99,7 @@ class _BoardScreenState extends ConsumerState<BoardScreen> {
                     Space.s20,
                     Space.s4,
                   ),
-                  child: HeroBar(),
+                  child: LevelCard(),
                 ),
                 const SizedBox(height: Space.s10),
                 Expanded(child: body),
@@ -136,35 +136,11 @@ class _TitleRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = context.palette;
-    final AppLocalizations l = AppLocalizations.of(context);
-    final String date = boardDateLabel(today, l.localeName);
-    // The subtitle sits under the title, on one line, so it never wraps and never
-    // moves the title away from the menu button.
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        ScreenHeader(
-          child: Semantics(
-            header: true,
-            child: Text(l.board_title, style: context.displayText.headlineLarge),
-          ),
-        ),
-        if (openCount != null)
-          Padding(
-            // Under the title, past the menu button.
-            padding: const EdgeInsets.only(
-              left: Space.s20 + Metrics.touchTarget,
-              right: Space.s20,
-            ),
-            child: Text(
-              l.board_subtitle(openCount!, date),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: context.bodyText.bodySmall!.copyWith(color: p.textDim),
-            ),
-          ),
-      ],
+    final strings = AppLocalizations.of(context);
+    final date = boardDateLabel(today, strings.localeName);
+    return AppHeader(
+      title: strings.board_title,
+      subtitle: openCount == null ? date : strings.board_subtitle(openCount!, date),
     );
   }
 }

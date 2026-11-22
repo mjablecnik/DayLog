@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../theme/time_theme.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../theme/app_theme.dart';
+import '../../../../theme/tokens.dart';
+import '../../../../ui_kit/common/app_icon.dart';
+import '../../../../ui_kit/controls/app_buttons.dart';
 
 class RingingOverlay extends StatefulWidget {
   final AppThemeData theme;
@@ -73,39 +77,22 @@ class _RingingOverlayState extends State<RingingOverlay>
                     _scale.value,
                     1,
                   )..translateByDouble(-60 * (_scale.value - 1), -60 * (_scale.value - 1), 0, 0),
-                  child: Icon(Icons.alarm_rounded, color: theme.ink, size: 56),
+                  child: Center(
+                    child: AppIcon(IconAsset.bell, color: theme.ink, size: Metrics.ring),
+                  ),
                 );
               },
             ),
             const SizedBox(height: 16),
             Text(
               l10n.time_timerTimeUpTitle,
-              style: TextStyle(
-                color: theme.text,
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-              ),
+              style: context.displayText.headlineLarge,
             ),
-            const SizedBox(height: 48),
-            GestureDetector(
-              onTap: widget.onDismiss,
-              child: Container(
-                constraints: const BoxConstraints(minWidth: 60, minHeight: 60),
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                decoration: BoxDecoration(
-                  color: theme.panel,
-                  borderRadius: BorderRadius.circular(32),
-                  border: Border.all(color: theme.border),
-                ),
-                child: Text(
-                  l10n.time_ringingDismiss,
-                  style: TextStyle(
-                    color: theme.text,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+            const SizedBox(height: Space.s48),
+            AppButton.primary(
+              label: l10n.time_ringingDismiss,
+              onPressed: widget.onDismiss,
+              expand: false,
             ),
           ],
         ),

@@ -9,13 +9,11 @@ translation keys, QuestLog's migration code and unused column, the old test layo
 - Literal paddings, font sizes and durations: move them to `Space`/`Metrics`/`Motion` tokens. The token guard test
   (`test/theme/token_usage_test.dart`) skips `lib/time_tracking/` until then.
 - `DateTime.now()` calls: route them through the `Clock`. `test/core/clock_usage_test.dart` skips the folder.
-- Material icon-font icons (`Icons.*`): replace them with the bundled SVG icons. `test/assets_test.dart` skips the folder.
 - `AppThemeData` (`theme/time_theme.dart`) is an adapter over the palette: read `context.palette` in the widgets and
   delete it.
 - Riverpod: `StateNotifier`, `StateProvider` and `StateNotifierProvider` come from `flutter_riverpod/legacy.dart`;
   convert them to `Notifier`/`AsyncNotifier`.
 - `data/time_tracking_queries.dart` is one long extension: split reminders, completions and entries.
-- The widgets use literal `Colors.red[400]` in a few dialogs: use the palette's destructive colour.
 
 ## QuestLog modules
 

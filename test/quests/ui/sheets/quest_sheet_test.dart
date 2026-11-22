@@ -521,7 +521,7 @@ void main() {
   group('dismissal', () {
     testWidgets('an untouched sheet closes without asking', (tester) async {
       await _pumpCreate(tester);
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
 
       expect(find.text(l10n.sheet_discardTitle), findsNothing);
@@ -534,7 +534,7 @@ void main() {
       await _pumpCreate(tester);
       await tester.enterText(_nameField, 'Half-written');
       await tester.pump();
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
 
       expect(find.text(l10n.sheet_discardTitle), findsOneWidget);
@@ -543,7 +543,7 @@ void main() {
       expect(_sheet, findsOneWidget);
       expect(find.text('Half-written'), findsOneWidget);
 
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.common_discard));
       await tester.pumpAndSettle();
@@ -554,7 +554,7 @@ void main() {
       await _pumpCreate(tester);
       await tester.tap(find.text('+10 XP'));
       await tester.pump();
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
 
       expect(find.text(l10n.sheet_discardTitle), findsOneWidget);
@@ -657,7 +657,7 @@ void main() {
       expect(find.textContaining('XP already earned'), findsNothing);
 
       // Cancelling changes nothing.
-      await tester.tap(find.text(l10n.common_cancel).last);
+      await tester.tap(find.byTooltip(l10n.common_close).last);
       await tester.pumpAndSettle();
       expect(_sheet, findsOneWidget);
       expect(await f.quests(), hasLength(1));
@@ -666,7 +666,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(
         find.descendant(
-          of: find.byType(AlertDialog),
+          of: find.byType(Dialog),
           matching: find.text(l10n.common_delete),
         ),
       );
@@ -688,7 +688,7 @@ void main() {
 
       await tester.tap(
         find.descendant(
-          of: find.byType(AlertDialog),
+          of: find.byType(Dialog),
           matching: find.text(l10n.common_delete),
         ),
       );
@@ -707,7 +707,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(
         find.descendant(
-          of: find.byType(AlertDialog),
+          of: find.byType(Dialog),
           matching: find.text(l10n.common_delete),
         ),
       );

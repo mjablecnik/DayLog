@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/ui_preferences.dart';
 import 'l10n/app_localizations.dart';
 import 'shell/app_shell.dart';
 import 'quests/ui/state/quest_actions.dart';
@@ -26,6 +27,9 @@ class DayLogApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(effectiveLocaleProvider);
     final theme = ref.watch(activeThemeProvider);
+    final titleWeight = ref.watch(
+      uiPreferencesProvider.select((p) => p.titleWeight),
+    );
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).app_name,
       debugShowCheckedModeBanner: false,
@@ -37,8 +41,8 @@ class DayLogApp extends ConsumerWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       locale: locale,
-      theme: buildTheme(palette: theme.light),
-      darkTheme: buildTheme(palette: theme.dark),
+      theme: buildTheme(palette: theme.light, titleWeight: titleWeight),
+      darkTheme: buildTheme(palette: theme.dark, titleWeight: titleWeight),
       themeMode: ref.watch(themeModeProvider),
       // The application-level Localizations does not tag its subtree, so screen
       // readers would keep the device voice without this.

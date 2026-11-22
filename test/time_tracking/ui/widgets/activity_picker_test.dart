@@ -86,10 +86,10 @@ void main() {
       for (final type in activityRegistry) {
         expect(find.byKey(ValueKey('type-chip-${type.key}')), findsOneWidget);
       }
-      expect(find.text('↳ Refine: Work'), findsOneWidget);
+      expect(find.text('Refine: Work'), findsOneWidget);
       expect(find.text('Choose one'), findsOneWidget);
-      expect(find.byKey(const ValueKey('subtype-chip-paid')), findsOneWidget);
-      expect(find.byKey(const ValueKey('subtype-chip-unpaid')), findsOneWidget);
+      expect(find.text('Paid'), findsOneWidget);
+      expect(find.text('Unpaid'), findsOneWidget);
       // The first subtype is preselected.
       expect(latest, const ActivitySelection(typeKey: 'Práce', subtypeKey: 'paid'));
     });
@@ -97,7 +97,7 @@ void main() {
     testWidgets('uses the Czech texts', (tester) async {
       await _pump(tester, _picker(onChanged: (_) {}), locale: 'cs');
       expect(find.text('TYP'), findsOneWidget);
-      expect(find.text('↳ Upřesni: Práce'), findsOneWidget);
+      expect(find.text('Upřesni: Práce'), findsOneWidget);
       expect(find.text('Vyber jednu možnost'), findsOneWidget);
       expect(find.text('Placená'), findsOneWidget);
     });
@@ -108,9 +108,9 @@ void main() {
 
       await tester.tap(find.byKey(const ValueKey('type-chip-Cvičení')));
       await tester.pumpAndSettle();
-      expect(find.text('↳ Refine: Exercise'), findsOneWidget);
-      expect(find.byKey(const ValueKey('subtype-chip-walk')), findsOneWidget);
-      expect(find.byKey(const ValueKey('subtype-chip-gym')), findsOneWidget);
+      expect(find.text('Refine: Exercise'), findsOneWidget);
+      expect(find.text('Walk'), findsOneWidget);
+      expect(find.text('Gym'), findsOneWidget);
       expect(latest!.subtypeKey, 'walk');
 
       await tester.tap(find.byKey(const ValueKey('type-chip-Meeting')));
@@ -125,7 +125,7 @@ void main() {
 
       await tester.tap(find.byKey(const ValueKey('type-chip-Jídlo')));
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('subtype-chip-dinner')));
+      await tester.tap(find.text('Dinner'));
       await tester.pumpAndSettle();
       expect(latest!.subtypeKey, 'dinner');
 
@@ -210,7 +210,7 @@ void main() {
       ActivitySelection? latest;
       await _pump(tester, _picker(onChanged: (s) => latest = s));
       await tester.enterText(find.byType(TextField), 'Kept');
-      await tester.tap(find.byKey(const ValueKey('subtype-chip-unpaid')));
+      await tester.tap(find.text('Unpaid'));
       await tester.pumpAndSettle();
       expect(latest, const ActivitySelection(typeKey: 'Práce', subtypeKey: 'unpaid', project: 'Kept'));
       expect(find.text('Kept'), findsOneWidget);
@@ -227,7 +227,7 @@ void main() {
       expect(find.text('PaidName'), findsOneWidget);
       expect(find.text('UnpaidName'), findsNothing);
 
-      await tester.tap(find.byKey(const ValueKey('subtype-chip-unpaid')));
+      await tester.tap(find.text('Unpaid'));
       await tester.pumpAndSettle();
       await tester.tap(find.byType(TextField));
       await tester.pumpAndSettle();
@@ -249,9 +249,9 @@ void main() {
       await tester.enterText(find.byType(TextField).first, 'LateName');
       await tester.enterText(find.byType(TextField).last, 'Some description');
       await tester.pump();
-      await tester.ensureVisible(find.byType(ElevatedButton));
+      await tester.ensureVisible(find.byType(FilledButton));
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(ElevatedButton));
+      await tester.tap(find.byType(FilledButton));
       await tester.pumpAndSettle();
 
       expect(
@@ -305,9 +305,9 @@ void main() {
       await fill();
       await tester.enterText(find.byType(TextField).last, 'Some description');
       await tester.pump();
-      await tester.ensureVisible(find.byType(ElevatedButton));
+      await tester.ensureVisible(find.byType(FilledButton));
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(ElevatedButton));
+      await tester.tap(find.byType(FilledButton));
       await tester.pumpAndSettle();
     }
 
@@ -349,15 +349,15 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField).last, 'Some description');
       await tester.pump();
-      expect(tester.widget<ElevatedButton>(find.byType(ElevatedButton)).onPressed, isNull);
+      expect(tester.widget<FilledButton>(find.byType(FilledButton)).onPressed, isNull);
 
       await tester.enterText(find.byType(TextField).first, 'Guitar');
       await tester.pump();
-      expect(tester.widget<ElevatedButton>(find.byType(ElevatedButton)).onPressed, isNotNull);
+      expect(tester.widget<FilledButton>(find.byType(FilledButton)).onPressed, isNotNull);
 
-      await tester.ensureVisible(find.byType(ElevatedButton));
+      await tester.ensureVisible(find.byType(FilledButton));
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(ElevatedButton));
+      await tester.tap(find.byType(FilledButton));
       await tester.pumpAndSettle();
       final row = (await db.select(db.timeEntries).get()).single;
       expect(row.activityType, 'Ostatní');
@@ -391,11 +391,11 @@ void main() {
           database: db, scrollable: false);
 
       // Preselected: the first subtype; switch to passive and save.
-      await tester.tap(find.byKey(const ValueKey('subtype-chip-passive')));
+      await tester.tap(find.text('Passive entertainment'));
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.byType(ElevatedButton));
+      await tester.ensureVisible(find.byType(FilledButton));
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(ElevatedButton));
+      await tester.tap(find.byType(FilledButton));
       await tester.pumpAndSettle();
 
       final row = (await db.select(db.timeEntries).get()).single;
@@ -417,9 +417,9 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField).first, 'Guitar');
       await tester.pump();
-      await tester.ensureVisible(find.byType(ElevatedButton));
+      await tester.ensureVisible(find.byType(FilledButton));
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(ElevatedButton));
+      await tester.tap(find.byType(FilledButton));
       await tester.pumpAndSettle();
 
       final row = (await db.select(db.timeEntries).get()).single;
@@ -440,11 +440,11 @@ void main() {
       await _pump(tester, EditSheet(theme: testTimeTheme, entry: entry),
           database: db, scrollable: false);
 
-      await tester.tap(find.byKey(const ValueKey('subtype-chip-paid')));
+      await tester.tap(find.text('Paid'));
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.byType(ElevatedButton));
+      await tester.ensureVisible(find.byType(FilledButton));
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(ElevatedButton));
+      await tester.tap(find.byType(FilledButton));
       await tester.pumpAndSettle();
 
       final row = (await db.select(db.timeEntries).get()).single;
@@ -489,7 +489,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField).last, 'Some text');
       await tester.pump();
-      expect(tester.widget<ElevatedButton>(find.byType(ElevatedButton)).onPressed, isNull);
+      expect(tester.widget<FilledButton>(find.byType(FilledButton)).onPressed, isNull);
 
       await tester.ensureVisible(find.text('Skip'));
       await tester.pumpAndSettle();
@@ -509,13 +509,13 @@ void main() {
 
       await tester.tap(find.byKey(const ValueKey('type-chip-Seberozvoj')));
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('subtype-chip-ai')));
+      await tester.tap(find.text('AI consultation'));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField).last, 'Asked about ABAP');
       await tester.pump();
-      await tester.ensureVisible(find.byType(ElevatedButton));
+      await tester.ensureVisible(find.byType(FilledButton));
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(ElevatedButton));
+      await tester.tap(find.byType(FilledButton));
       await tester.pumpAndSettle();
 
       final row = (await db.select(db.timeEntries).get()).single;
@@ -528,9 +528,11 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
       await _pump(tester, sheet(), database: db, scrollable: false);
       expect(find.text('Asked about ABAP'), findsOneWidget);
-      final chip = tester.widget<Semantics>(find.descendant(
-        of: find.byKey(const ValueKey('subtype-chip-ai')),
-        matching: find.byType(Semantics),
+      final chip = tester.widget<Semantics>(find.ancestor(
+        of: find.text('AI consultation'),
+        matching: find.byWidgetPredicate(
+          (widget) => widget is Semantics && widget.properties.inMutuallyExclusiveGroup == true,
+        ),
       ).first);
       expect(chip.properties.selected, isTrue);
     });

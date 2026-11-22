@@ -18,6 +18,7 @@ import '../widgets/address_suggestions.dart';
 import '../widgets/calendar_fields.dart';
 import '../widgets/event_type_picker.dart';
 import '../../../ui_kit/common/app_icon.dart';
+import '../../../ui_kit/layout/app_header.dart';
 import '../../../ui_kit/sheet/confirm_destructive.dart';
 import 'calendar_labels.dart';
 import '../../../core/clock_provider.dart';
@@ -634,37 +635,12 @@ class _FormTopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(Space.s8, Space.s4, Space.s12, Space.s8),
-      child: Row(
-        children: <Widget>[
-          Semantics(
-            button: true,
-            label: l.common_close,
-            excludeSemantics: true,
-            onTap: onBack,
-            child: InkWell(
-              key: const ValueKey<String>('form-back'),
-              onTap: onBack,
-              customBorder: const CircleBorder(),
-              child: SizedBox(
-                width: Metrics.touchTarget,
-                height: Metrics.touchTarget,
-                child: Center(child: AppIcon(IconAsset.chevronLeft, size: Metrics.iconSmall, color: p.text)),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Semantics(
-              header: true,
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.displayText.titleLarge,
-              ),
-            ),
-          ),
+    return AppHeader(
+      title: title,
+      leading: HeaderLeading.back,
+      leadingKey: const ValueKey<String>('form-back'),
+      onLeading: onBack,
+      trailing: [
           FilledButton(
             key: const ValueKey<String>('form-save'),
             onPressed: saveEnabled ? onSave : null,
@@ -679,8 +655,7 @@ class _FormTopBar extends StatelessWidget {
             ),
             child: Text(l.common_save),
           ),
-        ],
-      ),
+      ],
     );
   }
 }

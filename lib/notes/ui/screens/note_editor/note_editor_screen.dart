@@ -12,7 +12,7 @@ import '../../../services/notes_providers.dart';
 import '../../state/notes_state.dart';
 import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
-import '../../../../ui_kit/common/app_icon.dart';
+import '../../../../ui_kit/layout/app_header.dart';
 import '../notes/node_menu.dart';
 import '../notes/notes_actions.dart';
 import 'editor_style.dart';
@@ -312,80 +312,20 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppPalette p = context.palette;
-    final AppLocalizations l = AppLocalizations.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(Space.s8, Space.s4, Space.s8, 0),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Semantics(
-                button: true,
-                label: l.a11y_breadcrumbTo(parentName),
-                excludeSemantics: true,
-                onTap: onBack,
-                child: InkWell(
-                  key: const ValueKey<String>('editor-back'),
-                  onTap: onBack,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        AppIcon(IconAsset.chevronLeft, size: Metrics.iconSmall, color: p.brassText),
-                        const SizedBox(width: Space.s4),
-                        Flexible(
-                          child: Text(
-                            parentName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: context.bodyText.bodyLarge!.copyWith(
-                              color: p.brassText,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          NodeMenuButton(enabled: menuEnabled, onSelected: onMenu),
-          Semantics(
-            button: true,
-            label: l.editor_done,
-            excludeSemantics: true,
-            onTap: onDone,
-            child: InkWell(
-              key: const ValueKey<String>('editor-done'),
-              onTap: onDone,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: Metrics.touchTarget,
-                  minWidth: Metrics.touchTarget,
-                ),
-                child: Center(
-                  widthFactor: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Space.s8),
-                    child: Text(
-                      l.editor_done,
-                      style: context.bodyText.bodyLarge!.copyWith(
-                        color: p.brassText,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+    final strings = AppLocalizations.of(context);
+    return AppHeader(
+      leading: HeaderLeading.back,
+      onLeading: onBack,
+      leadingKey: const ValueKey<String>('editor-back'),
+      title: parentName,
+      trailing: [
+        NodeMenuButton(enabled: menuEnabled, onSelected: onMenu),
+        TextButton(
+          key: const ValueKey<String>('editor-done'),
+          onPressed: onDone,
+          child: Text(strings.editor_done),
+        ),
+      ],
     );
   }
 }

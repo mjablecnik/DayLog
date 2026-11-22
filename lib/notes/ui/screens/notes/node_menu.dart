@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
-import '../../../../theme/app_theme.dart';
-import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/app_icon.dart';
+import '../../../../ui_kit/layout/header_action.dart';
+import '../../../../ui_kit/sheet/menu_sheet.dart';
 
 /// What the "···" menu of a Folder or Note offers.
 enum NodeMenuAction { rename, move, trash }
@@ -12,84 +12,51 @@ enum NodeMenuAction { rename, move, trash }
 /// destructive colour, Přesunout do koše. While [enabled] is false the button
 /// opens nothing.
 class NodeMenuButton extends StatelessWidget {
-  const NodeMenuButton({super.key, required this.enabled, required this.onSelected});
+  const NodeMenuButton({
+    super.key,
+    required this.enabled,
+    required this.onSelected,
+  });
 
   final bool enabled;
   final ValueChanged<NodeMenuAction> onSelected;
 
   @override
   Widget build(BuildContext context) {
-    final AppPalette p = context.palette;
-    final AppLocalizations l = AppLocalizations.of(context);
-
-    PopupMenuItem<NodeMenuAction> item(
-      NodeMenuAction action,
-      String label,
-      String icon, {
-      Color? color,
-    }) {
-      final Color tint = color ?? p.text;
-      return PopupMenuItem<NodeMenuAction>(
-        value: action,
-        height: Metrics.menuItem,
-        padding: const EdgeInsets.symmetric(horizontal: Space.s16),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                label,
-                style: context.bodyText.bodyLarge!.copyWith(color: tint, fontWeight: FontWeight.w500),
-              ),
-            ),
-            AppIcon(icon, size: Metrics.iconSmall, color: tint),
-          ],
-        ),
-      );
-    }
-
-    return PopupMenuButton<NodeMenuAction>(
+    final strings = AppLocalizations.of(context);
+    return HeaderAction(
       key: const ValueKey<String>('node-menu'),
-      tooltip: l.a11y_nodeMenu,
-      enabled: enabled,
-      position: PopupMenuPosition.under,
-      color: p.sheet,
-      surfaceTintColor: p.sheet.withValues(alpha: 0),
-      shadowColor: p.scrim,
-      elevation: Space.s8,
-      constraints: const BoxConstraints.tightFor(width: Metrics.menuWidth + Space.s32),
-      padding: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Radii.card),
-        side: BorderSide(color: p.boardLine, width: Metrics.hairline),
-      ),
-      onSelected: onSelected,
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<NodeMenuAction>>[
-        item(NodeMenuAction.rename, l.notes_actionRename, IconAsset.edit),
-        item(NodeMenuAction.move, l.notes_actionMove, IconAsset.move),
-        const PopupMenuDivider(height: Metrics.hairline),
-        item(NodeMenuAction.trash, l.notes_actionTrash, IconAsset.trash, color: p.destructive),
-      ],
-      child: SizedBox(
-        width: Metrics.touchTarget,
-        height: Metrics.touchTarget,
-        child: Center(
-          child: Container(
-            width: Metrics.iconButton,
-            height: Metrics.iconButton,
-            decoration: BoxDecoration(
-              color: enabled ? p.brassSoft : p.field,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: AppIcon(
-                IconAsset.more,
-                size: Metrics.iconSmall,
-                color: enabled ? p.brass : p.textFaint,
-              ),
-            ),
-          ),
-        ),
-      ),
+      icon: IconAsset.more,
+      semanticLabel: strings.a11y_nodeMenu,
+      onPressed: !enabled
+          ? null
+          : () async {
+              final action = await showMenuSheet<NodeMenuAction>(
+                context,
+                title: strings.a11y_nodeMenu,
+                items: [
+                  (
+                    value: NodeMenuAction.rename,
+                    label: strings.notes_actionRename,
+                    icon: IconAsset.edit,
+                    destructive: false,
+                  ),
+                  (
+                    value: NodeMenuAction.move,
+                    label: strings.notes_actionMove,
+                    icon: IconAsset.move,
+                    destructive: false,
+                  ),
+                  (
+                    value: NodeMenuAction.trash,
+                    label: strings.notes_actionTrash,
+                    icon: IconAsset.trash,
+                    destructive: true,
+                  ),
+                ],
+              );
+              if (context.mounted && action != null) onSelected(action);
+            },
     );
   }
 }

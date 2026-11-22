@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
+import '../layout/section_headers.dart';
 
 /// A caps label above its content: one group of the Settings page.
 class SettingsGroup extends StatelessWidget {
@@ -15,15 +15,7 @@ class SettingsGroup extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Semantics(
-          header: true,
-          child: Text(
-            label.toUpperCase(),
-            style: context.bodyText.labelSmall!.copyWith(
-              color: context.palette.textFaint,
-            ),
-          ),
-        ),
+        SectionLabel(label),
         const SizedBox(height: Space.s8),
         child,
       ],

@@ -24,7 +24,7 @@ daylog/
 │   ├── theme/               tokens (the palettes), typography, ThemeData, the theme registry
 │   ├── ui_kit/              widgets every feature uses: common/ (icons, snackbar, segmented, menu button, empty state), sheet/, forms/
 │   ├── l10n/                app_cs.arb (template), app_en.arb, generated localizations
-│   ├── shell/               the root screen: bottom bar, drawer, destinations, deep links, splash, reconciliation
+│   ├── shell/               the root screen: module bar, launcher, drawer, destinations, deep links, splash, reconciliation
 │   ├── settings/            the settings service and screen, the shortcut guide, export and import rows
 │   ├── quests/              Quests, Missions, XP, recurring rules (data/, domain/, services/, ui/)
 │   ├── calendar/            the Calendar (data/, domain/, services/, ui/)
@@ -65,11 +65,11 @@ page in the shell and, if it has settings, a group passed to `SettingsScreen.mod
 
 ### Navigation
 
-`Destination` is the one list of pages. The bottom bar shows the tabs (`Destination.tabs`: timer, quests,
-calendar, notes, settings), the drawer lists every page (`Destination.drawerItems`: Time = timer, history, statistics; Planning = quests,
-missions, calendar, notes; then settings), and the deep-link parser reads the same names. A page that is not a tab marks the tab it belongs to
-(`Destination.tab`). Every page keeps its state while another is shown (`IndexedStack`). The menu button
-(`ui_kit/common/menu_button.dart`) opens the drawer; a pushed route is outside its scope and shows no button.
+`Destination` lists the pages and defines their deep-link names. `Module` groups these pages and `ShellLocation`
+tracks the current module, previous module and last page per module. `AppShell` keeps the pages mounted in an
+`IndexedStack`. The module button opens the launcher, and a horizontal drag returns to the previous module.
+`UiPreferencesStore` saves the last location and experiment settings on the device. The importer skips `ui_`
+preferences so an imported backup preserves the receiving device's interface choices.
 
 ### Data
 
@@ -211,11 +211,11 @@ A `ThemeDefinition` (`lib/theme/theme_registry.dart`) pairs a light and a dark p
 
 | Palette | Board / accent | Notes |
 |---|---|---|
-| Dark (`guildBoard`) | `#0F1319` / `#78B4C4` | Quest cards are dark raised cards (`slip*` roles), not parchment slips. |
-| Light (`daylight`) | `#EDF1F6` / `#2B7287` | Quest cards are paper slips. |
+| Dark (`guildBoard`) | `#0F1319` / `#78B4C4` | Quest cards use the raised card surface. |
+| Light (`daylight`) | `#EDF1F6` / `#2B7287` | Quest cards use the white card surface. |
 
-The reward card and the empty-state slip stay parchment. Every body-text pair reaches 4.5:1, the accent as text
-4.5:1 and the accent as a fill 3:1 (`test/ui/theme/contrast_test.dart`).
+Shared headers, lists, controls, fields and sheets live in `lib/ui_kit/`. They use palette roles from
+`lib/theme/tokens.dart` and Figtree text styles from `lib/theme/typography.dart`. See the [visual reference](./.design/redesign-preview/README.md) for the redesign renders and their precedence.
 
 ### Deep links
 

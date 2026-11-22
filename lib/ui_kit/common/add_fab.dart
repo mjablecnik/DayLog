@@ -13,9 +13,6 @@ class AddFab extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  /// Opacity of the brass glow under the button (artboard: 35%).
-  static const double _glowAlpha = 0.35;
-
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
@@ -31,18 +28,12 @@ class AddFab extends StatelessWidget {
           height: Metrics.fab,
           child: DecoratedBox(
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: p.brass.withValues(alpha: _glowAlpha),
-                  blurRadius: 26,
-                  offset: const Offset(0, 10),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(Radii.group),
+              boxShadow: AppGlow.button(p),
             ),
             child: Material(
               color: p.brass,
-              shape: const CircleBorder(),
+              borderRadius: BorderRadius.circular(Radii.group),
               clipBehavior: Clip.antiAlias,
               child: InkWell(
                 key: const ValueKey<String>('add-fab'),

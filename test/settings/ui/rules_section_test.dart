@@ -14,6 +14,7 @@ import 'package:daylog/theme/tokens.dart';
 
 import '../../helpers/fixed_clock.dart';
 import '../../helpers/test_database.dart';
+
 import 'package:daylog/database/providers.dart';
 import 'package:daylog/core/clock_provider.dart';
 
@@ -47,9 +48,7 @@ Future<_Fixture> _pump(WidgetTester tester) async {
     UncontrolledProviderScope(
       container: container,
       child: MaterialApp(
-        theme: buildTheme(
-          palette: AppPalette.guildBoard,
-        ),
+        theme: buildTheme(palette: AppPalette.guildBoard),
         locale: const Locale('en'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -101,6 +100,17 @@ Future<void> _seedRule(
 
 Future<void> _postNow(WidgetTester tester) async {
   await tester.tap(find.text(l10n.rule_postNow));
+  await _confirmPost(tester);
+}
+
+Future<void> _confirmPost(WidgetTester tester) async {
+  await _settle(tester);
+  await tester.tap(
+    find.descendant(
+      of: find.byType(Dialog),
+      matching: find.text(l10n.rule_postNow),
+    ),
+  );
   await _settle(tester);
 }
 
@@ -113,7 +123,10 @@ void main() {
     expect(find.text(l10n.rule_addRow), findsOneWidget);
     expect(find.text(l10n.rule_addHint), findsOneWidget);
     expect(find.text(l10n.rule_postNow), findsNothing);
-    expect(find.text(l10n.settings_rulesActive(0).toUpperCase()), findsOneWidget);
+    expect(
+      find.text(l10n.settings_rulesActive(0).toUpperCase()),
+      findsOneWidget,
+    );
   });
 
   testWidgets('a rule row shows cadence, quest count and the next date', (
@@ -130,7 +143,10 @@ void main() {
       findsOneWidget,
     );
     expect(find.text(l10n.rule_postNow), findsOneWidget);
-    expect(find.text(l10n.settings_rulesActive(1).toUpperCase()), findsOneWidget);
+    expect(
+      find.text(l10n.settings_rulesActive(1).toUpperCase()),
+      findsOneWidget,
+    );
   });
 
   testWidgets(
@@ -164,7 +180,7 @@ void main() {
     await _postNow(tester);
 
     await tester.tap(find.text(l10n.rule_posted));
-    await _settle(tester);
+    await _confirmPost(tester);
 
     expect(find.textContaining(l10n.rule_postedClosedNote), findsOneWidget);
   });

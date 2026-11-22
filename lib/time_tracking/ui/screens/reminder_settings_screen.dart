@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+
+import '../../../theme/app_theme.dart';
+import '../../../theme/tokens.dart';
+import '../../../ui_kit/common/app_icon.dart';
+import '../../../ui_kit/common/empty_state.dart';
+import '../../../ui_kit/layout/app_header.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
+import '../../../ui_kit/layout/header_action.dart';
+import '../../../ui_kit/sheet/confirm_destructive.dart';
 
 import '../../theme/time_theme.dart';
 import '../../../database/app_database.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../providers/recurring_reminders_provider.dart';
-import '../widgets/reminders/reminder_card.dart';
-import '../widgets/reminders/reminder_edit_dialog.dart';
+import '../widgets/reminders/reminder_row.dart';
+import '../widgets/reminders/reminder_sheet.dart';
 
 /// Reminder list sub-screen within Settings: create, edit, delete, and
 /// toggle Recurring_Reminders (Requirement 1).
@@ -14,56 +24,39 @@ class ReminderSettingsScreen extends ConsumerWidget {
   const ReminderSettingsScreen({super.key});
 
   void _addReminder(BuildContext context, AppThemeData theme) {
-    ReminderEditDialog.show(context, theme: theme);
+    showReminderSheet(context, theme: theme);
   }
 
-  void _editReminder(BuildContext context, AppThemeData theme, RecurringReminder reminder) {
-    ReminderEditDialog.show(context, theme: theme, reminder: reminder);
+  void _editReminder(
+    BuildContext context,
+    AppThemeData theme,
+    RecurringReminder reminder,
+  ) {
+    showReminderSheet(context, theme: theme, reminder: reminder);
   }
 
   Future<void> _deleteReminder(
     BuildContext context,
     WidgetRef ref,
-    AppThemeData theme,
     RecurringReminder reminder,
   ) async {
     final l10n = AppLocalizations.of(context);
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: theme.background,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          l10n.time_reminderDeleteTitle,
-          style: TextStyle(color: theme.text, fontWeight: FontWeight.w600),
-        ),
-        content: Text(
-          l10n.time_reminderDeleteBody(reminder.name),
-          style: TextStyle(color: theme.dim, fontSize: 14),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(l10n.time_commonBack, style: TextStyle(color: theme.dim)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(
-              l10n.time_commonDelete,
-              style: TextStyle(color: Colors.red[400]),
-            ),
-          ),
-        ],
-      ),
+    final confirmed = await confirmDestructive(
+      context,
+      title: l10n.time_reminderDeleteTitle,
+      body: l10n.time_reminderDeleteBody(reminder.name),
+      confirmLabel: l10n.time_commonDelete,
     );
-    if (confirmed != true) return;
+    if (!confirmed || !context.mounted) return;
     try {
-      await ref.read(recurringRemindersProvider.notifier).deleteReminder(reminder.id);
+      await ref
+          .read(recurringRemindersProvider.notifier)
+          .deleteReminder(reminder.id);
     } catch (_) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.time_reminderDeleteFailed)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.time_reminderDeleteFailed)));
       }
     }
   }
@@ -80,77 +73,55 @@ class ReminderSettingsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 12),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Text(
-                  l10n.time_settingsRecurringRemindersLabel,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: theme.text,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Positioned(
-                  left: 4,
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back, color: theme.text),
-                    onPressed: () => Navigator.of(context).maybePop(),
-                  ),
-                ),
-                Positioned(
-                  right: 4,
-                  child: IconButton(
-                    icon: Icon(Icons.add, color: theme.text),
-                    onPressed: () => _addReminder(context, theme),
-                  ),
+            AppHeader(
+              title: l10n.time_settingsRecurringRemindersLabel,
+              leading: HeaderLeading.back,
+              trailing: [
+                HeaderAction(
+                  icon: IconAsset.plus,
+                  semanticLabel: l10n.time_reminderNewTitle,
+                  onPressed: () => _addReminder(context, theme),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
             Expanded(
               child: remindersAsync.when(
                 data: (reminders) {
                   if (reminders.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.notifications_none, size: 52, color: theme.faint),
-                            const SizedBox(height: 16),
-                            Text(
-                              l10n.time_remindersEmptyTitle,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: theme.dim, fontSize: 16),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              l10n.time_remindersEmptySubtitle,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: theme.faint, fontSize: 13),
-                            ),
-                          ],
-                        ),
-                      ),
+                    return EmptyState(
+                      title: l10n.time_remindersEmptyTitle,
+                      body: l10n.time_remindersEmptySubtitle,
+                      icon: IconAsset.bell,
                     );
                   }
-                  return ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    itemCount: reminders.length,
-                    itemBuilder: (context, index) {
-                      final reminder = reminders[index];
-                      return ReminderCard(
-                        key: ValueKey(reminder.id),
-                        reminder: reminder,
-                        theme: theme,
-                        onEdit: () => _editReminder(context, theme, reminder),
-                        onDelete: () => _deleteReminder(context, ref, theme, reminder),
-                      );
-                    },
+                  return SlidableAutoCloseBehavior(
+                    child: ListView(
+                      padding: const EdgeInsets.all(Space.s16),
+                      children: [
+                        GroupedList(
+                          children: [
+                            for (final reminder in reminders)
+                              ReminderRow(
+                                key: ValueKey(reminder.id),
+                                reminder: reminder,
+                                theme: theme,
+                                onEdit: () =>
+                                    _editReminder(context, theme, reminder),
+                                onDelete: () =>
+                                    _deleteReminder(context, ref, reminder),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: Space.s12),
+                        Text(
+                          l10n.time_reminderSwipeHint,
+                          textAlign: TextAlign.center,
+                          style: context.bodyText.bodySmall?.copyWith(
+                            color: context.palette.textFaint,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
                 loading: () => Center(

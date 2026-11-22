@@ -114,7 +114,7 @@ void main() {
       return c.decoration! as BoxDecoration;
     }
 
-    expect(decorationOf('Čeština').color, AppPalette.guildBoard.brassSoft);
+    expect(decorationOf('Čeština').color, AppPalette.guildBoard.card);
     expect(decorationOf('English').color, isNull);
 
     final TestGesture g = await tester.startGesture(

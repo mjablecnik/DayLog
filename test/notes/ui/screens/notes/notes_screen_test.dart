@@ -98,13 +98,13 @@ void main() {
       expect(tester.getTopLeft(find.byKey(const ValueKey<String>('notes-trash'))).dx, greaterThan(300));
     });
 
-    notesTest(h, 'a short title keeps the counts beside it, at the right', (tester) async {
+    notesTest(h, 'a short title also shows its counts underneath', (tester) async {
       await open(tester);
       await h.folder(tester, 'A');
       expect(find.text('Notes'), findsOneWidget);
       final Finder counts = find.text('1 folder');
-      expect(tester.getCenter(counts).dy, closeTo(tester.getCenter(find.text('Notes')).dy, 2));
-      expect(tester.getTopLeft(counts).dx, greaterThan(tester.getTopRight(find.text('Notes')).dx));
+      expect(tester.getTopLeft(counts).dy, greaterThan(tester.getTopLeft(find.text('Notes')).dy));
+      expect(tester.getTopLeft(counts).dx, tester.getTopLeft(find.text('Notes')).dx);
     });
 
     notesTest(h, 'no overflow at 320 points and a text scale of 130 %', (tester) async {
@@ -167,14 +167,12 @@ void main() {
       // Breadcrumb: Notes > ABAP > Syntax, title Syntax.
       expect(find.text('Syntax'), findsWidgets);
       expect(container(tester).read(visibleFolderProvider), s.id);
-      final double crumbX = tester
-          .getTopLeft(find.descendant(of: find.byType(Breadcrumb), matching: find.text('Notes')))
-          .dx;
-      expect(crumbX, lessThan(40), reason: 'a short breadcrumb starts at the left edge');
+      expect(find.byType(Breadcrumb), findsOneWidget);
+      expect(find.text('Notes › ABAP › Syntax'), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey<String>('notes-back')));
       await h.settle(tester);
       expect(container(tester).read(visibleFolderProvider), a.id);
-      await tester.tap(find.text('Notes').first);
+      await tester.tap(find.byKey(const ValueKey<String>('notes-back')));
       await h.settle(tester);
       expect(container(tester).read(visibleFolderProvider), isNull);
     });
@@ -190,17 +188,16 @@ void main() {
       expect(find.text('Nothing here yet'), findsOneWidget);
     });
 
-    notesTest(h, 'long breadcrumbs keep the first segment and the last two', (tester) async {
+    notesTest(h, 'long folder paths are truncated on the left', (tester) async {
       await open(tester);
       NoteNode? parent;
-      for (final String name in <String>['One', 'Two', 'Three', 'Four', 'Five']) {
+      for (final String name in <String>['First folder with a long title', 'Second long folder title', 'Third long folder title', 'Four', 'Five']) {
         parent = await h.folder(tester, name, parent: parent?.id);
       }
       container(tester).read(currentFolderProvider.notifier).open(parent!.id);
       await h.settle(tester);
-      expect(find.text('…'), findsOneWidget);
-      expect(find.text('Four'), findsWidgets);
-      expect(find.text('Two'), findsNothing);
+      expect(find.textContaining(RegExp(r'^….*Four › Five$')), findsOneWidget);
+      expect(find.text('Five'), findsOneWidget);
     });
   });
 

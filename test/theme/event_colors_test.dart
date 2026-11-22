@@ -71,6 +71,17 @@ void main() {
     }
   });
 
+  test('tinted event chips reach 4.5:1 in each theme', () {
+    for (final palette in all) {
+      for (final type in EventType.values) {
+        final color = palette.eventColor(type);
+        final fill = Color.lerp(palette.board, color, 0.26)!;
+        final ink = Color.lerp(palette.text, color, 0.40)!;
+        expect(_contrast(ink, fill), greaterThanOrEqualTo(4.5), reason: type.key);
+      }
+    }
+  });
+
   test('the colours are the same in every palette', () {
     for (final AppPalette p in all) {
       for (final EventType t in EventType.values) {

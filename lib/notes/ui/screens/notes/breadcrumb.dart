@@ -3,75 +3,60 @@ import 'package:flutter/material.dart';
 import '../../../domain/note_node.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../theme/app_theme.dart';
-import '../../../../theme/tokens.dart';
-import '../../../../ui_kit/common/app_icon.dart';
 
-/// The path from Poznámky to the Current_Folder. Every segment but the last is
-/// tappable. When the path is longer than three Folders the middle segments
-/// are replaced by an ellipsis, keeping the first and the last two.
+/// The current folder path with the end kept visible on narrow screens.
 class Breadcrumb extends StatelessWidget {
-  const Breadcrumb({super.key, required this.path, required this.onOpen});
+  const Breadcrumb({super.key, required this.path});
 
-  /// Folders from the first below the Root_Folder to the Current_Folder.
   final List<NoteNode> path;
-
-  /// Opens a Folder, or the Root_Folder for null.
-  final ValueChanged<int?> onOpen;
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l = AppLocalizations.of(context);
-    final AppPalette p = context.palette;
-    // Poznámky, then the Folders; a long path keeps only the last two of them.
-    final bool shorten = path.length > 3;
-    final List<NoteNode> shown = shorten ? path.sublist(path.length - 2) : path;
-    final List<Widget> parts = <Widget>[
-      _segment(context, l.notes_title, () => onOpen(null), current: false),
-      if (shorten) ...<Widget>[
-        _chevron(p),
-        Text('…', style: context.bodyText.bodySmall!.copyWith(color: p.textDim)),
-      ],
-      for (final NoteNode n in shown) ...<Widget>[
-        _chevron(p),
-        _segment(
-          context,
-          n.name,
-          identical(n, path.last) ? null : () => onOpen(n.id),
-          current: identical(n, path.last),
-        ),
-      ],
-    ];
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(children: parts),
+    final strings = AppLocalizations.of(context);
+    final pathText = [
+      strings.notes_title,
+      for (final folder in path) folder.name,
+    ].join(' › ');
+    final style = context.bodyText.bodySmall?.copyWith(
+      color: context.palette.textDim,
     );
-  }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final painter = TextPainter(
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+          maxLines: 1,
+        );
+        bool fits(String text) {
+          painter.text = TextSpan(text: text, style: style);
+          painter.layout();
+          return painter.width <= constraints.maxWidth;
+        }
 
-  Widget _chevron(AppPalette p) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: Space.s4),
-    child: AppIcon(IconAsset.chevronRight, size: Metrics.iconSmall - Space.s6, color: p.textFaint),
-  );
-
-  Widget _segment(BuildContext context, String text, VoidCallback? onTap, {required bool current}) {
-    final AppPalette p = context.palette;
-    final AppLocalizations l = AppLocalizations.of(context);
-    final TextStyle style = context.bodyText.bodySmall!.copyWith(
-      color: current ? p.text : p.textDim,
-      fontWeight: current ? FontWeight.w600 : FontWeight.w500,
-    );
-    final Widget label = ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-      child: Center(child: Text(text, maxLines: 1, style: style)),
-    );
-    if (onTap == null) {
-      return Semantics(label: text, excludeSemantics: true, child: label);
-    }
-    return Semantics(
-      button: true,
-      label: l.a11y_breadcrumbTo(text),
-      excludeSemantics: true,
-      onTap: onTap,
-      child: InkWell(onTap: onTap, child: label),
+        var visible = pathText;
+        if (!fits(pathText)) {
+          final characters = pathText.characters;
+          var low = 0;
+          var high = characters.length;
+          while (low < high) {
+            final middle = (low + high + 1) ~/ 2;
+            if (fits('…${characters.takeLast(middle)}')) {
+              low = middle;
+            } else {
+              high = middle - 1;
+            }
+          }
+          visible = '…${characters.takeLast(low)}';
+        }
+        painter.dispose();
+        return Text(
+          visible,
+          semanticsLabel: pathText,
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          style: style,
+        );
+      },
     );
   }
 }

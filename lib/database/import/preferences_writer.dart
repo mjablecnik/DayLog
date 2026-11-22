@@ -15,7 +15,9 @@ const Set<String> ignoredPreferenceKeys = <String>{
 const String ignoredPreferencePrefix = 'timer_';
 
 bool isImportedPreference(String key) =>
-    !ignoredPreferenceKeys.contains(key) && !key.startsWith(ignoredPreferencePrefix);
+    !ignoredPreferenceKeys.contains(key) &&
+    !key.startsWith(ignoredPreferencePrefix) &&
+    !key.startsWith('ui_');
 
 /// Writes [values] into [prefs] with their types (string, int, double, bool,
 /// list of strings), skipping the keys the importer ignores. Returns how many

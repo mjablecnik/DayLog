@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../domain/activity_types.dart';
 import '../../domain/config.dart';
@@ -8,12 +9,19 @@ import '../../theme/time_theme.dart';
 import '../../../database/app_database.dart' show TimeEntry;
 import '../../data/stats_data.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../ui_kit/common/menu_button.dart' show ShellMenuScope;
-import '../../../ui_kit/common/screen_header.dart';
+import '../../../theme/app_theme.dart';
+import '../../../theme/tokens.dart';
+import '../../../ui_kit/common/app_icon.dart';
+import '../../../ui_kit/common/app_segmented.dart';
+import '../../../ui_kit/common/empty_state.dart';
+import '../../../ui_kit/layout/app_header.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
+import '../../../ui_kit/layout/section_headers.dart';
 import '../../providers/statistics_provider.dart';
 import '../../providers/history_provider.dart' show logicalDay;
 import '../painters/bar_painter.dart';
 import '../painters/timeline_painter.dart';
+import '../widgets/controls/day_navigator.dart';
 
 DateTime _weekStart(DateTime date) {
   final start = date.subtract(Duration(days: date.weekday - 1));
@@ -55,21 +63,23 @@ class StatisticsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ScreenHeader(
-              onBack: () => ShellMenuScope.maybeOf(context)?.openPage?.call('timer'),
-              child: Text(
-                l10n.time_statsTitle,
-                style: TextStyle(
-                  color: theme.text,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
+            AppHeader(
+              title: l10n.time_statsTitle,
+              trailing: [
+                SizedBox(
+                  width: Metrics.settingsControlWidth,
+                  child: AppSegmented<StatsPeriod>(
+                    options: [
+                      SegmentedOption(value: StatsPeriod.daily, label: l10n.time_statsPeriodDay),
+                      SegmentedOption(value: StatsPeriod.weekly, label: l10n.time_statsPeriodWeek),
+                    ],
+                    selected: period,
+                    onChanged: (value) => ref.read(statisticsPeriodProvider.notifier).state = value,
+                  ),
                 ),
-              ),
+              ],
             ),
-            const SizedBox(height: 4),
-            _PeriodToggle(theme: theme),
-            const SizedBox(height: 8),
-            _DateNav(theme: theme),
+            const _DateNav(),
             const SizedBox(height: 4),
             Expanded(
               child: GestureDetector(
@@ -88,24 +98,18 @@ class StatisticsScreen extends ConsumerWidget {
                   }
                 },
                 child: statsAsync.when(
-                  data: (stats) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (period == StatsPeriod.daily)
-                        _DailyTimeline(
-                          entries: stats.entries,
-                          day: date,
-                          theme: theme,
-                        )
-                      else
-                        _WeeklyTimeline(
-                          entries: stats.entries,
-                          weekStart: _weekStart(date),
-                          theme: theme,
-                          l10n: l10n,
-                        ),
-                      Expanded(child: _StatsBody(stats: stats, theme: theme, l10n: l10n)),
-                    ],
+                  data: (stats) => _StatsBody(
+                    stats: stats,
+                    theme: theme,
+                    l10n: l10n,
+                    timeline: period == StatsPeriod.daily
+                        ? _DailyTimeline(entries: stats.entries, day: date, theme: theme)
+                        : _WeeklyTimeline(
+                            entries: stats.entries,
+                            weekStart: _weekStart(date),
+                            theme: theme,
+                            l10n: l10n,
+                          ),
                   ),
                   loading: () => Center(
                     child: CircularProgressIndicator(color: theme.accent),
@@ -126,92 +130,12 @@ class StatisticsScreen extends ConsumerWidget {
   }
 }
 
-class _PeriodToggle extends ConsumerWidget {
-  final AppThemeData theme;
-
-  const _PeriodToggle({required this.theme});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final period = ref.watch(statisticsPeriodProvider);
-    final l10n = AppLocalizations.of(context);
-
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(3),
-        decoration: BoxDecoration(
-          color: theme.track,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _PeriodSegment(
-              label: l10n.time_statsPeriodDay,
-              isActive: period == StatsPeriod.daily,
-              theme: theme,
-              onTap: () => ref.read(statisticsPeriodProvider.notifier).state =
-                  StatsPeriod.daily,
-            ),
-            _PeriodSegment(
-              label: l10n.time_statsPeriodWeek,
-              isActive: period == StatsPeriod.weekly,
-              theme: theme,
-              onTap: () => ref.read(statisticsPeriodProvider.notifier).state =
-                  StatsPeriod.weekly,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PeriodSegment extends StatelessWidget {
-  final String label;
-  final bool isActive;
-  final AppThemeData theme;
-  final VoidCallback onTap;
-
-  const _PeriodSegment({
-    required this.label,
-    required this.isActive,
-    required this.theme,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-        decoration: BoxDecoration(
-          color: isActive ? theme.accent : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isActive ? theme.ink : theme.dim,
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _DateNav extends ConsumerWidget {
-  final AppThemeData theme;
-
-  const _DateNav({required this.theme});
+  const _DateNav();
 
   String _label(AppLocalizations l10n, StatsPeriod period, DateTime date) {
-    final now = DateTime.now();
+    final today = logicalDay(DateTime.now());
     if (period == StatsPeriod.daily) {
-      final today = DateTime(now.year, now.month, now.day);
       final yesterday = today.subtract(const Duration(days: 1));
       if (date == today) return l10n.time_dayToday;
       if (date == yesterday) return l10n.time_dayYesterday;
@@ -219,7 +143,7 @@ class _DateNav extends ConsumerWidget {
     }
 
     final weekStart = _weekStart(date);
-    if (weekStart == _weekStart(now)) return l10n.time_statsThisWeek;
+    if (weekStart == _weekStart(today)) return l10n.time_statsThisWeek;
     final weekEnd = weekStart.add(const Duration(days: 6));
     return '${weekStart.day}. ${weekStart.month}. – ${weekEnd.day}. ${weekEnd.month}. ${weekEnd.year}';
   }
@@ -232,37 +156,23 @@ class _DateNav extends ConsumerWidget {
     final step = period == StatsPeriod.daily ? 1 : 7;
     final isCurrent = _isCurrentPeriod(period, date);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          icon: Icon(Icons.chevron_left, color: theme.dim),
-          onPressed: () {
-            ref.read(statisticsDateProvider.notifier).state =
-                date.subtract(Duration(days: step));
-          },
-        ),
-        Text(
-          _label(l10n, period, date),
-          style: TextStyle(
-            color: theme.text,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        IconButton(
-          icon: Icon(
-            Icons.chevron_right,
-            color: isCurrent ? theme.faint : theme.dim,
-          ),
-          onPressed: isCurrent
-              ? null
-              : () {
-                  ref.read(statisticsDateProvider.notifier).state =
-                      date.add(Duration(days: step));
-                },
-        ),
-      ],
+    final dateFormat = DateFormat.yMMMMd(l10n.localeName);
+    final start = _weekStart(date);
+    return PeriodNavigator(
+      title: _label(l10n, period, date),
+      subtitle: period == StatsPeriod.daily
+          ? DateFormat.yMMMMEEEEd(l10n.localeName).format(date)
+          : '${dateFormat.format(start)} – ${dateFormat.format(start.add(const Duration(days: 6)))}',
+      onPrevious: () {
+        ref.read(statisticsDateProvider.notifier).state =
+            date.subtract(Duration(days: step));
+      },
+      onNext: isCurrent
+          ? null
+          : () {
+              ref.read(statisticsDateProvider.notifier).state =
+                  date.add(Duration(days: step));
+            },
     );
   }
 }
@@ -281,14 +191,8 @@ class _DailyTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = theme.isDark;
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: theme.panel,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.border),
-      ),
+    return Padding(
+      padding: const EdgeInsets.all(Space.s12),
       child: SizedBox(
         height: 48,
         child: CustomPaint(
@@ -296,6 +200,7 @@ class _DailyTimeline extends StatelessWidget {
             entries: entries,
             day: day,
             theme: theme,
+            palette: context.palette,
             isDark: isDark,
           ),
           size: Size.infinite,
@@ -322,14 +227,8 @@ class _WeeklyTimeline extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = theme.isDark;
     final weekdayLabels = weekdayShortLabels(l10n);
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: theme.panel,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.border),
-      ),
+    return Padding(
+      padding: const EdgeInsets.all(Space.s12),
       child: Column(
         children: [
           for (var i = 0; i < 7; i++)
@@ -337,6 +236,7 @@ class _WeeklyTimeline extends StatelessWidget {
               padding: EdgeInsets.only(bottom: i < 6 ? 6 : 0),
               child: _WeekdayRow(
                 label: weekdayLabels[i],
+                showHourMarkers: i == 6,
                 day: weekStart.add(Duration(days: i)),
                 entries: entries,
                 theme: theme,
@@ -355,6 +255,7 @@ class _WeekdayRow extends StatelessWidget {
   final List<TimeEntry> entries;
   final AppThemeData theme;
   final bool isDark;
+  final bool showHourMarkers;
 
   const _WeekdayRow({
     required this.label,
@@ -362,6 +263,7 @@ class _WeekdayRow extends StatelessWidget {
     required this.entries,
     required this.theme,
     required this.isDark,
+    required this.showHourMarkers,
   });
 
   @override
@@ -389,13 +291,15 @@ class _WeekdayRow extends StatelessWidget {
         ),
         Expanded(
           child: SizedBox(
-            height: 28,
+            height: showHourMarkers ? Space.s32 : Space.s16,
             child: CustomPaint(
               painter: TimelinePainter(
                 entries: dayEntries,
                 day: day,
                 theme: theme,
                 isDark: isDark,
+                palette: context.palette,
+                showHourMarkers: showHourMarkers,
               ),
               size: Size.infinite,
             ),
@@ -410,208 +314,130 @@ class _StatsBody extends StatelessWidget {
   final StatsData stats;
   final AppThemeData theme;
   final AppLocalizations l10n;
+  final Widget timeline;
 
-  const _StatsBody({required this.stats, required this.theme, required this.l10n});
+  const _StatsBody({
+    required this.stats,
+    required this.theme,
+    required this.l10n,
+    required this.timeline,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (stats.byActivityType.isEmpty) {
-      return Center(
-        child: Text(
-          l10n.time_statsNoEntriesPeriod,
-          style: TextStyle(color: theme.dim, fontSize: 15),
-        ),
-      );
-    }
-
-    final isDark = theme.isDark;
-    final typeEntries = stats.byActivityType.entries.toList()
+    final palette = context.palette;
+    final types = stats.byActivityType.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    final projectEntries = stats.byProject;
+
+    Widget total(String label, Duration duration, Color color) => Expanded(
+      child: GroupedList(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(Space.s12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SectionLabel(label),
+                const SizedBox(height: Space.s4),
+                Text(
+                  formatDuration(l10n, duration),
+                  style: context.displayText.displayLarge?.copyWith(
+                    color: color,
+                    fontSize: 34,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      padding: const EdgeInsets.fromLTRB(Space.s16, Space.s8, Space.s16, Space.s24),
       children: [
-        Text(
-          l10n.time_statsByActivityType,
-          style: TextStyle(
-            color: theme.dim,
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            total(l10n.time_statsTracked, stats.totalTracked, palette.brassText),
+            const SizedBox(width: Space.s8),
+            total(l10n.time_statsUntracked, stats.untrackedTime, palette.textDim),
+          ],
         ),
-        const SizedBox(height: 10),
-        for (final entry in typeEntries)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: _ActivityTypeBar(
-              type: entry.key,
-              duration: entry.value,
-              share: stats.totalTracked.inSeconds == 0
-                  ? 0
-                  : entry.value.inSeconds / stats.totalTracked.inSeconds,
-              // Every bar is scaled to the type with the longest time.
-              progress: typeEntries.first.value.inSeconds == 0
-                  ? 0
-                  : entry.value.inSeconds / typeEntries.first.value.inSeconds,
-              subtypeDurations: stats.bySubtype[entry.key] ?? const {},
-              isDark: isDark,
-              theme: theme,
-              l10n: l10n,
-            ),
-          ),
-        if (projectEntries.isNotEmpty) ...[
-          const SizedBox(height: 8),
-          Text(
-            l10n.time_statsByProject,
-            style: TextStyle(
-              color: theme.dim,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 10),
-          for (final entry in projectEntries)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+        if (stats.totalTracked.inSeconds > 0) ...[
+          const SizedBox(height: Space.s12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(Radii.pill),
+            child: SizedBox(
+              height: Space.s12,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    width: 8,
-                    height: 8,
-                    margin: const EdgeInsets.only(right: 8),
-                    decoration: BoxDecoration(
-                      color: activityMainColor(entry.activityType, isDark: isDark),
-                      shape: BoxShape.circle,
+                  for (final (index, entry) in types.indexed) ...[
+                    if (index > 0) const SizedBox(width: Space.s2),
+                    Expanded(
+                      flex: entry.value.inSeconds.clamp(1, 1 << 30),
+                      child: ColoredBox(color: activityMainColor(entry.key, isDark: theme.isDark)),
                     ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      entry.name,
-                      style: TextStyle(
-                        color: theme.text,
-                        fontSize: 14,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Text(
-                    formatDuration(l10n, entry.duration),
-                    style: TextStyle(
-                      color: theme.dim,
-                      fontSize: 13,
-                    ),
-                  ),
+                  ],
                 ],
               ),
             ),
+          ),
+        ],
+        const SizedBox(height: Space.s12),
+        GroupedList(children: [timeline]),
+        const SizedBox(height: Space.s16),
+        if (types.isEmpty)
+          EmptyState(title: l10n.time_statsNoEntriesPeriod, icon: IconAsset.statistics)
+        else ...[
+          SectionLabel(l10n.time_statsByActivityType),
+          const SizedBox(height: Space.s8),
+          GroupedList(
+            children: [
+              for (final entry in types)
+                Padding(
+                  padding: const EdgeInsets.all(Space.s12),
+                  child: _ActivityTypeBar(
+                    type: entry.key,
+                    duration: entry.value,
+                    share: stats.totalTracked.inSeconds == 0
+                        ? 0
+                        : entry.value.inSeconds / stats.totalTracked.inSeconds,
+                    progress: types.first.value.inSeconds == 0
+                        ? 0
+                        : entry.value.inSeconds / types.first.value.inSeconds,
+                    subtypeDurations: stats.bySubtype[entry.key] ?? const {},
+                    isDark: theme.isDark,
+                    theme: theme,
+                    l10n: l10n,
+                  ),
+                ),
+            ],
+          ),
+        ],
+        if (stats.byProject.isNotEmpty) ...[
+          const SizedBox(height: Space.s16),
+          SectionLabel(l10n.time_statsByProject),
+          const SizedBox(height: Space.s8),
+          GroupedList(
+            children: [
+              for (final entry in stats.byProject)
+                ListRow(title: entry.name, value: formatDuration(l10n, entry.duration)),
+            ],
+          ),
         ],
         if (stats.byCustomName.isNotEmpty) ...[
-          const SizedBox(height: 8),
-          Text(
-            l10n.time_statsByCustomName,
-            style: TextStyle(
-              color: theme.dim,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-            ),
+          const SizedBox(height: Space.s16),
+          SectionLabel(l10n.time_statsByCustomName),
+          const SizedBox(height: Space.s8),
+          GroupedList(
+            children: [
+              for (final entry in stats.byCustomName)
+                ListRow(title: entry.name, value: formatDuration(l10n, entry.duration)),
+            ],
           ),
-          const SizedBox(height: 10),
-          for (final entry in stats.byCustomName)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                children: [
-                  Container(
-                    width: 8,
-                    height: 8,
-                    margin: const EdgeInsets.only(right: 8),
-                    decoration: BoxDecoration(
-                      color: activityMainColor('Ostatní', isDark: isDark),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      entry.name,
-                      style: TextStyle(
-                        color: theme.text,
-                        fontSize: 14,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Text(
-                    formatDuration(l10n, entry.duration),
-                    style: TextStyle(
-                      color: theme.dim,
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              ),
-            ),
         ],
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: theme.panel,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: theme.border),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10n.time_statsTotalTracked,
-                style: TextStyle(
-                  color: theme.dim,
-                  fontSize: 13,
-                ),
-              ),
-              Text(
-                formatDuration(l10n, stats.totalTracked),
-                style: TextStyle(
-                  color: theme.text,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: theme.panel,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: theme.border),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10n.time_statsUntrackedTime,
-                style: TextStyle(
-                  color: theme.dim,
-                  fontSize: 13,
-                ),
-              ),
-              Text(
-                formatDuration(l10n, stats.untrackedTime),
-                style: TextStyle(
-                  color: theme.text,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
       ],
     );
   }

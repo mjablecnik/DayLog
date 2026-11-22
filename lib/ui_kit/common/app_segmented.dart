@@ -12,12 +12,14 @@ class SegmentedOption<T> {
     required this.label,
     this.icon,
     this.caption,
-  });
+    this.semanticLabel,
+  }) : assert(label != '' || semanticLabel != null);
 
   final T value;
 
   /// Already localized.
   final String label;
+  final String? semanticLabel;
 
   /// Optional [IconAsset] name drawn before the label.
   final String? icon;
@@ -51,9 +53,9 @@ class AppSegmented<T> extends StatelessWidget {
       container: true,
       explicitChildNodes: true,
       child: Container(
-        padding: const EdgeInsets.all(Space.s4),
+        padding: const EdgeInsets.all(Space.s3),
         decoration: BoxDecoration(
-          color: p.field,
+          color: p.tone,
           borderRadius: BorderRadius.circular(Radii.control),
         ),
         child: Row(
@@ -110,14 +112,15 @@ class _SegmentState<T> extends State<_Segment<T>> {
         ? Motion.none
         : Motion.hover;
 
-    final Color? background = (on || _pressed) ? p.brassSoft : null;
+    final Color? background = _pressed ? p.brassSoft : (on ? p.card : null);
+    final String label = o.semanticLabel ?? o.label;
 
     return Semantics(
       button: true,
       selected: on,
       inMutuallyExclusiveGroup: true,
       enabled: widget.enabled,
-      label: o.caption == null ? o.label : '${o.label}, ${o.caption}',
+      label: o.caption == null ? label : '$label, ${o.caption}',
       excludeSemantics: true,
       onTap: widget.enabled ? widget.onTap : null,
       child: GestureDetector(
@@ -133,15 +136,8 @@ class _SegmentState<T> extends State<_Segment<T>> {
           padding: const EdgeInsets.symmetric(horizontal: Space.s8),
           decoration: BoxDecoration(
             color: background,
-            borderRadius: BorderRadius.circular(Radii.control - Space.s4),
-            border: on
-                // The selected option is already filled, so its pressed state
-                // is a heavier outline.
-                ? Border.all(
-                    color: p.brass,
-                    width: _pressed ? Metrics.hairline * 2 : Metrics.hairline,
-                  )
-                : null,
+            borderRadius: BorderRadius.circular(Radii.segment),
+            boxShadow: on && p.isLight ? AppGlow.segment(p) : null,
           ),
           child: Opacity(
             opacity: widget.enabled ? 1 : 0.5,
@@ -158,19 +154,20 @@ class _SegmentState<T> extends State<_Segment<T>> {
                           size: Metrics.iconSmall,
                           color: foreground,
                         ),
-                        const SizedBox(width: Space.s6),
+                        if (o.label.isNotEmpty) const SizedBox(width: Space.s6),
                       ],
-                      Flexible(
-                        child: Text(
-                          o.label,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.bodyText.labelLarge!.copyWith(
-                            color: foreground,
-                            fontSize: 13,
+                      if (o.label.isNotEmpty)
+                        Flexible(
+                          child: Text(
+                            o.label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.bodyText.labelLarge!.copyWith(
+                              color: foreground,
+                              fontSize: 13,
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                   if (o.caption != null)

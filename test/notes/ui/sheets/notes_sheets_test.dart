@@ -64,7 +64,7 @@ void main() {
           answered = true;
         },
       );
-      await tester.tap(find.text('Cancel'));
+      await tester.tap(find.byTooltip('Close'));
       await h.settle(tester);
       expect(answered, isTrue);
       expect(result, isNull);

@@ -28,7 +28,7 @@ class NoteTitleField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppPalette p = context.palette;
-    final TextStyle style = context.displayText.headlineMedium!;
+    final TextStyle style = context.displayText.displaySmall!;
     return Padding(
       padding: const EdgeInsets.fromLTRB(Space.s20, Space.s8, Space.s20, Space.s4),
       child: TextField(

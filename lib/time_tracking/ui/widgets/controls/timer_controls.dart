@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../theme/app_theme.dart';
+import '../../../../theme/tokens.dart';
+import '../../../../ui_kit/common/app_icon.dart';
+import '../../../../ui_kit/sheet/confirm_destructive.dart';
 import '../../../theme/time_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../providers/timer_provider.dart';
@@ -31,25 +35,24 @@ class TimerControls extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _CircleButton(
-          size: 52,
+          size: Metrics.fab,
           label: l10n.time_timerStopLabel,
-          icon: Icons.stop_rounded,
+          icon: IconAsset.stop,
+          caption: l10n.time_timerLogCaption,
           enabled: isRunning || isPaused,
-          theme: theme,
           onPressed: () => _stopWithConfirmation(context, notifier),
           isAccent: false,
         ),
-        const SizedBox(width: 20),
+        const SizedBox(width: Space.s20),
         _CircleButton(
-          size: 80,
+          size: Metrics.timerPrimary,
           label: isRunning
               ? l10n.time_timerPauseLabel
               : isPaused
-                  ? l10n.time_timerResumeLabel
-                  : l10n.time_timerStartLabel,
-          icon: isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
+              ? l10n.time_timerResumeLabel
+              : l10n.time_timerStartLabel,
+          icon: isRunning ? IconAsset.pause : IconAsset.play,
           enabled: true,
-          theme: theme,
           onPressed: () {
             if (isIdle) {
               notifier.setDuration(adjustedMinutes);
@@ -62,13 +65,13 @@ class TimerControls extends ConsumerWidget {
           },
           isAccent: true,
         ),
-        const SizedBox(width: 20),
+        const SizedBox(width: Space.s20),
         _CircleButton(
-          size: 52,
+          size: Metrics.fab,
           label: l10n.time_timerFinishLabel,
-          icon: Icons.flag_rounded,
+          icon: IconAsset.flag,
+          caption: l10n.time_timerFinishCaption,
           enabled: isRunning || isPaused,
-          theme: theme,
           onPressed: notifier.finishNow,
           isAccent: false,
         ),
@@ -76,41 +79,17 @@ class TimerControls extends ConsumerWidget {
     );
   }
 
-  Future<void> _stopWithConfirmation(BuildContext context, TimerNotifier notifier) async {
+  Future<void> _stopWithConfirmation(
+    BuildContext context,
+    TimerNotifier notifier,
+  ) async {
     final l10n = AppLocalizations.of(context);
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: theme.background,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          l10n.time_timerResetTitle,
-          style: TextStyle(
-              color: theme.text, fontWeight: FontWeight.w600),
-        ),
-        content: Text(
-          l10n.time_timerResetBody,
-          style: TextStyle(color: theme.dim, fontSize: 14),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(
-              l10n.time_commonCancel,
-              style: TextStyle(color: theme.dim),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(
-              l10n.time_commonReset,
-              style: TextStyle(
-                  color: Colors.red[400],
-                  fontWeight: FontWeight.w600),
-            ),
-          ),
-        ],
-      ),
+    final confirmed = await confirmDestructive(
+      context,
+      title: l10n.time_timerResetTitle,
+      body: l10n.time_timerResetBody,
+      confirmLabel: l10n.time_commonReset,
+      cancelLabel: l10n.time_commonCancel,
     );
 
     if (confirmed == true) {
@@ -120,61 +99,79 @@ class TimerControls extends ConsumerWidget {
 }
 
 class _CircleButton extends StatelessWidget {
-  final double size;
-  final String label;
-  final IconData icon;
-  final bool enabled;
-  final AppThemeData theme;
-  final VoidCallback onPressed;
-  final bool isAccent;
-
   const _CircleButton({
     required this.size,
     required this.label,
     required this.icon,
     required this.enabled,
-    required this.theme,
     required this.onPressed,
     required this.isAccent,
+    this.caption,
   });
+
+  final double size;
+  final String label;
+  final String icon;
+  final bool enabled;
+  final VoidCallback onPressed;
+  final bool isAccent;
+  final String? caption;
 
   @override
   Widget build(BuildContext context) {
-    final active = enabled;
-    final bgColor = isAccent && active ? theme.accent : theme.panel;
-    final iconColor = isAccent && active
-        ? theme.ink
-        : active
-            ? theme.text
-            : theme.faint;
-
+    final palette = context.palette;
+    final foreground = isAccent ? palette.inkOnBrass : palette.text;
     return Semantics(
       button: true,
-      enabled: active,
+      enabled: enabled,
       label: label,
       excludeSemantics: true,
-      onTap: active ? onPressed : null,
-      child: Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: bgColor,
-        border: Border.all(color: theme.border),
-        boxShadow: isAccent && active
-            ? [BoxShadow(color: theme.glow, blurRadius: 16, spreadRadius: 2)]
-            : null,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        shape: const CircleBorder(),
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: active ? onPressed : null,
-          child: Icon(icon, color: iconColor, size: size * 0.44),
+      onTap: enabled ? onPressed : null,
+      child: Opacity(
+        opacity: enabled ? 1 : 0.5,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DecoratedBox(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: isAccent ? AppGlow.button(palette) : null,
+              ),
+              child: Material(
+                color: isAccent ? palette.brass : palette.card,
+                shape: CircleBorder(
+                  side: isAccent
+                      ? BorderSide.none
+                      : BorderSide(color: palette.lineStrong),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: enabled ? onPressed : null,
+                  child: SizedBox.square(
+                    dimension: size,
+                    child: Center(
+                      child: AppIcon(
+                        icon,
+                        color: foreground,
+                        size: isAccent ? Space.s32 : Metrics.iconSize,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            if (caption case final text?) ...[
+              const SizedBox(height: Space.s4),
+              Text(
+                text,
+                style: context.bodyText.bodySmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ],
         ),
       ),
-    ),
     );
   }
 }

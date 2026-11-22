@@ -9,11 +9,11 @@ import '../../database/import/export_file.dart';
 import '../../database/import/import_providers.dart';
 import '../../database/import/import_report.dart';
 import '../../l10n/app_localizations.dart';
-import '../../theme/app_theme.dart';
-import '../../theme/tokens.dart';
 import '../../ui_kit/common/app_icon.dart';
+import '../../ui_kit/layout/grouped_list.dart';
 import '../../ui_kit/common/snackbar_host.dart';
 import '../../ui_kit/sheet/confirm_destructive.dart';
+import '../../ui_kit/sheet/app_sheet.dart';
 
 /// Asks the user for an export file and returns its text, or null when the
 /// user cancels. Tests replace it; the real one opens the system file picker.
@@ -82,22 +82,16 @@ class _ImportRowState extends ConsumerState<ImportRow> {
 
   Future<void> _showReport(ImportReport report) {
     final AppLocalizations l = AppLocalizations.of(context);
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext dialogContext) => AlertDialog(
-        title: Text(l.settings_importDoneTitle),
-        content: Text(
-          <String>[
+    return showAppSheet<void>(
+      context,
+      builder: (_) => AppSheet(
+        title: l.settings_importDoneTitle,
+        child: Text(
+          [
             l.settings_importDoneBody(report.rowsWritten, report.tables.length),
             if (!report.preferencesWritten) l.settings_importPreferencesFailed,
           ].join('\n\n'),
         ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(l.common_close),
-          ),
-        ],
       ),
     );
   }
@@ -118,43 +112,12 @@ class _ImportRowState extends ConsumerState<ImportRow> {
 
   @override
   Widget build(BuildContext context) {
-    final p = context.palette;
-    final l = AppLocalizations.of(context);
-    return Semantics(
-      button: true,
-      label: l.settings_importTitle,
-      excludeSemantics: true,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(Radii.control),
-        onTap: _import,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Space.s2, vertical: Space.s8),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        l.settings_importTitle,
-                        style: context.bodyText.bodyMedium!.copyWith(color: p.brassText),
-                      ),
-                      const SizedBox(height: Space.s2),
-                      Text(
-                        l.settings_importSubtitle,
-                        style: context.bodyText.bodySmall!.copyWith(color: p.textDim),
-                      ),
-                    ],
-                  ),
-                ),
-                AppIcon(IconAsset.chevronRight, size: Metrics.iconSmall, color: p.textFaint),
-              ],
-            ),
-          ),
-        ),
-      ),
+    final strings = AppLocalizations.of(context);
+    return ListRow(
+      title: strings.settings_importTitle,
+      leading: const IconTile(IconAsset.download),
+      showChevron: true,
+      onTap: _busy ? null : _import,
     );
   }
 }

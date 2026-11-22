@@ -9,6 +9,7 @@ import '../../services/calendar_service.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
 import '../../../ui_kit/common/snackbar_host.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 import '../../../ui_kit/sheet/confirm_destructive.dart';
 import '../../../ui_kit/sheet/app_sheet.dart';
 
@@ -44,7 +45,11 @@ Future<bool> deleteEventFlow(
   }
   if (scope == null || !context.mounted) return false;
   try {
-    final DeletedEventSnapshot snapshot = await service.deleteOccurrence(event.id, occurrenceDate, scope);
+    final DeletedEventSnapshot snapshot = await service.deleteOccurrence(
+      event.id,
+      occurrenceDate,
+      scope,
+    );
     if (!context.mounted) return true;
     showAppSnack(
       context,
@@ -68,61 +73,38 @@ class _DeleteScopeSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppPalette p = context.palette;
     final AppLocalizations l = AppLocalizations.of(context);
-    final MediaQueryData media = MediaQuery.of(context);
-    final RoundedRectangleBorder shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(Radii.control),
+    Widget choice(DeleteScope scope, String label) => ListRow(
+      key: ValueKey<String>('delete-${scope.name}'),
+      title: label,
+      titleColor: p.destructiveText,
+      onTap: () => AppSheet.close(context, scope),
     );
-    Widget choice(DeleteScope scope, String label) => Padding(
-      padding: const EdgeInsets.only(bottom: Space.s8),
-      child: FilledButton(
-        key: ValueKey<String>('delete-${scope.name}'),
-        onPressed: () => Navigator.of(context).pop(scope),
-        style: FilledButton.styleFrom(
-          minimumSize: const Size(double.infinity, Metrics.touchTarget + Space.s4),
-          backgroundColor: p.destructive,
-          foregroundColor: p.inkOnDestructive,
-          shape: shape,
-        ),
-        child: Text(label, textAlign: TextAlign.center, style: context.bodyText.labelLarge),
-      ),
-    );
-    return Material(
-      color: p.sheet,
-      clipBehavior: Clip.antiAlias,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(Radii.sheet)),
-      ),
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(Space.s20, Space.s20, Space.s20, Space.s12 + media.padding.bottom),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Semantics(
-              header: true,
-              namesRoute: true,
-              child: Text(l.calendar_deleteTitle, style: context.displayText.headlineMedium),
-            ),
-            const SizedBox(height: Space.s8),
-            Text(
-              l.calendar_deleteRepeatBody(name),
-              style: context.bodyText.bodyLarge!.copyWith(color: p.textDim),
-            ),
-            const SizedBox(height: Space.s16),
-            choice(DeleteScope.onlyThis, l.calendar_deleteOnlyThis),
-            choice(DeleteScope.thisAndFollowing, l.calendar_deleteThisAndFollowing),
-            choice(DeleteScope.all, l.calendar_deleteAll),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: TextButton.styleFrom(
-                minimumSize: const Size(double.infinity, Metrics.touchTarget),
-                foregroundColor: p.text,
-                shape: shape,
+    return AppSheet(
+      title: l.calendar_deleteTitle,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l.calendar_deleteRepeatBody(name),
+            style: context.bodyText.bodyLarge?.copyWith(color: p.textDim),
+          ),
+          const SizedBox(height: Space.s16),
+          GroupedList(
+            children: [
+              choice(DeleteScope.onlyThis, l.calendar_deleteOnlyThis),
+              choice(
+                DeleteScope.thisAndFollowing,
+                l.calendar_deleteThisAndFollowing,
               ),
-              child: Text(l.common_cancel, style: context.bodyText.labelLarge),
-            ),
-          ],
-        ),
+              choice(DeleteScope.all, l.calendar_deleteAll),
+            ],
+          ),
+          const SizedBox(height: Space.s8),
+          TextButton(
+            onPressed: () => AppSheet.close<DeleteScope>(context),
+            child: Text(l.common_cancel),
+          ),
+        ],
       ),
     );
   }

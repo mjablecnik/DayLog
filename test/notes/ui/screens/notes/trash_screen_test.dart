@@ -69,7 +69,7 @@ void main() {
     await h.run(tester, () => h.service.moveToTrash(b.id));
     h.clock.advance(const Duration(days: 19, hours: 12));
     await h.note(tester, 'a change that rebuilds the list');
-    final Color red = AppPalette.guildBoard.destructive;
+    final Color red = AppPalette.guildBoard.destructiveText;
     Color colorOf(String text) => tester.widget<Text>(find.text(text)).style!.color!;
     expect(colorOf('from Notes · deleted in 1 day'), red);
     expect(colorOf('from Notes · deleted in 11 days'), isNot(red));

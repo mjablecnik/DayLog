@@ -10,17 +10,20 @@ import '../../../services/notes_providers.dart';
 import '../../../../quests/ui/state/quest_actions.dart' show showDomainError;
 import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
-import '../../../../ui_kit/common/app_icon.dart';
+import '../../../../ui_kit/controls/app_buttons.dart';
+import '../../../../ui_kit/layout/app_header.dart';
+import '../../../../ui_kit/sheet/confirm_destructive.dart';
 import '../note_editor/editor_style.dart';
 import '../note_editor/note_markdown.dart';
 import '../note_editor/note_task_component.dart';
-import 'trash_row.dart';
 
 /// Opens the read-only preview of the trashed Note [noteId]. Completes with
 /// true when the Note was restored from the preview.
 Future<bool?> openTrashPreview(BuildContext context, int noteId) {
   return Navigator.of(context).push<bool>(
-    CupertinoPageRoute<bool>(builder: (_) => TrashPreviewScreen(noteId: noteId)),
+    CupertinoPageRoute<bool>(
+      builder: (_) => TrashPreviewScreen(noteId: noteId),
+    ),
   );
 }
 
@@ -50,7 +53,10 @@ class _TrashPreviewScreenState extends ConsumerState<TrashPreviewScreen> {
     final MutableDocument document = documentFromMarkdown(body);
     _empty = body.trim().isEmpty;
     _composer = MutableDocumentComposer();
-    _editor = createDefaultDocumentEditor(document: document, composer: _composer!);
+    _editor = createDefaultDocumentEditor(
+      document: document,
+      composer: _composer!,
+    );
   }
 
   @override
@@ -65,6 +71,25 @@ class _TrashPreviewScreenState extends ConsumerState<TrashPreviewScreen> {
     try {
       await ref.read(notesServiceProvider).restore(node.id);
       if (mounted) Navigator.of(context).pop(true);
+    } catch (error) {
+      _closing = false;
+      if (mounted) showDomainError(context, error);
+    }
+  }
+
+  Future<void> _delete(NoteNode node) async {
+    final strings = AppLocalizations.of(context);
+    final confirmed = await confirmDestructive(
+      context,
+      title: strings.trash_foreverTitle,
+      body: strings.trash_foreverBody(node.name),
+      confirmLabel: strings.trash_foreverConfirm,
+    );
+    if (!confirmed || !mounted) return;
+    _closing = true;
+    try {
+      await ref.read(notesServiceProvider).deleteForever(node.id);
+      if (mounted) Navigator.of(context).pop(false);
     } catch (error) {
       _closing = false;
       if (mounted) showDomainError(context, error);
@@ -91,64 +116,12 @@ class _TrashPreviewScreenState extends ConsumerState<TrashPreviewScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(Space.s8, Space.s4, Space.s16, 0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Semantics(
-                        button: true,
-                        label: l.common_back,
-                        excludeSemantics: true,
-                        onTap: () => Navigator.of(context).maybePop(),
-                        child: InkWell(
-                          key: const ValueKey<String>('preview-back'),
-                          onTap: () => Navigator.of(context).maybePop(),
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                AppIcon(IconAsset.chevronLeft, size: Metrics.iconSmall, color: p.brassText),
-                                const SizedBox(width: Space.s4),
-                                Text(
-                                  l.trash_title,
-                                  style: context.bodyText.bodyLarge!.copyWith(
-                                    color: p.brassText,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (node != null)
-                    RestorePill(
-                      name: node.name,
-                      onPressed: () => _restore(node),
-                      buttonKey: const ValueKey<String>('preview-restore'),
-                    ),
-                ],
-              ),
+            AppHeader(
+              leading: HeaderLeading.back,
+              leadingKey: const ValueKey<String>('preview-back'),
+              title: node?.name ?? l.trash_title,
             ),
-            if (node != null) ...<Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(Space.s20, Space.s8, Space.s20, Space.s4),
-                child: Semantics(
-                  header: true,
-                  child: Text(
-                    node.name,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.displayText.headlineMedium,
-                  ),
-                ),
-              ),
+            if (node != null) ...[
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Space.s20),
@@ -159,7 +132,9 @@ class _TrashPreviewScreenState extends ConsumerState<TrashPreviewScreen> {
                             padding: const EdgeInsets.only(top: Space.s12),
                             child: Text(
                               l.trash_previewEmpty,
-                              style: context.bodyText.bodyLarge!.copyWith(color: p.textFaint),
+                              style: context.bodyText.bodyLarge!.copyWith(
+                                color: p.textFaint,
+                              ),
                             ),
                           ),
                         )
@@ -169,10 +144,29 @@ class _TrashPreviewScreenState extends ConsumerState<TrashPreviewScreen> {
                           stylesheet: buildEditorStylesheet(context),
                           selectionStyle: buildSelectionStyles(p),
                           componentBuilders: <ComponentBuilder>[
-                            NoteTaskComponentBuilder.readOnly(toggleLabel: l.a11y_taskToggle),
+                            NoteTaskComponentBuilder.readOnly(
+                              toggleLabel: l.a11y_taskToggle,
+                            ),
                             ...readOnlyDefaultComponentBuilders,
                           ],
                         ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(Space.s16),
+                child: Column(
+                  children: [
+                    AppButton.primary(
+                      key: const ValueKey<String>('preview-restore'),
+                      label: l.trash_restore,
+                      onPressed: () => _restore(node),
+                    ),
+                    const SizedBox(height: Space.s8),
+                    AppButton.destructive(
+                      label: l.trash_forever,
+                      onPressed: () => _delete(node),
+                    ),
+                  ],
                 ),
               ),
             ] else

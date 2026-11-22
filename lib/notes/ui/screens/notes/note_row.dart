@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
-import '../../../../theme/app_theme.dart';
-import '../../../../theme/tokens.dart';
-import '../../widgets/node_tiles.dart';
+import '../../../../ui_kit/common/app_icon.dart';
+import '../../../../ui_kit/layout/grouped_list.dart';
 
 /// One Note in the list: name, the date of its last edit and a two-line preview.
 class NoteRow extends StatelessWidget {
@@ -26,53 +25,18 @@ class NoteRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppPalette p = context.palette;
-    final AppLocalizations l = AppLocalizations.of(context);
+    final strings = AppLocalizations.of(context);
     return Semantics(
       button: true,
-      label: '${l.a11y_openNote(name)}. $date. $preview',
+      label: '${strings.a11y_openNote(name)}. $date. $preview',
       excludeSemantics: true,
       onTap: onTap,
-      child: NodeCard(
+      child: ListRow(
+        leading: const IconTile(IconAsset.note),
+        title: name,
+        subtitle: preview.isEmpty ? null : preview,
+        value: date,
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(Space.s16, Space.s12, Space.s16, Space.s12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.bodyText.bodyLarge!.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  const SizedBox(width: Space.s12),
-                  Text(
-                    date,
-                    maxLines: 1,
-                    style: context.bodyText.bodySmall!.copyWith(color: p.textFaint),
-                  ),
-                ],
-              ),
-              if (preview.isNotEmpty) ...<Widget>[
-                const SizedBox(height: Space.s4),
-                Text(
-                  preview,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.bodyText.bodyMedium!.copyWith(color: p.textDim),
-                ),
-              ],
-            ],
-          ),
-        ),
       ),
     );
   }

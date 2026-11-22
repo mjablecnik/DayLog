@@ -62,11 +62,12 @@ scripts/check.sh                    # flutter analyze + all tests (about 10 min)
 scripts/release.sh 1.0.0            # bump the version, update CHANGELOG.md, commit and tag
 ```
 
-The bottom bar has five tabs: Timer, Quests, Calendar, Notes and Settings. The side drawer, opened with the
-menu button in the header of every page, lists all pages: the five tabs plus History, Statistics and Missions.
+The bottom bar shows the pages of the active module. Tap its module button to switch between Time, Quests,
+Calendar, Notes and Settings. Swipe across the same button to return to the previous module. The optional
+side drawer offers shortcuts to each module and its pages.
 
 **Moving from TimeLog and QuestLog.** In each old app (QuestLog 1.5.0, TimeLog 1.2.0), open Settings → Data →
-Export data and save the file. Then in DayLog open Settings → Data → Import data, pick the file, and confirm
+Export data and save the file. Then in DayLog open Settings → Device and data → Import data, pick the file, and confirm
 what it replaces. Compare the counts with the old app before you stop using it. The steps are in
 [DOCS.md](./DOCS.md#moving-from-timelog-and-questlog).
 

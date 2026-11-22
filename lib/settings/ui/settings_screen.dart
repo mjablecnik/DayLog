@@ -2,23 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors.dart';
-import '../../core/validation.dart';
 import '../../database/preferences.dart';
 import '../../l10n/app_localizations.dart';
 import '../../quests/services/providers.dart';
 import '../../ui_kit/forms/error_text.dart';
-import '../../ui_kit/forms/validators.dart';
 import '../ui_providers.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
 import '../../ui_kit/common/app_icon.dart';
-import '../../ui_kit/common/screen_header.dart';
+import '../../ui_kit/layout/app_header.dart';
+import '../../ui_kit/layout/header_action.dart';
+import '../../ui_kit/layout/grouped_list.dart';
 import '../../ui_kit/common/settings_group.dart';
 import '../../ui_kit/common/app_segmented.dart';
 import '../../ui_kit/common/snackbar_host.dart';
+import 'experiments_group.dart';
 import 'export_row.dart';
 import 'import_row.dart';
-import '../../ui_kit/common/settings_nav_row.dart';
+import 'hero_name_sheet.dart';
 import 'rules_screen.dart';
 import 'shortcut_guide.dart';
 import 'shortcut_screen.dart';
@@ -55,15 +56,7 @@ class SettingsScreen extends ConsumerWidget {
           children: <Widget>[
             // Outside the list, so the menu button stays reachable when the
             // list is scrolled.
-            ScreenHeader(
-              child: Semantics(
-                header: true,
-                child: Text(
-                  l.settings_title,
-                  style: context.displayText.headlineLarge,
-                ),
-              ),
-            ),
+            AppHeader(title: l.settings_title),
             Expanded(
               child: ListView(
                 keyboardDismissBehavior:
@@ -75,49 +68,61 @@ class SettingsScreen extends ConsumerWidget {
                   Space.s24,
                 ),
                 children: <Widget>[
-                  SettingsGroup(
-                    label: l.settings_groupProfile,
-                    child: const _HeroNameField(),
-                  ),
+                  const _HeroProfile(),
                   const SizedBox(height: Space.s24),
                   SettingsGroup(
-                    label: l.settings_groupLanguage,
-                    child: const _LanguageControl(),
-                  ),
-                  const SizedBox(height: Space.s24),
-                  SettingsGroup(
-                    label: l.settings_groupAppearance,
-                    child: const _ThemeControl(),
-                  ),
-                  const SizedBox(height: Space.s24),
-                  SettingsGroup(
-                    label: l.settings_groupRules,
-                    child: const _RulesLink(),
-                  ),
-                  const SizedBox(height: Space.s24),
-                  SettingsGroup(
-                    label: l.settings_shortcutTitle,
-                    child: SettingsNavRow(
-                      title: l.settings_shortcutTitle,
-                      subtitle: l.settings_shortcutSubtitle,
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => ShortcutScreen(targets: shortcutTargets),
+                    label: l.settings_groupAppearanceLanguage,
+                    child: GroupedList(
+                      children: [
+                        ListRow(
+                          title: l.settings_groupLanguage,
+                          leading: const IconTile(IconAsset.globe),
+                          trailing: const SizedBox(
+                            width: Metrics.settingsControlWidth,
+                            child: _LanguageControl(),
+                          ),
                         ),
-                      ),
+                        ListRow(
+                          title: l.settings_groupAppearance,
+                          leading: const IconTile(IconAsset.contrast),
+                          trailing: const SizedBox(
+                            width: Metrics.settingsControlWidth,
+                            child: _ThemeControl(),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: Space.s24),
-                  for (final Widget group in moduleGroups) ...<Widget>[
-                    group,
-                    const SizedBox(height: Space.s24),
-                  ],
                   SettingsGroup(
-                    label: l.settings_groupData,
-                    child: const Column(
-                      children: <Widget>[ExportRow(), ImportRow()],
+                    label: l.settings_groupPlanning,
+                    child: GroupedList(
+                      children: [const _RulesLink(), ...moduleGroups],
                     ),
                   ),
+                  const SizedBox(height: Space.s24),
+                  SettingsGroup(
+                    label: l.settings_groupDeviceData,
+                    child: GroupedList(
+                      children: [
+                        ListRow(
+                          title: l.settings_shortcutTitle,
+                          leading: const IconTile(IconAsset.smartphone),
+                          showChevron: true,
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) =>
+                                  ShortcutScreen(targets: shortcutTargets),
+                            ),
+                          ),
+                        ),
+                        const ExportRow(),
+                        const ImportRow(),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: Space.s24),
+                  const ExperimentsGroup(),
                   const SizedBox(height: Space.s24),
                   SettingsGroup(
                     label: l.settings_groupAbout,
@@ -150,11 +155,13 @@ class _LanguageControl extends ConsumerWidget {
       options: <SegmentedOption<AppLanguage>>[
         SegmentedOption<AppLanguage>(
           value: AppLanguage.cs,
-          label: l.settings_languageCs,
+          label: l.settings_languageCsShort,
+          semanticLabel: l.settings_languageCs,
         ),
         SegmentedOption<AppLanguage>(
           value: AppLanguage.en,
-          label: l.settings_languageEn,
+          label: l.settings_languageEnShort,
+          semanticLabel: l.settings_languageEn,
         ),
       ],
       selected: effective == 'cs' ? AppLanguage.cs : AppLanguage.en,
@@ -183,18 +190,21 @@ class _ThemeControl extends ConsumerWidget {
       options: <SegmentedOption<ThemeModeSetting>>[
         SegmentedOption<ThemeModeSetting>(
           value: ThemeModeSetting.light,
-          label: l.settings_themeLight,
+          label: '',
+          semanticLabel: l.settings_themeLight,
           icon: IconAsset.sun,
         ),
         SegmentedOption<ThemeModeSetting>(
           value: ThemeModeSetting.dark,
-          label: l.settings_themeDark,
+          label: '',
+          semanticLabel: l.settings_themeDark,
           icon: IconAsset.moon,
         ),
         SegmentedOption<ThemeModeSetting>(
           value: ThemeModeSetting.system,
-          label: l.settings_themeSystem,
-          icon: IconAsset.auto,
+          label: '',
+          semanticLabel: l.settings_themeSystem,
+          icon: IconAsset.monitor,
         ),
       ],
       selected: stored,
@@ -251,12 +261,13 @@ class _RulesLink extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final int count = ref.watch(rulesProvider).value?.length ?? 0;
-    return SettingsNavRow(
+    return ListRow(
       title: l.settings_groupRules,
-      subtitle: l.settings_rulesActive(count),
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const RulesScreen()),
-      ),
+      leading: const IconTile(IconAsset.repeat),
+      value: l.settings_rulesActive(count),
+      showChevron: true,
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute<void>(builder: (_) => const RulesScreen())),
     );
   }
 }
@@ -312,176 +323,72 @@ class _LicensesRow extends StatelessWidget {
   }
 }
 
-/// Hero-name field: saved when it loses focus or is submitted, with the
-/// counter and the Total_XP underneath.
-class _HeroNameField extends ConsumerStatefulWidget {
-  const _HeroNameField();
+class _HeroProfile extends ConsumerWidget {
+  const _HeroProfile();
 
   @override
-  ConsumerState<_HeroNameField> createState() => _HeroNameFieldState();
-}
-
-class _HeroNameFieldState extends ConsumerState<_HeroNameField> {
-  late final TextEditingController _controller;
-  final FocusNode _focus = FocusNode();
-  FieldError? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(
-      text: ref.read(settingsProvider).value?.heroName ?? '',
-    );
-    _focus.addListener(() {
-      if (!_focus.hasFocus) _commit();
-    });
-  }
-
-  @override
-  void dispose() {
-    _focus.dispose();
-    _controller.dispose();
-    super.dispose();
-  }
-
-  /// Validates and stores the name; an invalid name is kept in the field and
-  /// not saved.
-  Future<void> _commit() async {
-    final raw = _controller.text;
-    final error = validateHeroName(raw);
-    if (error != null) {
-      setState(() => _error = error);
-      return;
-    }
-    setState(() => _error = null);
-    final stored = ref.read(settingsProvider).value?.heroName ?? '';
-    final trimmed = raw.trim();
-    if (trimmed != raw) {
-      _controller.value = TextEditingValue(
-        text: trimmed,
-        selection: TextSelection.collapsed(offset: trimmed.length),
-      );
-    }
-    if (trimmed == stored) return;
-    try {
-      await ref.read(settingsServiceProvider).setHeroName(trimmed);
-    } catch (e) {
-      if (!mounted) return;
-      _reportFailure(context, e);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final p = context.palette;
-    final l = AppLocalizations.of(context);
-
-    // Follow outside changes (first emission, restore) unless the user is typing.
-    ref.listen<String?>(settingsProvider.select((s) => s.value?.heroName), (
-      _,
-      next,
-    ) {
-      if (next != null && !_focus.hasFocus && _controller.text != next) {
-        _controller.text = next;
-        setState(() => _error = null);
-      }
-    });
-    final totalXp = ref.watch(totalXpProvider).value ?? 0;
-    final bool hasError = _error != null;
-    final TextStyle small = context.bodyText.bodySmall!.copyWith(
-      color: p.textDim,
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        ListenableBuilder(
-          listenable: _focus,
-          builder: (BuildContext context, Widget? child) {
-            final bool active = _focus.hasFocus;
-            return Container(
-              constraints: const BoxConstraints(
-                minHeight: Metrics.touchTarget + Space.s4,
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: Space.s16),
-              decoration: BoxDecoration(
-                color: active ? p.fieldActive : p.field,
-                borderRadius: BorderRadius.circular(Radii.control),
-                border: hasError
-                    ? Border.all(color: p.destructive)
-                    : active
-                    ? Border.all(color: p.brass)
-                    : null,
-              ),
-              alignment: Alignment.centerLeft,
-              child: child,
-            );
-          },
-          child: Semantics(
-            label: l.settings_heroNameLabel,
-            textField: true,
-            child: TextField(
-              controller: _controller,
-              focusNode: _focus,
-              textInputAction: TextInputAction.done,
-              textCapitalization: TextCapitalization.words,
-              cursorColor: p.brass,
-              style: context.bodyText.bodyLarge!.copyWith(fontSize: 16),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                isDense: true,
-                // The field itself is at least as tall as the 44 px hit area,
-                // so a tap anywhere in the painted box focuses it.
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: Space.s12 + Space.s2,
-                ),
-                hintText: l.settings_heroNamePlaceholder,
-                hintStyle: context.bodyText.bodyLarge!.copyWith(
-                  fontSize: 16,
-                  color: p.textFaint,
-                ),
-              ),
-              onChanged: (String value) =>
-                  setState(() => _error = validateHeroName(value)),
-              onSubmitted: (_) => _commit(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+    final palette = context.palette;
+    final name = ref.watch(settingsProvider).value?.displayName;
+    final xp = ref.watch(totalXpProvider).value ?? 0;
+    final initial = name?.characters.first.toUpperCase();
+    return Container(
+      padding: const EdgeInsets.all(Space.s12),
+      decoration: BoxDecoration(
+        color: palette.card,
+        border: Border.all(color: palette.boardLine),
+        borderRadius: BorderRadius.circular(Radii.group),
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: Metrics.buttonHeight,
+            width: Metrics.buttonHeight,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: palette.brassSoft,
+              shape: BoxShape.circle,
             ),
-          ),
-        ),
-        if (hasError)
-          Padding(
-            padding: const EdgeInsets.only(top: Space.s6),
-            child: Semantics(
-              liveRegion: true,
-              child: Text(
-                fieldErrorText(l, _error!),
-                style: small.copyWith(color: p.destructive),
-              ),
-            ),
-          ),
-        Padding(
-          padding: const EdgeInsets.only(top: Space.s6),
-          child: Row(
-            children: <Widget>[
-              Expanded(child: Text(l.settings_totalXp(totalXp), style: small)),
-              ListenableBuilder(
-                listenable: _controller,
-                builder: (BuildContext context, Widget? child) => Text(
-                  l.settings_heroNameCounter(
-                    _controller.text.trim().runes.length,
-                    maxHeroNameLength,
+            child: initial == null
+                ? AppIcon(IconAsset.quests, color: palette.brassText)
+                : Text(
+                    initial,
+                    style: context.displayText.headlineMedium?.copyWith(
+                      color: palette.brassText,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                  style: small.copyWith(
-                    color: hasError ? p.destructive : p.textFaint,
-                    fontFeatures: const <FontFeature>[
-                      FontFeature.tabularFigures(),
-                    ],
+          ),
+          const SizedBox(width: Space.s12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name ?? strings.settings_heroNamePlaceholder,
+                  style: context.bodyText.titleLarge?.copyWith(
+                    fontSize: 18,
+                    fontWeight: const FontWeight(750),
                   ),
                 ),
-              ),
-            ],
+                Text(
+                  strings.settings_totalXp(xp),
+                  style: context.bodyText.bodySmall?.copyWith(
+                    fontSize: 13.5,
+                    color: palette.textDim,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+          HeaderAction(
+            icon: IconAsset.edit,
+            semanticLabel: strings.settings_editHeroName,
+            onPressed: () => showHeroNameSheet(context, initial: name ?? ''),
+          ),
+        ],
+      ),
     );
   }
 }

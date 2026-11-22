@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../core/event_type.dart';
 
 /// Palette roles from `.design/DESIGN.md`; one instance per theme.
@@ -37,7 +38,16 @@ class AppPalette {
     required this.sheet,
     required this.field,
     required this.fieldActive,
-  }) : brassText = brassText ?? brass,
+    required this.tone,
+    required this.lineStrong,
+    Color? card,
+    required this.glowRing,
+    required this.glowRingBlur,
+    required this.glowButton,
+    required this.glowButtonBlur,
+    required this.glowButtonOffsetY,
+  }) : card = card ?? (brightness == Brightness.dark ? boardRaised : parchment),
+       brassText = brassText ?? brass,
        destructiveText = destructiveText ?? destructive,
        brassOnParchment = brassOnParchment ?? brass,
        slip = slip ?? (brightness == Brightness.dark ? boardRaised : parchment),
@@ -61,6 +71,8 @@ class AppPalette {
   final Color parchment, parchmentEdge, ink, inkDim, inkFaint;
   final Color brass, brassSoft, inkOnBrass, destructive, inkOnDestructive;
   final Color scrim, sheet, field, fieldActive;
+  final Color tone, lineStrong, card, glowRing, glowButton;
+  final double glowRingBlur, glowButtonBlur, glowButtonOffsetY;
 
   /// The destructive colour as text on a Quest card (the overdue Deadline); darker
   /// than the fill in the light theme so that it reaches 4.5:1 on parchment.
@@ -112,6 +124,13 @@ class AppPalette {
     sheet: Color(0xFF18202B),
     field: Color(0x0FE6EAF2),
     fieldActive: Color(0x1A78B4C4),
+    tone: Color(0x0FE6EAF2),
+    lineStrong: Color(0x24E6EAF2),
+    glowRing: Color(0x8C78B4C4),
+    glowRingBlur: 9,
+    glowButton: Color(0x7378B4C4),
+    glowButtonBlur: 26,
+    glowButtonOffsetY: 0,
   );
 
   /// Light theme: cool off-white ground, darkened teal accent.
@@ -140,17 +159,27 @@ class AppPalette {
     sheet: Color(0xFFF8FAFD),
     field: Color(0x0D15202B),
     fieldActive: Color(0x1A2B7287),
+    tone: Color(0x0D15202B),
+    lineStrong: Color(0x2115202B),
+    glowRing: Color(0x4D2B7287),
+    glowRingBlur: 5,
+    glowButton: Color(0x522B7287),
+    glowButtonBlur: 16,
+    glowButtonOffsetY: 4,
   );
 }
 
 /// Spacing scale in logical pixels.
 abstract final class Space {
   static const double s2 = 2;
+  static const double s3 = 3;
   static const double s4 = 4;
   static const double s6 = 6;
   static const double s8 = 8;
   static const double s10 = 10;
   static const double s12 = 12;
+  static const double s13 = 13;
+  static const double s14 = 14;
   static const double s16 = 16;
   static const double s18 = 18;
   static const double s20 = 20;
@@ -158,12 +187,26 @@ abstract final class Space {
   static const double s24 = 24;
   static const double s26 = 26;
   static const double s32 = 32;
+  static const double s36 = 36;
   static const double s48 = 48;
   static const double s64 = 64;
 }
 
 /// Corner radii.
 abstract final class Radii {
+  static const double group = 18;
+  static const double tile = 20;
+  static const double drawerIcon = 13;
+  static const double launcherIcon = 12;
+  static const double field = 14;
+  static const double button = 16;
+  static const double headerAction = 14;
+  static const double iconTile = 10;
+  static const double segment = 9;
+  static const double tag = 8;
+  static const double chipSmall = 5;
+  static const double dialog = 26;
+  static const double sheetTop = 28;
   static const double card = 14;
   static const double control = 12;
   static const double sheet = 24;
@@ -173,10 +216,42 @@ abstract final class Radii {
 
 /// Sizes that are not spacing.
 abstract final class Metrics {
+  static const double header = 64;
+  static const double moduleButton = 50;
+  static const double moduleSlot = 66;
+  static const double barContent = 66;
+  static const double singleTabMax = 92;
+  static const double drawerEdge = 20;
+  static const double drawerWidth = 312;
+  static const double drawerIcon = 42;
+  static const double historyTimeWidth = 42;
+  static const double timerRing = 290;
+  static const double timerStroke = 8;
+  static const double timerPrimary = 84;
+  static const double drawerChipInset = 68;
+  static const double launcherIcon = 40;
+  static const double tileMin = 112;
+  static const double settingsControlWidth = 144;
+  static const double weightControlWidth = 192;
+  static const double iconTile = 34;
+  static const double listRowMin = 56;
+  static const double buttonHeight = 54;
+  static const double pillButton = 32;
+  static const double checkCircle = 24;
+  static const double pipWidth = 12;
+  static const double pipHeight = 4;
+  static const double chipDot = 8;
+  static const double dialogIcon = 48;
+  static const double confirmDialogWidth = 420;
+  static const double emptyIcon = 64;
+  static const double emptyStateGlyph = 28;
+  static const double badge = 18;
+  static const double focusBorder = 2;
   static const double touchTarget = 44;
   static const double checkPainted = 28;
   static const double heroBar = 6;
   static const double ring = 56;
+  static const double missionRing = 50;
   static const double ringRadius = 24;
   static const double ringStroke = 5;
   static const double swipeAction = 84;
@@ -211,7 +286,7 @@ abstract final class Metrics {
   static const double menuItem = 46;
 
   /// Height of the progress bar on the Mission detail header.
-  static const double detailBar = 10;
+  static const double detailBar = 8;
 
   /// Diameter of the seal on a completed Mission.
   static const double detailSeal = 48;
@@ -290,5 +365,6 @@ extension EventTypeColors on AppPalette {
   Color get eventChipInk => const Color(0xFF14110A);
 
   /// The fill of a Soft_Chip: the type colour tinted over the ground.
-  Color eventSoftFill(EventType type) => eventColor(type).withValues(alpha: 0.24);
+  Color eventSoftFill(EventType type) =>
+      eventColor(type).withValues(alpha: 0.24);
 }

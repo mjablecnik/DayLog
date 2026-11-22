@@ -4,6 +4,8 @@ import '../../../domain/date_format_utils.dart';
 import '../../../theme/time_theme.dart';
 import '../../../../database/app_database.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../theme/app_theme.dart';
+import '../../../../theme/tokens.dart';
 
 class DaySummary extends StatelessWidget {
   final List<TimeEntry> entries;
@@ -25,24 +27,43 @@ class DaySummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final count = entries.length;
+    final palette = context.palette;
+    final style = context.bodyText.bodySmall?.copyWith(
+      fontSize: 13,
+      fontWeight: const FontWeight(750),
+    );
+    Widget pill(String label, Color fill, Color color) => DecoratedBox(
+      decoration: BoxDecoration(
+        color: fill,
+        borderRadius: BorderRadius.circular(Radii.pill),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Space.s12,
+          vertical: Space.s6,
+        ),
+        child: Text(label, style: style?.copyWith(color: color)),
+      ),
+    );
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Space.s16,
+        vertical: Space.s8,
+      ),
+      child: Wrap(
+        spacing: Space.s8,
+        runSpacing: Space.s6,
         children: [
-          Text(
+          pill(
             l10n.time_historyEntryCount(count),
-            style: TextStyle(
-              color: theme.dim,
-              fontSize: 13,
-            ),
+            palette.tone,
+            palette.textDim,
           ),
-          const SizedBox(width: 16),
-          Text(
+          pill(
             l10n.time_historyTotalLabel(formatDuration(l10n, _totalTime())),
-            style: TextStyle(
-              color: theme.dim,
-              fontSize: 13,
-            ),
+            palette.brassSoft,
+            palette.brassText,
           ),
         ],
       ),

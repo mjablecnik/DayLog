@@ -13,6 +13,8 @@ import '../../theme/app_theme.dart';
 import '../../theme/tokens.dart';
 import '../../ui_kit/common/haptics.dart';
 import '../../ui_kit/common/snackbar_host.dart';
+import '../../ui_kit/layout/grouped_list.dart';
+import '../../ui_kit/sheet/confirm_destructive.dart';
 import 'rule_row.dart';
 
 /// Recurring rules group of the Settings_Screen (requirement 12): the header
@@ -27,6 +29,13 @@ class RulesSection extends ConsumerWidget {
     RuleSummary rule,
   ) async {
     final l = AppLocalizations.of(context);
+    final confirmed = await confirmAction(
+      context,
+      title: rule.name,
+      body: l.rule_addHint,
+      confirmLabel: l.rule_postNow,
+    );
+    if (!confirmed || !context.mounted) return;
     unawaited(Haptics.light());
     try {
       final result = await ref.read(recurrenceServiceProvider).postNow(rule.id);
@@ -73,16 +82,18 @@ class RulesSection extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: Space.s8),
-        for (final rule in rules) ...<Widget>[
-          RuleRow(
-            key: ValueKey<int>(rule.id),
-            rule: rule,
-            onEdit: () => showRuleSheet(context, editing: rule),
-            onPostNow: () => _postNow(context, ref, rule),
-          ),
-          const SizedBox(height: Space.s8),
-        ],
-        AddRuleRow(onTap: () => showRuleSheet(context)),
+        GroupedList(
+          children: [
+            for (final rule in rules)
+              RuleRow(
+                key: ValueKey<int>(rule.id),
+                rule: rule,
+                onEdit: () => showRuleSheet(context, editing: rule),
+                onPostNow: () => _postNow(context, ref, rule),
+              ),
+            AddRuleRow(onTap: () => showRuleSheet(context)),
+          ],
+        ),
         const SizedBox(height: Space.s8),
         Text(
           l.rule_addHint,

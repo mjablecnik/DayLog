@@ -1,5 +1,3 @@
-import 'dart:ui' show PathMetric;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,6 +14,7 @@ import '../cards/difficulty_pips.dart';
 import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/common/app_segmented.dart';
 import '../../../ui_kit/sheet/app_sheet.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 
 /// Opens the Mission_Sheet: create mode (name, bonus and the first quest rows)
 /// or, when [editing] is given, edit mode (name and bonus only).
@@ -292,7 +291,7 @@ class _MissionSheetState extends ConsumerState<MissionSheet> {
                     child: _rowWidget(context, _rows[index]),
                   ),
             ),
-            _AddRow(label: l10n.mission_addQuest, onTap: _addRow),
+            AddRow(label: l10n.mission_addQuest, onTap: _addRow),
           ],
           if (_submitError != null) ...<Widget>[
             const SizedBox(height: Space.s12),
@@ -547,95 +546,4 @@ class _QuestRowTile extends StatelessWidget {
       ),
     );
   }
-}
-
-/// The dashed "Přidat quest" row below the quest rows.
-class _AddRow extends StatelessWidget {
-  const _AddRow({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final AppPalette palette = context.palette;
-    return Semantics(
-      button: true,
-      label: label,
-      excludeSemantics: true,
-      onTap: onTap,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(Radii.control),
-        onTap: onTap,
-        child: CustomPaint(
-          painter: _DashedBorderPainter(
-            color: palette.textFaint,
-            radius: Radii.control,
-          ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: Metrics.touchTarget + Space.s4,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Space.s16),
-              child: Row(
-                children: <Widget>[
-                  AppIcon(
-                    IconAsset.plus,
-                    size: Metrics.iconSmall,
-                    color: palette.textFaint,
-                  ),
-                  const SizedBox(width: Space.s12),
-                  Expanded(
-                    child: Text(
-                      label,
-                      style: context.bodyText.bodyLarge!.copyWith(
-                        color: palette.textFaint,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DashedBorderPainter extends CustomPainter {
-  const _DashedBorderPainter({required this.color, required this.radius});
-
-  static const double _dash = 6;
-  static const double _gap = 4;
-
-  final Color color;
-  final double radius;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = Metrics.hairline * 1.5;
-    final Path outline = Path()
-      ..addRRect(
-        RRect.fromRectAndRadius(
-          Offset.zero & size,
-          Radius.circular(radius),
-        ).deflate(paint.strokeWidth / 2),
-      );
-    for (final PathMetric metric in outline.computeMetrics()) {
-      double distance = 0;
-      while (distance < metric.length) {
-        canvas.drawPath(metric.extractPath(distance, distance + _dash), paint);
-        distance += _dash + _gap;
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(_DashedBorderPainter old) =>
-      old.color != color || old.radius != radius;
 }

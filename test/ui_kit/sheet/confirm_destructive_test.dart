@@ -64,7 +64,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(answer.value, isTrue);
-    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.byType(Dialog), findsNothing);
   });
 
   testWidgets('the cancel button resolves false', (WidgetTester tester) async {
@@ -74,7 +74,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(answer.value, isFalse);
-    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.byType(Dialog), findsNothing);
   });
 
   testWidgets('a custom cancel label replaces the default', (
@@ -93,7 +93,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(answer.value, isFalse);
-    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.byType(Dialog), findsNothing);
   });
 
   testWidgets('the system back gesture resolves false', (
@@ -129,7 +129,7 @@ void main() {
     await _pumpAsk(tester);
 
     for (final Finder finder in <Finder>[
-      find.widgetWithText(TextButton, l10n.common_cancel),
+      find.widgetWithText(FilledButton, l10n.common_cancel),
       find.widgetWithText(FilledButton, 'Delete'),
     ]) {
       final Size size = tester.getSize(finder);
@@ -170,7 +170,7 @@ void main() {
 
     expect(tester.takeException(), isNull);
     final Offset cancel = tester.getTopLeft(
-      find.widgetWithText(TextButton, 'Continue editing what I typed'),
+      find.widgetWithText(FilledButton, 'Continue editing what I typed'),
     );
     final Offset confirm = tester.getTopLeft(
       find.widgetWithText(FilledButton, 'Delete'),

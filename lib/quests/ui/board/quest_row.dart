@@ -5,6 +5,7 @@ import '../../data/models.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
+import '../../../ui_kit/layout/grouped_list.dart';
 import '../cards/quest_card.dart';
 import '../../../ui_kit/common/app_icon.dart';
 
@@ -21,6 +22,7 @@ class QuestRow extends StatelessWidget {
     this.missionName,
     this.deadline,
     this.today,
+    this.groupEdges,
     required this.onToggle,
     required this.onEdit,
     required this.onDelete,
@@ -36,6 +38,7 @@ class QuestRow extends StatelessWidget {
   /// The Quest's Deadline and the Board_Day date, for the card.
   final DateTime? deadline;
   final DateTime? today;
+  final GroupEdges? groupEdges;
   final VoidCallback onToggle;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -50,7 +53,7 @@ class QuestRow extends StatelessWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Space.s20, 0, Space.s20, Space.s10),
+      padding: EdgeInsets.fromLTRB(Space.s20, 0, Space.s20, groupEdges?.last == false ? 0 : Space.s10),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           // Two actions of Metrics.swipeAction each, as a share of the card.
@@ -87,6 +90,7 @@ class QuestRow extends StatelessWidget {
               missionName: missionName,
               deadline: deadline,
               today: today,
+              groupEdges: groupEdges,
               onToggle: onToggle,
               onTap: onEdit,
             ),

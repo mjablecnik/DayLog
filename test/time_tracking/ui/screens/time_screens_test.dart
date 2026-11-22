@@ -12,6 +12,9 @@ import 'package:daylog/time_tracking/ui/screens/reminder_action_screen.dart';
 import 'package:daylog/time_tracking/ui/screens/reminder_settings_screen.dart';
 import 'package:daylog/time_tracking/ui/screens/statistics_screen.dart';
 import 'package:daylog/time_tracking/ui/screens/timer_screen.dart';
+import 'package:daylog/time_tracking/ui/widgets/cards/history_row.dart';
+import 'package:daylog/time_tracking/ui/widgets/reminders/reminder_sheet.dart';
+import 'package:daylog/time_tracking/ui/widgets/sheets/edit_sheet.dart';
 
 import '../../../helpers/test_database.dart';
 import '../../../helpers/time_theme.dart';
@@ -77,11 +80,14 @@ void main() {
   }
 
   testWidgets(
-    'TimerScreen shows the default 20 minutes and the phase "Ready"',
+    'TimerScreen shows the countdown and exposes the phase to accessibility',
     (tester) async {
       final AppDatabase db = await pump(tester, const TimerScreen());
       expect(find.text('20:00'), findsOneWidget);
-      expect(find.text('READY'), findsOneWidget);
+      expect(find.text('READY'), findsNothing);
+      final semantics = tester.ensureSemantics();
+      expect(find.bySemanticsLabel('READY, 20:00'), findsOneWidget);
+      semantics.dispose();
       await close(tester, db);
     },
   );
@@ -96,6 +102,42 @@ void main() {
     );
     expect(find.text('History'), findsOneWidget);
     expect(find.text('Write the spec'), findsOneWidget);
+    await close(tester, db);
+  });
+
+  testWidgets('history tap and swipe edit the same entry and delete confirms', (
+    tester,
+  ) async {
+    final db = await pump(tester, const HistoryScreen(), seed: seedEntry);
+    final row = find.byType(HistoryRow);
+    final sheet = find.byType(EditSheet);
+    final entry = (await tester.runAsync(db.select(db.timeEntries).getSingle))!;
+
+    await tester.tap(row);
+    await tester.pumpAndSettle();
+    expect(tester.widget<EditSheet>(sheet).entry, entry);
+    await tester.tap(find.byTooltip('Close'));
+    await tester.pumpAndSettle();
+
+    await tester.drag(row, const Offset(-250, 0));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(ValueKey('history-edit-${entry.id}')));
+    await tester.pumpAndSettle();
+    expect(tester.widget<EditSheet>(sheet).entry, entry);
+    await tester.tap(find.byTooltip('Close'));
+    await tester.pumpAndSettle();
+
+    await tester.drag(row, const Offset(-250, 0));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(ValueKey('history-delete-${entry.id}')));
+    await tester.pumpAndSettle();
+    expect(find.text('Delete entry?'), findsOneWidget);
+    expect(await tester.runAsync(db.select(db.timeEntries).getSingle), entry);
+    await tester.tap(find.widgetWithText(FilledButton, 'Delete'));
+    await tester.pumpAndSettle();
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 80)));
+    await tester.pumpAndSettle();
+    expect(await tester.runAsync(db.select(db.timeEntries).get), isEmpty);
     await close(tester, db);
   });
 
@@ -118,6 +160,27 @@ void main() {
   ) async {
     final AppDatabase db = await pump(tester, const ReminderSettingsScreen());
     expect(find.byType(ReminderSettingsScreen), findsOneWidget);
+    await close(tester, db);
+  });
+
+  testWidgets('ReminderSheet shows its counter and confirms discarding edits', (
+    tester,
+  ) async {
+    final db = await pump(tester, const ReminderSettingsScreen());
+    await tester.tap(find.byTooltip('New reminder'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ReminderSheet), findsOneWidget);
+    expect(find.text('Window spans past midnight into the next day.'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), 'Walk');
+    await tester.pump();
+    expect(find.text('4 / 100'), findsOneWidget);
+    await tester.tap(find.byTooltip('Close'));
+    await tester.pumpAndSettle();
+    expect(find.text('Discard changes?'), findsOneWidget);
+    await tester.tap(find.text('Discard'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ReminderSheet), findsNothing);
     await close(tester, db);
   });
 

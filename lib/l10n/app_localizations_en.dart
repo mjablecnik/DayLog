@@ -2209,4 +2209,88 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time_liveActivityPaused => 'paused';
+
+  @override
+  String get time_historySwipeHint => 'Tap to edit · swipe left to delete';
+
+  @override
+  String get time_reminderSwipeHint =>
+      'Tap to edit · swipe left to delete · use the circle to mark done';
+
+  @override
+  String get time_timerLogCaption => 'Log';
+
+  @override
+  String get time_timerFinishCaption => 'Finish';
+
+  @override
+  String get settings_groupAppearanceLanguage => 'Appearance and language';
+
+  @override
+  String get settings_groupPlanning => 'Planning';
+
+  @override
+  String get settings_groupDeviceData => 'Device and data';
+
+  @override
+  String get settings_editHeroName => 'Edit name';
+
+  @override
+  String get settings_languageCsShort => 'CZ';
+
+  @override
+  String get settings_languageEnShort => 'EN';
+
+  @override
+  String get time_statsTracked => 'Tracked';
+
+  @override
+  String get time_statsUntracked => 'Untracked';
+
+  @override
+  String get time_reminderMinutesUnit => 'minutes';
+
+  @override
+  String time_reminderWindow(String from, String to, int minutes) {
+    return '$from–$to · every $minutes min';
+  }
+
+  @override
+  String get time_previousPeriod => 'Previous period';
+
+  @override
+  String get time_nextPeriod => 'Next period';
+
+  @override
+  String get shell_modulesTitle => 'Modules';
+
+  @override
+  String get shell_launcherHint =>
+      'Tip: swipe across the module button to go back to the previous module';
+
+  @override
+  String shell_moduleButtonLabel(String module) {
+    return '$module, switch module';
+  }
+
+  @override
+  String get shell_previousModule => 'Previous module';
+
+  @override
+  String get settings_groupExperiments => 'Experiments';
+
+  @override
+  String get settings_moduleButtonSide => 'Module button';
+
+  @override
+  String get settings_moduleButtonLeft => 'Left';
+
+  @override
+  String get settings_moduleButtonRight => 'Right';
+
+  @override
+  String get settings_drawerEnabled => 'Side menu';
+
+  @override
+  String get settings_titleWeight => 'Title weight';
 }

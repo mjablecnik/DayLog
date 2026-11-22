@@ -17,6 +17,8 @@ import '../widgets/effort_picker.dart';
 import '../../../ui_kit/common/app_icon.dart';
 import '../../../ui_kit/sheet/confirm_destructive.dart';
 import '../../../ui_kit/sheet/app_sheet.dart';
+import '../../../ui_kit/common/app_segmented.dart';
+import '../../../ui_kit/controls/choice_chip.dart';
 import '../../../core/clock_provider.dart';
 
 /// Opens the Quest_Sheet: create mode by default, edit mode when [editing] is
@@ -590,37 +592,15 @@ class _BoardPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return Wrap(
-          spacing: Space.s8,
-          runSpacing: Space.s8,
-          children: <Widget>[
-            _PickChip(
-              label: l10n.board_todaySection,
-              selected: selected == BoardSection.today,
-              enabled: enabled,
-              maxWidth: constraints.maxWidth,
-              onTap: () => onSelected(BoardSection.today),
-            ),
-            _PickChip(
-              label: l10n.board_todoSection,
-              selected: selected == BoardSection.todo,
-              enabled: enabled,
-              maxWidth: constraints.maxWidth,
-              onTap: () => onSelected(BoardSection.todo),
-            ),
-            if (allowOff)
-              _PickChip(
-                label: l10n.quest_boardNone,
-                selected: selected == null,
-                enabled: enabled,
-                maxWidth: constraints.maxWidth,
-                onTap: () => onSelected(null),
-              ),
-          ],
-        );
-      },
+    return AppSegmented<BoardSection?>(
+      options: [
+        SegmentedOption(value: BoardSection.today, label: l10n.board_todaySection),
+        SegmentedOption(value: BoardSection.todo, label: l10n.board_todoSection),
+        if (allowOff) SegmentedOption(value: null, label: l10n.quest_boardNone),
+      ],
+      selected: selected,
+      enabled: enabled,
+      onChanged: onSelected,
     );
   }
 }
@@ -709,57 +689,12 @@ class _PickChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppPalette palette = context.palette;
-    final BorderRadius radius = BorderRadius.circular(Radii.pill);
-    final Color foreground = selected ? palette.brassText : palette.textDim;
     return ConstrainedBox(
-      constraints: BoxConstraints(
-        minHeight: Metrics.touchTarget,
-        maxWidth: maxWidth,
-      ),
-      child: Semantics(
-        button: true,
-        selected: selected,
-        inMutuallyExclusiveGroup: true,
-        enabled: enabled,
+      constraints: BoxConstraints(maxWidth: maxWidth),
+      child: ChoiceChipX(
         label: label,
-        excludeSemantics: true,
-        onTap: enabled ? onTap : null,
-        child: Opacity(
-          opacity: enabled ? 1 : 0.5,
-          child: Material(
-            color: selected ? palette.brassSoft : palette.field,
-            shape: RoundedRectangleBorder(
-              borderRadius: radius,
-              side: BorderSide(
-                color: selected ? palette.brass : palette.boardLine,
-                width: Metrics.hairline,
-              ),
-            ),
-            child: InkWell(
-              customBorder: RoundedRectangleBorder(borderRadius: radius),
-              onTap: enabled ? onTap : null,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Space.s16,
-                  vertical: Space.s8,
-                ),
-                child: Center(
-                  widthFactor: 1,
-                  child: Text(
-                    label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.bodyText.bodyMedium!.copyWith(
-                      color: foreground,
-                      fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        selected: selected,
+        onSelected: enabled ? (_) => onTap() : null,
       ),
     );
   }

@@ -39,16 +39,23 @@ TextStyle _display(
   fontFeatures: _tabularFigures,
 );
 
+const FontWeight defaultTitleWeight = FontWeight.w600;
+
 /// Titles and XP figures, set in Figtree like the rest of the text, only heavier and tighter.
-TextTheme buildDisplayTextTheme(AppPalette p) {
+TextTheme buildDisplayTextTheme(
+  AppPalette p, {
+  FontWeight titleWeight = defaultTitleWeight,
+}) {
   const String family = bodyFamilyName;
   return TextTheme(
     // Reward figure.
     displayLarge: _display(family, p.text, 48, FontWeight.w800),
+    displayMedium: _display(family, p.text, 28, FontWeight.w700),
+    displaySmall: _display(family, p.text, 26, FontWeight.w600),
     // Page title.
-    headlineLarge: _display(family, p.text, 34, FontWeight.w700),
+    headlineLarge: _display(family, p.text, 22, titleWeight),
     // Sheet title.
-    headlineMedium: _display(family, p.text, 24, FontWeight.w700),
+    headlineMedium: _display(family, p.text, 22, titleWeight),
     // Level text, Mission and hero names.
     titleLarge: _display(family, p.text, 20, FontWeight.w700),
     // XP figure on cards.
@@ -78,11 +85,12 @@ TextTheme buildBodyTextTheme(AppPalette p) {
     bodyMedium: _body(p.text, 15, FontWeight.w500),
     // Meta line.
     bodySmall: _body(p.text, 12.5, FontWeight.w400),
+    titleLarge: _body(p.text, 17, FontWeight.w700),
     // Card title.
     titleMedium: _body(p.text, 16, FontWeight.w600),
     // Buttons.
     labelLarge: _body(p.text, 15, FontWeight.w600),
-    // Caps labels (0.14em).
-    labelSmall: _body(p.text, 11, FontWeight.w600, letterSpacing: 0.14 * 11),
+    // Section labels.
+    labelSmall: _body(p.text, 12, FontWeight.w700, letterSpacing: 0.09 * 12),
   );
 }

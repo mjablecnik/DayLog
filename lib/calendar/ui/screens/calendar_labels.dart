@@ -28,6 +28,9 @@ String _capitalized(String text) =>
 String monthTitle(DateTime month, String locale) =>
     _capitalized(DateFormat('LLLL y', locale).format(month));
 
+String monthName(DateTime month, String locale) =>
+    _capitalized(DateFormat('LLLL', locale).format(month));
+
 /// "Středa 18. listopadu" (Czech) or "Wednesday, November 18": the heading of the Day_Sheet.
 String dayHeading(DateTime date, String locale) => _capitalized(
   locale == 'cs'

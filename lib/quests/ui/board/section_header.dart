@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../theme/app_theme.dart';
 import '../../../theme/tokens.dart';
+import '../../../ui_kit/layout/section_headers.dart';
 
 /// Small upper-case label row above a list section, with a figure on the
 /// right ("+110 XP", "2 quests · 35 XP").
@@ -10,6 +11,7 @@ class BoardSectionHeader extends StatelessWidget {
     super.key,
     required this.label,
     required this.figure,
+    this.count,
     this.figureColor,
   });
 
@@ -18,6 +20,7 @@ class BoardSectionHeader extends StatelessWidget {
 
   /// Already localized summary shown at the right.
   final String figure;
+  final int? count;
 
   /// Defaults to the faint text colour; the open section uses brass.
   final Color? figureColor;
@@ -25,9 +28,6 @@ class BoardSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    final TextStyle base = context.bodyText.labelSmall!.copyWith(
-      color: p.textFaint,
-    );
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         Space.s20,
@@ -35,22 +35,27 @@ class BoardSectionHeader extends StatelessWidget {
         Space.s20,
         Space.s10,
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: <Widget>[
-          Expanded(
-            child: Semantics(
-              header: true,
-              child: Text(label.toUpperCase(), style: base),
+      child: CountHeader(
+        title: label.toUpperCase(),
+        count: count,
+        trailing: DecoratedBox(
+          decoration: BoxDecoration(
+            color: p.brassSoft,
+            borderRadius: BorderRadius.circular(Radii.pill),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Space.s8,
+              vertical: Space.s4,
+            ),
+            child: Text(
+              figure.toUpperCase(),
+              style: context.bodyText.labelLarge?.copyWith(
+                color: figureColor ?? p.brassText,
+              ),
             ),
           ),
-          const SizedBox(width: Space.s12),
-          Text(
-            figure.toUpperCase(),
-            style: base.copyWith(color: figureColor ?? p.textFaint),
-          ),
-        ],
+        ),
       ),
     );
   }

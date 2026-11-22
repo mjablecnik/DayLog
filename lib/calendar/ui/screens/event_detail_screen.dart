@@ -14,6 +14,10 @@ import '../../../theme/tokens.dart';
 import '../widgets/calendar_fields.dart';
 import '../widgets/event_chip.dart';
 import '../../../ui_kit/common/app_icon.dart';
+import '../../../ui_kit/controls/app_buttons.dart';
+import '../../../ui_kit/layout/app_header.dart';
+import '../../../ui_kit/layout/header_action.dart';
+import '../../../ui_kit/sheet/menu_sheet.dart';
 import '../../../ui_kit/common/snackbar_host.dart';
 import 'calendar_labels.dart';
 import 'event_form_screen.dart';
@@ -102,7 +106,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                 children: <Widget>[
                   Column(
                     children: <Widget>[
-                      _TopBar(occurrence: occurrence, onMenu: (_Menu a) => _onMenu(a, occurrence)),
+                      _TopBar(onMenu: (_Menu a) => _onMenu(a, occurrence)),
                       Expanded(child: _Body(occurrence: occurrence)),
                     ],
                   ),
@@ -110,19 +114,13 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                     left: 0,
                     right: 0,
                     bottom: Space.s20,
-                    child: Center(
-                      child: FilledButton.icon(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: Space.s16),
+                      child: AppButton.primary(
                         key: const ValueKey<String>('detail-edit'),
+                        label: l.calendar_edit,
+                        icon: IconAsset.edit,
                         onPressed: () => _onMenu(_Menu.edit, occurrence),
-                        icon: AppIcon(IconAsset.edit, size: Metrics.iconSmall, color: p.inkOnBrass),
-                        label: Text(l.calendar_edit),
-                        style: FilledButton.styleFrom(
-                          minimumSize: const Size(Metrics.fab * 3, Metrics.touchTarget + Space.s8),
-                          backgroundColor: p.brass,
-                          foregroundColor: p.inkOnBrass,
-                          shape: const StadiumBorder(),
-                          textStyle: context.bodyText.titleMedium,
-                        ),
                       ),
                     ),
                   ),
@@ -134,93 +132,36 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
 }
 
 class _TopBar extends StatelessWidget {
-  const _TopBar({required this.occurrence, required this.onMenu});
+  const _TopBar({required this.onMenu});
 
-  final EventOccurrence occurrence;
   final ValueChanged<_Menu> onMenu;
 
   @override
   Widget build(BuildContext context) {
-    final AppPalette p = context.palette;
-    final AppLocalizations l = AppLocalizations.of(context);
-    PopupMenuItem<_Menu> item(_Menu action, String label, String icon, {Color? color}) {
-      final Color tint = color ?? p.text;
-      return PopupMenuItem<_Menu>(
-        value: action,
-        height: Metrics.menuItem,
-        padding: const EdgeInsets.symmetric(horizontal: Space.s16),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                label,
-                style: context.bodyText.bodyLarge!.copyWith(color: tint, fontWeight: FontWeight.w500),
-              ),
-            ),
-            AppIcon(icon, size: Metrics.iconSmall, color: tint),
-          ],
+    final strings = AppLocalizations.of(context);
+    return AppHeader(
+      title: '',
+      leading: HeaderLeading.close,
+      leadingKey: const ValueKey<String>('detail-close'),
+      trailing: [
+        HeaderAction(
+          key: const ValueKey<String>('detail-menu'),
+          icon: IconAsset.more,
+          semanticLabel: strings.calendar_menu,
+          onPressed: () async {
+            final action = await showMenuSheet<_Menu>(
+              context,
+              title: strings.calendar_menu,
+              items: [
+                (value: _Menu.edit, label: strings.calendar_edit, icon: IconAsset.edit, destructive: false),
+                (value: _Menu.duplicate, label: strings.calendar_duplicate, icon: IconAsset.plus, destructive: false),
+                (value: _Menu.delete, label: strings.common_delete, icon: IconAsset.trash, destructive: true),
+              ],
+            );
+            if (action != null && context.mounted) onMenu(action);
+          },
         ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(Space.s8, Space.s4, Space.s8, Space.s8),
-      child: Row(
-        children: <Widget>[
-          Semantics(
-            button: true,
-            label: l.common_close,
-            excludeSemantics: true,
-            onTap: () => Navigator.of(context).maybePop(),
-            child: InkWell(
-              key: const ValueKey<String>('detail-close'),
-              onTap: () => Navigator.of(context).maybePop(),
-              customBorder: const CircleBorder(),
-              child: SizedBox(
-                width: Metrics.touchTarget,
-                height: Metrics.touchTarget,
-                child: Center(child: AppIcon(IconAsset.close, size: Metrics.iconSmall, color: p.text)),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Semantics(
-              header: true,
-              child: Text(
-                occurrence.event.name,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.displayText.titleLarge,
-              ),
-            ),
-          ),
-          PopupMenuButton<_Menu>(
-            key: const ValueKey<String>('detail-menu'),
-            tooltip: l.calendar_menu,
-            position: PopupMenuPosition.under,
-            color: p.sheet,
-            surfaceTintColor: p.sheet.withValues(alpha: 0),
-            shadowColor: p.scrim,
-            elevation: Space.s8,
-            constraints: const BoxConstraints.tightFor(width: Metrics.menuWidth),
-            padding: EdgeInsets.zero,
-            icon: AppIcon(IconAsset.more, size: Metrics.iconSize, color: p.text),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(Radii.card),
-              side: BorderSide(color: p.boardLine, width: Metrics.hairline),
-            ),
-            onSelected: onMenu,
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<_Menu>>[
-              item(_Menu.edit, l.calendar_edit, IconAsset.edit),
-              const PopupMenuDivider(height: Metrics.hairline),
-              item(_Menu.duplicate, l.calendar_duplicate, IconAsset.plus),
-              const PopupMenuDivider(height: Metrics.hairline),
-              item(_Menu.delete, l.common_delete, IconAsset.trash, color: p.destructive),
-            ],
-          ),
-        ],
-      ),
+      ],
     );
   }
 }
@@ -303,7 +244,10 @@ class _Body extends StatelessWidget {
       children: <Widget>[
         CalendarCard(
           children: <Widget>[
-            Text(event.name, style: context.displayText.headlineMedium),
+            Semantics(
+              header: true,
+              child: Text(event.name, style: context.displayText.displayMedium),
+            ),
             Align(
               alignment: Alignment.centerLeft,
               child: EventTypeBadge(type: event.type, label: eventTypeName(l, event.type)),

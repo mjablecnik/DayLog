@@ -1,41 +1,27 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:daylog/shell/deep_link.dart';
 import 'package:daylog/shell/destination.dart';
+import 'package:daylog/shell/module.dart';
 
 void main() {
-  // Feature: app-foundation, Property 1: Every Destination is reachable
-  test('the Drawer lists every Destination once; the tabs are a subset', () {
-    expect(Destination.drawerItems.toSet(), Destination.values.toSet());
-    expect(Destination.drawerItems.length, Destination.values.length);
-    expect(Destination.drawerItems, <Destination>[
-      Destination.timer,
-      Destination.history,
-      Destination.statistics,
-      Destination.quests,
-      Destination.missions,
-      Destination.calendar,
-      Destination.notes,
-      Destination.settings,
-    ]);
-    expect(Destination.tabs, <Destination>[
-      Destination.timer,
-      Destination.quests,
-      Destination.calendar,
-      Destination.notes,
-      Destination.settings,
-    ]);
+  test('every destination appears in exactly one module', () {
+    final pages = Module.values.expand((module) => module.pages).toList();
+    expect(pages, unorderedEquals(Destination.values));
+    for (final module in Module.values) {
+      expect(module.pages.every((page) => page.module == module), isTrue);
+    }
   });
 
-  test('the Bottom_Bar marks the tab a Drawer page belongs to', () {
-    expect(Destination.history.tab, Destination.timer);
-    expect(Destination.statistics.tab, Destination.timer);
-    expect(Destination.missions.tab, Destination.quests);
-    for (final Destination d in Destination.tabs) {
-      expect(d.tab, d);
-    }
-    for (final Destination d in Destination.values) {
-      expect(d.tab.isTab, isTrue, reason: d.name);
-    }
+  test('switching restores the page and toggles the previous module', () {
+    final location = ShellLocation.initial()
+        .show(Destination.history)
+        .show(Destination.missions)
+        .switchTo(Module.calendar);
+    expect(location.destination, Destination.calendar);
+    expect(location.back().destination, Destination.missions);
+    expect(location.back().back().destination, Destination.calendar);
+    expect(location.switchTo(Module.time).destination, Destination.history);
+    expect(location.switchTo(Module.calendar), same(location));
   });
 
   test('daylog://<name> opens each Destination, in any letter case and with a path form', () {

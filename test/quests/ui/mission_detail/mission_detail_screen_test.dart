@@ -137,8 +137,11 @@ void main() {
         matching: find.byType(ColoredBox),
       );
       expect(fill, findsOneWidget);
-      final Finder track = find.byWidgetPredicate(
-        (Widget w) => w is SizedBox && w.height == Metrics.detailBar,
+      final Finder track = find.ancestor(
+        of: fill,
+        matching: find.byWidgetPredicate(
+          (Widget w) => w is SizedBox && w.height == Metrics.detailBar,
+        ),
       );
       expect(track, findsOneWidget);
       // A fill with zero height is invisible although the text says 1 of 3.

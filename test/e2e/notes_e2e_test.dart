@@ -1,3 +1,4 @@
+import '../helpers/shell_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,7 +10,7 @@ import 'package:daylog/notes/ui/screens/note_editor/note_editor_screen.dart';
 import 'package:daylog/notes/ui/screens/notes/folder_row.dart';
 import 'package:daylog/notes/ui/screens/notes/note_row.dart';
 import 'package:daylog/notes/ui/screens/notes/trash_row.dart';
-import 'package:daylog/shell/bottom_bar.dart';
+import 'package:daylog/shell/module_bar.dart';
 import 'package:daylog/shell/destination.dart';
 import 'package:super_editor/super_editor.dart';
 
@@ -22,7 +23,7 @@ void main() {
   a11yTest('folders, a formatted note, move, trash, restore and delete for good', (tester, track) async {
     final A11yEnv env = await A11yEnv.pump(tester, Subject.shell);
     track(env);
-    final ProviderContainer container = ProviderScope.containerOf(tester.element(find.byType(BottomBar)));
+    final ProviderContainer container = ProviderScope.containerOf(tester.element(find.byType(ModuleBar)));
     final int? xpBefore = await tester.runAsync(() => container.read(xpEngineProvider).readTotal());
 
     Future<void> tap(Finder finder) async {
@@ -56,7 +57,7 @@ void main() {
     }
 
     // The Notes tab shows the seeded folder and the root note; the trashed note is not listed.
-    await tap(find.byKey(const ValueKey<Destination>(Destination.notes)));
+    await tapDestination(tester, Destination.notes);
     expect(find.byType(FolderRow), findsOneWidget);
     expect(find.byType(NoteRow), findsOneWidget);
 

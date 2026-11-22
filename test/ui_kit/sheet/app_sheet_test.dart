@@ -99,25 +99,19 @@ Future<void> _typeInto(WidgetTester tester) async {
 
 void main() {
   group('clean sheet', () {
-    testWidgets('shows grabber, cancel, centred title and primary button', (
+    testWidgets('shows the grabber, left-aligned title, close and primary button', (
       WidgetTester tester,
     ) async {
       await _pumpHost(tester);
       await _openSheet(tester);
 
-      expect(find.text(l10n.common_cancel), findsOneWidget);
+      expect(find.byTooltip(l10n.common_close), findsOneWidget);
       expect(find.text('New quest'), findsOneWidget);
       expect(find.text('Post quest'), findsOneWidget);
 
-      final double screenCentre =
-          tester.view.physicalSize.width / tester.view.devicePixelRatio / 2;
       expect(
-        tester.getCenter(find.text('New quest')).dx,
-        closeTo(screenCentre, 1),
-      );
-      expect(
-        tester.getTopLeft(find.text(l10n.common_cancel)).dx,
-        lessThan(tester.getTopLeft(find.text('New quest')).dx),
+        tester.getTopLeft(find.text('New quest')).dx,
+        lessThan(tester.getTopLeft(find.byTooltip(l10n.common_close)).dx),
       );
     });
 
@@ -127,7 +121,7 @@ void main() {
       final _Result result = await _pumpHost(tester);
       await _openSheet(tester);
 
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
 
       expect(find.byType(AppSheet), findsNothing);
@@ -200,7 +194,7 @@ void main() {
       await _openSheet(tester);
       await _typeInto(tester);
 
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
 
       expect(find.text(l10n.sheet_discardTitle), findsOneWidget);
@@ -222,7 +216,7 @@ void main() {
       await _openSheet(tester);
       await _typeInto(tester);
 
-      await tester.tap(find.text(l10n.common_cancel));
+      await tester.tap(find.byTooltip(l10n.common_close));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.common_discard));
       await tester.pumpAndSettle();
@@ -507,7 +501,7 @@ void main() {
       await _pumpHost(tester);
       await _openSheet(tester);
 
-      expect(find.bySemanticsLabel(l10n.common_cancel), findsOneWidget);
+      expect(find.byTooltip(l10n.common_close), findsOneWidget);
       expect(find.bySemanticsLabel('Post quest'), findsOneWidget);
       expect(
         tester.getSemantics(find.text('New quest')),
@@ -523,7 +517,7 @@ void main() {
       await _openSheet(tester);
 
       for (final Finder finder in <Finder>[
-        find.widgetWithText(TextButton, l10n.common_cancel),
+        find.byTooltip(l10n.common_close),
         find.byType(FilledButton),
       ]) {
         final Size size = tester.getSize(finder);

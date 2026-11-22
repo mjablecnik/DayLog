@@ -8,6 +8,8 @@ import 'package:flutter/services.dart' show FontLoader;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:drift/drift.dart' show Value;
+import 'package:timezone/data/latest.dart' as time_zones;
 import 'package:daylog/quests/domain/cadence.dart';
 import 'package:daylog/quests/domain/xp_rules.dart';
 import 'package:daylog/database/app_database.dart';
@@ -34,6 +36,8 @@ import 'package:daylog/shell/app_shell.dart';
 import 'package:daylog/settings/ui_providers.dart';
 import 'package:daylog/theme/app_theme.dart';
 import 'package:daylog/theme/tokens.dart';
+import 'package:daylog/time_tracking/ui/screens/history_screen.dart';
+import 'package:daylog/time_tracking/ui/screens/reminder_settings_screen.dart';
 
 import '../helpers/fixed_clock.dart';
 import '../helpers/seed.dart';
@@ -46,7 +50,10 @@ import 'package:daylog/core/clock_provider.dart';
 final DateTime a11yNow = DateTime(2026, 11, 15, 12);
 
 /// The screens the layout and accessibility tests walk.
-enum Subject { board, missions, detail, settings, shell, calendar, notes, trash, editor }
+enum Subject {
+  board, missions, detail, settings, shell, calendar, notes, trash, editor,
+  history, reminders,
+}
 
 /// Reconciliation that posts nothing, so the shell reaches its tabs without
 /// writing to the database from inside the fake-async zone.
@@ -128,6 +135,9 @@ class A11yEnv {
     final AppDatabase db = createTestDatabase();
     final FixedClock clock = FixedClock(a11yNow);
     final int missionId = await _seed(tester, db, clock, startXp, calendarEvents);
+    if (subject == Subject.history || subject == Subject.reminders) {
+      await tester.runAsync(() => _seedTime(db, subject));
+    }
 
     final Widget home = switch (subject) {
       Subject.board => const BoardScreen(),
@@ -140,6 +150,8 @@ class A11yEnv {
       Subject.trash => const TrashScreen(),
       // The second node of the seed is a long Note in the root.
       Subject.editor => const NoteEditorScreen(noteId: 2),
+      Subject.history => const HistoryScreen(),
+      Subject.reminders => const ReminderSettingsScreen(),
     };
     await tester.pumpWidget(
       ProviderScope(
@@ -253,6 +265,32 @@ class A11yEnv {
     });
     return id!;
   }
+}
+
+Future<void> _seedTime(AppDatabase db, Subject subject) async {
+  if (subject == Subject.history) {
+    final now = a11yNow;
+    final start = DateTime(now.year, now.month, now.day, 10);
+    await db.into(db.timeEntries).insert(
+      TimeEntriesCompanion.insert(
+        startTime: start.toIso8601String(),
+        endTime: start.add(const Duration(minutes: 40)).toIso8601String(),
+        description: 'Příprava týdenního plánu',
+        activityType: const Value('Práce'),
+      ),
+    );
+    return;
+  }
+  time_zones.initializeTimeZones();
+  await db.into(db.recurringReminders).insert(
+    RecurringRemindersCompanion.insert(
+      name: 'Krátká procházka',
+      startTime: 9 * 60,
+      endTime: 17 * 60,
+      repeatInterval: 60,
+      activeDays: 31,
+    ),
+  );
 }
 
 /// A [testWidgets] that tears the environment down at the end of the body.

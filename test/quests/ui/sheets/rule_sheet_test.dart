@@ -377,7 +377,7 @@ void main() {
       await tester.ensureVisible(find.text(l10n.rule_deleteAction));
       await tester.tap(find.text(l10n.rule_deleteAction));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(l10n.common_cancel).last);
+      await tester.tap(find.byTooltip(l10n.common_close).last);
       await tester.pumpAndSettle();
 
       expect((await _rules(tester, f)).length, 1);

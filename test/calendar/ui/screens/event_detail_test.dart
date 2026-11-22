@@ -28,7 +28,7 @@ void main() {
     await openMonth(tester);
     final CalendarEvent e = await h.add(tester, name: 'Leandro Salsa', type: EventType.lesson, date: d(2026, 11, 18));
     await openDetail(tester, e, d(2026, 11, 18));
-    expect(find.text('Leandro Salsa'), findsWidgets);
+    expect(find.text('Leandro Salsa'), findsOneWidget);
     expect(find.text(en.calendar_typeLesson), findsOneWidget);
     expect(find.text(en.calendar_start), findsOneWidget);
     expect(find.text(en.calendar_end), findsOneWidget);

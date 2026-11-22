@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+import '../../core/clock_provider.dart';
 import '../domain/config.dart';
 import '../../database/app_database.dart';
 import 'database_provider.dart';
@@ -16,7 +17,7 @@ DateTime logicalDay(DateTime dateTime) {
 }
 
 final selectedDayProvider = StateProvider<DateTime>((ref) {
-  return logicalDay(DateTime.now());
+  return logicalDay(ref.watch(clockProvider).now());
 });
 
 final dayEntriesProvider = StreamProvider<List<TimeEntry>>((ref) {

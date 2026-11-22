@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/ui_preferences.dart';
 import '../quests/data/models.dart';
 import '../l10n/app_localizations.dart';
 import '../calendar/services/calendar_providers.dart';
@@ -11,6 +12,7 @@ import '../quests/services/providers.dart';
 import '../quests/ui/state/board_day.dart';
 import '../settings/ui_providers.dart';
 import '../theme/app_theme.dart';
+import '../theme/tokens.dart';
 import '../ui_kit/common/menu_button.dart';
 import '../ui_kit/common/snackbar_host.dart';
 import '../quests/ui/board/board_screen.dart';
@@ -23,7 +25,9 @@ import '../time_tracking/time_tracking.dart';
 import 'deep_link.dart';
 import '../database/import/import_providers.dart';
 import 'app_drawer.dart';
-import 'bottom_bar.dart';
+import 'module.dart';
+import 'module_bar.dart';
+import 'module_launcher.dart';
 import 'destination.dart';
 import 'reconcile_banner.dart';
 import 'splash_screen.dart';
@@ -40,10 +44,10 @@ import 'splash_screen.dart';
 /// coalesced into one run, and a request made while a run is in flight triggers
 /// exactly one more run afterwards.
 class AppShell extends ConsumerStatefulWidget {
-  const AppShell({super.key, this.initial = Destination.timer});
+  const AppShell({super.key, this.initial});
 
   /// The page shown first; a deep link that launches the app replaces it.
-  final Destination initial;
+  final Destination? initial;
 
   @override
   ConsumerState<AppShell> createState() => _AppShellState();
@@ -52,7 +56,8 @@ class AppShell extends ConsumerStatefulWidget {
 class _AppShellState extends ConsumerState<AppShell>
     with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  late Destination _destination = widget.initial;
+  late ShellLocation _location;
+  Destination get _destination => _location.destination;
   bool _ready = false;
   bool _failed = false;
 
@@ -64,6 +69,14 @@ class _AppShellState extends ConsumerState<AppShell>
   @override
   void initState() {
     super.initState();
+    final storedLocation = ref.read(initialUiPreferencesProvider).lastLocation;
+    final initial =
+        widget.initial ??
+        Destination.values
+            .where((page) => page.linkName == storedLocation)
+            .firstOrNull ??
+        Destination.timer;
+    _location = ShellLocation.at(initial);
     WidgetsBinding.instance.addObserver(this);
     _requestReconcile();
     _links = ref
@@ -178,19 +191,29 @@ class _AppShellState extends ConsumerState<AppShell>
     _select(destination);
   }
 
-  void _select(Destination destination) {
-    if (destination == _destination) return;
-    // A message belongs to the screen that raised it (for example a Settings
-    // rule saved), so it does not follow the user to another page.
+  void _select(Destination destination) =>
+      _applyLocation(_location.show(destination));
+
+  void _switchModule(Module module) =>
+      _applyLocation(_location.switchTo(module));
+
+  void _previousModule() => _applyLocation(_location.back());
+
+  void _applyLocation(ShellLocation next) {
+    if (identical(next, _location)) return;
     ScaffoldMessenger.of(context).clearSnackBars();
-    // The figures of the Statistics page are recomputed on every visit.
-    if (destination == Destination.statistics) refreshStatistics(ref);
-    setState(() => _destination = destination);
+    if (next.destination == Destination.statistics) refreshStatistics(ref);
+    setState(() => _location = next);
+    unawaited(
+      ref
+          .read(uiPreferencesProvider.notifier)
+          .setLastLocation(next.destination.linkName),
+    );
   }
 
-  void _selectFromDrawer(Destination destination) {
-    _scaffoldKey.currentState?.closeDrawer();
-    _select(destination);
+  Future<void> _openLauncher() async {
+    final module = await showModuleLauncher(context, current: _location.module);
+    if (mounted && module != null) _switchModule(module);
   }
 
   @override
@@ -203,7 +226,9 @@ class _AppShellState extends ConsumerState<AppShell>
     // An import brings new recurring rules: check them at once.
     ref.listen<int>(importCounterProvider, (_, _) => _requestReconcile());
 
+    final preferences = ref.watch(uiPreferencesProvider);
     return ShellMenuScope(
+      enabled: preferences.drawerEnabled,
       open: () => _scaffoldKey.currentState?.openDrawer(),
       openPage: (String linkName) {
         for (final Destination d in Destination.values) {
@@ -214,16 +239,27 @@ class _AppShellState extends ConsumerState<AppShell>
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         backgroundColor: context.palette.board,
-        // The edge swipe collides with the iOS back swipe and with the reorder
-        // and slide gestures of the lists, so only the menu button opens it.
-        drawerEnableOpenDragGesture: false,
-        drawer: AppDrawer(selected: _destination, onSelect: _selectFromDrawer),
-        body: _buildPages(context),
+        drawerEnableOpenDragGesture: preferences.drawerEnabled,
+        drawerEdgeDragWidth: Metrics.drawerEdge,
+        drawer: preferences.drawerEnabled
+            ? AppDrawer(
+                current: _location.module,
+                onSelectModule: (module) {
+                  _scaffoldKey.currentState?.closeDrawer();
+                  _switchModule(module);
+                },
+                onSelectPage: (page) {
+                  _scaffoldKey.currentState?.closeDrawer();
+                  _select(page);
+                },
+              )
+            : null,
+        body: _buildPages(context, preferences.moduleButtonSide),
       ),
     );
   }
 
-  Widget _buildPages(BuildContext context) {
+  Widget _buildPages(BuildContext context, ModuleButtonSide buttonSide) {
     // The pages that read the Quest data wait for the first Reconciliation.
     Widget gated(Widget page) => _ready ? page : const SplashScreen();
     return Column(
@@ -251,7 +287,14 @@ class _AppShellState extends ConsumerState<AppShell>
           ),
         ),
         if (_failed) ReconcileBanner(onRetry: _requestReconcile),
-        BottomBar(selected: _destination.tab, onSelected: _select),
+        ModuleBar(
+          location: _location,
+          side: buttonSide,
+          hasPrevious: _location.previous != null,
+          onSelectPage: _select,
+          onOpenLauncher: _openLauncher,
+          onPreviousModule: _previousModule,
+        ),
       ],
     );
   }
@@ -259,9 +302,14 @@ class _AppShellState extends ConsumerState<AppShell>
   List<ShortcutTarget> _shortcutTargets(BuildContext context) {
     final AppLocalizations l = AppLocalizations.of(context);
     return <ShortcutTarget>[
-      for (final Destination d in Destination.values)
-        if (d != Destination.settings)
-          ShortcutTarget(linkName: d.linkName, label: d.label(l)),
+      for (final module in Module.launchable)
+        for (final page in module.pages)
+          ShortcutTarget(
+            linkName: page.linkName,
+            label: page.label(l),
+            moduleLabel: module.label(l),
+            icon: page.icon,
+          ),
     ];
   }
 }

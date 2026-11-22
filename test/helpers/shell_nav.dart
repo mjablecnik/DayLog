@@ -1,23 +1,34 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:daylog/shell/app_drawer.dart';
 import 'package:daylog/shell/destination.dart';
+import 'package:daylog/shell/module_bar.dart';
+import 'package:daylog/shell/module_launcher.dart';
 import 'package:daylog/ui_kit/common/menu_button.dart';
 
-/// Shows [destination]: a tab by a tap on the Bottom_Bar, any other page
-/// through the menu button and the Drawer, or every page through the Drawer
-/// when [viaDrawer] is set. The caller settles the page.
+/// Opens the destination through the module bar or the drawer.
 Future<void> tapDestination(
   WidgetTester tester,
   Destination destination, {
   bool viaDrawer = false,
 }) async {
-  if (destination.isTab && !viaDrawer) {
-    await tester.tap(find.byKey(ValueKey<Destination>(destination)));
+  if (viaDrawer) {
+    await tester.tap(find.byType(MenuButton).hitTestable().first);
+    await tester.pumpAndSettle();
+    final row = find.byKey(drawerItemKey(destination));
+    await tester.ensureVisible(row);
+    await tester.tap(row);
+    await tester.pumpAndSettle();
     return;
   }
-  await tester.tap(find.byType(MenuButton).hitTestable().first);
-  await tester.pumpAndSettle();
-  await tester.tap(find.byKey(drawerItemKey(destination)));
+  final tab = find.byKey(moduleBarTabKey(destination));
+  if (tab.evaluate().isEmpty) {
+    await tester.tap(find.byKey(moduleButtonKey));
+    await tester.pumpAndSettle();
+    final tile = find.byKey(launcherTileKey(destination.module));
+    await tester.ensureVisible(tile);
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+  }
+  await tester.tap(tab);
   await tester.pumpAndSettle();
 }

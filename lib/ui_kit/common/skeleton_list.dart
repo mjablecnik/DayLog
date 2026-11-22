@@ -82,7 +82,7 @@ class SkeletonRow extends StatelessWidget {
     return Container(
       height: Metrics.skeletonRow,
       decoration: BoxDecoration(
-        color: p.boardRaised,
+        color: p.tone,
         borderRadius: BorderRadius.circular(Radii.card),
         border: Border.all(color: p.boardLine, width: Metrics.hairline),
       ),

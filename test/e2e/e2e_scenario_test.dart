@@ -113,7 +113,7 @@ void main() {
 
       // Starting point: Level 1, 10 XP, an empty board, no missions.
       expect(find.text(en.hero_level(1)), findsOneWidget);
-      expect(find.text(en.hero_xpProgress(10, 100)), findsOneWidget);
+      expect(find.textContaining(en.hero_xpProgress(10, 100)), findsOneWidget);
       expect(find.text(en.board_emptyTitle), findsOneWidget);
 
       // ---- 1. Create a Mission with two Quests (requirements 3.6, 9) -------
@@ -197,8 +197,8 @@ void main() {
 
       // The Hero_Bar shows the new Level: 185 XP = Level 2, 85 / 150.
       expect(find.text(en.hero_level(2)), findsOneWidget);
-      expect(find.text(en.hero_xpProgress(85, 150)), findsOneWidget);
-      expect(find.text(en.hero_xpRemaining(65, 3)), findsOneWidget);
+      expect(find.textContaining(en.hero_xpProgress(85, 150)), findsOneWidget);
+      expect(find.textContaining(en.hero_xpRemaining(65, 3)), findsOneWidget);
 
       // ---- 3. Missions tab: "Completed today" with the earned bonus -------
       await _show(tester, Destination.missions);
@@ -237,16 +237,16 @@ void main() {
       expect(find.text(en.settings_title), findsNWidgets(2));
       expect(_palette(tester).isLight, isFalse);
 
-      await _tap(tester, find.text(en.settings_languageCs));
+      await _tap(tester, find.text(en.settings_languageCsShort));
       expect(find.text(cs.settings_title), findsNWidgets(2));
-      expect(find.text(cs.settings_groupLanguage.toUpperCase()), findsOne);
+      expect(find.text(cs.settings_groupAppearanceLanguage.toUpperCase()), findsOne);
       expect(find.text(en.settings_title), findsNothing);
       expect(container.read(effectiveLocaleProvider).languageCode, 'cs');
 
-      await _tap(tester, find.text(cs.settings_themeLight));
+      await _tap(tester, find.bySemanticsLabel(cs.settings_themeLight));
       expect(_palette(tester).isLight, isTrue);
       expect(_palette(tester).board, AppPalette.daylight.board);
-      expect(find.text(cs.settings_version('1.0.0')), findsOneWidget);
+
 
       // ---- 6. Post a rule by hand (12.3) ------------------------------------
       // The rules have a page of their own, opened from Settings.
@@ -276,6 +276,10 @@ void main() {
       expect(find.text(cs.rule_postNow), findsOneWidget);
 
       await _tap(tester, find.text(cs.rule_postNow));
+      await _tap(tester, find.descendant(
+        of: find.byType(Dialog),
+        matching: find.text(cs.rule_postNow),
+      ));
       expect(
         find.textContaining(cs.rule_postedMessage('Water plants')),
         findsOneWidget,
@@ -289,8 +293,7 @@ void main() {
       await _show(tester, Destination.missions);
       expect(find.byType(SettingsScreen), findsNothing);
       expect(find.byType(SnackBar), findsNothing);
-      // The screen title; Missions is no tab, so there is no tab label.
-      expect(find.text(cs.missions_title), findsOneWidget);
+      expect(find.text(cs.missions_title), findsWidgets);
       expect(find.text(cs.missions_sectionOpen.toUpperCase()), findsOneWidget);
       expect(find.text('Water plants'), findsOneWidget);
       expect(find.text(cs.missions_remaining(25)), findsOneWidget);

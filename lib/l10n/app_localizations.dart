@@ -3528,6 +3528,162 @@ abstract class AppLocalizations {
   /// In cs, this message translates to:
   /// **'pozastaveno'**
   String get time_liveActivityPaused;
+
+  /// Hint for tapping or swiping History rows.
+  ///
+  /// In cs, this message translates to:
+  /// **'Klepnutím upravíš · tažením doleva smažeš'**
+  String get time_historySwipeHint;
+
+  /// Hint for interacting with reminder rows.
+  ///
+  /// In cs, this message translates to:
+  /// **'Klepnutím upravíš · tažením doleva smažeš · kroužkem označíš jako hotové'**
+  String get time_reminderSwipeHint;
+
+  /// Caption under the timer log action.
+  ///
+  /// In cs, this message translates to:
+  /// **'Zapsat'**
+  String get time_timerLogCaption;
+
+  /// Caption under the timer finish action.
+  ///
+  /// In cs, this message translates to:
+  /// **'Dokončit'**
+  String get time_timerFinishCaption;
+
+  /// Group for appearance and language settings.
+  ///
+  /// In cs, this message translates to:
+  /// **'Vzhled a jazyk'**
+  String get settings_groupAppearanceLanguage;
+
+  /// Group for recurring missions, reminders and testing.
+  ///
+  /// In cs, this message translates to:
+  /// **'Plánování'**
+  String get settings_groupPlanning;
+
+  /// Group for device shortcuts and data transfer.
+  ///
+  /// In cs, this message translates to:
+  /// **'Zařízení a data'**
+  String get settings_groupDeviceData;
+
+  /// Accessible label for editing the hero name.
+  ///
+  /// In cs, this message translates to:
+  /// **'Upravit jméno'**
+  String get settings_editHeroName;
+
+  /// Short Czech language label.
+  ///
+  /// In cs, this message translates to:
+  /// **'CZ'**
+  String get settings_languageCsShort;
+
+  /// Short English language label.
+  ///
+  /// In cs, this message translates to:
+  /// **'EN'**
+  String get settings_languageEnShort;
+
+  /// Tracked time total.
+  ///
+  /// In cs, this message translates to:
+  /// **'Sledováno'**
+  String get time_statsTracked;
+
+  /// Untracked time total.
+  ///
+  /// In cs, this message translates to:
+  /// **'Nesledováno'**
+  String get time_statsUntracked;
+
+  /// Unit of the reminder interval selector.
+  ///
+  /// In cs, this message translates to:
+  /// **'minut'**
+  String get time_reminderMinutesUnit;
+
+  /// Time window and repeat interval of a reminder.
+  ///
+  /// In cs, this message translates to:
+  /// **'{from}–{to} · každých {minutes} min'**
+  String time_reminderWindow(String from, String to, int minutes);
+
+  /// Previous day or week in time tracking.
+  ///
+  /// In cs, this message translates to:
+  /// **'Předchozí období'**
+  String get time_previousPeriod;
+
+  /// Next day or week in time tracking.
+  ///
+  /// In cs, this message translates to:
+  /// **'Následující období'**
+  String get time_nextPeriod;
+
+  /// Module launcher title.
+  ///
+  /// In cs, this message translates to:
+  /// **'Moduly'**
+  String get shell_modulesTitle;
+
+  /// Hint below the module launcher tiles.
+  ///
+  /// In cs, this message translates to:
+  /// **'Tip: přejetím po tlačítku modulu se vrátíš na předchozí modul'**
+  String get shell_launcherHint;
+
+  /// Accessible label of the module launcher button.
+  ///
+  /// In cs, this message translates to:
+  /// **'{module}, přepnout modul'**
+  String shell_moduleButtonLabel(String module);
+
+  /// Accessible action to switch back to the previous module.
+  ///
+  /// In cs, this message translates to:
+  /// **'Předchozí modul'**
+  String get shell_previousModule;
+
+  /// Settings group for experimental interface controls.
+  ///
+  /// In cs, this message translates to:
+  /// **'Experimenty'**
+  String get settings_groupExperiments;
+
+  /// Setting for the side of the module button.
+  ///
+  /// In cs, this message translates to:
+  /// **'Tlačítko modulů'**
+  String get settings_moduleButtonSide;
+
+  /// Place the module button on the left.
+  ///
+  /// In cs, this message translates to:
+  /// **'Vlevo'**
+  String get settings_moduleButtonLeft;
+
+  /// Place the module button on the right.
+  ///
+  /// In cs, this message translates to:
+  /// **'Vpravo'**
+  String get settings_moduleButtonRight;
+
+  /// Toggle the navigation drawer.
+  ///
+  /// In cs, this message translates to:
+  /// **'Boční menu'**
+  String get settings_drawerEnabled;
+
+  /// Set the font weight of page and sheet titles.
+  ///
+  /// In cs, this message translates to:
+  /// **'Tloušťka nadpisů'**
+  String get settings_titleWeight;
 }
 
 class _AppLocalizationsDelegate

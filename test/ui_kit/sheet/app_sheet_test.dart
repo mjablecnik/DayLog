@@ -423,6 +423,82 @@ void main() {
       expect(find.text('abc'), findsOneWidget);
     });
 
+    group('keyboard', () {
+      Widget tallSheet() => AppSheet(
+        title: 'Tall',
+        primaryLabel: 'Save',
+        onPrimary: () async {},
+        child: Column(
+          children: <Widget>[
+            const TextField(),
+            for (int i = 0; i < 30; i++)
+              SizedBox(height: 60, child: Text('row $i')),
+          ],
+        ),
+      );
+
+      Future<_Result> openWithKeyboard(WidgetTester tester) async {
+        final _Result result = await _pumpHost(tester, sheet: tallSheet());
+        await _openSheet(tester);
+        await tester.tap(find.byType(TextField));
+        await tester.pump();
+        tester.view.viewInsets = const FakeViewPadding(bottom: 600);
+        addTearDown(tester.view.resetViewInsets);
+        await tester.pumpAndSettle();
+        return result;
+      }
+
+      bool hasFocus(WidgetTester tester) =>
+          tester.widget<EditableText>(find.byType(EditableText)).focusNode.hasFocus;
+
+      testWidgets('dragging the body scrolls it and keeps the keyboard', (
+        WidgetTester tester,
+      ) async {
+        await openWithKeyboard(tester);
+        expect(hasFocus(tester), isTrue);
+        await tester.drag(find.text('row 3'), const Offset(0, -200));
+        await tester.pumpAndSettle();
+        expect(hasFocus(tester), isTrue);
+        expect(find.text('Tall'), findsOneWidget);
+      });
+
+      testWidgets('a tap on the body outside the field hides the keyboard', (
+        WidgetTester tester,
+      ) async {
+        await openWithKeyboard(tester);
+        await tester.tap(find.text('row 3'));
+        await tester.pumpAndSettle();
+        expect(hasFocus(tester), isFalse);
+        expect(find.text('Tall'), findsOneWidget);
+      });
+
+      testWidgets('the scrim first hides the keyboard and then closes the sheet', (
+        WidgetTester tester,
+      ) async {
+        final _Result result = await openWithKeyboard(tester);
+        await tester.tapAt(const Offset(10, 10));
+        await tester.pumpAndSettle();
+        expect(hasFocus(tester), isFalse);
+        expect(find.text('Tall'), findsOneWidget, reason: 'the first tap only hides the keyboard');
+
+        tester.view.resetViewInsets();
+        await tester.pumpAndSettle();
+        await tester.tapAt(const Offset(10, 10));
+        await tester.pumpAndSettle();
+        expect(find.text('Tall'), findsNothing);
+        expect(result.completed, isTrue);
+      });
+
+      testWidgets('the close button closes at once, also with the keyboard open', (
+        WidgetTester tester,
+      ) async {
+        await openWithKeyboard(tester);
+        await tester.tap(find.byTooltip(l10n.common_close));
+        await tester.pumpAndSettle();
+        expect(find.text('Tall'), findsNothing);
+      });
+    });
+
     testWidgets('with the keyboard open the button scrolls with the body', (
       WidgetTester tester,
     ) async {

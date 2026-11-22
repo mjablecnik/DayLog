@@ -162,6 +162,10 @@ class _AppSheetState extends State<AppSheet> {
 
   bool _busy = false;
   bool _confirming = false;
+
+  /// Set while the close button or a drag down asks to close. Any other close
+  /// request (the scrim, the back gesture) only hides an open keyboard first.
+  bool _closeRequested = false;
   bool _dragging = false;
   double _dragOffset = 0;
 
@@ -192,6 +196,15 @@ class _AppSheetState extends State<AppSheet> {
     if (discard && mounted) Navigator.of(context).pop();
   }
 
+  Future<void> _requestClose() async {
+    _closeRequested = true;
+    try {
+      await Navigator.of(context).maybePop();
+    } finally {
+      _closeRequested = false;
+    }
+  }
+
   void _dragStart(DragStartDetails details) {
     setState(() => _dragging = true);
   }
@@ -212,7 +225,7 @@ class _AppSheetState extends State<AppSheet> {
       // A dirty sheet stays put while the confirmation is shown.
       if (!release || widget.isDirty) _dragOffset = 0;
     });
-    if (release) Navigator.of(context).maybePop();
+    if (release) _requestClose();
   }
 
   @override
@@ -257,38 +270,43 @@ class _AppSheetState extends State<AppSheet> {
                   title: widget.title,
                   closeLabel: l10n.common_close,
                   action: widget.headerAction,
-                  onCancel: widget.dismissible
-                      ? () => AppSheet.requestClose(context)
-                      : null,
+                  onCancel: widget.dismissible ? _requestClose : null,
                   subtitle: widget.subtitle,
                 ),
               ],
             ),
           ),
           Flexible(
-            child: SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              padding: const EdgeInsets.fromLTRB(
-                Space.s20,
-                Space.s8,
-                Space.s20,
-                Space.s16,
-              ),
-              // The body is always the first child of this column, so opening
-              // the keyboard never rebuilds it: a different wrapper would
-              // recreate the text field and drop its focus at once.
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  widget.child,
-                  if (keyboardOpen) ...<Widget>[
-                    if (button != null) ...<Widget>[
-                      const SizedBox(height: Space.s16),
-                      button,
+            // A tap on the body outside a field or button hides the keyboard;
+            // dragging only scrolls.
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: SingleChildScrollView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.manual,
+                padding: const EdgeInsets.fromLTRB(
+                  Space.s20,
+                  Space.s8,
+                  Space.s20,
+                  Space.s16,
+                ),
+                // The body is always the first child of this column, so opening
+                // the keyboard never rebuilds it: a different wrapper would
+                // recreate the text field and drop its focus at once.
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    widget.child,
+                    if (keyboardOpen) ...<Widget>[
+                      if (button != null) ...<Widget>[
+                        const SizedBox(height: Space.s16),
+                        button,
+                      ],
+                      ?widget.footer,
                     ],
-                    ?widget.footer,
                   ],
-                ],
+                ),
               ),
             ),
           ),
@@ -315,9 +333,18 @@ class _AppSheetState extends State<AppSheet> {
     );
 
     return PopScope<Object?>(
-      canPop: widget.dismissible && !widget.isDirty,
+      // With the keyboard open a close request from the scrim or the back
+      // gesture only hides the keyboard; the next one closes the sheet.
+      canPop: widget.dismissible && !widget.isDirty && !keyboardOpen,
       onPopInvokedWithResult: (bool didPop, Object? result) {
-        if (!didPop && widget.dismissible) _confirmDiscard();
+        if (didPop || !widget.dismissible) return;
+        if (keyboardOpen && !_closeRequested) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        } else if (widget.isDirty) {
+          _confirmDiscard();
+        } else {
+          Navigator.of(context).pop();
+        }
       },
       child: Semantics(
         container: true,

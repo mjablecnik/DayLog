@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/gestures.dart' show DeviceGestureSettings;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +21,30 @@ const int _monthCount = 101 * 12;
 int _pageOf(DateTime month) => (month.year - 2000) * 12 + (month.month - 1);
 
 DateTime _monthOfPage(int page) => DateTime(2000 + page ~/ 12, page % 12 + 1);
+
+/// How far a finger must move sideways before the pager starts to follow it
+/// (the framework default is 18).
+const double _swipeSlop = 30;
+
+/// The slowest sideways speed, in logical pixels a second, that still turns the
+/// page when the finger is lifted. The default is only a few pixels a second,
+/// so any slight sideways motion at the end of a vertical stroke turned it.
+const double _swipeFlingVelocity = 250;
+
+/// Page physics that turn the page on a deliberate sideways flick, or when the
+/// page is dragged past its middle, and otherwise settle back.
+class _CalmPagePhysics extends PageScrollPhysics {
+  const _CalmPagePhysics({super.parent});
+
+  @override
+  _CalmPagePhysics applyTo(ScrollPhysics? ancestor) => _CalmPagePhysics(parent: buildParent(ancestor));
+
+  @override
+  Tolerance toleranceFor(ScrollMetrics metrics) {
+    final Tolerance base = super.toleranceFor(metrics);
+    return Tolerance(velocity: _swipeFlingVelocity, distance: base.distance);
+  }
+}
 
 /// The Month_View: the Visible_Month as a six-week grid in a pager, so a
 /// horizontal swipe changes the month. Arrows, "Dnes" and the month picker move
@@ -57,12 +82,20 @@ class _MonthPagerState extends ConsumerState<MonthPager> {
   @override
   Widget build(BuildContext context) {
     ref.listen<DateTime>(visibleMonthProvider, _follow);
-    return PageView.builder(
-      key: const ValueKey<String>('month-pager'),
-      controller: _controller,
-      itemCount: _monthCount,
-      onPageChanged: (int page) => ref.read(visibleMonthProvider.notifier).show(_monthOfPage(page)),
-      itemBuilder: (BuildContext context, int page) => MonthPage(month: _monthOfPage(page)),
+    // A little less sensitive than the default, so an up or down stroke with a
+    // slight sideways drift does not turn the page.
+    return MediaQuery(
+      data: MediaQuery.of(context).copyWith(
+        gestureSettings: const DeviceGestureSettings(touchSlop: _swipeSlop),
+      ),
+      child: PageView.builder(
+        key: const ValueKey<String>('month-pager'),
+        controller: _controller,
+        physics: const _CalmPagePhysics(),
+        itemCount: _monthCount,
+        onPageChanged: (int page) => ref.read(visibleMonthProvider.notifier).show(_monthOfPage(page)),
+        itemBuilder: (BuildContext context, int page) => MonthPage(month: _monthOfPage(page)),
+      ),
     );
   }
 }

@@ -92,6 +92,41 @@ void main() {
     expect(find.text('November 2026'), findsOneWidget);
   });
 
+  calendarTest(h, 'an up or down stroke with a slight sideways drift does not turn the month', (tester) async {
+    await open(tester);
+    final Finder pager = find.byKey(const ValueKey<String>('month-pager'));
+
+    // A finger moving 300 px up or down in a quarter of a second while it drifts
+    // sideways (50 px in all, 20 px in the last tenth of a second): not a
+    // sideways swipe, though the framework default would turn the page.
+    Future<void> stroke(double driftPerStep, double dyPerStep) async {
+      final TestGesture gesture = await tester.startGesture(tester.getCenter(pager));
+      // The events need time stamps, or the velocity of the stroke reads as zero.
+      for (int i = 1; i <= 50; i++) {
+        await gesture.moveBy(Offset(driftPerStep, dyPerStep), timeStamp: Duration(milliseconds: 5 * i));
+        await tester.pump(const Duration(milliseconds: 5));
+      }
+      await gesture.up(timeStamp: const Duration(milliseconds: 255));
+      await h.settle(tester);
+    }
+
+    for (final (double, double) s in const <(double, double)>[(1, 6), (-1, 6), (1, -6), (-1, -6)]) {
+      await stroke(s.$1, s.$2);
+      expect(find.text('November 2026'), findsOneWidget, reason: 'drift ${s.$1}, dy ${s.$2}');
+    }
+  });
+
+  calendarTest(h, 'a short deliberate sideways flick still turns the month', (tester) async {
+    await open(tester);
+    final Finder pager = find.byKey(const ValueKey<String>('month-pager'));
+    await tester.fling(pager, const Offset(-120, 10), 700);
+    await h.settle(tester);
+    expect(find.text('December 2026'), findsOneWidget);
+    await tester.fling(pager, const Offset(120, -10), 700);
+    await h.settle(tester);
+    expect(find.text('November 2026'), findsOneWidget);
+  });
+
   calendarTest(h, 'MonthPickerSheet jumps to a month of another year and stays within 2000 to 2100', (tester) async {
     await open(tester);
     await tester.tap(find.bySemanticsLabel(RegExp('November 2026. ${en.calendar_pickMonth}')));

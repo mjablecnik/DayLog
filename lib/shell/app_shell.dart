@@ -202,7 +202,11 @@ class _AppShellState extends ConsumerState<AppShell>
   void _applyLocation(ShellLocation next) {
     if (identical(next, _location)) return;
     ScaffoldMessenger.of(context).clearSnackBars();
-    if (next.destination == Destination.statistics) refreshStatistics(ref);
+    final opening = next.destination;
+    if (opening == Destination.history || opening == Destination.statistics) {
+      resetDaysToToday(ref);
+    }
+    if (opening == Destination.statistics) refreshStatistics(ref);
     setState(() => _location = next);
     unawaited(
       ref

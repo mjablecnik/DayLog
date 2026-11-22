@@ -5,6 +5,7 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'providers/history_provider.dart';
 import 'providers/statistics_provider.dart';
 
 export 'bootstrap.dart' show TimeTrackingBootstrap;
@@ -18,3 +19,10 @@ export 'ui/screens/timer_screen.dart' show TimerScreen;
 /// Recomputes the statistics; the shell calls it when the Statistics page is
 /// opened, so the figures are never stale.
 void refreshStatistics(WidgetRef ref) => ref.invalidate(statisticsProvider);
+
+/// Puts History and Statistics back on today; the shell calls it whenever
+/// either page is opened, so a day browsed earlier is not left behind.
+void resetDaysToToday(WidgetRef ref) {
+  ref.invalidate(selectedDayProvider);
+  ref.invalidate(statisticsDateProvider);
+}

@@ -28,6 +28,8 @@ import 'package:daylog/shell/destination.dart';
 import 'package:daylog/shell/reconcile_banner.dart';
 import 'package:daylog/shell/splash_screen.dart';
 import 'package:daylog/time_tracking/time_tracking.dart' show TimeSettingsGroups;
+import 'package:daylog/time_tracking/providers/history_provider.dart' show logicalDay, selectedDayProvider;
+import 'package:daylog/time_tracking/providers/statistics_provider.dart' show statisticsDateProvider;
 import 'package:daylog/settings/ui_providers.dart';
 import 'package:daylog/ui_kit/common/add_fab.dart';
 import 'package:daylog/ui_kit/common/menu_button.dart';
@@ -287,6 +289,29 @@ void main() {
 
       await open(tester, Destination.history);
       expect(shown(tester), Destination.history);
+    });
+
+    shellTest('History and Statistics are back on today every time they are opened', (
+      tester,
+    ) async {
+      await pumpApp(tester, initial: Destination.timer);
+      await settle(tester);
+      final today = logicalDay(clock.now());
+      final yesterday = today.subtract(const Duration(days: 1));
+
+      await open(tester, Destination.history);
+      container.read(selectedDayProvider.notifier).state = yesterday;
+      container.read(statisticsDateProvider.notifier).state = yesterday;
+      expect(container.read(selectedDayProvider), yesterday);
+
+      await open(tester, Destination.timer);
+      await open(tester, Destination.history);
+      expect(container.read(selectedDayProvider), today);
+
+      container.read(statisticsDateProvider.notifier).state = yesterday;
+      await open(tester, Destination.statistics);
+      // Statistics read the real clock, which the test clock does not replace.
+      expect(container.read(statisticsDateProvider), isNot(yesterday));
     });
 
     shellTest('tabs have 44 px hit areas and a selected semantic state', (

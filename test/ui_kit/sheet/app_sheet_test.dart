@@ -400,6 +400,45 @@ void main() {
       );
     });
 
+    testWidgets('with the keyboard open the button scrolls with the body', (
+      WidgetTester tester,
+    ) async {
+      await _pumpHost(
+        tester,
+        sheet: AppSheet(
+          title: 'Tall',
+          primaryLabel: 'Save',
+          onPrimary: () async {},
+          child: Column(
+            children: <Widget>[
+              for (int i = 0; i < 40; i++)
+                SizedBox(height: 60, child: Text('row $i')),
+            ],
+          ),
+        ),
+      );
+      tester.view.viewInsets = const FakeViewPadding(bottom: 600);
+      addTearDown(tester.view.resetViewInsets);
+      await _openSheet(tester);
+
+      final double screenHeight =
+          tester.view.physicalSize.height / tester.view.devicePixelRatio;
+      final double keyboardTop =
+          screenHeight - 600 / tester.view.devicePixelRatio;
+      // Not pinned: the button is below the visible part of the body.
+      expect(
+        tester.getTopLeft(find.byType(FilledButton)).dy,
+        greaterThan(keyboardTop),
+      );
+
+      await tester.drag(find.text('row 0'), const Offset(0, -6000));
+      await tester.pumpAndSettle();
+      expect(
+        tester.getBottomLeft(find.byType(FilledButton)).dy,
+        lessThanOrEqualTo(keyboardTop),
+      );
+    });
+
     testWidgets('scrolls a tall body while the header and button stay', (
       WidgetTester tester,
     ) async {

@@ -78,7 +78,8 @@ Future<T?> showAppSheet<T>(
 
 /// The visual sheet: grabber, title and close action, a scrollable body and
 /// one brass primary button pinned at
-/// the bottom (so it stays visible above the keyboard).
+/// the bottom. While the keyboard is open the button (and the footer) scroll
+/// with the body instead, so they do not take room above the keyboard.
 ///
 /// Put it at the root of the widget returned from the [showAppSheet]
 /// builder. It is rebuilt by its owner, so the owner must call `setState`
@@ -222,6 +223,14 @@ class _AppSheetState extends State<AppSheet> {
     final bool reduced = media.disableAnimations;
     final bool canSubmit =
         widget.onPrimary != null && widget.primaryEnabled && !_busy;
+    final bool keyboardOpen = _KeyboardOpen.of(context);
+    final Widget? button = widget.primaryLabel == null
+        ? null
+        : AppButton.primary(
+            label: widget.primaryLabel!,
+            icon: widget.primaryIcon,
+            onPressed: canSubmit ? _submit : null,
+          );
 
     final Widget sheet = Material(
       color: palette.sheet,
@@ -265,31 +274,39 @@ class _AppSheetState extends State<AppSheet> {
                 Space.s20,
                 Space.s16,
               ),
-              child: widget.child,
+              child: keyboardOpen
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        widget.child,
+                        if (button != null) ...<Widget>[
+                          const SizedBox(height: Space.s16),
+                          button,
+                        ],
+                        ?widget.footer,
+                      ],
+                    )
+                  : widget.child,
             ),
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              Space.s20,
-              Space.s4,
-              Space.s20,
-              widget.footer == null
-                  ? Space.s12 + media.padding.bottom
-                  : Space.s4,
-            ),
-            child: widget.primaryLabel == null
-                ? null
-                : AppButton.primary(
-                    label: widget.primaryLabel!,
-                    icon: widget.primaryIcon,
-                    onPressed: canSubmit ? _submit : null,
-                  ),
-          ),
-          if (widget.footer case final footer?)
+          if (!keyboardOpen) ...<Widget>[
             Padding(
-              padding: EdgeInsets.only(bottom: media.padding.bottom),
-              child: footer,
+              padding: EdgeInsets.fromLTRB(
+                Space.s20,
+                Space.s4,
+                Space.s20,
+                widget.footer == null
+                    ? Space.s12 + media.padding.bottom
+                    : Space.s4,
+              ),
+              child: button,
             ),
+            if (widget.footer case final footer?)
+              Padding(
+                padding: EdgeInsets.only(bottom: media.padding.bottom),
+                child: footer,
+              ),
+          ],
         ],
       ),
     );
@@ -313,6 +330,21 @@ class _AppSheetState extends State<AppSheet> {
       ),
     );
   }
+}
+
+/// Tells the sheet whether the keyboard is open. The route removes the view
+/// insets for the sheet, so this is the only way the sheet can know.
+class _KeyboardOpen extends InheritedWidget {
+  const _KeyboardOpen({required this.open, required super.child});
+
+  final bool open;
+
+  static bool of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_KeyboardOpen>()?.open ??
+      false;
+
+  @override
+  bool updateShouldNotify(_KeyboardOpen oldWidget) => open != oldWidget.open;
 }
 
 class _Grabber extends StatelessWidget {
@@ -450,7 +482,10 @@ class _SheetRoute<T> extends PopupRoute<T> {
           child: MediaQuery.removeViewInsets(
             context: context,
             removeBottom: true,
-            child: Builder(builder: builder),
+            child: _KeyboardOpen(
+              open: media.viewInsets.bottom > 0,
+              child: Builder(builder: builder),
+            ),
           ),
         ),
       ),

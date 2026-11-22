@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'licenses_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors.dart';
@@ -220,7 +222,7 @@ class _ThemeControl extends ConsumerWidget {
   }
 }
 
-/// The licences row, and under it the application name and its version.
+/// The About group: the licences page and the application version.
 class _AboutRow extends ConsumerWidget {
   const _AboutRow();
 
@@ -228,25 +230,20 @@ class _AboutRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final version = ref.watch(appVersionProvider).value;
-    final style = context.bodyText.bodyMedium!.copyWith(
-      color: context.palette.textFaint,
-      fontSize: 13,
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return GroupedList(
       children: <Widget>[
-        _LicensesRow(version: version),
-        const SizedBox(height: Space.s8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Space.s2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(l.app_name, style: style),
-              if (version != null)
-                Text(l.settings_version(version), style: style),
-            ],
+        ListRow(
+          title: l.settings_licenses,
+          showChevron: true,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => LicensesScreen(version: version),
+            ),
           ),
+        ),
+        ListRow(
+          title: l.app_name,
+          subtitle: version == null ? null : l.settings_version(version),
         ),
       ],
     );
@@ -268,57 +265,6 @@ class _RulesLink extends ConsumerWidget {
       showChevron: true,
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute<void>(builder: (_) => const RulesScreen())),
-    );
-  }
-}
-
-/// Opens Flutter's licence page, which lists the framework, package and
-/// bundled-font licences.
-class _LicensesRow extends StatelessWidget {
-  const _LicensesRow({required this.version});
-
-  final String? version;
-
-  @override
-  Widget build(BuildContext context) {
-    final p = context.palette;
-    final l = AppLocalizations.of(context);
-    return Semantics(
-      button: true,
-      label: l.settings_licenses,
-      excludeSemantics: true,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(Radii.control),
-        onTap: () {
-          showLicensePage(
-            context: context,
-            applicationName: l.app_name,
-            applicationVersion: version,
-          );
-        },
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: Metrics.touchTarget),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Space.s2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  l.settings_licenses,
-                  style: context.bodyText.bodyMedium!.copyWith(
-                    color: p.brassText,
-                  ),
-                ),
-                AppIcon(
-                  IconAsset.chevronRight,
-                  size: Metrics.iconSmall,
-                  color: p.textFaint,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

@@ -48,13 +48,15 @@ class AppDrawer extends StatelessWidget {
       child: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) => SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Space.s16,
-              vertical: Space.s22,
+            padding: const EdgeInsets.fromLTRB(
+              Space.s16,
+              Space.s32,
+              Space.s16,
+              Space.s22,
             ),
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: (constraints.maxHeight - Space.s22 * 2).clamp(
+                minHeight: (constraints.maxHeight - Space.s32 - Space.s22).clamp(
                   0.0,
                   double.infinity,
                 ),
@@ -72,7 +74,7 @@ class AppDrawer extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: Space.s16),
+                    const SizedBox(height: Space.s24),
                     for (final module in Module.launchable) ...[
                       KeyedSubtree(
                         key: drawerItemKey(module.pages.first),
@@ -85,6 +87,7 @@ class AppDrawer extends StatelessWidget {
                           ),
                           child: Wrap(
                             spacing: Space.s6,
+                            runSpacing: Space.s6,
                             children: [
                               for (final page in module.pages.skip(1))
                                 TextButton(
@@ -112,6 +115,7 @@ class AppDrawer extends StatelessWidget {
                             ],
                           ),
                         ),
+                      const SizedBox(height: Space.s16),
                     ],
                     const Spacer(),
                     const Divider(height: Metrics.hairline),
@@ -158,7 +162,7 @@ class _DrawerModuleRow extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: Space.s12,
-              vertical: Space.s6,
+              vertical: Space.s10,
             ),
             child: Row(
               children: [
@@ -181,6 +185,7 @@ class _DrawerModuleRow extends StatelessWidget {
                     module.label(AppLocalizations.of(context)),
                     style: context.bodyText.titleLarge?.copyWith(
                       fontWeight: const FontWeight(650),
+                      color: selected ? palette.brassText : null,
                     ),
                   ),
                 ),

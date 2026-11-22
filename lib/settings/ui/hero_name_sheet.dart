@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../ui_kit/forms/app_text_field.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors.dart';
@@ -64,19 +66,15 @@ class _HeroNameSheetState extends ConsumerState<HeroNameSheet> {
       primaryEnabled: error == null,
       onPrimary: _save,
       isDirty: value != widget.initial,
-      child: TextField(
+      child: AppTextField(
         controller: _controller,
         textCapitalization: TextCapitalization.words,
         onChanged: (_) => setState(() {}),
-        decoration: InputDecoration(
-          labelText: strings.settings_heroNameLabel,
-          hintText: strings.settings_heroNamePlaceholder,
-          errorText: error == null ? null : fieldErrorText(strings, error),
-          counterText: strings.settings_heroNameCounter(
-            value.trim().runes.length,
-            maxHeroNameLength,
-          ),
-        ),
+        label: strings.settings_heroNameLabel,
+        hint: strings.settings_heroNamePlaceholder,
+        errorText: error == null ? null : fieldErrorText(strings, error),
+        maxLength: maxHeroNameLength,
+        enforceMaxLength: false,
       ),
     );
   }

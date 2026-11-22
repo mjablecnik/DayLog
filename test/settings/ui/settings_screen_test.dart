@@ -1,3 +1,4 @@
+import 'package:daylog/settings/ui/licenses_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -208,7 +209,7 @@ void main() {
     await tester.pump();
     expect(find.text('The name can be at most 40 characters.'), findsOneWidget);
     expect(find.byType(HeroNameSheet), findsOneWidget);
-    expect(find.text('41 / 40'), findsOneWidget);
+    expect(find.text('41/40'), findsOneWidget);
 
     expect(tester.widget<FilledButton>(find.widgetWithText(FilledButton, 'Save')).onPressed, isNull);
 
@@ -301,13 +302,13 @@ void main() {
     expect(row, findsOneWidget);
     await tester.pump(const Duration(milliseconds: 500));
     final target = find.ancestor(of: row, matching: find.byType(InkWell));
-    expect(tester.getSize(target).height, greaterThanOrEqualTo(44));
+    expect(tester.getSize(target.first).height, greaterThanOrEqualTo(44));
 
     await tester.tap(row);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
-    expect(find.byType(LicensePage), findsOneWidget);
-    expect(find.text('4.5.6'), findsOneWidget);
+    expect(find.byType(LicensesScreen), findsOneWidget);
+    expect(find.textContaining('4.5.6'), findsWidgets);
 
     // The registry streams in on real async.
     for (var i = 0; i < 20; i++) {

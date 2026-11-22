@@ -57,31 +57,10 @@ class RulesSection extends ConsumerWidget {
     final p = context.palette;
     final l = AppLocalizations.of(context);
     final rules = ref.watch(rulesProvider).value ?? const <RuleSummary>[];
-    final labelStyle = context.bodyText.labelSmall!.copyWith(
-      color: p.textFaint,
-    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Semantics(
-                header: true,
-                child: Text(
-                  l.settings_groupRules.toUpperCase(),
-                  style: labelStyle,
-                ),
-              ),
-            ),
-            Text(
-              l.settings_rulesActive(rules.length).toUpperCase(),
-              style: labelStyle.copyWith(color: p.textDim),
-            ),
-          ],
-        ),
-        const SizedBox(height: Space.s8),
         GroupedList(
           children: [
             for (final rule in rules)

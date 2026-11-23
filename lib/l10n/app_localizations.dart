@@ -2891,7 +2891,7 @@ abstract class AppLocalizations {
   /// Time tracking text: "AI consultation"
   ///
   /// In cs, this message translates to:
-  /// **'Konzultace s AI'**
+  /// **'Konzultace'**
   String get time_subtypeAi;
 
   /// Time tracking text: "Active rest"

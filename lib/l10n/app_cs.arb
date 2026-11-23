@@ -2484,7 +2484,7 @@
   "@time_subtypeStudy": {
     "description": "Time tracking text: \"Study\""
   },
-  "time_subtypeAi": "Konzultace s AI",
+  "time_subtypeAi": "Konzultace",
   "@time_subtypeAi": {
     "description": "Time tracking text: \"AI consultation\""
   },

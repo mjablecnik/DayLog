@@ -1885,7 +1885,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_subtypeStudy => 'Studium';
 
   @override
-  String get time_subtypeAi => 'Konzultace s AI';
+  String get time_subtypeAi => 'Konzultace';
 
   @override
   String get time_subtypeRestActive => 'Aktivní odpočinek';

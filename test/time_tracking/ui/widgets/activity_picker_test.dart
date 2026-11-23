@@ -535,7 +535,7 @@ void main() {
 
       await tester.tap(find.byKey(const ValueKey('type-chip-Seberozvoj')));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('AI consultation'));
+      await tester.tap(find.text('Consulting'));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField).last, 'Asked about ABAP');
       await tester.pump();
@@ -555,7 +555,7 @@ void main() {
       await _pump(tester, sheet(), database: db, scrollable: false);
       expect(find.text('Asked about ABAP'), findsOneWidget);
       final chip = tester.widget<Semantics>(find.ancestor(
-        of: find.text('AI consultation'),
+        of: find.text('Consulting'),
         matching: find.byWidgetPredicate(
           (widget) => widget is Semantics && widget.properties.inMutuallyExclusiveGroup == true,
         ),

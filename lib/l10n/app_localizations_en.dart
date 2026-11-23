@@ -1842,7 +1842,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_subtypeStudy => 'Study';
 
   @override
-  String get time_subtypeAi => 'AI consultation';
+  String get time_subtypeAi => 'Consulting';
 
   @override
   String get time_subtypeRestActive => 'Active rest';

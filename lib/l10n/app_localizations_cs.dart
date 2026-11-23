@@ -1849,6 +1849,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_activityDance => 'Tanec';
 
   @override
+  String get time_activityCourse => 'Kurz';
+
+  @override
   String get time_activityIdle => 'Nicnedělání';
 
   @override

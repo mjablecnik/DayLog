@@ -2436,6 +2436,10 @@
   "@time_activityDance": {
     "description": "Time tracking text: \"Dance\""
   },
+  "time_activityCourse": "Kurz",
+  "@time_activityCourse": {
+    "description": "Time tracking text: \"Course\""
+  },
   "time_activityIdle": "Nicnedělání",
   "@time_activityIdle": {
     "description": "Time tracking text: \"Doing nothing\""

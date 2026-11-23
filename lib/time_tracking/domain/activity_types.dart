@@ -244,6 +244,11 @@ const List<ActivityType> activityRegistry = [
     dark: Color(0xFFE0B0F0),
     light: Color(0xFF804080),
   ),
+  ActivityType(
+    key: 'Kurz',
+    dark: Color(0xFF709868),
+    light: Color(0xFF486028),
+  ),
 ];
 
 /// Neutral colour for a type key that the registry does not define.
@@ -379,6 +384,8 @@ String activityTypeLabel(AppLocalizations l10n, String typeKey) {
       return l10n.time_activityOther;
     case 'Nicnedělání':
       return l10n.time_activityIdle;
+    case 'Kurz':
+      return l10n.time_activityCourse;
     default:
       return typeKey;
   }

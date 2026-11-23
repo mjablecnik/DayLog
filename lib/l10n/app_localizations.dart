@@ -2816,6 +2816,12 @@ abstract class AppLocalizations {
   /// **'Tanec'**
   String get time_activityDance;
 
+  /// Time tracking text: "Course"
+  ///
+  /// In cs, this message translates to:
+  /// **'Kurz'**
+  String get time_activityCourse;
+
   /// Time tracking text: "Doing nothing"
   ///
   /// In cs, this message translates to:

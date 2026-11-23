@@ -1806,6 +1806,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_activityDance => 'Dance';
 
   @override
+  String get time_activityCourse => 'Course';
+
+  @override
   String get time_activityIdle => 'Doing nothing';
 
   @override

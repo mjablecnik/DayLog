@@ -453,6 +453,7 @@
   "time_activityMeeting": "Meeting",
   "time_activityCommunication": "Communication",
   "time_activityDance": "Dance",
+  "time_activityCourse": "Course",
   "time_activityIdle": "Doing nothing",
   "time_activityOther": "Other",
   "time_subtypePaid": "Paid",

@@ -3682,14 +3682,20 @@ abstract class AppLocalizations {
   /// Heading of the drawer section with the timer, history and statistics.
   ///
   /// In cs, this message translates to:
-  /// **'Čas'**
-  String get shell_drawerSectionTime;
+  /// **'Aktivita'**
+  String get shell_drawerSectionActivity;
 
-  /// Heading of the drawer section with quests, calendar and notes.
+  /// Heading of the drawer section with quests and missions.
   ///
   /// In cs, this message translates to:
-  /// **'Plánování'**
-  String get shell_drawerSectionPlanning;
+  /// **'Úkoly a cíle'**
+  String get shell_drawerSectionTasks;
+
+  /// Heading of the drawer section with the calendar and notes.
+  ///
+  /// In cs, this message translates to:
+  /// **'Organizace'**
+  String get shell_drawerSectionOrganization;
 
   /// Accessible label of the module launcher button.
   ///

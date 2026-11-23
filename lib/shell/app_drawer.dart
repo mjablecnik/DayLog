@@ -11,7 +11,7 @@ import 'module.dart';
 Key drawerItemKey(Destination destination) =>
     ValueKey<String>('drawer-${destination.name}');
 
-/// The drawer is one flat list of every page, grouped in two sections.
+/// The drawer is one flat list of every page, grouped in three sections.
 class AppDrawer extends StatelessWidget {
   const AppDrawer({
     super.key,
@@ -91,11 +91,13 @@ class AppDrawer extends StatelessWidget {
                         ),
                       ),
                     ),
-                    section(strings.shell_drawerSectionTime, const [
+                    section(strings.shell_drawerSectionActivity, const [
                       Module.time,
                     ]),
-                    section(strings.shell_drawerSectionPlanning, const [
+                    section(strings.shell_drawerSectionTasks, const [
                       Module.quests,
+                    ]),
+                    section(strings.shell_drawerSectionOrganization, const [
                       Module.calendar,
                       Module.notes,
                     ]),

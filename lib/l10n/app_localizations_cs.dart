@@ -2339,10 +2339,13 @@ class AppLocalizationsCs extends AppLocalizations {
       'Tip: přejetím po tlačítku modulu se vrátíš na předchozí modul';
 
   @override
-  String get shell_drawerSectionTime => 'Čas';
+  String get shell_drawerSectionActivity => 'Aktivita';
 
   @override
-  String get shell_drawerSectionPlanning => 'Plánování';
+  String get shell_drawerSectionTasks => 'Úkoly a cíle';
+
+  @override
+  String get shell_drawerSectionOrganization => 'Organizace';
 
   @override
   String shell_moduleButtonLabel(String module) {

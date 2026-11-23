@@ -7,6 +7,23 @@ every release from the commit messages.
 
 ## [Unreleased]
 
+## [1.0.0-dev.4] - 2026-11-23
+
+### Features
+
+- group the drawer in three sections: activity, tasks and goals, organization (shell)
+- add the activity type course (time_tracking)
+- add the activity types dance and doing nothing (time_tracking)
+- bring back the search and filter buttons in the header (calendar)
+
+### Fixes
+
+- shorten the AI consultation subtype so it fits its segment (time_tracking)
+- make the month pager less sensitive to up and down strokes (calendar)
+- make the Skip button tappable on its text only (time_tracking)
+- let a sheet scroll with the keyboard open and hide it on a tap outside a field (ui_kit)
+
+
 ## [1.0.0-dev.3] - 2026-11-22
 
 ### Features

@@ -1728,6 +1728,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_descriptionHint => 'Describe what you worked on...';
 
   @override
+  String get time_dayFieldStart => 'Start day';
+
+  @override
+  String get time_dayFieldEnd => 'End day';
+
+  @override
   String get time_timeFieldStart => 'Start';
 
   @override

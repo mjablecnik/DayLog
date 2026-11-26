@@ -6,7 +6,6 @@ import '../../../../ui_kit/forms/app_text_field.dart';
 import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/app_icon.dart';
-import '../../../../ui_kit/forms/form_field_box.dart';
 import '../../../../ui_kit/layout/header_action.dart';
 import '../../../../ui_kit/sheet/app_sheet.dart';
 
@@ -22,6 +21,7 @@ import '../../../services/database_service.dart'
 import '../../../providers/suggestions_provider.dart';
 import '../../../providers/history_provider.dart' show logicalDay;
 import '../activity_picker/activity_picker.dart';
+import 'entry_time_fields.dart';
 
 class ManualEntrySheet extends ConsumerStatefulWidget {
   final AppThemeData theme;
@@ -106,29 +106,11 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
     return '$h:$m';
   }
 
-  Future<void> _pickTime(bool isStart) async {
-    final l10n = AppLocalizations.of(context);
-    final timeOrderError = l10n.time_errorEndBeforeStart;
-    final current = isStart ? _startTime : _endTime;
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(current),
-    );
-    if (picked == null) return;
+  void _setTimes(DateTime start, DateTime end) {
+    final timeOrderError = AppLocalizations.of(context).time_errorEndBeforeStart;
     setState(() {
-      final day = widget.selectedDay;
-      final updated = DateTime(
-        day.year,
-        day.month,
-        day.day,
-        picked.hour,
-        picked.minute,
-      );
-      if (isStart) {
-        _startTime = updated;
-      } else {
-        _endTime = updated;
-      }
+      _startTime = start;
+      _endTime = end;
       if (!_endTime.isAfter(_startTime)) {
         _error = timeOrderError;
       } else if (_error == timeOrderError) {
@@ -246,24 +228,11 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: FormFieldBox(
-                  label: strings.time_timeFieldStart,
-                  value: _formatTime(_startTime),
-                  onTap: () => _pickTime(true),
-                ),
-              ),
-              const SizedBox(width: Space.s12),
-              Expanded(
-                child: FormFieldBox(
-                  label: strings.time_timeFieldEnd,
-                  value: _formatTime(_endTime),
-                  onTap: () => _pickTime(false),
-                ),
-              ),
-            ],
+          EntryTimeFields(
+            start: _startTime,
+            end: _endTime,
+            lastDay: DateTime.now(),
+            onChanged: _setTimes,
           ),
           const SizedBox(height: Space.s16),
           ActivityPicker(

@@ -6,7 +6,6 @@ import '../../../../ui_kit/forms/app_text_field.dart';
 import '../../../../theme/app_theme.dart';
 import '../../../../theme/tokens.dart';
 import '../../../../ui_kit/common/app_icon.dart';
-import '../../../../ui_kit/forms/form_field_box.dart';
 import '../../../../ui_kit/layout/header_action.dart';
 import '../../../../ui_kit/sheet/app_sheet.dart';
 
@@ -21,6 +20,7 @@ import '../../../services/database_service.dart'
     show OverlappingEntryException;
 import '../../../providers/suggestions_provider.dart';
 import '../activity_picker/activity_picker.dart';
+import 'entry_time_fields.dart';
 
 class EditSheet extends ConsumerStatefulWidget {
   final AppThemeData theme;
@@ -62,26 +62,10 @@ class _EditSheetState extends ConsumerState<EditSheet> {
     return '$h:$m';
   }
 
-  Future<void> _pickTime(bool isStart) async {
-    final current = isStart ? _startTime : _endTime;
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(current),
-    );
-    if (picked == null) return;
+  void _setTimes(DateTime start, DateTime end) {
     setState(() {
-      final updated = DateTime(
-        current.year,
-        current.month,
-        current.day,
-        picked.hour,
-        picked.minute,
-      );
-      if (isStart) {
-        _startTime = updated;
-      } else {
-        _endTime = updated;
-      }
+      _startTime = start;
+      _endTime = end;
     });
   }
 
@@ -192,24 +176,11 @@ class _EditSheetState extends ConsumerState<EditSheet> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: FormFieldBox(
-                  label: strings.time_timeFieldStart,
-                  value: _formatTime(_startTime),
-                  onTap: () => _pickTime(true),
-                ),
-              ),
-              const SizedBox(width: Space.s12),
-              Expanded(
-                child: FormFieldBox(
-                  label: strings.time_timeFieldEnd,
-                  value: _formatTime(_endTime),
-                  onTap: () => _pickTime(false),
-                ),
-              ),
-            ],
+          EntryTimeFields(
+            start: _startTime,
+            end: _endTime,
+            lastDay: DateTime.now(),
+            onChanged: _setTimes,
           ),
           const SizedBox(height: Space.s16),
           ActivityPicker(

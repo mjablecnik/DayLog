@@ -2672,6 +2672,18 @@ abstract class AppLocalizations {
   /// **'Popiš, na čem jsi pracoval/a...'**
   String get time_descriptionHint;
 
+  /// Time tracking text: "Start day" — the date field beside the start time of an entry
+  ///
+  /// In cs, this message translates to:
+  /// **'Den začátku'**
+  String get time_dayFieldStart;
+
+  /// Time tracking text: "End day" — the date field beside the end time of an entry
+  ///
+  /// In cs, this message translates to:
+  /// **'Den konce'**
+  String get time_dayFieldEnd;
+
   /// Time tracking text: "Start"
   ///
   /// In cs, this message translates to:

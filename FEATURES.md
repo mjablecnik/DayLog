@@ -28,7 +28,9 @@ loading the data of the two old apps.
   Meal, Other), most with subtypes shown as shades of the type's colour. Work and Housework take a project
   name, Other a free-text name, with suggestions kept apart for paid work, unpaid work, housework and others.
 - History shows a daily summary and lets you add past entries. Tap a row to edit it or swipe left to reveal
-  Edit and Delete. The day starts at 03:00.
+  Edit and Delete. The day starts at 03:00. An added or edited entry has a day and a time for both its start and
+  its end, so it can be moved to another day or run past midnight (an end time picked before the start lands on
+  the next day).
 - Entries never overlap: an added or edited entry whose time collides with another one is refused with a message
   naming that entry, and a timer session keeps only the time no entry covers yet (an entry added by hand while the
   timer ran shortens it or splits it in two).

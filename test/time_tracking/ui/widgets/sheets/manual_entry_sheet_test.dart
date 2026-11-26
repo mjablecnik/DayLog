@@ -97,11 +97,11 @@ void main() {
         isNull,
       );
 
-      // Make the end time precede the start time.
+      // Move the start past the end.
       await _setTimeViaPicker(
         tester,
-        currentTimeText: '12:30',
-        hour: 11,
+        currentTimeText: '12:00',
+        hour: 13,
         minute: 0,
       );
       expect(find.text('End time must be after start time.'), findsOneWidget);
@@ -109,7 +109,7 @@ void main() {
       // Fix the end time so it is after start again.
       await _setTimeViaPicker(
         tester,
-        currentTimeText: '11:00',
+        currentTimeText: '12:30',
         hour: 14,
         minute: 0,
       );
@@ -145,7 +145,7 @@ void main() {
       // A new entry defaults to paid work.
       expect(saved.subtype, 'paid');
       expect(saved.customName, isNull);
-      expect(DateTime.parse(saved.startTime).toLocal(), DateTime(2026, 1, 15, 12, 0));
+      expect(DateTime.parse(saved.startTime).toLocal(), DateTime(2026, 1, 15, 13, 0));
       expect(DateTime.parse(saved.endTime).toLocal(), DateTime(2026, 1, 15, 14, 0));
     },
   );

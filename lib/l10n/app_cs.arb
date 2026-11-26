@@ -2325,6 +2325,14 @@
   "@time_descriptionHint": {
     "description": "Time tracking text: \"Describe what you worked on...\""
   },
+  "time_dayFieldStart": "Den začátku",
+  "@time_dayFieldStart": {
+    "description": "Time tracking text: \"Start day\" — the date field beside the start time of an entry"
+  },
+  "time_dayFieldEnd": "Den konce",
+  "@time_dayFieldEnd": {
+    "description": "Time tracking text: \"End day\" — the date field beside the end time of an entry"
+  },
   "time_timeFieldStart": "Začátek",
   "@time_timeFieldStart": {
     "description": "Time tracking text: \"Start\""

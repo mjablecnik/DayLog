@@ -158,4 +158,85 @@ void main() {
       expect(updatedEnd, DateTime(2026, 1, 15, 12, 0));
     },
   );
+
+  testWidgets(
+    'an entry can be moved to another day and can end after midnight',
+    (tester) async {
+      tester.view.physicalSize = const Size(800, 2400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      final insertedId = await db.into(db.timeEntries).insert(
+            TimeEntriesCompanion.insert(
+              startTime: DateTime(2026, 1, 15, 22, 0).toIso8601String(),
+              endTime: DateTime(2026, 1, 15, 23, 0).toIso8601String(),
+              description: 'Late film',
+            ),
+          );
+      final entry = await (db.select(db.timeEntries)
+            ..where((t) => t.id.equals(insertedId)))
+          .getSingle();
+      final container = ProviderContainer(
+        overrides: [databaseProvider.overrideWithValue(db)],
+      );
+      addTearDown(container.dispose);
+      await container.read(databaseServiceProvider.future);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: testMaterialTheme(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('en'),
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context)
+                  .copyWith(alwaysUse24HourFormat: true),
+              child: child!,
+            ),
+            home: Scaffold(
+              body: EditSheet(theme: testTimeTheme, entry: entry),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Thu, Jan 15'), findsNWidgets(2));
+
+      // Move the entry one day back: both days follow.
+      await tester.tap(find.text('Thu, Jan 15').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.edit_outlined));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.descendant(of: find.byType(Dialog), matching: find.byType(TextField)),
+        '01/14/2026',
+      );
+      await tester.tap(find.widgetWithText(TextButton, 'OK'));
+      await tester.pumpAndSettle();
+      expect(find.text('Wed, Jan 14'), findsNWidgets(2));
+
+      // An end time before the start puts the end on the next day.
+      await _setTimeViaPicker(tester, currentTimeText: '23:00', hour: 1, minute: 30);
+      expect(find.text('Wed, Jan 14'), findsOneWidget);
+      expect(find.text('Thu, Jan 15'), findsOneWidget);
+      expect(find.text('End time must be after start time.'), findsNothing);
+
+      final saveButton =
+          find.widgetWithText(FilledButton, 'Save', skipOffstage: false);
+      await tester.ensureVisible(saveButton);
+      await tester.pumpAndSettle();
+      await tester.tap(saveButton);
+      await tester.pumpAndSettle();
+
+      final updated = await (db.select(db.timeEntries)
+            ..where((t) => t.id.equals(insertedId)))
+          .getSingle();
+      expect(DateTime.parse(updated.startTime), DateTime(2026, 1, 14, 22, 0));
+      expect(DateTime.parse(updated.endTime), DateTime(2026, 1, 15, 1, 30));
+    },
+  );
 }

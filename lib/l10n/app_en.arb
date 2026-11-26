@@ -429,6 +429,8 @@
   "time_errorGeneric": "Something went wrong. Please try again.",
   "time_projectNameHint": "Project name...",
   "time_descriptionHint": "Describe what you worked on...",
+  "time_dayFieldStart": "Start day",
+  "time_dayFieldEnd": "End day",
   "time_timeFieldStart": "Start",
   "time_timeFieldEnd": "End",
   "time_durationMinutesLabel": "{minutes} min",

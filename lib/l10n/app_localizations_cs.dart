@@ -1771,6 +1771,12 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_descriptionHint => 'Popiš, na čem jsi pracoval/a...';
 
   @override
+  String get time_dayFieldStart => 'Den začátku';
+
+  @override
+  String get time_dayFieldEnd => 'Den konce';
+
+  @override
   String get time_timeFieldStart => 'Začátek';
 
   @override

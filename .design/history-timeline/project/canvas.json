@@ -1,0 +1,17 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-11-26T07:40:00Z" },
+  "title": "DayLog Historie – časová osa",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 390, "h": 1240, "title": "A · Časová osa s pauzami" },
+    "Grid.dc.html": { "x": 470, "y": 0, "w": 390, "h": 1240, "title": "B · Denní mřížka (výška = délka)" },
+    "Strip.dc.html": { "x": 940, "y": 0, "w": 390, "h": 1240, "title": "C · Seznam + pruh dne" }
+  },
+  "order": ["Main.dc.html", "Grid.dc.html", "Strip.dc.html"],
+  "notes": {
+    "heading": { "x": 0, "y": -300, "text": "Historie – časová posloupnost", "kind": "title1", "maxW": 1330 }
+  },
+  "designSystems": []
+}

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Historie – denní mřížka</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#8cc7d9}a:hover{color:#b5dde9}
+</style>
+</helmet>
+<div style="width: 390px; height: 1240px; box-sizing: border-box; background: #0f131a; color: #e8edf2; font-family: 'Figtree', system-ui, sans-serif; display: flex; flex-direction: column;">
+
+  <header style="display: flex; align-items: center; gap: 16px; padding: 18px 16px 8px;">
+    <button aria-label="Menu" style="width: 44px; height: 44px; border: 0; background: transparent; color: #aab3bf; display: flex; align-items: center; justify-content: center; padding: 0;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <h1 style="margin: 0; flex-grow: 1; font-size: 24px; font-weight: 600;">Historie</h1>
+    <button aria-label="Přidat záznam" style="width: 48px; height: 48px; border: 0; border-radius: 14px; background: #1b222c; color: #cfd6de; display: flex; align-items: center; justify-content: center; padding: 0;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </header>
+
+  <div style="display: flex; align-items: center; gap: 12px; padding: 4px 20px 0;">
+    <button aria-label="Předchozí den" style="width: 44px; height: 44px; border: 0; border-radius: 12px; background: #1b222c; color: #aab3bf; display: flex; align-items: center; justify-content: center; padding: 0;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <div style="flex-grow: 1; text-align: center;">
+      <div style="font-size: 18px; font-weight: 700;">Dnes</div>
+      <div style="font-size: 13px; color: #9aa4b1;">čtvrtek 26. listopadu</div>
+    </div>
+    <button aria-label="Další den" style="width: 44px; height: 44px; border: 0; border-radius: 12px; background: #1b222c; color: #aab3bf; display: flex; align-items: center; justify-content: center; padding: 0;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+
+  <div style="display: flex; gap: 8px; padding: 12px 18px 14px;">
+    <span style="padding: 7px 14px; border-radius: 999px; background: #1b222c; font-size: 14px; font-weight: 700;">12 záznamů</span>
+    <span style="padding: 7px 14px; border-radius: 999px; background: #1d3038; color: #8cc7d9; font-size: 14px; font-weight: 700;">Celkem: 9h 19m</span>
+  </div>
+
+  <div style="position: relative; margin: 0 16px 0 8px; height: 880px;">
+    <sc-for list="{{ hours }}" as="h" hint-placeholder-count="13">
+      <div style="position: absolute; left: 0; right: 0; top: {{ h.top }}; transform: translateY(-50%); display: flex; align-items: center; gap: 8px;">
+        <span style="width: 40px; text-align: right; font-size: 11.5px; font-weight: 600; color: #6f7986; font-variant-numeric: tabular-nums; transform: translateY(-1px);">{{ h.label }}</span>
+        <div style="flex-grow: 1; height: 1px; background: #1f2630;"></div>
+      </div>
+    </sc-for>
+
+    <sc-for list="{{ gaps }}" as="g" hint-placeholder-count="2">
+      <div style="position: absolute; left: 54px; right: 0; top: {{ g.top }}; height: {{ g.height }}; box-sizing: border-box; border: 1.5px dashed #343d49; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #8792a0;">{{ g.label }}</div>
+    </sc-for>
+
+    <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="12">
+      <button style="position: absolute; left: 54px; right: 0; top: {{ b.top }}; height: {{ b.height }}; box-sizing: border-box; border: 0; border-radius: 6px; background: {{ b.bg }}; color: inherit; font: inherit; text-align: left; padding: 0 10px; display: flex; align-items: center; gap: 8px; overflow: hidden;">
+        <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: {{ b.color }};"></div>
+        <sc-if value="{{ b.tall }}" hint-placeholder-val="{{ false }}">
+          <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; padding-left: 2px;">
+            <span style="font-size: 14.5px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ b.title }}</span>
+            <span style="font-size: 12px; color: #aab3bf;"><b style="color: {{ b.ink }}; font-weight: 700;">{{ b.type }}</b> {{ b.meta }} · {{ b.range }}</span>
+          </div>
+          <span style="font-size: 13.5px; font-weight: 700;">{{ b.dur }}</span>
+        </sc-if>
+        <sc-if value="{{ b.short }}" hint-placeholder-val="{{ true }}">
+          <span style="flex-grow: 1; min-width: 0; padding-left: 2px; font-size: 13px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ b.title }}</span>
+          <span style="font-size: 12.5px; font-weight: 700; color: #cfd6de;">{{ b.dur }}</span>
+        </sc-if>
+      </button>
+    </sc-for>
+
+    <div style="position: absolute; left: 0; right: 0; top: {{ nowTop }}; display: flex; align-items: center; gap: 6px;">
+      <span style="width: 40px; text-align: right; font-size: 11.5px; font-weight: 800; color: #8cc7d9; transform: translateY(-1px);">18:52</span>
+      <div style="width: 8px; height: 8px; border-radius: 50%; background: #8cc7d9;"></div>
+      <div style="flex-grow: 1; height: 2px; background: #8cc7d9;"></div>
+    </div>
+  </div>
+
+  <p style="margin: 14px 0 0; text-align: center; font-size: 12.5px; color: #6b7480;">Klepnutím upravíš · tažením doleva smažeš</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var PX = 1.2, TO = 19 * 60, TOP = 8;
+    var C = { prace: '#e06b6b', zabava: '#6fd3b8', odpocinek: '#8f9cf0', cesta: '#8b95a3', meeting: '#a97cf2', hygiena: '#5cc4ee' };
+    function rgb(hex) { var n = parseInt(hex.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+    function bg(hex) {
+      var c = rgb(hex), base = [25, 32, 42];
+      return 'rgb(' + c.map(function (v, i) { return Math.round(base[i] + (v - base[i]) * 0.2); }).join(',') + ')';
+    }
+    function ink(hex) {
+      var c = rgb(hex);
+      return 'rgb(' + c.map(function (v) { return Math.round(v + (255 - v) * 0.35); }).join(',') + ')';
+    }
+    function min(t) { var p = t.split(':'); return +p[0] * 60 + +p[1]; }
+    // The axis runs upwards: the evening is at the top, the morning at the bottom.
+    function y(m) { return (TOP + (TO - m) * PX) + 'px'; }
+    function b(start, end, title, type, key, meta, dur) {
+      var h = (min(end) - min(start)) * PX;
+      var tall = h >= 44;
+      return { top: y(min(end)), height: Math.max(h - 2, 20) + 'px', title: title, type: type, meta: meta, dur: dur, range: start + '–' + end, color: C[key], bg: bg(C[key]), ink: ink(C[key]), tall: tall, short: !tall };
+    }
+    var blocks = [
+      b('08:10', '09:55', 'Oprava par chyb', 'Práce', 'prace', 'DayLog · Neplacená', '1h 45m'),
+      b('10:21', '10:41', 'Hraní hry Gloria Victis', 'Zábava', 'zabava', '', '20m'),
+      b('10:42', '11:00', 'Sledovani youtube', 'Zábava', 'zabava', '', '18m'),
+      b('11:00', '11:40', 'Sledovani youtube', 'Zábava', 'zabava', 'Pasivní zábava', '40m'),
+      b('11:40', '12:00', 'Sledovani youtube', 'Zábava', 'zabava', '', '20m'),
+      b('12:00', '12:19', 'Příprava na odchod', 'Hygiena', 'hygiena', '', '19m'),
+      b('12:20', '12:39', 'Cesta na schůzku', 'Cestování', 'cesta', '', '19m'),
+      b('12:39', '12:58', 'Cesta na schůzku', 'Cestování', 'cesta', '', '19m'),
+      b('12:58', '15:00', 'Partners schuzka', 'Meeting', 'meeting', '', '2h 2m'),
+      b('15:00', '16:00', 'Cesta ze schuzky domu', 'Cestování', 'cesta', '', '1h'),
+      b('16:00', '16:42', 'Sledovani youtube', 'Odpočinek', 'odpocinek', '', '42m'),
+      b('17:30', '18:45', 'Oprava par chyb', 'Práce', 'prace', 'DayLog · Neplacená', '1h 15m')
+    ];
+    function g(start, end, label) {
+      return { top: (TOP + (TO - min(end)) * PX + 2) + 'px', height: ((min(end) - min(start)) * PX - 6) + 'px', label: label };
+    }
+    var gaps = [g('09:55', '10:21', 'pauza 26 min'), g('16:42', '17:30', 'pauza 48 min')];
+    var hours = [];
+    for (var hr = 19; hr >= 7; hr--) hours.push({ top: y(hr * 60), label: (hr < 10 ? '0' : '') + hr + ':00' });
+    return { blocks: blocks, gaps: gaps, hours: hours, nowTop: y(min('18:52')) };
+  }
+}
+</script>
+</body>
+</html>

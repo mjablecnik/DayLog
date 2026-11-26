@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Historie – časová osa</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#8cc7d9}a:hover{color:#b5dde9}
+</style>
+</helmet>
+<div style="width: 390px; height: 1240px; box-sizing: border-box; background: #0f131a; color: #e8edf2; font-family: 'Figtree', system-ui, sans-serif; display: flex; flex-direction: column;">
+
+  <header style="display: flex; align-items: center; gap: 16px; padding: 18px 16px 8px;">
+    <button aria-label="Menu" style="width: 44px; height: 44px; border: 0; background: transparent; color: #aab3bf; display: flex; align-items: center; justify-content: center; padding: 0;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <h1 style="margin: 0; flex-grow: 1; font-size: 24px; font-weight: 600;">Historie</h1>
+    <button aria-label="Přidat záznam" style="width: 48px; height: 48px; border: 0; border-radius: 14px; background: #1b222c; color: #cfd6de; display: flex; align-items: center; justify-content: center; padding: 0;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </header>
+
+  <div style="display: flex; align-items: center; gap: 12px; padding: 4px 20px 0;">
+    <button aria-label="Předchozí den" style="width: 44px; height: 44px; border: 0; border-radius: 12px; background: #1b222c; color: #aab3bf; display: flex; align-items: center; justify-content: center; padding: 0;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <div style="flex-grow: 1; text-align: center;">
+      <div style="font-size: 18px; font-weight: 700;">Dnes</div>
+      <div style="font-size: 13px; color: #9aa4b1;">čtvrtek 26. listopadu</div>
+    </div>
+    <button aria-label="Další den" style="width: 44px; height: 44px; border: 0; border-radius: 12px; background: #1b222c; color: #aab3bf; display: flex; align-items: center; justify-content: center; padding: 0;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+
+  <div style="display: flex; gap: 8px; padding: 12px 18px 6px;">
+    <span style="padding: 7px 14px; border-radius: 999px; background: #1b222c; font-size: 14px; font-weight: 700;">12 záznamů</span>
+    <span style="padding: 7px 14px; border-radius: 999px; background: #1d3038; color: #8cc7d9; font-size: 14px; font-weight: 700;">Celkem: 9h 19m</span>
+  </div>
+
+  <div style="display: flex; flex-direction: column; padding: 10px 16px 0 12px;">
+    <sc-for list="{{ items }}" as="it" hint-placeholder-count="14">
+
+      <sc-if value="{{ it.isGap }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; align-items: stretch; min-height: 44px;">
+          <div style="width: 46px;"></div>
+          <div style="width: 22px; display: flex; justify-content: center;">
+            <div style="width: 0; border-left: 2px dashed #3a4350;"></div>
+          </div>
+          <div style="flex-grow: 1; display: flex; align-items: center; gap: 8px; padding-left: 8px; color: #8792a0; font-size: 13px; font-weight: 600;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span>{{ it.label }}</span>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ it.isEntry }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; align-items: stretch;">
+          <div style="width: 46px; padding-top: 12px; font-size: 13.5px; font-weight: 600; color: #cfd6de; font-variant-numeric: tabular-nums;">{{ it.start }}</div>
+          <div style="width: 22px; position: relative; display: flex; justify-content: center;">
+            <div style="position: absolute; top: {{ it.lineTop }}; bottom: {{ it.lineBottom }}; width: 2px; background: #2c3440;"></div>
+            <div style="position: relative; margin-top: 15px; width: 12px; height: 12px; border-radius: 50%; background: {{ it.color }}; box-shadow: 0 0 0 3px #0f131a;"></div>
+          </div>
+          <button style="flex-grow: 1; margin: 4px 0 4px 8px; padding: 10px 12px; border: 0; border-radius: 12px; background: #19202a; color: inherit; font: inherit; text-align: left; display: flex; align-items: center; gap: 8px; min-height: 58px;">
+            <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+              <div style="font-size: 15.5px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ it.title }}</div>
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #9aa4b1;">
+                <span style="padding: 1px 7px; border-radius: 6px; background: {{ it.tagBg }}; color: {{ it.tagInk }}; font-size: 11.5px; font-weight: 700;">{{ it.type }}</span>
+                <span>{{ it.meta }}</span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+              <span style="font-size: 14.5px; font-weight: 700;">{{ it.dur }}</span>
+              <span style="font-size: 11.5px; color: #7d8794; font-variant-numeric: tabular-nums;">do {{ it.end }}</span>
+            </div>
+          </button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ it.isNow }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; align-items: center; min-height: 40px;">
+          <div style="width: 46px; font-size: 13.5px; font-weight: 700; color: #8cc7d9; font-variant-numeric: tabular-nums;">{{ it.start }}</div>
+          <div style="width: 22px; display: flex; justify-content: center;">
+            <div style="width: 10px; height: 10px; border-radius: 50%; border: 2px solid #8cc7d9;"></div>
+          </div>
+          <div style="flex-grow: 1; padding-left: 8px; font-size: 13px; font-weight: 600; color: #8cc7d9;">{{ it.label }}</div>
+        </div>
+      </sc-if>
+
+    </sc-for>
+  </div>
+
+  <p style="margin: 18px 0 0; text-align: center; font-size: 12.5px; color: #6b7480;">Klepnutím upravíš · tažením doleva smažeš</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var C = { prace: '#e06b6b', zabava: '#6fd3b8', odpocinek: '#8f9cf0', cesta: '#8b95a3', meeting: '#a97cf2', hygiena: '#5cc4ee' };
+    function rgba(hex, a) {
+      var n = parseInt(hex.slice(1), 16);
+      return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+    }
+    function mix(hex) {
+      var n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+      return 'rgb(' + Math.round(r + (255 - r) * 0.45) + ',' + Math.round(g + (255 - g) * 0.45) + ',' + Math.round(b + (255 - b) * 0.45) + ')';
+    }
+    function e(start, end, title, type, key, meta, dur) {
+      return { isEntry: true, isGap: false, isNow: false, start: start, end: end, title: title, type: type, meta: meta, dur: dur, color: C[key], tagBg: rgba(C[key], 0.2), tagInk: mix(C[key]) };
+    }
+    function gap(label) { return { isEntry: false, isGap: true, isNow: false, label: label }; }
+    var raw = [
+      e('08:10', '09:55', 'Oprava par chyb', 'Práce', 'prace', 'DayLog · Neplacená', '1h 45m'),
+      gap('Pauza 26 min'),
+      e('10:21', '10:41', 'Hraní hry Gloria Victis', 'Zábava', 'zabava', 'Hry', '20m'),
+      e('10:42', '11:00', 'Sledovani youtube', 'Zábava', 'zabava', 'Pasivní zábava', '18m'),
+      e('11:00', '11:40', 'Sledovani youtube', 'Zábava', 'zabava', 'Pasivní zábava', '40m'),
+      e('11:40', '12:00', 'Sledovani youtube', 'Zábava', 'zabava', 'Pasivní zábava', '20m'),
+      e('12:00', '12:19', 'Příprava na odchod', 'Hygiena', 'hygiena', 'Obecná', '19m'),
+      e('12:20', '12:39', 'Cesta na schůzku', 'Cestování', 'cesta', '', '19m'),
+      e('12:39', '12:58', 'Cesta na schůzku', 'Cestování', 'cesta', '', '19m'),
+      e('12:58', '15:00', 'Partners schuzka', 'Meeting', 'meeting', '', '2h 2m'),
+      e('15:00', '16:00', 'Cesta ze schuzky domu', 'Cestování', 'cesta', '', '1h'),
+      e('16:00', '16:42', 'Sledovani youtube', 'Odpočinek', 'odpocinek', 'Pasivní odpočinek', '42m'),
+      gap('Pauza 48 min'),
+      e('17:30', '18:45', 'Oprava par chyb', 'Práce', 'prace', 'DayLog · Neplacená', '1h 15m'),
+      gap('Nic nezapsáno · 7 min'),
+      { isEntry: false, isGap: false, isNow: true, start: '18:52', label: 'Teď' }
+    ];
+    // Newest on top: the evening is read first, the morning sits at the bottom.
+    raw.reverse();
+    // The solid rail joins entries that follow each other; a gap row breaks it with a dashed piece.
+    var items = raw.map(function (it, i) {
+      if (!it.isEntry) return it;
+      var prev = raw[i - 1], next = raw[i + 1];
+      it.lineTop = prev && prev.isEntry ? '0px' : '21px';
+      it.lineBottom = next && next.isEntry ? '0px' : 'calc(100% - 21px)';
+      return it;
+    });
+    return { items: items };
+  }
+}
+</script>
+</body>
+</html>

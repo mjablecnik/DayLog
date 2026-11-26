@@ -20,8 +20,11 @@ import '../../../ui_kit/layout/app_header.dart';
 import '../../../ui_kit/layout/header_action.dart';
 import '../../providers/history_provider.dart';
 import '../widgets/controls/day_navigator.dart';
+import '../../domain/history_timeline.dart';
+import '../widgets/cards/day_strip.dart';
 import '../widgets/cards/day_summary.dart';
 import '../widgets/cards/empty_state.dart';
+import '../widgets/cards/gap_row.dart';
 import '../widgets/cards/history_row.dart';
 import '../widgets/sheets/edit_sheet.dart';
 import '../widgets/sheets/manual_entry_sheet.dart';
@@ -142,6 +145,13 @@ class HistoryScreen extends ConsumerWidget {
                         children: [
                           DayNavigator(theme: theme),
                           DaySummary(entries: entries, theme: theme),
+                          DayStrip(
+                            entries: entries,
+                            isDark: theme.isDark,
+                            now: _isToday(selectedDay, clock.now())
+                                ? clock.now()
+                                : null,
+                          ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(
                               Space.s16,
@@ -151,15 +161,22 @@ class HistoryScreen extends ConsumerWidget {
                             ),
                             child: GroupedList(
                               children: [
-                                for (final entry in entries)
-                                  HistoryRow(
-                                    key: ValueKey(entry.id),
-                                    entry: entry,
-                                    theme: theme,
-                                    onEdit: () => _edit(context, theme, entry),
-                                    onDelete: () =>
-                                        _delete(context, ref, entry),
-                                  ),
+                                for (final item in buildHistoryItems(entries))
+                                  switch (item) {
+                                    HistoryEntryItem(:final entry) =>
+                                      HistoryRow(
+                                        key: ValueKey(entry.id),
+                                        entry: entry,
+                                        theme: theme,
+                                        onEdit: () =>
+                                            _edit(context, theme, entry),
+                                        onDelete: () =>
+                                            _delete(context, ref, entry),
+                                      ),
+                                    HistoryGapItem(:final length) => GapRow(
+                                      length: length,
+                                    ),
+                                  },
                               ],
                             ),
                           ),

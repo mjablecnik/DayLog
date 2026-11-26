@@ -107,8 +107,10 @@ class _HistoryRowState extends State<HistoryRow> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(_formatTime(entry.startTime), style: timeStyle),
+                    // End above start: the list runs newest first, so the end of
+                    // a row continues into the start of the row below it.
                     Text(_formatTime(entry.endTime), style: timeStyle),
+                    Text(_formatTime(entry.startTime), style: timeStyle),
                   ],
                 ),
               ),

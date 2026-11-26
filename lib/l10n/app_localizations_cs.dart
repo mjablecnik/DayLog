@@ -2295,6 +2295,16 @@ class AppLocalizationsCs extends AppLocalizations {
       'Klepnutím upravíš · tažením doleva smažeš';
 
   @override
+  String time_historyGap(String duration) {
+    return 'pauza $duration';
+  }
+
+  @override
+  String time_historyStripLabel(String from, String to) {
+    return 'Přehled dne od $from do $to';
+  }
+
+  @override
   String get time_reminderSwipeHint =>
       'Klepnutím upravíš · tažením doleva smažeš · kroužkem označíš jako hotové';
 

@@ -3595,6 +3595,18 @@ abstract class AppLocalizations {
   /// **'Klepnutím upravíš · tažením doleva smažeš'**
   String get time_historySwipeHint;
 
+  /// Gap row in the History list: the unrecorded time between two entries, e.g. "pauza 48m".
+  ///
+  /// In cs, this message translates to:
+  /// **'pauza {duration}'**
+  String time_historyGap(String duration);
+
+  /// Screen reader label of the day strip above the History list; from and to are clock times.
+  ///
+  /// In cs, this message translates to:
+  /// **'Přehled dne od {from} do {to}'**
+  String time_historyStripLabel(String from, String to);
+
   /// Hint for interacting with reminder rows.
   ///
   /// In cs, this message translates to:

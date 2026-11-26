@@ -270,15 +270,21 @@ class A11yEnv {
 Future<void> _seedTime(AppDatabase db, Subject subject) async {
   if (subject == Subject.history) {
     final now = a11yNow;
-    final start = DateTime(now.year, now.month, now.day, 10);
-    await db.into(db.timeEntries).insert(
-      TimeEntriesCompanion.insert(
-        startTime: start.toIso8601String(),
-        endTime: start.add(const Duration(minutes: 40)).toIso8601String(),
-        description: 'Příprava týdenního plánu',
-        activityType: const Value('Práce'),
-      ),
-    );
+    // Four entries before the fixed 12:00: a pause of 40 minutes, two entries
+    // two minutes apart (no pause row) and a pause of 15 minutes.
+    Future<void> add(String name, String type, int fromHour, int fromMinute, int toHour, int toMinute) =>
+        db.into(db.timeEntries).insert(
+          TimeEntriesCompanion.insert(
+            startTime: DateTime(now.year, now.month, now.day, fromHour, fromMinute).toIso8601String(),
+            endTime: DateTime(now.year, now.month, now.day, toHour, toMinute).toIso8601String(),
+            description: name,
+            activityType: Value(type),
+          ),
+        );
+    await add('Porada týmu', 'Meeting', 8, 10, 9, 20);
+    await add('Příprava týdenního plánu', 'Práce', 10, 0, 10, 40);
+    await add('Cesta na schůzku', 'Přesun', 10, 42, 11, 25);
+    await add('Hraní hry', 'Zábava', 11, 40, 11, 58);
     return;
   }
   time_zones.initializeTimeZones();

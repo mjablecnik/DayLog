@@ -12,6 +12,8 @@ import 'package:daylog/time_tracking/ui/screens/reminder_action_screen.dart';
 import 'package:daylog/time_tracking/ui/screens/reminder_settings_screen.dart';
 import 'package:daylog/time_tracking/ui/screens/statistics_screen.dart';
 import 'package:daylog/time_tracking/ui/screens/timer_screen.dart';
+import 'package:daylog/time_tracking/ui/widgets/cards/day_strip.dart';
+import 'package:daylog/time_tracking/ui/widgets/cards/gap_row.dart';
 import 'package:daylog/time_tracking/ui/widgets/cards/history_row.dart';
 import 'package:daylog/time_tracking/ui/widgets/reminders/reminder_sheet.dart';
 import 'package:daylog/time_tracking/ui/widgets/sheets/edit_sheet.dart';
@@ -78,6 +80,66 @@ void main() {
           ),
         );
   }
+
+  /// Three entries of today: 10:00-10:40, 10:42-11:00 (two minutes after the
+  /// first, no pause) and 11:30-12:00 (half an hour after the second).
+  Future<void> seedDay(AppDatabase db) async {
+    final DateTime now = DateTime.now();
+    final DateTime day = now.hour < dayStartHour ? now.subtract(const Duration(days: 1)) : now;
+    Future<void> add(String name, int startHour, int startMinute, int endHour, int endMinute) => db
+        .into(db.timeEntries)
+        .insert(
+          TimeEntriesCompanion.insert(
+            startTime: DateTime(day.year, day.month, day.day, startHour, startMinute).toIso8601String(),
+            endTime: DateTime(day.year, day.month, day.day, endHour, endMinute).toIso8601String(),
+            description: name,
+            activityType: const Value('Práce'),
+          ),
+        );
+    await add('First', 10, 0, 10, 40);
+    await add('Second', 10, 42, 11, 0);
+    await add('Third', 11, 30, 12, 0);
+  }
+
+  testWidgets('HistoryScreen lists the newest entry first with a gap row only for a real pause', (
+    tester,
+  ) async {
+    final AppDatabase db = await pump(tester, const HistoryScreen(), seed: seedDay);
+    double top(String name) => tester.getTopLeft(find.text(name)).dy;
+    expect(top('Third'), lessThan(top('Second')));
+    expect(top('Second'), lessThan(top('First')));
+    expect(find.byType(HistoryRow), findsNWidgets(3));
+    expect(find.byType(GapRow), findsOneWidget);
+    expect(find.text('gap 30m'), findsOneWidget);
+    expect(find.text('3 entries'), findsOneWidget);
+    // The gap row sits between the third and the second entry.
+    final double gap = tester.getTopLeft(find.byType(GapRow)).dy;
+    expect(gap, greaterThan(top('Third')));
+    expect(gap, lessThan(top('Second')));
+    await close(tester, db);
+  });
+
+  testWidgets('a History row shows the end time above the start time', (tester) async {
+    final AppDatabase db = await pump(tester, const HistoryScreen(), seed: seedEntry);
+    // The day strip labels its own hours, so look only inside the row.
+    Finder inRow(String time) => find.descendant(of: find.byType(HistoryRow), matching: find.text(time));
+    expect(tester.getTopLeft(inRow('10:40')).dy, lessThan(tester.getTopLeft(inRow('10:00')).dy));
+    await close(tester, db);
+  });
+
+  testWidgets('HistoryScreen shows the day strip for entries and none for an empty day', (tester) async {
+    final AppDatabase db = await pump(tester, const HistoryScreen(), seed: seedDay);
+    expect(find.byType(DayStrip), findsOneWidget);
+    final semantics = tester.ensureSemantics();
+    expect(find.bySemanticsLabel('Day overview from 10:00 to 12:00'), findsOneWidget);
+    semantics.dispose();
+    await close(tester, db);
+
+    final AppDatabase empty = await pump(tester, const HistoryScreen());
+    expect(find.byType(DayStrip), findsNothing);
+    expect(find.byType(GapRow), findsNothing);
+    await close(tester, empty);
+  });
 
   testWidgets(
     'TimerScreen shows the countdown and exposes the phase to accessibility',

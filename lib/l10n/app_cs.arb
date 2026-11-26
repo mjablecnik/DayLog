@@ -3049,6 +3049,27 @@
   },
   "time_historySwipeHint": "Klepnutím upravíš · tažením doleva smažeš",
   "@time_historySwipeHint": {"description": "Hint for tapping or swiping History rows."},
+  "time_historyGap": "pauza {duration}",
+  "@time_historyGap": {
+    "description": "Gap row in the History list: the unrecorded time between two entries, e.g. \"pauza 48m\".",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "time_historyStripLabel": "Přehled dne od {from} do {to}",
+  "@time_historyStripLabel": {
+    "description": "Screen reader label of the day strip above the History list; from and to are clock times.",
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
   "time_reminderSwipeHint": "Klepnutím upravíš · tažením doleva smažeš · kroužkem označíš jako hotové",
   "@time_reminderSwipeHint": {"description": "Hint for interacting with reminder rows."},
   "time_timerLogCaption": "Zapsat",

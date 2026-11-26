@@ -2246,6 +2246,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_historySwipeHint => 'Tap to edit · swipe left to delete';
 
   @override
+  String time_historyGap(String duration) {
+    return 'gap $duration';
+  }
+
+  @override
+  String time_historyStripLabel(String from, String to) {
+    return 'Day overview from $from to $to';
+  }
+
+  @override
   String get time_reminderSwipeHint =>
       'Tap to edit · swipe left to delete · use the circle to mark done';
 

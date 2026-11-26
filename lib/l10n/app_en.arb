@@ -582,6 +582,8 @@
   "time_liveActivityDone": "Done!",
   "time_liveActivityPaused": "paused",
   "time_historySwipeHint": "Tap to edit · swipe left to delete",
+  "time_historyGap": "gap {duration}",
+  "time_historyStripLabel": "Day overview from {from} to {to}",
   "time_reminderSwipeHint": "Tap to edit · swipe left to delete · use the circle to mark done",
   "time_timerLogCaption": "Log",
   "time_timerFinishCaption": "Finish",

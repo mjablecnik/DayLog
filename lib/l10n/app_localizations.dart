@@ -3601,12 +3601,6 @@ abstract class AppLocalizations {
   /// **'pauza {duration}'**
   String time_historyGap(String duration);
 
-  /// Screen reader label of the day strip above the History list; from and to are clock times.
-  ///
-  /// In cs, this message translates to:
-  /// **'Přehled dne od {from} do {to}'**
-  String time_historyStripLabel(String from, String to);
-
   /// Hint for interacting with reminder rows.
   ///
   /// In cs, this message translates to:

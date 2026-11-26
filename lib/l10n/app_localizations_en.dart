@@ -2251,11 +2251,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String time_historyStripLabel(String from, String to) {
-    return 'Day overview from $from to $to';
-  }
-
-  @override
   String get time_reminderSwipeHint =>
       'Tap to edit · swipe left to delete · use the circle to mark done';
 

@@ -3058,18 +3058,6 @@
       }
     }
   },
-  "time_historyStripLabel": "Přehled dne od {from} do {to}",
-  "@time_historyStripLabel": {
-    "description": "Screen reader label of the day strip above the History list; from and to are clock times.",
-    "placeholders": {
-      "from": {
-        "type": "String"
-      },
-      "to": {
-        "type": "String"
-      }
-    }
-  },
   "time_reminderSwipeHint": "Klepnutím upravíš · tažením doleva smažeš · kroužkem označíš jako hotové",
   "@time_reminderSwipeHint": {"description": "Hint for interacting with reminder rows."},
   "time_timerLogCaption": "Zapsat",

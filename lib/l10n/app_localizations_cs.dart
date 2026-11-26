@@ -2300,11 +2300,6 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String time_historyStripLabel(String from, String to) {
-    return 'Přehled dne od $from do $to';
-  }
-
-  @override
   String get time_reminderSwipeHint =>
       'Klepnutím upravíš · tažením doleva smažeš · kroužkem označíš jako hotové';
 

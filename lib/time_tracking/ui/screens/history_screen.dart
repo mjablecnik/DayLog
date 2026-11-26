@@ -21,7 +21,6 @@ import '../../../ui_kit/layout/header_action.dart';
 import '../../providers/history_provider.dart';
 import '../widgets/controls/day_navigator.dart';
 import '../../domain/history_timeline.dart';
-import '../widgets/cards/day_strip.dart';
 import '../widgets/cards/day_summary.dart';
 import '../widgets/cards/empty_state.dart';
 import '../widgets/cards/gap_row.dart';
@@ -145,13 +144,6 @@ class HistoryScreen extends ConsumerWidget {
                         children: [
                           DayNavigator(theme: theme),
                           DaySummary(entries: entries, theme: theme),
-                          DayStrip(
-                            entries: entries,
-                            isDark: theme.isDark,
-                            now: _isToday(selectedDay, clock.now())
-                                ? clock.now()
-                                : null,
-                          ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(
                               Space.s16,

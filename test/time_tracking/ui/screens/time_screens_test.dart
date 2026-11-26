@@ -12,7 +12,6 @@ import 'package:daylog/time_tracking/ui/screens/reminder_action_screen.dart';
 import 'package:daylog/time_tracking/ui/screens/reminder_settings_screen.dart';
 import 'package:daylog/time_tracking/ui/screens/statistics_screen.dart';
 import 'package:daylog/time_tracking/ui/screens/timer_screen.dart';
-import 'package:daylog/time_tracking/ui/widgets/cards/day_strip.dart';
 import 'package:daylog/time_tracking/ui/widgets/cards/gap_row.dart';
 import 'package:daylog/time_tracking/ui/widgets/cards/history_row.dart';
 import 'package:daylog/time_tracking/ui/widgets/reminders/reminder_sheet.dart';
@@ -121,24 +120,15 @@ void main() {
 
   testWidgets('a History row shows the end time above the start time', (tester) async {
     final AppDatabase db = await pump(tester, const HistoryScreen(), seed: seedEntry);
-    // The day strip labels its own hours, so look only inside the row.
-    Finder inRow(String time) => find.descendant(of: find.byType(HistoryRow), matching: find.text(time));
-    expect(tester.getTopLeft(inRow('10:40')).dy, lessThan(tester.getTopLeft(inRow('10:00')).dy));
+    expect(tester.getTopLeft(find.text('10:40')).dy, lessThan(tester.getTopLeft(find.text('10:00')).dy));
     await close(tester, db);
   });
 
-  testWidgets('HistoryScreen shows the day strip for entries and none for an empty day', (tester) async {
-    final AppDatabase db = await pump(tester, const HistoryScreen(), seed: seedDay);
-    expect(find.byType(DayStrip), findsOneWidget);
-    final semantics = tester.ensureSemantics();
-    expect(find.bySemanticsLabel('Day overview from 10:00 to 12:00'), findsOneWidget);
-    semantics.dispose();
-    await close(tester, db);
-
-    final AppDatabase empty = await pump(tester, const HistoryScreen());
-    expect(find.byType(DayStrip), findsNothing);
+  testWidgets('HistoryScreen shows no pause row for an empty day', (tester) async {
+    final AppDatabase db = await pump(tester, const HistoryScreen());
+    expect(find.byType(HistoryRow), findsNothing);
     expect(find.byType(GapRow), findsNothing);
-    await close(tester, empty);
+    await close(tester, db);
   });
 
   testWidgets(

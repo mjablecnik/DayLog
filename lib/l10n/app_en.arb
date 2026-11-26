@@ -425,6 +425,7 @@
   "time_errorSaveFailed": "Failed to save. Please try again.",
   "time_errorDescriptionEmpty": "Description cannot be empty.",
   "time_errorEndBeforeStart": "End time must be after start time.",
+  "time_errorOverlap": "The time overlaps the entry {start}–{end}. Fix that one first.",
   "time_errorGeneric": "Something went wrong. Please try again.",
   "time_projectNameHint": "Project name...",
   "time_descriptionHint": "Describe what you worked on...",

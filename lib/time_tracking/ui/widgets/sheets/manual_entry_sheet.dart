@@ -17,6 +17,8 @@ import '../../../theme/time_theme.dart';
 import '../../../../database/app_database.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../providers/database_provider.dart';
+import '../../../services/database_service.dart'
+    show OverlappingEntryException;
 import '../../../providers/suggestions_provider.dart';
 import '../../../providers/history_provider.dart' show logicalDay;
 import '../activity_picker/activity_picker.dart';
@@ -201,6 +203,14 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
       }
 
       if (mounted) Navigator.of(context).pop();
+    } on OverlappingEntryException catch (e) {
+      setState(() {
+        _error = l10n.time_errorOverlap(
+          _formatTime(DateTime.parse(e.conflict.startTime).toLocal()),
+          _formatTime(DateTime.parse(e.conflict.endTime).toLocal()),
+        );
+        _saving = false;
+      });
     } catch (_) {
       setState(() {
         _error = l10n.time_errorSaveEntryFailed;

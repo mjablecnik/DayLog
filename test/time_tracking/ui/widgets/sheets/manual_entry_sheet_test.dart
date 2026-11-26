@@ -1,8 +1,10 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:daylog/database/app_database.dart' show TimeEntriesCompanion;
 import 'package:daylog/l10n/app_localizations.dart';
 import 'package:daylog/time_tracking/providers/database_provider.dart';
 import 'package:daylog/time_tracking/ui/widgets/sheets/manual_entry_sheet.dart';
@@ -147,4 +149,74 @@ void main() {
       expect(DateTime.parse(saved.endTime).toLocal(), DateTime(2026, 1, 15, 14, 0));
     },
   );
+
+  testWidgets('ManualEntrySheet refuses a time that overlaps a stored entry', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    final db = createTestDatabase();
+    addTearDown(db.close);
+    final container = ProviderContainer(
+      overrides: [databaseProvider.overrideWithValue(db)],
+    );
+    addTearDown(container.dispose);
+    final service = await container.read(databaseServiceProvider.future);
+    await tester.runAsync(
+      () => service.insertTimeEntry(
+        TimeEntriesCompanion(
+          startTime: Value(DateTime(2026, 1, 15, 12, 58).toIso8601String()),
+          endTime: Value(DateTime(2026, 1, 15, 15).toIso8601String()),
+          description: const Value('meeting'),
+          activityType: const Value('Práce'),
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: testMaterialTheme(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          ),
+          home: Scaffold(
+            body: ManualEntrySheet(
+              theme: testTimeTheme,
+              selectedDay: DateTime(2026, 1, 15),
+            ),
+          ),
+        ),
+      ),
+    );
+    // Let the sheet's lookup of the day's entries finish.
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    await tester.pumpAndSettle();
+
+    // The sheet starts after the stored entry; move the start back into it.
+    await _setTimeViaPicker(tester, currentTimeText: '15:00', hour: 14, minute: 0);
+    await tester.enterText(find.byType(TextField).last, 'video');
+    await tester.pump();
+    await tester.ensureVisible(find.byType(FilledButton));
+    await tester.pumpAndSettle();
+    await tester.runAsync(() async {
+      await tester.tap(find.byType(FilledButton));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+    });
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('The time overlaps the entry 12:58–15:00. Fix that one first.'),
+      findsOneWidget,
+    );
+    expect(find.byType(ManualEntrySheet), findsOneWidget);
+    expect(await tester.runAsync(() => db.select(db.timeEntries).get()), hasLength(1));
+  });
 }

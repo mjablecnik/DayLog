@@ -2301,6 +2301,18 @@
   "@time_errorEndBeforeStart": {
     "description": "Time tracking text: \"End time must be after start time.\""
   },
+  "time_errorOverlap": "Čas se kryje se záznamem {start}–{end}. Nejdřív upravte ten.",
+  "@time_errorOverlap": {
+    "description": "Time tracking text: \"The time overlaps the entry {start}–{end}. Fix that one first.\" Shown when a manual or edited entry shares time with a stored entry.",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
   "time_errorGeneric": "Něco se pokazilo. Zkuste to prosím znovu.",
   "@time_errorGeneric": {
     "description": "Time tracking text: \"Something went wrong. Please try again.\""

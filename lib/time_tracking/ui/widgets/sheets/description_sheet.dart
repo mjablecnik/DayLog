@@ -182,16 +182,17 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
 
       final values = _selection.toRowValues();
 
-      await dbService.insertTimeEntry(
+      // Time added by hand while the timer ran is cut out of the session.
+      await dbService.insertTimerSession(
         TimeEntriesCompanion(
-          startTime: Value(widget.sessionStart.toIso8601String()),
-          endTime: Value(_endedAt.toIso8601String()),
           description: Value(description),
           activityType: Value(_selection.typeKey),
           project: Value(values.project),
           subtype: Value(values.subtype),
           customName: Value(values.customName),
         ),
+        widget.sessionStart,
+        _endedAt,
       );
 
       final scope = suggestionScopeOf(_selection.typeKey, values.subtype);

@@ -2648,6 +2648,12 @@ abstract class AppLocalizations {
   /// **'Konec musí být po začátku.'**
   String get time_errorEndBeforeStart;
 
+  /// Time tracking text: "The time overlaps the entry {start}–{end}. Fix that one first." Shown when a manual or edited entry shares time with a stored entry.
+  ///
+  /// In cs, this message translates to:
+  /// **'Čas se kryje se záznamem {start}–{end}. Nejdřív upravte ten.'**
+  String time_errorOverlap(String start, String end);
+
   /// Time tracking text: "Something went wrong. Please try again."
   ///
   /// In cs, this message translates to:

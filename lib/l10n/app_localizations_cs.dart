@@ -1757,6 +1757,11 @@ class AppLocalizationsCs extends AppLocalizations {
   String get time_errorEndBeforeStart => 'Konec musí být po začátku.';
 
   @override
+  String time_errorOverlap(String start, String end) {
+    return 'Čas se kryje se záznamem $start–$end. Nejdřív upravte ten.';
+  }
+
+  @override
   String get time_errorGeneric => 'Něco se pokazilo. Zkuste to prosím znovu.';
 
   @override

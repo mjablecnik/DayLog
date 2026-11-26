@@ -29,6 +29,9 @@ loading the data of the two old apps.
   name, Other a free-text name, with suggestions kept apart for paid work, unpaid work, housework and others.
 - History shows a daily summary and lets you add past entries. Tap a row to edit it or swipe left to reveal
   Edit and Delete. The day starts at 03:00.
+- Entries never overlap: an added or edited entry whose time collides with another one is refused with a message
+  naming that entry, and a timer session keeps only the time no entry covers yet (an entry added by hand while the
+  timer ran shortens it or splits it in two).
 - Statistics: a daily or weekly view with a timeline, the time by activity type (with subtypes), by project and by
   name, and the untracked time (16 waking hours a day minus the tracked time).
 - Recurring reminders for habits with a time window, an interval and active days, which repeat until marked done

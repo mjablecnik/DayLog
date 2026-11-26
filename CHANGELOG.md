@@ -7,6 +7,21 @@ every release from the commit messages.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-26
+
+### Features
+
+- show a day strip and pause rows in History (time_tracking)
+- compute history gaps and the day strip range (time_tracking)
+- let entries be moved to another day and run past midnight (time_tracking)
+- never store overlapping time entries (time_tracking)
+
+### Other
+
+- docs(design): keep the history timeline mockups
+- docs(specs): add spec 007 for the History day strip and pause rows
+
+
 ## [1.0.0-dev.4] - 2026-11-23
 
 ### Features

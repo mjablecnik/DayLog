@@ -128,7 +128,7 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
     return now.isBefore(start) ? start : now;
   }
 
-  /// `Ostatní` needs a name to be submitted (Skip still saves without one).
+  /// `Ostatní` needs a name to be submitted .
   bool get _customNameMissing =>
       hasCustomNameField(_selection.typeKey) &&
       _selection.customName.trim().isEmpty;
@@ -148,19 +148,13 @@ class _DescriptionSheetState extends ConsumerState<DescriptionSheet> {
   Future<void> _skip() async {
     if (_saving) return;
 
-    final elapsed = _endedAt.difference(widget.sessionStart);
-    if (elapsed.inSeconds < 120) {
-      // Less than 2 minutes — discard without saving.
-      if (widget.triggeredByStop) {
-        ref.read(timerProvider.notifier).stop();
-      } else {
-        ref.read(timerProvider.notifier).autoRestart();
-      }
-      if (mounted) Navigator.of(context).pop();
-      return;
+    // Skip discards the session: nothing is stored, whatever its length.
+    if (widget.triggeredByStop) {
+      ref.read(timerProvider.notifier).stop();
+    } else {
+      ref.read(timerProvider.notifier).autoRestart();
     }
-
-    await _saveEntry('');
+    if (mounted) Navigator.of(context).pop();
   }
 
   Future<void> _saveEntry(String description) async {

@@ -503,10 +503,11 @@ void main() {
 
       await tester.tap(find.text('Skip'));
       await tester.pumpAndSettle();
-      expect(await db.select(db.timeEntries).get(), hasLength(1));
+      expect(await db.select(db.timeEntries).get(), isEmpty);
+      expect(find.byType(DescriptionSheet), findsNothing);
     });
 
-    testWidgets('Ostatní cannot be submitted without a name, but Skip still saves',
+    testWidgets('Ostatní cannot be submitted without a name, and Skip stores nothing',
         (tester) async {
       final db = createTestDatabase();
       await _pump(tester, sheet(), database: db, scrollable: false);
@@ -522,10 +523,7 @@ void main() {
       await tester.tap(find.text('Skip'));
       await tester.pumpAndSettle();
 
-      final row = (await db.select(db.timeEntries).get()).single;
-      expect(row.activityType, 'Ostatní');
-      expect(row.customName, isNull);
-      expect(row.description, '');
+      expect(await db.select(db.timeEntries).get(), isEmpty);
     });
 
     testWidgets('submitting stores the subtype, remembers the name and restores it next time',

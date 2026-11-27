@@ -1714,6 +1714,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time_errorEndBeforeStart => 'End time must be after start time.';
 
   @override
+  String get time_errorOverlapEdit => 'Edit that entry';
+
+  @override
   String time_errorOverlap(String start, String end) {
     return 'The time overlaps the entry $start–$end. Fix that one first.';
   }

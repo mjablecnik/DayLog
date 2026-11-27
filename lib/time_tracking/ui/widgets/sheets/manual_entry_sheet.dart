@@ -21,6 +21,7 @@ import '../../../services/database_service.dart'
 import '../../../providers/suggestions_provider.dart';
 import '../../../providers/history_provider.dart' show logicalDay;
 import '../activity_picker/activity_picker.dart';
+import 'edit_sheet.dart';
 import 'entry_time_fields.dart';
 
 class ManualEntrySheet extends ConsumerStatefulWidget {
@@ -151,6 +152,7 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
     setState(() {
       _saving = true;
       _error = null;
+      _conflict = null;
     });
 
     try {
@@ -187,6 +189,7 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
       if (mounted) Navigator.of(context).pop();
     } on OverlappingEntryException catch (e) {
       setState(() {
+        _conflict = e.conflict;
         _error = l10n.time_errorOverlap(
           _formatTime(DateTime.parse(e.conflict.startTime).toLocal()),
           _formatTime(DateTime.parse(e.conflict.endTime).toLocal()),
@@ -202,6 +205,19 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
   }
 
   int _pickerGeneration = 0;
+
+  /// The stored entry the last save collided with, so the error can offer to
+  /// open it for editing.
+  TimeEntry? _conflict;
+
+  void _editConflict(TimeEntry entry) {
+    showAppSheet<void>(
+      context,
+      builder: (_) => EditSheet(theme: widget.theme, entry: entry),
+    ).then((_) {
+      if (mounted) setState(() => _error = null);
+    });
+  }
 
   void _resetForm() {
     setState(() {
@@ -254,6 +270,14 @@ class _ManualEntrySheetState extends ConsumerState<ManualEntrySheet> {
               error,
               style: context.bodyText.bodySmall?.copyWith(
                 color: context.palette.destructiveText,
+              ),
+            ),
+          if (_error != null && _conflict != null)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                onPressed: () => _editConflict(_conflict!),
+                child: Text(strings.time_errorOverlapEdit),
               ),
             ),
         ],
